@@ -1,4 +1,4 @@
-# Base Gradle Example
+# Gradle and Kotlin Example
 
 ## To setup a new project with a Gradle wrapper, if you've installed Gradle into your path.
 ```
