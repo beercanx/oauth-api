@@ -14,8 +14,11 @@ COPY settings.gradle.kts /opt/code/settings.gradle.kts
 ## Switch to the code
 WORKDIR /opt/code
 
-## Compile the project
-RUN ./gradlew build
+## Build the project
+RUN apt-get update && \
+    # install unzip as its not always available
+    apt-get -y install unzip && \
+    ./gradlew build
 
 ## Extract distribution
 WORKDIR /opt/code/build/distributions/
