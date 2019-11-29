@@ -13,14 +13,13 @@ import io.ktor.serialization.serialization
 import io.ktor.sessions.Sessions
 import io.ktor.sessions.cookie
 
+@Suppress("unused") // Inform the IDE that we are actually using this
 @KtorExperimentalLocationsAPI
 fun Application.main() {
 
     install(Locations)
     install(AutoHeadResponse)
     install(DataConversion)
-    install(ForwardedHeaderSupport) // WARNING: for security, do not include this if not behind a reverse proxy
-    install(XForwardedHeaderSupport) // WARNING: for security, do not include this if not behind a reverse proxy
 
     install(HSTS) {
         includeSubDomains = true
