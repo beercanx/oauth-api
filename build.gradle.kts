@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     idea
     application
-    kotlin("jvm") version "1.3.31"
+    kotlin("jvm") version "1.3.60"
 }
 
 repositories {
@@ -16,7 +16,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
     // Kotlin Test
-    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
+    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.4.2")
 }
 
 application {
