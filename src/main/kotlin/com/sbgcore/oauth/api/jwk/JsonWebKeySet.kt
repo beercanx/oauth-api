@@ -1,4 +1,4 @@
-package com.sbgcore.oauth.api.wellknown
+package com.sbgcore.oauth.api.jwk
 
 import kotlinx.serialization.Serializable
 

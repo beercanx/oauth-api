@@ -2,8 +2,8 @@ package com.sbgcore.oauth.api
 
 import com.sbgcore.oauth.api.session.MySession
 import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
-import io.ktor.application.install
 import io.ktor.application.Application
+import io.ktor.application.install
 import io.ktor.features.*
 import io.ktor.http.CacheControl
 import io.ktor.http.content.CachingOptions
@@ -53,7 +53,15 @@ fun Application.main() {
         // no-cache
         options { CachingOptions(CacheControl.NoCache(null)) }
         // must-revalidate, proxy-revalidate, max-age=0
-        options { CachingOptions(CacheControl.MaxAge(maxAgeSeconds = 0, mustRevalidate = true, proxyRevalidate = true)) }
+        options {
+            CachingOptions(
+                CacheControl.MaxAge(
+                    maxAgeSeconds = 0,
+                    mustRevalidate = true,
+                    proxyRevalidate = true
+                )
+            )
+        }
     }
 
     // Setup the well known routes

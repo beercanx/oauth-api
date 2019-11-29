@@ -1,5 +1,8 @@
 package com.sbgcore.oauth.api.wellknown
 
+import com.sbgcore.oauth.api.jwk.JsonWebKey
+import com.sbgcore.oauth.api.jwk.JsonWebKeySet
+
 class WellKnown {
 
     fun getOpenIdConfiguration(): OpenIdConfiguration {

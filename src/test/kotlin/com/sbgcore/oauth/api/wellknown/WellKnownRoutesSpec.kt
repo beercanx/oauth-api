@@ -1,5 +1,6 @@
 package com.sbgcore.oauth.api.wellknown
 
+import com.sbgcore.oauth.api.jwk.JsonWebKeySet
 import io.kotlintest.assertSoftly
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
@@ -30,7 +31,10 @@ class WellKnownRoutesSpec : StringSpec({
 
     "/.well-known/openid-configuration should return OpenID configuration" {
 
-        every { mockWellKnown.getOpenIdConfiguration() } returns OpenIdConfiguration("issuer", "endpoint")
+        every { mockWellKnown.getOpenIdConfiguration() } returns OpenIdConfiguration(
+            "issuer",
+            "endpoint"
+        )
 
         withTestApplication(underTest) {
             handleRequest(HttpMethod.Get, "/.well-known/openid-configuration").apply {
@@ -44,7 +48,9 @@ class WellKnownRoutesSpec : StringSpec({
 
     "/.well-known/jwks.json should return some JWKS" {
 
-        every { mockWellKnown.getJsonWebKeySet() } returns JsonWebKeySet(emptySet())
+        every { mockWellKnown.getJsonWebKeySet() } returns JsonWebKeySet(
+            emptySet()
+        )
 
         withTestApplication(underTest) {
             handleRequest(HttpMethod.Get, "/.well-known/jwks.json").apply {
