@@ -1,9 +1,4 @@
-# Gradle and Kotlin Example
-
-## To setup a new project with a Gradle wrapper, if you've installed Gradle into your path.
-```
-gradle wrapper --gradle-version 5.4.1 --distribution-type all
-```
+# A Ktor bare bones OAuth API
 
 ## Using Gradle
 ```

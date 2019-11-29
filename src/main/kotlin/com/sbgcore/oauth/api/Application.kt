@@ -1,4 +1,4 @@
-package com.sbgcore.examples.gradle
+package com.sbgcore.oauth.api
 
 fun main() {
     println("Hello World")

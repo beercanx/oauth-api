@@ -1,4 +1,4 @@
-package com.sbgcore.examples.gradle
+package com.sbgcore.oauth.api
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec

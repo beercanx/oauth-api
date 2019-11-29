@@ -22,7 +22,7 @@ RUN apt-get update && \
 
 ## Extract distribution
 WORKDIR /opt/code/build/distributions/
-RUN unzip gradle-kotlin-starter.zip
+RUN unzip oauth-api.zip
 
 #############################
 ## Create production image ##
@@ -34,7 +34,7 @@ LABEL maintainer=james.bacon@skybettingandgaming.com
 WORKDIR /opt/distribution
 
 ## Copy in the uber jar from the builder
-COPY --from=BUILDER /opt/code/build/distributions/gradle-kotlin-starter  /opt/distribution
+COPY --from=BUILDER /opt/code/build/distributions/oauth-api  /opt/distribution
 
 ## Setup to run application on start
-CMD ["/opt/distribution/bin/gradle-kotlin-starter"]
+CMD ["/opt/distribution/bin/oauth-api"]

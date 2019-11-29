@@ -1,1 +1,1 @@
-rootProject.name = "gradle-kotlin-starter"
+rootProject.name = "oauth-api"
