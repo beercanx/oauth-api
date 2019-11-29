@@ -10,6 +10,7 @@ COPY gradle/ /opt/code/gradle
 COPY gradlew /opt/code/gradlew
 COPY build.gradle.kts /opt/code/build.gradle.kts
 COPY settings.gradle.kts /opt/code/settings.gradle.kts
+COPY gradle.properties /opt/code/gradle.properties
 
 ## Switch to the code
 WORKDIR /opt/code
