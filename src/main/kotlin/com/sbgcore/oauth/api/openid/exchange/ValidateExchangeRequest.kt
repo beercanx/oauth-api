@@ -19,24 +19,24 @@ import io.ktor.util.pipeline.PipelineContext
 suspend fun PipelineContext<*, ApplicationCall>.validateExchangeRequest(): Either<Throwable, ValidatedExchangeRequest<*>> {
 
     // TODO - Handle deserialisation errors
-    val rawRequest = call.receive<ExchangeRequest>()
+    val rawExchangeRequest = call.receive<RawExchangeRequest>()
 
-    return when(rawRequest.grantType) {
+    return when(rawExchangeRequest.grantType) {
         GrantType.AuthorizationCode -> {
-            if(rawRequest.isPKCE) {
+            if(rawExchangeRequest.isPKCE) {
                 Either.fx {
-                    val (principal) = validPkceClient(rawRequest)
-                    val (code) = validParameter("code", rawRequest.code)
-                    val (redirectUri) = validRedirectUri(rawRequest, principal)
-                    val (codeVerifier) = validParameter("codeVerifier", rawRequest.codeVerifier)
+                    val (principal) = validPkceClient(rawExchangeRequest)
+                    val (code) = validParameter("code", rawExchangeRequest.code)
+                    val (redirectUri) = validRedirectUri(rawExchangeRequest, principal)
+                    val (codeVerifier) = validParameter("codeVerifier", rawExchangeRequest.codeVerifier)
 
                     PkceAuthorizationCodeRequest(principal, code, redirectUri, codeVerifier)
                 }
             } else {
                 Either.fx {
                     val (principal) = validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
-                    val (code) = validParameter("code", rawRequest.code)
-                    val (redirectUri) = validRedirectUri(rawRequest, principal)
+                    val (code) = validParameter("code", rawExchangeRequest.code)
+                    val (redirectUri) = validRedirectUri(rawExchangeRequest, principal)
 
                     AuthorizationCodeRequest(principal, code, redirectUri)
                 }
@@ -44,35 +44,35 @@ suspend fun PipelineContext<*, ApplicationCall>.validateExchangeRequest(): Eithe
         }
         GrantType.Password -> Either.fx {
             val (principal) = validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
-            val (scopes) = validScopes(rawRequest, principal)
-            val (username) = validParameter("username", rawRequest.username)
-            val (password) = validParameter("password", rawRequest.password)
+            val (scopes) = validScopes(rawExchangeRequest, principal)
+            val (username) = validParameter("username", rawExchangeRequest.username)
+            val (password) = validParameter("password", rawExchangeRequest.password)
 
             PasswordRequest(principal, scopes, username, password)
         }
         GrantType.RefreshToken -> Either.fx {
             val (principal) = validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
-            val (scopes) = validScopes(rawRequest, principal)
-            val (refreshToken) = validParameter("refreshToken", rawRequest.refreshToken)
+            val (scopes) = validScopes(rawExchangeRequest, principal)
+            val (refreshToken) = validParameter("refreshToken", rawExchangeRequest.refreshToken)
 
             RefreshTokenRequest(principal, scopes, refreshToken)
         }
         GrantType.Assertion -> Either.fx {
             val (principal) = validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
-            val (assertion) = validParameter("assertion", rawRequest.assertion)
+            val (assertion) = validParameter("assertion", rawExchangeRequest.assertion)
 
             AssertionRequest(principal, assertion)
         }
         GrantType.SsoToken -> Either.fx {
             val (principal) = validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
-            val (ssoToken) = validParameter("ssoToken", rawRequest.ssoToken)
+            val (ssoToken) = validParameter("ssoToken", rawExchangeRequest.ssoToken)
 
             SsoTokenRequest(principal, ssoToken)
         }
     }
 }
 
-fun validScopes(request: ExchangeRequest, principal: AuthenticatedClientPrincipal): Either<Throwable, Set<Scopes>> {
+fun validScopes(request: RawExchangeRequest, principal: AuthenticatedClientPrincipal): Either<Throwable, Set<Scopes>> {
     return validParameter("scope", request.scope)
         .map { scopes -> scopes.split(" ") }
         .flatMap { scopes -> Either.fx { scopes.map(Scopes::valueOf) } }
@@ -85,7 +85,7 @@ fun Scopes.canBeIssuedTo(principal: AuthenticatedClientPrincipal): Boolean {
     return true;
 }
 
-fun validRedirectUri(request: ExchangeRequest, principal: ClientPrincipal): Either<Throwable, Url> = Either.fx {
+fun validRedirectUri(request: RawExchangeRequest, principal: ClientPrincipal): Either<Throwable, Url> = Either.fx {
     if(!request.redirectUri.isNullOrBlank()) {
         // TODO - Look up from config based on the provided principal id
         URLBuilder(request.redirectUri).build()
@@ -94,7 +94,7 @@ fun validRedirectUri(request: ExchangeRequest, principal: ClientPrincipal): Eith
     }
 }
 
-fun validPkceClient(request: ExchangeRequest): Either<Throwable, PkceClientPrincipal> {
+fun validPkceClient(request: RawExchangeRequest): Either<Throwable, PkceClientPrincipal> {
     return if(!request.clientId.isNullOrBlank()) {
         // TODO - Lookup from config
         PkceClientPrincipal(request.clientId).right()

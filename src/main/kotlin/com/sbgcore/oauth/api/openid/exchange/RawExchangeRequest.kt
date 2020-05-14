@@ -9,7 +9,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ExchangeRequest(
+data class RawExchangeRequest(
     // All
     @SerialName("grant_type") val grantType: GrantType,
 
@@ -78,5 +78,5 @@ data class SsoTokenRequest(
     val ssoToken: String
 ) : ValidatedExchangeRequest<AuthenticatedClientPrincipal>()
 
-val ExchangeRequest.isPKCE: Boolean
+val RawExchangeRequest.isPKCE: Boolean
     get() = !codeVerifier.isNullOrBlank()

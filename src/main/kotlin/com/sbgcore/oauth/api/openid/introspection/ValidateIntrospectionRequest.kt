@@ -15,23 +15,23 @@ import io.ktor.util.pipeline.PipelineContext
 suspend fun PipelineContext<*, ApplicationCall>.validateIntrospectionRequest(): Either<Throwable, ValidatedIntrospectionRequest> {
 
     // TODO - Handle deserialisation errors
-    val rawRequest = call.receive<IntrospectionRequest>()
+    val rawrawIntrospectionRequest = call.receive<RawIntrospectionRequest>()
 
     return Either.fx {
 
         val (principal) = validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
-        val (token) = validParameter("token", rawRequest.token)
+        val (token) = validParameter("token", rawrawIntrospectionRequest.token)
 
-        val hint: TokenType? = optionalTokenHint(rawRequest)
+        val hint: TokenType? = optionalTokenHint(rawrawIntrospectionRequest)
         if(hint == null) {
-            IntrospectionRequestBasic(principal, token)
+            IntrospectionRequest(principal, token)
         } else {
             IntrospectionRequestWithHint(principal, token, hint)
         }
     }
 }
 
-fun optionalTokenHint(request: IntrospectionRequest): TokenType? {
+fun optionalTokenHint(request: RawIntrospectionRequest): TokenType? {
     return if(!request.hint.isNullOrBlank()) {
         enumValues<TokenType>().firstOrNull { token -> token.name == request.hint }
     } else {

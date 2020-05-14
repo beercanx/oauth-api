@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class IntrospectionRequest(
+data class RawIntrospectionRequest(
     val token: String?,
     @SerialName("token_type_hint") val hint: String?
 )
@@ -16,7 +16,7 @@ sealed class ValidatedIntrospectionRequest {
     abstract val token: String
 }
 
-data class IntrospectionRequestBasic(
+data class IntrospectionRequest(
     override val principal: AuthenticatedClientPrincipal,
     override val token: String
 ) : ValidatedIntrospectionRequest()

@@ -5,7 +5,7 @@ import com.sbgcore.oauth.api.openid.exchange.*
 import com.sbgcore.oauth.api.openid.exchange.flows.AuthorizationCodeFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.PasswordFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.RefreshFlow
-import com.sbgcore.oauth.api.openid.introspection.IntrospectionRequestBasic
+import com.sbgcore.oauth.api.openid.introspection.IntrospectionRequest
 import com.sbgcore.oauth.api.openid.introspection.IntrospectionRequestWithHint
 import com.sbgcore.oauth.api.openid.introspection.ValidatedIntrospectionRequest
 import com.sbgcore.oauth.api.openid.introspection.validateIntrospectionRequest
@@ -42,7 +42,7 @@ fun Application.openIdRoutes(
             post {
                 when(val result = validateIntrospectionRequest()) {
                     is Either.Right<ValidatedIntrospectionRequest> -> when(val request = result.b) {
-                        is IntrospectionRequestBasic -> TODO("Implement token introspection")
+                        is IntrospectionRequest -> TODO("Implement token introspection")
                         is IntrospectionRequestWithHint -> TODO("Implement token introspection with hint")
                     }
                     is Either.Left<Throwable> -> {
