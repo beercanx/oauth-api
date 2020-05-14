@@ -1,5 +1,6 @@
 package com.sbgcore.oauth.api
 
+import com.sbgcore.oauth.api.openid.openIdRoutes
 import com.sbgcore.oauth.api.session.MySession
 import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
 import io.ktor.application.Application
@@ -74,7 +75,9 @@ fun Application.main() {
     // Setup the well known routes
     wellKnownRoutes()
 
-    // TODO - OpenID routes
+    // Setup the OpenID connect routes
+    openIdRoutes()
+
     // TODO - Account routes
     // TODO - Product transfer routes
 }

@@ -1,4 +1,7 @@
-package com.sbgcore.oauth.api.openid.exchange
+package com.sbgcore.oauth.api.openid.exchange.flows
+
+import com.sbgcore.oauth.api.openid.exchange.AuthorizationCodeRequest
+import com.sbgcore.oauth.api.openid.exchange.PkceAuthorizationCodeRequest
 
 class AuthorizationCodeFlow {
 
