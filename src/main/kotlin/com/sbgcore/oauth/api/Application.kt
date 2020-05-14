@@ -4,6 +4,8 @@ import com.sbgcore.oauth.api.session.MySession
 import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
 import io.ktor.application.Application
 import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.auth.basic
 import io.ktor.features.*
 import io.ktor.http.CacheControl
 import io.ktor.http.content.CachingOptions
@@ -60,6 +62,12 @@ fun Application.main() {
                     proxyRevalidate = true
                 )
             )
+        }
+    }
+
+    install(Authentication) {
+        basic("client_id_and_secret") {
+
         }
     }
 

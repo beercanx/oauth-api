@@ -2,12 +2,14 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val ktorVersion: String by project
+val arrowVersion: String by project
 
 plugins {
     idea
     application
     kotlin("jvm") version "1.3.61"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.3.61"
+    kotlin("kapt") version "1.3.61"
+    kotlin("plugin.serialization") version "1.3.61"
 }
 
 repositories {
@@ -44,6 +46,11 @@ dependencies {
     implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
     implementation("io.ktor:ktor-client-json-jvm:$ktorVersion")
     implementation("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
+
+    // Arrow Core + Arrow FX
+    implementation("io.arrow-kt:arrow-fx:$arrowVersion")
+    implementation("io.arrow-kt:arrow-syntax:$arrowVersion")
+    kapt("io.arrow-kt:arrow-meta:$arrowVersion")
 
     // Kotlin Test
     testImplementation("io.kotlintest:kotlintest-runner-junit5:3.4.2")
