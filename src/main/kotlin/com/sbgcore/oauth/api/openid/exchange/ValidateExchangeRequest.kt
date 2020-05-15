@@ -1,7 +1,10 @@
 package com.sbgcore.oauth.api.openid.exchange
 
-import arrow.core.*
+import arrow.core.Either
 import arrow.core.extensions.fx
+import arrow.core.flatMap
+import arrow.core.left
+import arrow.core.right
 import com.sbgcore.oauth.api.authentication.AuthenticatedClientPrincipal
 import com.sbgcore.oauth.api.authentication.ClientPrincipal
 import com.sbgcore.oauth.api.authentication.PkceClientPrincipal
@@ -18,12 +21,12 @@ import io.ktor.util.pipeline.PipelineContext
 
 suspend fun PipelineContext<*, ApplicationCall>.validateExchangeRequest(): Either<Throwable, ValidatedExchangeRequest<*>> {
 
-    // TODO - Handle deserialisation errors
+    // TODO - Handle deserialization errors
     val rawExchangeRequest = call.receive<RawExchangeRequest>()
 
-    return when(rawExchangeRequest.grantType) {
+    return when (rawExchangeRequest.grantType) {
         GrantType.AuthorizationCode -> {
-            if(rawExchangeRequest.isPKCE) {
+            if (rawExchangeRequest.isPKCE) {
                 Either.fx {
                     val (principal) = validPkceClient(rawExchangeRequest)
                     val (code) = validParameter("code", rawExchangeRequest.code)
@@ -77,16 +80,16 @@ fun validScopes(request: RawExchangeRequest, principal: AuthenticatedClientPrinc
         .map { scopes -> scopes.split(" ") }
         .flatMap { scopes -> Either.fx { scopes.map(Scopes::valueOf) } }
         .map { scopes -> scopes.filter { scope -> scope.canBeIssuedTo(principal) } }
-        .map { scopes -> scopes.toSet()}
+        .map { scopes -> scopes.toSet() }
 }
 
 fun Scopes.canBeIssuedTo(principal: AuthenticatedClientPrincipal): Boolean {
     // TODO - Look up from config based on the provided principal id
-    return true;
+    return true
 }
 
 fun validRedirectUri(request: RawExchangeRequest, principal: ClientPrincipal): Either<Throwable, Url> = Either.fx {
-    if(!request.redirectUri.isNullOrBlank()) {
+    if (!request.redirectUri.isNullOrBlank()) {
         // TODO - Look up from config based on the provided principal id
         URLBuilder(request.redirectUri).build()
     } else {
@@ -95,7 +98,7 @@ fun validRedirectUri(request: RawExchangeRequest, principal: ClientPrincipal): E
 }
 
 fun validPkceClient(request: RawExchangeRequest): Either<Throwable, PkceClientPrincipal> {
-    return if(!request.clientId.isNullOrBlank()) {
+    return if (!request.clientId.isNullOrBlank()) {
         // TODO - Lookup from config
         PkceClientPrincipal(request.clientId).right()
     } else {

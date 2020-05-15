@@ -1,8 +1,8 @@
 package com.sbgcore.oauth.api.openid.exchange
 
 import com.sbgcore.oauth.api.authentication.AuthenticatedClientPrincipal
-import com.sbgcore.oauth.api.openid.Scopes
 import com.sbgcore.oauth.api.authentication.PkceClientPrincipal
+import com.sbgcore.oauth.api.openid.Scopes
 import io.ktor.auth.Principal
 import io.ktor.http.Url
 import kotlinx.serialization.SerialName

@@ -12,9 +12,9 @@ fun <A : ClientPrincipal> validClientPrincipal(principal: A?): Either<Throwable,
     }
 }
 
-fun validParameter(name:String, value: String?): Either<Throwable, String> {
+fun validParameter(name: String, value: String?): Either<Throwable, String> {
     // TODO - Verify this is all we need to do
-    return if(!value.isNullOrBlank()) {
+    return if (!value.isNullOrBlank()) {
         value.right()
     } else {
         Exception("Null or blank parameter: $name").left()

@@ -6,10 +6,10 @@ import com.sbgcore.oauth.api.openid.exchange.PkceAuthorizationCodeRequest
 class AuthorizationCodeFlow {
 
     fun exchange(request: AuthorizationCodeRequest) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("Not yet implemented: $request")
     }
 
     fun exchange(request: PkceAuthorizationCodeRequest) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("Not yet implemented: $request")
     }
 }
