@@ -28,47 +28,47 @@ suspend fun PipelineContext<*, ApplicationCall>.validateExchangeRequest(): Eithe
         GrantType.AuthorizationCode -> {
             if (rawExchangeRequest.isPKCE) {
                 Either.fx {
-                    val (principal) = validPkceClient(rawExchangeRequest)
-                    val (code) = validParameter("code", rawExchangeRequest.code)
-                    val (redirectUri) = validRedirectUri(rawExchangeRequest, principal)
-                    val (codeVerifier) = validParameter("codeVerifier", rawExchangeRequest.codeVerifier)
+                    val principal = !validPkceClient(rawExchangeRequest)
+                    val code = !validParameter("code", rawExchangeRequest.code)
+                    val redirectUri = !validRedirectUri(rawExchangeRequest, principal)
+                    val codeVerifier = !validParameter("codeVerifier", rawExchangeRequest.codeVerifier)
 
                     PkceAuthorizationCodeRequest(principal, code, redirectUri, codeVerifier)
                 }
             } else {
                 Either.fx {
-                    val (principal) = validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
-                    val (code) = validParameter("code", rawExchangeRequest.code)
-                    val (redirectUri) = validRedirectUri(rawExchangeRequest, principal)
+                    val principal = !validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
+                    val code = !validParameter("code", rawExchangeRequest.code)
+                    val redirectUri = !validRedirectUri(rawExchangeRequest, principal)
 
                     AuthorizationCodeRequest(principal, code, redirectUri)
                 }
             }
         }
         GrantType.Password -> Either.fx {
-            val (principal) = validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
-            val (scopes) = validScopes(rawExchangeRequest, principal)
-            val (username) = validParameter("username", rawExchangeRequest.username)
-            val (password) = validParameter("password", rawExchangeRequest.password)
+            val principal = !validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
+            val scopes = !validScopes(rawExchangeRequest, principal)
+            val username = !validParameter("username", rawExchangeRequest.username)
+            val password = !validParameter("password", rawExchangeRequest.password)
 
             PasswordRequest(principal, scopes, username, password)
         }
         GrantType.RefreshToken -> Either.fx {
-            val (principal) = validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
-            val (scopes) = validScopes(rawExchangeRequest, principal)
-            val (refreshToken) = validParameter("refreshToken", rawExchangeRequest.refreshToken)
+            val principal = !validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
+            val scopes = !validScopes(rawExchangeRequest, principal)
+            val refreshToken = !validParameter("refreshToken", rawExchangeRequest.refreshToken)
 
             RefreshTokenRequest(principal, scopes, refreshToken)
         }
         GrantType.Assertion -> Either.fx {
-            val (principal) = validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
-            val (assertion) = validParameter("assertion", rawExchangeRequest.assertion)
+            val principal = !validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
+            val assertion = !validParameter("assertion", rawExchangeRequest.assertion)
 
             AssertionRequest(principal, assertion)
         }
         GrantType.SsoToken -> Either.fx {
-            val (principal) = validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
-            val (ssoToken) = validParameter("ssoToken", rawExchangeRequest.ssoToken)
+            val principal = !validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
+            val ssoToken = !validParameter("ssoToken", rawExchangeRequest.ssoToken)
 
             SsoTokenRequest(principal, ssoToken)
         }

@@ -19,8 +19,8 @@ suspend fun PipelineContext<*, ApplicationCall>.validateIntrospectionRequest(): 
 
     return Either.fx {
 
-        val (principal) = validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
-        val (token) = validParameter("token", rawIntrospectionRequest.token)
+        val principal = !validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
+        val token = !validParameter("token", rawIntrospectionRequest.token)
 
         val hint: TokenType? = optionalTokenHint(rawIntrospectionRequest)
         if (hint == null) {
