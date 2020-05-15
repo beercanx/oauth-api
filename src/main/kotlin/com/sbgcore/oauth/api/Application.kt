@@ -12,7 +12,7 @@ import io.ktor.http.CacheControl
 import io.ktor.http.content.CachingOptions
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Locations
-import io.ktor.serialization.serialization
+import io.ktor.serialization.json
 import io.ktor.sessions.Sessions
 import io.ktor.sessions.cookie
 
@@ -29,7 +29,7 @@ fun Application.main() {
     }
 
     install(ContentNegotiation) {
-        serialization()
+        json()
     }
 
     install(Sessions) {

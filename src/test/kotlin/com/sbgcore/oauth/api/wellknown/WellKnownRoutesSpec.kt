@@ -9,7 +9,7 @@ import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import io.ktor.serialization.serialization
+import io.ktor.serialization.json
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
 import io.mockk.every
@@ -25,7 +25,7 @@ class WellKnownRoutesSpec : StringSpec({
 
         // Add support for returning data classes
         install(ContentNegotiation) {
-            serialization()
+            json()
         }
     }
 

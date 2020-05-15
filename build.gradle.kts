@@ -14,7 +14,8 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven { url = uri("https://kotlin.bintray.com/kotlinx") }
+    maven("https://kotlin.bintray.com/ktor")
+    maven("https://kotlin.bintray.com/kotlinx")
 }
 
 dependencies {
@@ -27,7 +28,6 @@ dependencies {
     // Ktor server layer
     implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("io.ktor:ktor-server-host-common:$ktorVersion")
 
     // Ktor content negotiation
     implementation("io.ktor:ktor-serialization:$ktorVersion")
