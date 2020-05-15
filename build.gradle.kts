@@ -7,9 +7,9 @@ val arrowVersion: String by project
 plugins {
     idea
     application
-    kotlin("jvm") version "1.3.61"
-    kotlin("kapt") version "1.3.61"
-    kotlin("plugin.serialization") version "1.3.61"
+    kotlin("jvm") version "1.3.70"
+    kotlin("kapt") version "1.3.70"
+    kotlin("plugin.serialization") version "1.3.70"
 }
 
 repositories {
