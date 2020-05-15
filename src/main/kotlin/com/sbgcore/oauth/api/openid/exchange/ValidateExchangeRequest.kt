@@ -78,7 +78,7 @@ suspend fun PipelineContext<*, ApplicationCall>.validateExchangeRequest(): Eithe
 fun validScopes(request: RawExchangeRequest, principal: AuthenticatedClientPrincipal): Either<Throwable, Set<Scopes>> {
     return validParameter("scope", request.scope)
         .map { scopes -> scopes.split(" ") }
-        .flatMap { scopes -> Either.fx { scopes.map(Scopes::valueOf) } }
+        .flatMap { scopes -> Either.fx<Throwable, List<Scopes>> { scopes.map(Scopes::valueOf) } }
         .map { scopes -> scopes.filter { scope -> scope.canBeIssuedTo(principal) } }
         .map { scopes -> scopes.toSet() }
 }
