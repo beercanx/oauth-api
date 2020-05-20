@@ -1,6 +1,6 @@
 package com.sbgcore.oauth.api.openid.introspection
 
-import com.sbgcore.oauth.api.authentication.AuthenticatedClientPrincipal
+import com.sbgcore.oauth.api.authentication.AuthenticatedClient
 import com.sbgcore.oauth.api.openid.TokenType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -12,17 +12,17 @@ data class RawIntrospectionRequest(
 )
 
 sealed class ValidatedIntrospectionRequest {
-    abstract val principal: AuthenticatedClientPrincipal
+    abstract val principal: AuthenticatedClient
     abstract val token: String
 }
 
 data class IntrospectionRequest(
-    override val principal: AuthenticatedClientPrincipal,
+    override val principal: AuthenticatedClient,
     override val token: String
 ) : ValidatedIntrospectionRequest()
 
 data class IntrospectionRequestWithHint(
-    override val principal: AuthenticatedClientPrincipal,
+    override val principal: AuthenticatedClient,
     override val token: String,
     val hint: TokenType
 ) : ValidatedIntrospectionRequest()

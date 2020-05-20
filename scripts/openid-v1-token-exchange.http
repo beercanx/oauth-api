@@ -1,0 +1,10 @@
+##
+# Password Flow as Core Auto Test
+##
+POST http://localhost:8080/openid/v1/token_exchange
+authorization: Basic Y29yZV9hdXRvX3Rlc3Q6N3R2TEV5eWozampTODJ3S2JTUnBueVQ1ejZrdHl2S0o=
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&scope=openid&username=GAMSTOPDAVE&password=121212
+
+###

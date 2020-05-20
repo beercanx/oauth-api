@@ -1,7 +1,7 @@
 package com.sbgcore.oauth.api.openid.exchange
 
-import com.sbgcore.oauth.api.authentication.AuthenticatedClientPrincipal
-import com.sbgcore.oauth.api.authentication.PkceClientPrincipal
+import com.sbgcore.oauth.api.authentication.AuthenticatedClient
+import com.sbgcore.oauth.api.authentication.PkceClient
 import com.sbgcore.oauth.api.openid.Scopes
 import io.ktor.auth.Principal
 import io.ktor.http.Url
@@ -14,28 +14,28 @@ data class RawExchangeRequest(
     @SerialName("grant_type") val grantType: GrantType,
 
     // AuthorizationCodeRequest && PkceAuthorizationCodeRequest
-    val code: String?,
-    @SerialName("redirect_uri") val redirectUri: String?,
+    val code: String? = null,
+    @SerialName("redirect_uri") val redirectUri: String? = null,
 
     // PkceAuthorizationCodeRequest
-    @SerialName("code_verifier") val codeVerifier: String?,
-    @SerialName("client_id") val clientId: String?,
+    @SerialName("code_verifier") val codeVerifier: String? = null,
+    @SerialName("client_id") val clientId: String? = null,
 
     // PasswordRequest && RefreshTokenRequest
-    val scope: String?,
+    val scope: String? = null,
 
     // PasswordRequest
-    val username: String?,
-    val password: String?,
+    val username: String? = null,
+    val password: String? = null,
 
     // RefreshTokenRequest
-    @SerialName("refresh_token") val refreshToken: String?,
+    @SerialName("refresh_token") val refreshToken: String? = null,
 
     // AssertionRequest
-    val assertion: String?,
+    val assertion: String? = null,
 
     // SsoTokenRequest
-    @SerialName("sso_token") val ssoToken: String?
+    @SerialName("sso_token") val ssoToken: String? = null
 )
 
 sealed class ValidatedExchangeRequest<T : Principal> {
@@ -43,40 +43,40 @@ sealed class ValidatedExchangeRequest<T : Principal> {
 }
 
 data class AuthorizationCodeRequest(
-    override val principal: AuthenticatedClientPrincipal,
+    override val principal: AuthenticatedClient,
     val code: String,
     val redirectUri: Url
-) : ValidatedExchangeRequest<AuthenticatedClientPrincipal>()
+) : ValidatedExchangeRequest<AuthenticatedClient>()
 
 data class PkceAuthorizationCodeRequest(
-    override val principal: PkceClientPrincipal,
+    override val principal: PkceClient,
     val code: String,
     val redirectUri: Url,
     val codeVerifier: String
-) : ValidatedExchangeRequest<PkceClientPrincipal>()
+) : ValidatedExchangeRequest<PkceClient>()
 
 data class PasswordRequest(
-    override val principal: AuthenticatedClientPrincipal,
+    override val principal: AuthenticatedClient,
     val scopes: Set<Scopes>,
     val username: String,
     val password: String
-) : ValidatedExchangeRequest<AuthenticatedClientPrincipal>()
+) : ValidatedExchangeRequest<AuthenticatedClient>()
 
 data class RefreshTokenRequest(
-    override val principal: AuthenticatedClientPrincipal,
+    override val principal: AuthenticatedClient,
     val scopes: Set<Scopes>,
     val refreshToken: String
-) : ValidatedExchangeRequest<AuthenticatedClientPrincipal>()
+) : ValidatedExchangeRequest<AuthenticatedClient>()
 
 data class AssertionRequest(
-    override val principal: AuthenticatedClientPrincipal,
+    override val principal: AuthenticatedClient,
     val assertion: String
-) : ValidatedExchangeRequest<AuthenticatedClientPrincipal>()
+) : ValidatedExchangeRequest<AuthenticatedClient>()
 
 data class SsoTokenRequest(
-    override val principal: AuthenticatedClientPrincipal,
+    override val principal: AuthenticatedClient,
     val ssoToken: String
-) : ValidatedExchangeRequest<AuthenticatedClientPrincipal>()
+) : ValidatedExchangeRequest<AuthenticatedClient>()
 
 val RawExchangeRequest.isPKCE: Boolean
     get() = !codeVerifier.isNullOrBlank()

@@ -2,7 +2,7 @@ package com.sbgcore.oauth.api.openid.introspection
 
 import arrow.core.Either
 import arrow.core.extensions.fx
-import com.sbgcore.oauth.api.authentication.AuthenticatedClientPrincipal
+import com.sbgcore.oauth.api.authentication.AuthenticatedClient
 import com.sbgcore.oauth.api.openid.TokenType
 import com.sbgcore.oauth.api.openid.validClientPrincipal
 import com.sbgcore.oauth.api.openid.validParameter
@@ -19,7 +19,7 @@ suspend fun PipelineContext<*, ApplicationCall>.validateIntrospectionRequest(): 
 
     return Either.fx {
 
-        val principal = !validClientPrincipal(call.principal<AuthenticatedClientPrincipal>())
+        val principal = !validClientPrincipal(call.principal<AuthenticatedClient>())
         val token = !validParameter("token", rawIntrospectionRequest.token)
 
         val hint: TokenType? = optionalTokenHint(rawIntrospectionRequest)

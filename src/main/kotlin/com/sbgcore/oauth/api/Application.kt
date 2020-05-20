@@ -1,20 +1,24 @@
 package com.sbgcore.oauth.api
 
+import com.sbgcore.oauth.api.authentication.AuthenticatedClient
+import com.sbgcore.oauth.api.authentication.ErrorResponse
+import com.sbgcore.oauth.api.authentication.PkceClient
 import com.sbgcore.oauth.api.openid.openIdRoutes
-import com.sbgcore.oauth.api.session.MySession
 import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.auth.Authentication
-import io.ktor.auth.basic
 import io.ktor.features.*
 import io.ktor.http.CacheControl
 import io.ktor.http.content.CachingOptions
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Locations
-import io.ktor.serialization.json
-import io.ktor.sessions.Sessions
-import io.ktor.sessions.cookie
+import com.sbgcore.oauth.api.ktor.basic
+import com.sbgcore.oauth.api.ktor.form
+import com.sbgcore.oauth.api.openid.openIdRoutesV2
+import io.ktor.application.call
+import io.ktor.response.header
+import io.ktor.response.respond
 
 @Suppress("unused") // Inform the IDE that we are actually using this
 @KtorExperimentalLocationsAPI
@@ -28,15 +32,10 @@ fun Application.main() {
         includeSubDomains = true
     }
 
-    install(ContentNegotiation) {
-        json()
-    }
-
-    install(Sessions) {
-        cookie<MySession>("MY_SESSION") {
-            cookie.extensions["SameSite"] = "lax"
-        }
-    }
+    // OAuth API's don't seem to use JSON input
+    //install(ContentNegotiation) {
+    //    json()
+    //}
 
     install(Compression) {
         gzip {
@@ -67,8 +66,31 @@ fun Application.main() {
     }
 
     install(Authentication) {
-        basic("client_id_and_secret") {
-
+        basic<AuthenticatedClient> {
+            realm = "skybettingandgaming"
+            validate { (clientId, clientSecret) ->
+                if(clientId.isBlank() || clientSecret.isBlank()) {
+                     null
+                } else {
+                    // TODO - Lookup against client config / database
+                    AuthenticatedClient(clientId)
+                }
+            }
+        }
+        form<PkceClient> {
+            userParamName = "client_id"
+            passwordParamName = "client_id"
+            validate {  (clientId, _) ->
+                if(clientId.isBlank()) {
+                    null
+                } else {
+                    // TODO - Lookup against client config / database
+                    PkceClient(clientId)
+                }
+            }
+            challenge {
+                call.respond(ErrorResponse("invalid_client"))
+            }
         }
     }
 
@@ -76,7 +98,7 @@ fun Application.main() {
     wellKnownRoutes()
 
     // Setup the OpenID connect routes
-    openIdRoutes()
+    openIdRoutesV2()
 
     // TODO - Account routes
     // TODO - Product transfer routes
