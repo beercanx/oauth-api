@@ -1,5 +1,9 @@
 package com.sbgcore.oauth.api.openid
 
-enum class Scopes {
-    OpenId
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+enum class Scopes(val value: String) {
+    @SerialName("openid") OpenId("openid")
 }

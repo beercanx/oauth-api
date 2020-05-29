@@ -8,3 +8,13 @@ Content-Type: application/x-www-form-urlencoded
 grant_type=password&scope=openid&username=GAMSTOPDAVE&password=121212
 
 ###
+
+##
+# PKCE Auth Flow as Super6
+##
+POST http://localhost:8080/openid/v1/token_exchange
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&scope=openid&username=GAMSTOPDAVE&password=121212&clientId=super6
+
+###

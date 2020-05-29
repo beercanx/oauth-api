@@ -26,7 +26,6 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.2.1")
 
     // Ktor server layer
-    implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
 
     // Ktor content negotiation

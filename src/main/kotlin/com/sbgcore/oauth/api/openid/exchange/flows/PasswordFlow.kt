@@ -4,7 +4,7 @@ import com.sbgcore.oauth.api.openid.exchange.PasswordRequest
 
 class PasswordFlow {
 
-    fun exchange(request: PasswordRequest): Any {
-        TODO("Not yet implemented: $request")
+    fun exchange(request: PasswordRequest) {
+        // TODO("Not yet implemented: $request")
     }
 }

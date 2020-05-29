@@ -1,85 +1,58 @@
 package com.sbgcore.oauth.api.openid.exchange
 
-import arrow.core.Either
+import arrow.core.*
 import arrow.core.extensions.fx
-import arrow.core.flatMap
-import arrow.core.left
-import arrow.core.right
 import com.sbgcore.oauth.api.authentication.AuthenticatedClient
 import com.sbgcore.oauth.api.authentication.ClientPrincipal
 import com.sbgcore.oauth.api.authentication.PkceClient
 import com.sbgcore.oauth.api.openid.Scopes
-import com.sbgcore.oauth.api.openid.validClientPrincipal
+import com.sbgcore.oauth.api.openid.exchange.GrantType.*
 import com.sbgcore.oauth.api.openid.validParameter
 import io.ktor.application.ApplicationCall
 import io.ktor.application.application
 import io.ktor.application.call
 import io.ktor.application.log
-import io.ktor.auth.principal
 import io.ktor.http.Parameters
 import io.ktor.http.URLBuilder
 import io.ktor.http.Url
 import io.ktor.request.receive
 import io.ktor.util.pipeline.PipelineContext
+import kotlinx.serialization.SerialName
 
-suspend fun PipelineContext<*, ApplicationCall>.validateExchangeRequest(): Either<Throwable, ValidatedExchangeRequest<*>> {
-
-    // TODO - Handle deserialization errors
-    // val rawExchangeRequest = call.receive<RawExchangeRequest>()
+suspend fun validateExchangeRequest(
+    principal: AuthenticatedClient,
+    parameters: Parameters
+): Either<Throwable, ValidatedExchangeRequest<AuthenticatedClient>> = Either.fx {
 
     // Receive the posted form, unless we implement ContentNegotiation that supports URL encoded forms.
-    val p = call.parameters
-    val raw = call.receive<Parameters>()
+    val rawExchangeRequest = !parameters.toRawExchangeRequest()
 
-    application.log.debug("call.parameters: {}", p)
-    application.log.debug("call.receive<Parameters>(): {}", raw)
+    when (rawExchangeRequest.grantType) {
+        AuthorizationCode -> {
+            val code = !validParameter("code", rawExchangeRequest.code)
+            val redirectUri = !validRedirectUri(rawExchangeRequest, principal)
 
-    val rawExchangeRequest = RawExchangeRequest(GrantType.AuthorizationCode)
-
-    return when (rawExchangeRequest.grantType) {
-        GrantType.AuthorizationCode -> {
-            if (rawExchangeRequest.isPKCE) {
-                Either.fx {
-                    val principal = !validPkceClient(rawExchangeRequest)
-                    val code = !validParameter("code", rawExchangeRequest.code)
-                    val redirectUri = !validRedirectUri(rawExchangeRequest, principal)
-                    val codeVerifier = !validParameter("codeVerifier", rawExchangeRequest.codeVerifier)
-
-                    PkceAuthorizationCodeRequest(principal, code, redirectUri, codeVerifier)
-                }
-            } else {
-                Either.fx {
-                    val principal = !validClientPrincipal(call.principal<AuthenticatedClient>())
-                    val code = !validParameter("code", rawExchangeRequest.code)
-                    val redirectUri = !validRedirectUri(rawExchangeRequest, principal)
-
-                    AuthorizationCodeRequest(principal, code, redirectUri)
-                }
-            }
+            AuthorizationCodeRequest(principal, code, redirectUri)
         }
-        GrantType.Password -> Either.fx {
-            val principal = !validClientPrincipal(call.principal<AuthenticatedClient>())
+        Password -> {
             val scopes = !validScopes(rawExchangeRequest, principal)
             val username = !validParameter("username", rawExchangeRequest.username)
             val password = !validParameter("password", rawExchangeRequest.password)
 
             PasswordRequest(principal, scopes, username, password)
         }
-        GrantType.RefreshToken -> Either.fx {
-            val principal = !validClientPrincipal(call.principal<AuthenticatedClient>())
+        RefreshToken -> {
             val scopes = !validScopes(rawExchangeRequest, principal)
             val refreshToken = !validParameter("refreshToken", rawExchangeRequest.refreshToken)
 
             RefreshTokenRequest(principal, scopes, refreshToken)
         }
-        GrantType.Assertion -> Either.fx {
-            val principal = !validClientPrincipal(call.principal<AuthenticatedClient>())
+        Assertion -> {
             val assertion = !validParameter("assertion", rawExchangeRequest.assertion)
 
             AssertionRequest(principal, assertion)
         }
-        GrantType.SsoToken -> Either.fx {
-            val principal = !validClientPrincipal(call.principal<AuthenticatedClient>())
+        SsoToken -> {
             val ssoToken = !validParameter("ssoToken", rawExchangeRequest.ssoToken)
 
             SsoTokenRequest(principal, ssoToken)
@@ -87,33 +60,84 @@ suspend fun PipelineContext<*, ApplicationCall>.validateExchangeRequest(): Eithe
     }
 }
 
-fun validScopes(request: RawExchangeRequest, principal: AuthenticatedClient): Either<Throwable, Set<Scopes>> {
-    return validParameter("scope", request.scope)
+suspend fun validatePkceExchangeRequest(
+    principal:PkceClient,
+    parameters: Parameters
+): Either<Throwable, ValidatedExchangeRequest<PkceClient>> = Either.fx {
+
+    // Receive the posted form, unless we implement ContentNegotiation that supports URL encoded forms.
+    val raw = !parameters.toRawExchangeRequest()
+
+    if(raw.grantType == AuthorizationCode && raw.isPKCE) {
+
+        val code = !validParameter("code", raw.code)
+        val redirectUri = !validRedirectUri(raw, principal)
+        val codeVerifier = !validParameter("codeVerifier", raw.codeVerifier)
+
+        PkceAuthorizationCodeRequest(principal, code, redirectUri, codeVerifier)
+    } else {
+        throw Exception("Bad Request")
+    }
+}
+
+// TODO - See if we can extend Kotlinx Serialisation to support this instead
+private fun Parameters.toRawExchangeRequest(): Either<Throwable, RawExchangeRequest> = Either.fx {
+    RawExchangeRequest(
+        // All
+        grantType = when(get("grant_type")) {
+            "authorization_code" -> AuthorizationCode
+            "password" -> Password
+            "refresh_token" -> RefreshToken
+            "urn:ietf:params:oauth:grant-type:jwt-bearer" -> Assertion
+            "sso_token" -> SsoToken
+            else -> throw Exception("Bad Request")
+        },
+
+        // AuthorizationCodeRequest && PkceAuthorizationCodeRequest
+        code = get("code"),
+        redirectUri = get("redirect_uri"),
+
+        // PkceAuthorizationCodeRequest
+        codeVerifier = get("code_verifier"),
+        clientId = get("client_id"),
+
+        // PasswordRequest && RefreshTokenRequest
+        scope = get("scope"),
+
+        // PasswordRequest
+        username = get("username"),
+        password = get("password"),
+
+        // RefreshTokenRequest
+        refreshToken = get("refresh_token"),
+
+        // AssertionRequest
+        assertion = get("assertion"),
+
+        // SsoTokenRequest
+        ssoToken = get("sso_token")
+    )
+}
+
+private fun validScopes(raw: RawExchangeRequest, principal: AuthenticatedClient): Either<Throwable, Set<Scopes>> {
+    return validParameter("scope", raw.scope)
         .map { scopes -> scopes.split(" ") }
-        .flatMap { scopes -> Either.fx<Throwable, List<Scopes>> { scopes.map(Scopes::valueOf) } }
+        // TODO - Sort out this line, its getting crazy complex
+        .flatMap { scopes -> Either.fx<Throwable, List<Scopes>> { scopes.mapNotNull { string -> Scopes.values().find { scope -> scope.value == string } } } }
         .map { scopes -> scopes.filter { scope -> scope.canBeIssuedTo(principal) } }
         .map { scopes -> scopes.toSet() }
 }
 
-fun Scopes.canBeIssuedTo(principal: AuthenticatedClient): Boolean {
+private fun Scopes.canBeIssuedTo(principal: AuthenticatedClient): Boolean {
     // TODO - Look up from config based on the provided principal id
     return true
 }
 
-fun validRedirectUri(request: RawExchangeRequest, principal: ClientPrincipal): Either<Throwable, Url> = Either.fx {
-    if (!request.redirectUri.isNullOrBlank()) {
+private fun validRedirectUri(raw: RawExchangeRequest, principal: ClientPrincipal): Either<Throwable, Url> = Either.fx {
+    if (!raw.redirectUri.isNullOrBlank()) {
         // TODO - Look up from config based on the provided principal id
-        URLBuilder(request.redirectUri).build()
+        URLBuilder(raw.redirectUri).build()
     } else {
         throw Exception("Null or blank redirect uri")
-    }
-}
-
-fun validPkceClient(request: RawExchangeRequest): Either<Throwable, PkceClient> {
-    return if (!request.clientId.isNullOrBlank()) {
-        // TODO - Lookup from config
-        PkceClient(request.clientId).right()
-    } else {
-        Exception("Invalid PKCE client").left()
     }
 }

@@ -1,8 +1,14 @@
 package com.sbgcore.oauth.api.ktor
 
 import com.sbgcore.oauth.api.authentication.ClientPrincipal
-import io.ktor.auth.*
+
+import io.ktor.auth.Authentication
+import io.ktor.auth.BasicAuthenticationProvider
+import io.ktor.auth.basic
+import io.ktor.auth.authenticate
+
 import io.ktor.routing.Route
+
 import kotlin.reflect.jvm.jvmName
 
 /**
@@ -12,15 +18,6 @@ inline fun <reified T : ClientPrincipal> Authentication.Configuration.basic(
     noinline configure: BasicAuthenticationProvider.Configuration.() -> Unit
 ) {
     basic(T::class.jvmName, configure)
-}
-
-/**
- * Provides a typed way to define which principle type this form auth will provide.
- */
-inline fun <reified T : ClientPrincipal> Authentication.Configuration.form(
-    noinline configure: FormAuthenticationProvider.Configuration.() -> Unit
-) {
-    form(T::class.jvmName, configure)
 }
 
 /**

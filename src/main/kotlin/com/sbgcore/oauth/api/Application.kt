@@ -1,9 +1,6 @@
 package com.sbgcore.oauth.api
 
 import com.sbgcore.oauth.api.authentication.AuthenticatedClient
-import com.sbgcore.oauth.api.authentication.ErrorResponse
-import com.sbgcore.oauth.api.authentication.PkceClient
-import com.sbgcore.oauth.api.openid.openIdRoutes
 import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
 import io.ktor.application.Application
 import io.ktor.application.install
@@ -14,11 +11,8 @@ import io.ktor.http.content.CachingOptions
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Locations
 import com.sbgcore.oauth.api.ktor.basic
-import com.sbgcore.oauth.api.ktor.form
-import com.sbgcore.oauth.api.openid.openIdRoutesV2
-import io.ktor.application.call
-import io.ktor.response.header
-import io.ktor.response.respond
+import com.sbgcore.oauth.api.openid.openIdRoutes
+import io.ktor.serialization.json
 
 @Suppress("unused") // Inform the IDE that we are actually using this
 @KtorExperimentalLocationsAPI
@@ -32,10 +26,9 @@ fun Application.main() {
         includeSubDomains = true
     }
 
-    // OAuth API's don't seem to use JSON input
-    //install(ContentNegotiation) {
-    //    json()
-    //}
+    install(ContentNegotiation) {
+        json()
+    }
 
     install(Compression) {
         gzip {
@@ -77,28 +70,13 @@ fun Application.main() {
                 }
             }
         }
-        form<PkceClient> {
-            userParamName = "client_id"
-            passwordParamName = "client_id"
-            validate {  (clientId, _) ->
-                if(clientId.isBlank()) {
-                    null
-                } else {
-                    // TODO - Lookup against client config / database
-                    PkceClient(clientId)
-                }
-            }
-            challenge {
-                call.respond(ErrorResponse("invalid_client"))
-            }
-        }
     }
 
     // Setup the well known routes
     wellKnownRoutes()
 
     // Setup the OpenID connect routes
-    openIdRoutesV2()
+    openIdRoutes()
 
     // TODO - Account routes
     // TODO - Product transfer routes
