@@ -12,6 +12,7 @@ import io.ktor.application.call
 import io.ktor.auth.principal
 import io.ktor.request.receive
 import io.ktor.util.pipeline.PipelineContext
+import kotlin.reflect.KProperty1
 
 suspend fun PipelineContext<*, ApplicationCall>.validateIntrospectionRequest(): IO<ValidatedIntrospectionRequest> {
     return IO.fx {
@@ -19,7 +20,7 @@ suspend fun PipelineContext<*, ApplicationCall>.validateIntrospectionRequest(): 
         val rawIntrospectionRequest = !effect { call.receive<RawIntrospectionRequest>() }
 
         val principal = !validClientPrincipal(call.principal<ConfidentialClient>())
-        val token = !validParameter("token", rawIntrospectionRequest.token)
+        val token = !rawIntrospectionRequest.validateStringParameter(RawIntrospectionRequest::token)
 
         val hint: TokenType? = optionalTokenHint(rawIntrospectionRequest)
         if (hint == null) {
@@ -44,11 +45,10 @@ fun <A : ClientPrincipal> validClientPrincipal(principal: A?): IO<A> {
 }
 
 // TODO - Refactor other code
-fun validParameter(name: String, value: String?): IO<String> {
+fun <T> T.validateStringParameter(parameter: KProperty1<T, String?>): IO<String> {
     // TODO - Verify this is all we need to do
-    return if (!value.isNullOrBlank()) {
-        value.just()
-    } else {
-        Exception("Null or blank parameter: $name").raiseError()
+    return when(val value = parameter.get(this)?.trim()) {
+        null, "" -> Exception("Null or blank parameter: ${parameter.name}").raiseError()
+        else -> value.just()
     }
 }
