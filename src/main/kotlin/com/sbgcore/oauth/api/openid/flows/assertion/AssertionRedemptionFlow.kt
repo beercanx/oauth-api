@@ -1,4 +1,4 @@
-package com.sbgcore.oauth.api.openid.exchange.flows
+package com.sbgcore.oauth.api.openid.flows.assertion
 
 import com.sbgcore.oauth.api.openid.exchange.AssertionRequest
 

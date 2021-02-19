@@ -1,4 +1,4 @@
-package com.sbgcore.oauth.api.openid.exchange.flows
+package com.sbgcore.oauth.api.openid.flows.password
 
 import com.sbgcore.oauth.api.openid.exchange.PasswordRequest
 

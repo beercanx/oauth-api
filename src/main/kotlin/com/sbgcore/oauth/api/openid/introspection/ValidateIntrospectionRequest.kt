@@ -3,7 +3,7 @@ package com.sbgcore.oauth.api.openid.introspection
 import arrow.fx.IO
 import arrow.fx.extensions.fx
 import com.sbgcore.oauth.api.authentication.ConfidentialClient
-import com.sbgcore.oauth.api.openid.TokenType
+import com.sbgcore.oauth.api.openid.exchange.tokens.TokenTypes
 import com.sbgcore.oauth.api.openid.validClientPrincipal
 import com.sbgcore.oauth.api.openid.validateStringParameter
 import io.ktor.application.ApplicationCall
@@ -20,7 +20,7 @@ suspend fun PipelineContext<*, ApplicationCall>.validateIntrospectionRequest(): 
         val principal = !validClientPrincipal(call.principal<ConfidentialClient>())
         val token = !rawIntrospectionRequest.validateStringParameter(RawIntrospectionRequest::token)
 
-        val hint: TokenType? = optionalTokenHint(rawIntrospectionRequest)
+        val hint: TokenTypes? = optionalTokenHint(rawIntrospectionRequest)
         if (hint == null) {
             IntrospectionRequest(principal, token)
         } else {
@@ -29,9 +29,9 @@ suspend fun PipelineContext<*, ApplicationCall>.validateIntrospectionRequest(): 
     }
 }
 
-fun optionalTokenHint(request: RawIntrospectionRequest): TokenType? {
+fun optionalTokenHint(request: RawIntrospectionRequest): TokenTypes? {
     return if (!request.hint.isNullOrBlank()) {
-        enumValues<TokenType>().firstOrNull { token -> token.name == request.hint }
+        enumValues<TokenTypes>().firstOrNull { token -> token.name == request.hint }
     } else {
         null
     }

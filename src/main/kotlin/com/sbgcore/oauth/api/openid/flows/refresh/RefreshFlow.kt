@@ -1,4 +1,4 @@
-package com.sbgcore.oauth.api.openid.exchange.flows
+package com.sbgcore.oauth.api.openid.flows.refresh
 
 import com.sbgcore.oauth.api.openid.exchange.RefreshTokenRequest
 
