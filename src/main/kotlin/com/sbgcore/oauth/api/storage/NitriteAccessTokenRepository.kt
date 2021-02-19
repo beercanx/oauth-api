@@ -5,6 +5,9 @@ import com.sbgcore.oauth.api.openid.exchange.tokens.AccessToken
 import org.dizitart.kno2.filters.eq
 import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite
+import org.dizitart.no2.IndexOptions.indexOptions
+import org.dizitart.no2.IndexType.Unique
+import org.dizitart.no2.IndexType.NonUnique
 import org.dizitart.no2.Nitrite
 import java.util.*
 
@@ -23,7 +26,20 @@ class NitriteAccessTokenRepository(database: Nitrite) : AccessTokenRepository {
         nitrite(userId = "access-token", password = "XqUX^CUMH90DmK3YdMpNLU#NFE1ioof7")
     )
 
-    private val repository = database.getRepository<AccessToken>()
+    private val repository = database.getRepository<AccessToken> {
+
+        // To support the day to day look up of an access token
+        createIndex(AccessToken::value.name, indexOptions(Unique))
+
+        // To support finding all access tokens for a specific customer id
+        createIndex(AccessToken::customerId.name, indexOptions(NonUnique))
+
+        // To support finding all access tokens for a specific username
+        createIndex(AccessToken::username.name, indexOptions(NonUnique))
+
+        // To support purging access tokens by client [decommissioned client || compromised client]
+        createIndex(AccessToken::clientId.name, indexOptions(NonUnique))
+    }
 
     override fun insert(new: AccessToken) {
         // TODO - Add async logic to implement automatic deletes, given this is a basic in memory nosql implementation.
