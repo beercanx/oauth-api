@@ -43,16 +43,14 @@ fun Application.openIdRoutes(
             // Optional because we have to cater for PKCE clients
             authenticate<ConfidentialClient>(optional = true) {
                 post {
-
-                    //application.log.info("Test")
-
                     // Handle standard exchanges
                     when (val client = call.principal<ConfidentialClient>()) {
                         is ConfidentialClient -> {
 
                             val parameters = call.receive<Parameters>()
 
-                            when (val result = validateExchangeRequest(client, parameters)) {
+                            // TODO - Make this more IO friendly
+                            when (val result = validateExchangeRequest(client, parameters).attempt().suspended()) {
                                 is Right<ValidatedExchangeRequest<ConfidentialClient>> -> when (val request = result.b) {
                                     is AuthorizationCodeRequest -> authorizationCodeFlow.exchange(request)
                                     is PasswordRequest -> passwordFlow.exchange(request)
@@ -76,7 +74,8 @@ fun Application.openIdRoutes(
                         is Parameters -> when (val client = validPkceClient(parameters)) {
                             is Some<PublicClient> -> {
 
-                                when (val result = validatePkceExchangeRequest(client.t, parameters)) {
+                                // TODO - Make this more IO friendly
+                                when (val result = validatePkceExchangeRequest(client.t, parameters).attempt().suspended()) {
                                     is Right<ValidatedExchangeRequest<PublicClient>> -> {
                                         authorizationCodeFlow.exchange(result.b as PkceAuthorizationCodeRequest)
                                     }

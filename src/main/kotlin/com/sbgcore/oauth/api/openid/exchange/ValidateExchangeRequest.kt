@@ -1,13 +1,13 @@
 package com.sbgcore.oauth.api.openid.exchange
 
-import arrow.core.*
-import arrow.core.extensions.fx
+import arrow.fx.IO
+import arrow.fx.extensions.fx
 import com.sbgcore.oauth.api.authentication.ConfidentialClient
 import com.sbgcore.oauth.api.authentication.ClientPrincipal
 import com.sbgcore.oauth.api.authentication.PublicClient
 import com.sbgcore.oauth.api.openid.Scopes
 import com.sbgcore.oauth.api.openid.exchange.GrantType.*
-import com.sbgcore.oauth.api.openid.validParameter
+import com.sbgcore.oauth.api.openid.validateStringParameter
 import io.ktor.http.Parameters
 import io.ktor.http.URLBuilder
 import io.ktor.http.Url
@@ -15,38 +15,38 @@ import io.ktor.http.Url
 suspend fun validateExchangeRequest(
     principal: ConfidentialClient,
     parameters: Parameters
-): Either<Throwable, ValidatedExchangeRequest<ConfidentialClient>> = Either.fx {
+): IO<ValidatedExchangeRequest<ConfidentialClient>> = IO.fx {
 
     // Receive the posted form, unless we implement ContentNegotiation that supports URL encoded forms.
     val rawExchangeRequest = !parameters.toRawExchangeRequest()
 
     when (rawExchangeRequest.grantType) {
         AuthorizationCode -> {
-            val code = !validParameter("code", rawExchangeRequest.code)
-            val redirectUri = !validRedirectUri(rawExchangeRequest, principal)
+            val code = !rawExchangeRequest.validateStringParameter(RawExchangeRequest::code)
+            val redirectUri = !rawExchangeRequest.validateRedirectUri(principal)
 
             AuthorizationCodeRequest(principal, code, redirectUri)
         }
         Password -> {
-            val scopes = !validScopes(rawExchangeRequest, principal)
-            val username = !validParameter("username", rawExchangeRequest.username)
-            val password = !validParameter("password", rawExchangeRequest.password)
+            val scopes = !rawExchangeRequest.validateScopes(principal)
+            val username = !rawExchangeRequest.validateStringParameter(RawExchangeRequest::username)
+            val password = !rawExchangeRequest.validateStringParameter(RawExchangeRequest::password)
 
             PasswordRequest(principal, scopes, username, password)
         }
         RefreshToken -> {
-            val scopes = !validScopes(rawExchangeRequest, principal)
-            val refreshToken = !validParameter("refreshToken", rawExchangeRequest.refreshToken)
+            val scopes = !rawExchangeRequest.validateScopes(principal)
+            val refreshToken = !rawExchangeRequest.validateStringParameter(RawExchangeRequest::refreshToken)
 
             RefreshTokenRequest(principal, scopes, refreshToken)
         }
         Assertion -> {
-            val assertion = !validParameter("assertion", rawExchangeRequest.assertion)
+            val assertion = !rawExchangeRequest.validateStringParameter(RawExchangeRequest::assertion)
 
             AssertionRequest(principal, assertion)
         }
         SsoToken -> {
-            val ssoToken = !validParameter("ssoToken", rawExchangeRequest.ssoToken)
+            val ssoToken = !rawExchangeRequest.validateStringParameter(RawExchangeRequest::ssoToken)
 
             SsoTokenRequest(principal, ssoToken)
         }
@@ -56,16 +56,16 @@ suspend fun validateExchangeRequest(
 suspend fun validatePkceExchangeRequest(
     principal: PublicClient,
     parameters: Parameters
-): Either<Throwable, ValidatedExchangeRequest<PublicClient>> = Either.fx {
+): IO<ValidatedExchangeRequest<PublicClient>> = IO.fx {
 
     // Receive the posted form, unless we implement ContentNegotiation that supports URL encoded forms.
     val raw = !parameters.toRawExchangeRequest()
 
     if(raw.grantType == AuthorizationCode && raw.isPKCE) {
 
-        val code = !validParameter("code", raw.code)
-        val redirectUri = !validRedirectUri(raw, principal)
-        val codeVerifier = !validParameter("codeVerifier", raw.codeVerifier)
+        val code = !raw.validateStringParameter(RawExchangeRequest::code)
+        val redirectUri = !raw.validateRedirectUri(principal)
+        val codeVerifier = !raw.validateStringParameter(RawExchangeRequest::codeVerifier)
 
         PkceAuthorizationCodeRequest(principal, code, redirectUri, codeVerifier)
     } else {
@@ -74,7 +74,7 @@ suspend fun validatePkceExchangeRequest(
 }
 
 // TODO - See if we can extend Kotlinx Serialisation to support this instead
-private fun Parameters.toRawExchangeRequest(): Either<Throwable, RawExchangeRequest> = Either.fx {
+private fun Parameters.toRawExchangeRequest(): IO<RawExchangeRequest> = IO.fx {
     RawExchangeRequest(
         // All
         grantType = when(get("grant_type")) {
@@ -112,11 +112,11 @@ private fun Parameters.toRawExchangeRequest(): Either<Throwable, RawExchangeRequ
     )
 }
 
-private fun validScopes(raw: RawExchangeRequest, principal: ConfidentialClient): Either<Throwable, Set<Scopes>> {
-    return validParameter("scope", raw.scope)
+private fun RawExchangeRequest.validateScopes(principal: ConfidentialClient): IO<Set<Scopes>> {
+    return validateStringParameter(RawExchangeRequest::scope)
         .map { scopes -> scopes.split(" ") }
         // TODO - Sort out this line, its getting crazy complex
-        .flatMap { scopes -> Either.fx<Throwable, List<Scopes>> { scopes.mapNotNull { string -> Scopes.values().find { scope -> scope.value == string } } } }
+        .flatMap { scopes -> IO.fx { scopes.mapNotNull { string -> Scopes.values().find { scope -> scope.value == string } } } }
         .map { scopes -> scopes.filter { scope -> scope.canBeIssuedTo(principal) } }
         .map { scopes -> scopes.toSet() }
 }
@@ -126,11 +126,10 @@ private fun Scopes.canBeIssuedTo(principal: ConfidentialClient): Boolean {
     return true
 }
 
-private fun validRedirectUri(raw: RawExchangeRequest, principal: ClientPrincipal): Either<Throwable, Url> = Either.fx {
-    if (!raw.redirectUri.isNullOrBlank()) {
-        // TODO - Look up from config based on the provided principal id
-        URLBuilder(raw.redirectUri).build()
-    } else {
-        throw Exception("Null or blank redirect uri")
-    }
+private fun RawExchangeRequest.validateRedirectUri(principal: ClientPrincipal): IO<Url> = IO.fx {
+
+    val rawRedirectUri = !validateStringParameter(RawExchangeRequest::redirectUri)
+    // TODO - Look up from config based on the provided principal id
+
+    URLBuilder(rawRedirectUri).build()
 }
