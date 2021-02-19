@@ -1,5 +1,6 @@
 package com.sbgcore.oauth.api.openid.exchange.tokens
 
+import com.sbgcore.oauth.api.openid.ClientId
 import com.sbgcore.oauth.api.openid.Scopes
 import java.time.OffsetDateTime
 import java.util.*
@@ -29,7 +30,7 @@ interface Token {
     /**
      * The if of the oauth client this token was issued to.
      */
-    val clientId: String // TODO - Consider adding custom type
+    val clientId: ClientId
 
     /**
      * The scopes associated with this token.

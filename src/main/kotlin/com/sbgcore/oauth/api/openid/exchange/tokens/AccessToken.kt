@@ -1,5 +1,6 @@
 package com.sbgcore.oauth.api.openid.exchange.tokens
 
+import com.sbgcore.oauth.api.openid.ClientId
 import com.sbgcore.oauth.api.openid.Scopes
 import org.dizitart.no2.IndexType.NonUnique
 import org.dizitart.no2.IndexType.Unique
@@ -20,7 +21,7 @@ data class AccessToken(
     override val value: UUID,
     override val customerId: Long,
     override val username: String,
-    override val clientId: String,
+    override val clientId: ClientId,
     override val scopes: Set<Scopes>,
     override val issuedAt: OffsetDateTime,
     override val expiresAt: OffsetDateTime,
