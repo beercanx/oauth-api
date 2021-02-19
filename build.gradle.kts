@@ -51,6 +51,10 @@ dependencies {
     implementation("io.arrow-kt:arrow-syntax:$arrowVersion")
     kapt("io.arrow-kt:arrow-meta:$arrowVersion")
 
+    // Nitrate - NoSQL DB
+    implementation("org.dizitart:nitrite:3.4.3") // https://www.dizitart.org/nitrite-database
+    implementation("org.dizitart:potassium-nitrite:3.4.3") // https://www.dizitart.org/potassium-nitrite.html
+
     // Kotlin Test
     testImplementation("io.kotlintest:kotlintest-runner-junit5:3.4.2")
 
