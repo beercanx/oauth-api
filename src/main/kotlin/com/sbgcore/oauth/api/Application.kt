@@ -1,6 +1,6 @@
 package com.sbgcore.oauth.api
 
-import com.sbgcore.oauth.api.authentication.AuthenticatedClient
+import com.sbgcore.oauth.api.authentication.ConfidentialClient
 import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
 import io.ktor.application.Application
 import io.ktor.application.install
@@ -59,14 +59,14 @@ fun Application.main() {
     }
 
     install(Authentication) {
-        basic<AuthenticatedClient> {
+        basic<ConfidentialClient> {
             realm = "skybettingandgaming"
             validate { (clientId, clientSecret) ->
                 if(clientId.isBlank() || clientSecret.isBlank()) {
                      null
                 } else {
                     // TODO - Lookup against client config / database
-                    AuthenticatedClient(clientId)
+                    ConfidentialClient(clientId)
                 }
             }
         }

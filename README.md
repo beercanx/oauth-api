@@ -25,6 +25,16 @@ docker-compose up
 ```
 
 ## Sources
+OAuth and related RFCs
+ * https://tools.ietf.org/html/rfc6749 - The OAuth 2.0 Authorization Framework
+ * https://tools.ietf.org/html/rfc8252 - OAuth 2.0 for Native Apps
+ * https://tools.ietf.org/html/rfc7662 - OAuth 2.0 Token Introspection
+ * https://tools.ietf.org/html/rfc7009 - OAuth 2.0 Token Revocation
+ * https://tools.ietf.org/html/rfc6750 - The OAuth 2.0 Authorization Framework: Bearer Token Usage
+ * https://tools.ietf.org/html/rfc7521 - Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants
+ * https://tools.ietf.org/html/rfc7523 - JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants
+ * https://tools.ietf.org/html/rfc7636 - Proof Key for Code Exchange by OAuth Public Clients
+
 This project was based on the CORE/gradle-kotlin-starter and the Ktor Project Generator.
  * https://stash.skybet.net/projects/CORES/repos/gradle-kotlin-starter/browse
  * https://ktor.io/quickstart/generator.html

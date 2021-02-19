@@ -2,27 +2,20 @@ package com.sbgcore.oauth.api.openid.exchange
 
 import arrow.core.*
 import arrow.core.extensions.fx
-import com.sbgcore.oauth.api.authentication.AuthenticatedClient
+import com.sbgcore.oauth.api.authentication.ConfidentialClient
 import com.sbgcore.oauth.api.authentication.ClientPrincipal
-import com.sbgcore.oauth.api.authentication.PkceClient
+import com.sbgcore.oauth.api.authentication.PublicClient
 import com.sbgcore.oauth.api.openid.Scopes
 import com.sbgcore.oauth.api.openid.exchange.GrantType.*
 import com.sbgcore.oauth.api.openid.validParameter
-import io.ktor.application.ApplicationCall
-import io.ktor.application.application
-import io.ktor.application.call
-import io.ktor.application.log
 import io.ktor.http.Parameters
 import io.ktor.http.URLBuilder
 import io.ktor.http.Url
-import io.ktor.request.receive
-import io.ktor.util.pipeline.PipelineContext
-import kotlinx.serialization.SerialName
 
 suspend fun validateExchangeRequest(
-    principal: AuthenticatedClient,
+    principal: ConfidentialClient,
     parameters: Parameters
-): Either<Throwable, ValidatedExchangeRequest<AuthenticatedClient>> = Either.fx {
+): Either<Throwable, ValidatedExchangeRequest<ConfidentialClient>> = Either.fx {
 
     // Receive the posted form, unless we implement ContentNegotiation that supports URL encoded forms.
     val rawExchangeRequest = !parameters.toRawExchangeRequest()
@@ -61,9 +54,9 @@ suspend fun validateExchangeRequest(
 }
 
 suspend fun validatePkceExchangeRequest(
-    principal:PkceClient,
+    principal: PublicClient,
     parameters: Parameters
-): Either<Throwable, ValidatedExchangeRequest<PkceClient>> = Either.fx {
+): Either<Throwable, ValidatedExchangeRequest<PublicClient>> = Either.fx {
 
     // Receive the posted form, unless we implement ContentNegotiation that supports URL encoded forms.
     val raw = !parameters.toRawExchangeRequest()
@@ -119,7 +112,7 @@ private fun Parameters.toRawExchangeRequest(): Either<Throwable, RawExchangeRequ
     )
 }
 
-private fun validScopes(raw: RawExchangeRequest, principal: AuthenticatedClient): Either<Throwable, Set<Scopes>> {
+private fun validScopes(raw: RawExchangeRequest, principal: ConfidentialClient): Either<Throwable, Set<Scopes>> {
     return validParameter("scope", raw.scope)
         .map { scopes -> scopes.split(" ") }
         // TODO - Sort out this line, its getting crazy complex
@@ -128,7 +121,7 @@ private fun validScopes(raw: RawExchangeRequest, principal: AuthenticatedClient)
         .map { scopes -> scopes.toSet() }
 }
 
-private fun Scopes.canBeIssuedTo(principal: AuthenticatedClient): Boolean {
+private fun Scopes.canBeIssuedTo(principal: ConfidentialClient): Boolean {
     // TODO - Look up from config based on the provided principal id
     return true
 }

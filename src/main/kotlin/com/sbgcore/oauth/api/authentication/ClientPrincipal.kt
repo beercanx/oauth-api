@@ -6,6 +6,6 @@ sealed class ClientPrincipal : Principal {
     abstract val id: String
 }
 
-data class AuthenticatedClient(override val id: String) : ClientPrincipal()
+data class ConfidentialClient(override val id: String) : ClientPrincipal()
 
-data class PkceClient(override val id: String) : ClientPrincipal()
+data class PublicClient(override val id: String) : ClientPrincipal()

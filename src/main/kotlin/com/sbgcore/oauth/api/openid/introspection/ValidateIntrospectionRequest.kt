@@ -1,25 +1,24 @@
 package com.sbgcore.oauth.api.openid.introspection
 
-import arrow.core.Either
-import arrow.core.extensions.fx
-import com.sbgcore.oauth.api.authentication.AuthenticatedClient
+import arrow.fx.IO
+import arrow.fx.extensions.fx
+import arrow.fx.extensions.io.applicative.just
+import arrow.fx.extensions.io.applicativeError.raiseError
+import com.sbgcore.oauth.api.authentication.ConfidentialClient
+import com.sbgcore.oauth.api.authentication.ClientPrincipal
 import com.sbgcore.oauth.api.openid.TokenType
-import com.sbgcore.oauth.api.openid.validClientPrincipal
-import com.sbgcore.oauth.api.openid.validParameter
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.auth.principal
 import io.ktor.request.receive
 import io.ktor.util.pipeline.PipelineContext
 
-suspend fun PipelineContext<*, ApplicationCall>.validateIntrospectionRequest(): Either<Throwable, ValidatedIntrospectionRequest> {
+suspend fun PipelineContext<*, ApplicationCall>.validateIntrospectionRequest(): IO<ValidatedIntrospectionRequest> {
+    return IO.fx {
 
-    // TODO - Handle deserialization errors
-    val rawIntrospectionRequest = call.receive<RawIntrospectionRequest>()
+        val rawIntrospectionRequest = !effect { call.receive<RawIntrospectionRequest>() }
 
-    return Either.fx {
-
-        val principal = !validClientPrincipal(call.principal<AuthenticatedClient>())
+        val principal = !validClientPrincipal(call.principal<ConfidentialClient>())
         val token = !validParameter("token", rawIntrospectionRequest.token)
 
         val hint: TokenType? = optionalTokenHint(rawIntrospectionRequest)
@@ -36,5 +35,20 @@ fun optionalTokenHint(request: RawIntrospectionRequest): TokenType? {
         enumValues<TokenType>().firstOrNull { token -> token.name == request.hint }
     } else {
         null
+    }
+}
+
+// TODO - Refactor other code
+fun <A : ClientPrincipal> validClientPrincipal(principal: A?): IO<A> {
+    return principal?.just() ?: Exception("Invalid client").raiseError()
+}
+
+// TODO - Refactor other code
+fun validParameter(name: String, value: String?): IO<String> {
+    // TODO - Verify this is all we need to do
+    return if (!value.isNullOrBlank()) {
+        value.just()
+    } else {
+        Exception("Null or blank parameter: $name").raiseError()
     }
 }

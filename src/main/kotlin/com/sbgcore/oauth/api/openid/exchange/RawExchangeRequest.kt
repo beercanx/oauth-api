@@ -1,7 +1,7 @@
 package com.sbgcore.oauth.api.openid.exchange
 
-import com.sbgcore.oauth.api.authentication.AuthenticatedClient
-import com.sbgcore.oauth.api.authentication.PkceClient
+import com.sbgcore.oauth.api.authentication.ConfidentialClient
+import com.sbgcore.oauth.api.authentication.PublicClient
 import com.sbgcore.oauth.api.openid.Scopes
 import io.ktor.auth.Principal
 import io.ktor.http.Url
@@ -43,40 +43,40 @@ sealed class ValidatedExchangeRequest<T : Principal> {
 }
 
 data class AuthorizationCodeRequest(
-    override val principal: AuthenticatedClient,
+    override val principal: ConfidentialClient,
     val code: String,
     val redirectUri: Url
-) : ValidatedExchangeRequest<AuthenticatedClient>()
+) : ValidatedExchangeRequest<ConfidentialClient>()
 
 data class PkceAuthorizationCodeRequest(
-    override val principal: PkceClient,
+    override val principal: PublicClient,
     val code: String,
     val redirectUri: Url,
     val codeVerifier: String
-) : ValidatedExchangeRequest<PkceClient>()
+) : ValidatedExchangeRequest<PublicClient>()
 
 data class PasswordRequest(
-    override val principal: AuthenticatedClient,
+    override val principal: ConfidentialClient,
     val scopes: Set<Scopes>,
     val username: String,
     val password: String
-) : ValidatedExchangeRequest<AuthenticatedClient>()
+) : ValidatedExchangeRequest<ConfidentialClient>()
 
 data class RefreshTokenRequest(
-    override val principal: AuthenticatedClient,
+    override val principal: ConfidentialClient,
     val scopes: Set<Scopes>,
     val refreshToken: String
-) : ValidatedExchangeRequest<AuthenticatedClient>()
+) : ValidatedExchangeRequest<ConfidentialClient>()
 
 data class AssertionRequest(
-    override val principal: AuthenticatedClient,
+    override val principal: ConfidentialClient,
     val assertion: String
-) : ValidatedExchangeRequest<AuthenticatedClient>()
+) : ValidatedExchangeRequest<ConfidentialClient>()
 
 data class SsoTokenRequest(
-    override val principal: AuthenticatedClient,
+    override val principal: ConfidentialClient,
     val ssoToken: String
-) : ValidatedExchangeRequest<AuthenticatedClient>()
+) : ValidatedExchangeRequest<ConfidentialClient>()
 
 val RawExchangeRequest.isPKCE: Boolean
     get() = !codeVerifier.isNullOrBlank()
