@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class TokenTypes {
     @SerialName("access_token") AccessToken,
-    @SerialName("refresh_token") RefreshToken
+    //@SerialName("refresh_token") RefreshToken // TODO - Add back in once we've implemented refresh flow.
 }
