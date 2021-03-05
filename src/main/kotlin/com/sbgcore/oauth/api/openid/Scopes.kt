@@ -29,5 +29,8 @@ enum class Scopes : SerializableEnum {
 
     ;
 
-    val value: String = getSerialName() // TODO - Decide if we even need do expose this.
+    // TODO - Decide if we even need do expose this.
+    val value: String by lazy {
+        getSerialName(serializer())
+    }
 }

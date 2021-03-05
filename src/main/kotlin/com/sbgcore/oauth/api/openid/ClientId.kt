@@ -10,6 +10,7 @@ enum class ClientId : SerializableEnum {
     @SerialName("consumer-z") ConsumerZ,
     ;
 
-    // TODO - Decide if we even need this
-    val value: String = getSerialName()
+    val value: String by lazy {
+        getSerialName(serializer())
+    }
 }
