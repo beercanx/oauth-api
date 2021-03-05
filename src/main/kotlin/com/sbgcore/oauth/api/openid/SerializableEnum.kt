@@ -3,6 +3,7 @@ package com.sbgcore.oauth.api.openid
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonPrimitive
 
 interface SerializableEnum {
 
@@ -18,6 +19,6 @@ interface SerializableEnum {
      * @throws IllegalStateException if there is no [SerialName] annotation found.
      */
     fun <T : Any> T.getSerialName(serializer: KSerializer<T>): String {
-        return format.encodeToString(serializer, this)
+        return (format.encodeToJsonElement(serializer, this) as JsonPrimitive).content
     }
 }

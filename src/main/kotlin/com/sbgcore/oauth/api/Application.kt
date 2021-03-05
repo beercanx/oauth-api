@@ -1,18 +1,21 @@
 package com.sbgcore.oauth.api
 
+import com.sbgcore.oauth.api.authentication.ClientSecret
 import com.sbgcore.oauth.api.authentication.ConfidentialClient
-import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
-import io.ktor.application.Application
-import io.ktor.application.install
-import io.ktor.auth.Authentication
-import io.ktor.features.*
-import io.ktor.http.CacheControl
-import io.ktor.http.content.CachingOptions
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Locations
 import com.sbgcore.oauth.api.ktor.basic
+import com.sbgcore.oauth.api.openid.ClientId
 import com.sbgcore.oauth.api.openid.openIdRoutes
-import io.ktor.serialization.json
+import com.sbgcore.oauth.api.storage.NitriteClientSecretRepository
+import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
+import io.ktor.application.*
+import io.ktor.auth.*
+import io.ktor.features.*
+import io.ktor.http.*
+import io.ktor.http.content.*
+import io.ktor.locations.*
+import io.ktor.serialization.*
+import org.bouncycastle.crypto.generators.OpenBSDBCrypt
+import org.slf4j.LoggerFactory
 
 @Suppress("unused") // Inform the IDE that we are actually using this
 @KtorExperimentalLocationsAPI
@@ -58,16 +61,21 @@ fun Application.main() {
         }
     }
 
+    val clientSecretRepository = NitriteClientSecretRepository()
+
     install(Authentication) {
         basic<ConfidentialClient> {
             realm = "skybettingandgaming"
             validate { (clientId, clientSecret) ->
-                if(clientId.isBlank() || clientSecret.isBlank()) {
-                     null
-                } else {
-                    // TODO - Lookup against client config / database
-                    ConfidentialClient(clientId)
-                }
+                // TODO - Refactor into testable unit
+                clientSecretRepository
+                    .findAllByClientId(clientId)
+                    .filter { secret ->
+                        OpenBSDBCrypt.checkPassword(secret.secret, clientSecret.toCharArray())
+                    }
+                    .map(ClientSecret::clientId)
+                    .map(::ConfidentialClient)
+                    .firstOrNull()
             }
         }
     }

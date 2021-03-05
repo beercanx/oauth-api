@@ -55,6 +55,9 @@ dependencies {
     implementation("org.dizitart:nitrite:3.4.3") // https://www.dizitart.org/nitrite-database
     implementation("org.dizitart:potassium-nitrite:3.4.3") // https://www.dizitart.org/potassium-nitrite.html
 
+    // Bouncy Castle - bcrypt provider for the JVM
+    implementation("org.bouncycastle:bcprov-jdk15on:1.68")
+
     // JUnit 5 for tests definitions and running
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
 

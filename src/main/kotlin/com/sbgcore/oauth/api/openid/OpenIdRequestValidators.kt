@@ -45,9 +45,16 @@ fun PipelineContext<*, ApplicationCall>.validPkceClient(parameters: Parameters):
  * TODO - Lookup against client config / database
  */
 fun validatePkceClient(clientId: String): Option<PublicClient> {
-    return if(clientId.isBlank()) {
+
+    val client: ClientId? = try {
+        enumValueOf<ClientId>(clientId)
+    } catch (exception: Exception) {
+        null
+    }
+
+    return if(client == null) {
         none()
     } else {
-        PublicClient(clientId).some()
+        PublicClient(client).some()
     }
 }

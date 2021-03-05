@@ -66,7 +66,7 @@ class NitriteAccessTokenRepository(database: Nitrite) : AccessTokenRepository {
         return repository.find(AccessToken::username eq username).toSet()
     }
 
-    override fun findAllByClient(clientId: ClientId): Set<AccessToken> {
+    override fun findAllByClientId(clientId: ClientId): Set<AccessToken> {
         return repository.find(AccessToken::clientId eq clientId).toSet()
     }
 }

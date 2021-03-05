@@ -4,6 +4,9 @@ import com.sbgcore.oauth.api.openid.ClientId
 import com.sbgcore.oauth.api.openid.exchange.tokens.AccessToken
 import java.util.UUID
 
+/**
+ * A [Repository] for storing [AccessToken]'s
+ */
 interface AccessTokenRepository : Repository<AccessToken, UUID> {
 
     /**
@@ -24,6 +27,6 @@ interface AccessTokenRepository : Repository<AccessToken, UUID> {
     /**
      * Find all the [AccessToken]'s issued to a given client.
      */
-    fun findAllByClient(clientId: ClientId): Set<AccessToken>
+    fun findAllByClientId(clientId: ClientId): Set<AccessToken>
 
 }
