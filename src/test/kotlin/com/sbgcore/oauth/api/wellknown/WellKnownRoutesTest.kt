@@ -1,9 +1,8 @@
 package com.sbgcore.oauth.api.wellknown
 
 import com.sbgcore.oauth.api.jwk.JsonWebKeySet
-import io.kotlintest.assertSoftly
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.StringSpec
+import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.shouldBe
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
@@ -14,11 +13,12 @@ import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
 import io.mockk.every
 import io.mockk.mockk
+import org.junit.jupiter.api.Test
 
-class WellKnownRoutesSpec : StringSpec({
+class WellKnownRoutesTest {
 
-    val mockWellKnown = mockk<WellKnown>()
-    val underTest: Application.() -> Unit = {
+    private val mockWellKnown = mockk<WellKnown>()
+    private val underTest: Application.() -> Unit = {
 
         // The routes we are testing
         wellKnownRoutes(mockWellKnown)
@@ -29,7 +29,8 @@ class WellKnownRoutesSpec : StringSpec({
         }
     }
 
-    "/.well-known/openid-configuration should return OpenID configuration" {
+    @Test
+    fun `well known openid configuration endpoint should return OpenID configuration`() {
 
         every { mockWellKnown.getOpenIdConfiguration() } returns OpenIdConfiguration(
             "issuer",
@@ -46,7 +47,8 @@ class WellKnownRoutesSpec : StringSpec({
         }
     }
 
-    "/.well-known/jwks.json should return some JWKS" {
+    @Test
+    fun `well known jwks endpoint should return some JWKS`() {
 
         every { mockWellKnown.getJsonWebKeySet() } returns JsonWebKeySet(
             emptySet()
@@ -62,7 +64,8 @@ class WellKnownRoutesSpec : StringSpec({
         }
     }
 
-    "/.well-known/openid-product should return some product configuration" {
+    @Test
+    fun `well known openid product endpoint should return some product configuration`() {
 
         every { mockWellKnown.getProductConfiguration() } returns ProductConfiguration(emptyList())
 
@@ -75,4 +78,4 @@ class WellKnownRoutesSpec : StringSpec({
             }
         }
     }
-})
+}

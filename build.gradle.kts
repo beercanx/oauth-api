@@ -55,8 +55,11 @@ dependencies {
     implementation("org.dizitart:nitrite:3.4.3") // https://www.dizitart.org/nitrite-database
     implementation("org.dizitart:potassium-nitrite:3.4.3") // https://www.dizitart.org/potassium-nitrite.html
 
-    // Kotlin Test
-    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.4.2")
+    // JUnit 5 for tests definitions and running
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
+
+    // Kotest for assertions and matchers
+    testImplementation("io.kotest:kotest-assertions-core:4.3.1")
 
     // Mocking
     testImplementation("io.mockk:mockk:1.9.3")
@@ -75,7 +78,8 @@ application {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
+        languageVersion = "1.4"
     }
 }
 
