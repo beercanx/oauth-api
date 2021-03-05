@@ -10,7 +10,7 @@ enum class ClientId : SerializableEnum {
     @SerialName("consumer-z") ConsumerZ,
     ;
 
-    val value: String by lazy {
+    override val value: String by lazy {
         getSerialName(serializer())
     }
 }

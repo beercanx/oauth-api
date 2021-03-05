@@ -3,7 +3,6 @@ package com.sbgcore.oauth.api.openid.exchange
 import com.sbgcore.oauth.api.authentication.ConfidentialClient
 import com.sbgcore.oauth.api.authentication.PublicClient
 import com.sbgcore.oauth.api.openid.Scopes
-import io.ktor.auth.Principal
 import io.ktor.http.Url
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -38,45 +37,49 @@ data class RawExchangeRequest(
     @SerialName("sso_token") val ssoToken: String? = null
 )
 
-sealed class ValidatedExchangeRequest<T : Principal> {
-    abstract val principal: T
+sealed class ValidatedConfidentialExchangeRequest {
+    abstract val principal: ConfidentialClient
+}
+
+sealed class ValidatedPublicExchangeRequest {
+    abstract val principal: PublicClient
 }
 
 data class AuthorizationCodeRequest(
     override val principal: ConfidentialClient,
     val code: String,
     val redirectUri: Url
-) : ValidatedExchangeRequest<ConfidentialClient>()
+) : ValidatedConfidentialExchangeRequest()
 
 data class PkceAuthorizationCodeRequest(
     override val principal: PublicClient,
     val code: String,
     val redirectUri: Url,
     val codeVerifier: String
-) : ValidatedExchangeRequest<PublicClient>()
+) : ValidatedPublicExchangeRequest()
 
 data class PasswordRequest(
     override val principal: ConfidentialClient,
     val scopes: Set<Scopes>,
     val username: String,
     val password: String
-) : ValidatedExchangeRequest<ConfidentialClient>()
+) : ValidatedConfidentialExchangeRequest()
 
 data class RefreshTokenRequest(
     override val principal: ConfidentialClient,
     val scopes: Set<Scopes>,
     val refreshToken: String
-) : ValidatedExchangeRequest<ConfidentialClient>()
+) : ValidatedConfidentialExchangeRequest()
 
 data class AssertionRequest(
     override val principal: ConfidentialClient,
     val assertion: String
-) : ValidatedExchangeRequest<ConfidentialClient>()
+) : ValidatedConfidentialExchangeRequest()
 
 data class SsoTokenRequest(
     override val principal: ConfidentialClient,
     val ssoToken: String
-) : ValidatedExchangeRequest<ConfidentialClient>()
+) : ValidatedConfidentialExchangeRequest()
 
 val RawExchangeRequest.isPKCE: Boolean
     get() = !codeVerifier.isNullOrBlank()

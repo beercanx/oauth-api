@@ -12,6 +12,8 @@ interface SerializableEnum {
             encodeDefaults = true
         }
 
+    val value: String
+
     /**
      * Help extract the name from the [SerialName] annotation.
      *
@@ -21,4 +23,11 @@ interface SerializableEnum {
     fun <T : Any> T.getSerialName(serializer: KSerializer<T>): String {
         return (format.encodeToJsonElement(serializer, this) as JsonPrimitive).content
     }
+}
+
+/**
+ * Find a [SerializableEnum] by its JSON value.
+ */
+inline fun <reified A> enumByValue(value: String): A? where A : Enum<A>, A : SerializableEnum {
+    return enumValues<A>().find { a -> a.value == value }
 }

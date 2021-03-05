@@ -2,6 +2,7 @@ package com.sbgcore.oauth.api.storage
 
 import com.sbgcore.oauth.api.authentication.ClientSecret
 import com.sbgcore.oauth.api.openid.ClientId
+import com.sbgcore.oauth.api.openid.enumByValue
 import java.util.*
 
 /**
@@ -19,7 +20,7 @@ interface ClientSecretRepository : Repository<ClientSecret, UUID> {
      * but takes a [String] and looks up the [ClientId] first.
      */
     fun findAllByClientId(clientId: String): Set<ClientSecret> {
-        val enum: ClientId? = enumValues<ClientId>().firstOrNull { it.value == clientId }
+        val enum = enumByValue<ClientId>(clientId)
         return if(enum == null) {
             emptySet()
         } else {

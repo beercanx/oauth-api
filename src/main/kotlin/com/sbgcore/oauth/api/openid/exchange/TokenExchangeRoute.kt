@@ -1,7 +1,5 @@
 package com.sbgcore.oauth.api.openid.exchange
 
-import arrow.core.Either
-import arrow.core.Some
 import com.sbgcore.oauth.api.authentication.ConfidentialClient
 import com.sbgcore.oauth.api.authentication.PublicClient
 import com.sbgcore.oauth.api.ktor.authenticate
@@ -33,19 +31,12 @@ fun Route.tokenExchangeRoute(
 
                     val parameters = call.receive<Parameters>()
 
-                    // TODO - Make this more IO friendly
-                    when (val result = validateExchangeRequest(client, parameters).attempt().suspended()) {
-                        is Either.Right<ValidatedExchangeRequest<ConfidentialClient>> -> when (val request = result.b) {
-                            is AuthorizationCodeRequest -> authorizationCodeFlow.exchange(request)
-                            is PasswordRequest -> passwordFlow.exchange(request)
-                            is RefreshTokenRequest -> refreshFlow.exchange(request)
-                            is AssertionRequest -> assertionRedemptionFlow.exchange(request)
-                        }
-                        is Either.Left<Throwable> -> {
-                            // TODO - Convert Throwable into error responses with context on what to return with
-                            // TODO - Handle having a no valid exchange request
-                            throw result.a
-                        }
+                    val response = when (val request = validateExchangeRequest(client, parameters)) {
+                        is AuthorizationCodeRequest -> authorizationCodeFlow.exchange(request)
+                        is PasswordRequest -> passwordFlow.exchange(request)
+                        is RefreshTokenRequest -> refreshFlow.exchange(request)
+                        is AssertionRequest -> assertionRedemptionFlow.exchange(request)
+                        is SsoTokenRequest -> TODO()
                     }
 
                     // TODO - Return the appropriate response from the flow exchange performed....
@@ -58,19 +49,13 @@ fun Route.tokenExchangeRoute(
             // Handle PKCE requests
             when (val parameters = call.receiveOrNull<Parameters>()) {
                 is Parameters -> when (val client = validPkceClient(parameters)) {
-                    is Some<PublicClient> -> {
+                    is PublicClient -> {
 
-                        // TODO - Make this more IO friendly
-                        when (val result = validatePkceExchangeRequest(client.t, parameters).attempt().suspended()) {
-                            is Either.Right<ValidatedExchangeRequest<PublicClient>> -> {
-                                authorizationCodeFlow.exchange(result.b as PkceAuthorizationCodeRequest)
-                            }
-                            is Either.Left<Throwable> -> {
-                                // TODO - Convert Throwable into error responses with context on what to return with
-                                // TODO - Handle having a no valid exchange request
-                                throw result.a
-                            }
+                        val response = when (val result = validatePkceExchangeRequest(client, parameters)) {
+                            is PkceAuthorizationCodeRequest -> authorizationCodeFlow.exchange(result)
                         }
+
+                        // TODO - Return the appropriate response from the flow exchange performed....
 
                         // Don't look for other code paths to handle request
                         return@post call.respond(ExchangeResponse("PkceClient"))

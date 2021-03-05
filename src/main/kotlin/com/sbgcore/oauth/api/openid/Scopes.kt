@@ -29,8 +29,7 @@ enum class Scopes : SerializableEnum {
 
     ;
 
-    // TODO - Decide if we even need do expose this.
-    val value: String by lazy {
+    override val value: String by lazy {
         getSerialName(serializer())
     }
 }

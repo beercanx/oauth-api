@@ -8,7 +8,6 @@ plugins {
     idea
     application
     kotlin("jvm") version "1.4.31"
-    kotlin("kapt") version "1.4.31"
     kotlin("plugin.serialization") version "1.4.31"
 }
 
@@ -45,11 +44,6 @@ dependencies {
     implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
     implementation("io.ktor:ktor-client-json-jvm:$ktorVersion")
     implementation("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
-
-    // Arrow Core + Arrow FX
-    implementation("io.arrow-kt:arrow-fx:$arrowVersion")
-    implementation("io.arrow-kt:arrow-syntax:$arrowVersion")
-    kapt("io.arrow-kt:arrow-meta:$arrowVersion")
 
     // Nitrate - NoSQL DB
     implementation("org.dizitart:nitrite:3.4.3") // https://www.dizitart.org/nitrite-database
