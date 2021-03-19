@@ -1,9 +1,10 @@
-package com.sbgcore.oauth.api.storage
+package com.sbgcore.oauth.api.storage.nitrite
 
 import com.sbgcore.oauth.api.authentication.ClientSecret
 import com.sbgcore.oauth.api.openid.ClientId
 import com.sbgcore.oauth.api.openid.ClientId.ConsumerX
 import com.sbgcore.oauth.api.openid.ClientId.ConsumerZ
+import com.sbgcore.oauth.api.storage.ClientSecretRepository
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 import org.dizitart.kno2.filters.eq
 import org.dizitart.kno2.getRepository

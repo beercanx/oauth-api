@@ -29,14 +29,14 @@ fun <A> A.validateStringParameter(parameter: KProperty1<A, String?>): String {
 }
 
 /**
- * Extract the client_id from the body, check that its a valid PKCE client and then save it as the current Principal.
+ * Extract the client_id from the body, check that its a valid Public Client and then save it as the current Principal.
  */
-fun PipelineContext<*, ApplicationCall>.validPkceClient(parameters: Parameters): PublicClient? {
-    return parameters["client_id"]?.let(::validatePkceClient)?.also { client ->
+fun PipelineContext<*, ApplicationCall>.validPublicClient(parameters: Parameters): PublicClient? {
+    return parameters["client_id"]?.let(::validatePublicClient)?.also { client ->
         call.authentication.principal(client)
     }
 }
 
-fun validatePkceClient(clientId: String): PublicClient? {
+fun validatePublicClient(clientId: String): PublicClient? {
     return enumByValue<ClientId>(clientId)?.let(::PublicClient)
 }

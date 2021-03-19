@@ -1,7 +1,7 @@
 package com.sbgcore.oauth.api.openid.introspection
 
 import com.sbgcore.oauth.api.authentication.ConfidentialClient
-import com.sbgcore.oauth.api.openid.exchange.tokens.TokenTypes
+import com.sbgcore.oauth.api.openid.exchange.tokens.Tokens
 
 sealed class ValidatedIntrospectionRequest {
     abstract val principal: ConfidentialClient
@@ -16,5 +16,5 @@ data class IntrospectionRequest(
 data class IntrospectionRequestWithHint(
     override val principal: ConfidentialClient,
     override val token: String,
-    val hint: TokenTypes
+    val hint: Tokens
 ) : ValidatedIntrospectionRequest()

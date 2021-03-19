@@ -3,18 +3,20 @@ package com.sbgcore.oauth.api.openid.exchange
 import com.sbgcore.oauth.api.authentication.ConfidentialClient
 import com.sbgcore.oauth.api.authentication.PublicClient
 import com.sbgcore.oauth.api.ktor.authenticate
-import com.sbgcore.oauth.api.openid.flows.assertion.AssertionRedemptionFlow
-import com.sbgcore.oauth.api.openid.flows.authorization.AuthorizationCodeFlow
-import com.sbgcore.oauth.api.openid.flows.password.PasswordFlow
-import com.sbgcore.oauth.api.openid.flows.refresh.RefreshFlow
-import com.sbgcore.oauth.api.openid.validPkceClient
+import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
+import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
+import com.sbgcore.oauth.api.openid.exchange.flows.password.PasswordFlow
+import com.sbgcore.oauth.api.openid.exchange.flows.refresh.RefreshFlow
+import com.sbgcore.oauth.api.openid.validPublicClient
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.auth.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.util.pipeline.*
 
 fun Route.tokenExchangeRoute(
     passwordFlow: PasswordFlow,
@@ -22,10 +24,10 @@ fun Route.tokenExchangeRoute(
     authorizationCodeFlow: AuthorizationCodeFlow,
     assertionRedemptionFlow: AssertionRedemptionFlow
 ) {
-    // Optional because we have to cater for PKCE clients
+    // Optional because we have to cater for public clients using PKCE
     authenticate<ConfidentialClient>(optional = true) {
         post {
-            // Handle standard exchanges
+            // Handle standard exchanges for confidential clients
             when (val client = call.principal<ConfidentialClient>()) {
                 is ConfidentialClient -> {
 
@@ -36,34 +38,35 @@ fun Route.tokenExchangeRoute(
                         is PasswordRequest -> passwordFlow.exchange(request)
                         is RefreshTokenRequest -> refreshFlow.exchange(request)
                         is AssertionRequest -> assertionRedemptionFlow.exchange(request)
-                        is SsoTokenRequest -> TODO()
+                        is SsoTokenRequest -> TODO("Not yet implemented: $request")
                     }
 
-                    // TODO - Return the appropriate response from the flow exchange performed....
-
-                    // Don't look for other code paths to handle request
-                    return@post call.respond(ExchangeResponse("AuthenticatedClient"))
+                    return@post when(response) {
+                        is SuccessExchangeResponse -> call.respond(response)
+                        is FailedExchangeResponse ->  call.respond(BadRequest, response) // TODO - Review if the spec allows for any other type of response codes, maybe around invalid_client responses.
+                    }
                 }
             }
 
-            // Handle PKCE requests
+            // Handle PKCE requests for public clients
             when (val parameters = call.receiveOrNull<Parameters>()) {
-                is Parameters -> when (val client = validPkceClient(parameters)) {
+                is Parameters -> when (val client = validPublicClient(parameters)) {
                     is PublicClient -> {
 
                         val response = when (val result = validatePkceExchangeRequest(client, parameters)) {
                             is PkceAuthorizationCodeRequest -> authorizationCodeFlow.exchange(result)
                         }
 
-                        // TODO - Return the appropriate response from the flow exchange performed....
-
-                        // Don't look for other code paths to handle request
-                        return@post call.respond(ExchangeResponse("PkceClient"))
+                        return@post when(response) {
+                            is SuccessExchangeResponse -> call.respond(response)
+                            is FailedExchangeResponse ->  call.respond(BadRequest, response) // TODO - Review if the spec allows for any other type of response codes, maybe around invalid_client responses.
+                        }
                     }
                 }
             }
 
-            // 401 - Invalid credentials
+            // 401 - Invalid credentials?
+            // TODO - Review this "default" error response
             // TODO - Setup a common response provider
             return@post call.respond(UnauthorizedResponse(HttpAuthHeader.basicAuthChallenge("skybettingandgaming", Charsets.UTF_8)))
         }

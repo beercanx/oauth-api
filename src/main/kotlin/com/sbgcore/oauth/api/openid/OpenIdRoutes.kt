@@ -1,10 +1,10 @@
 package com.sbgcore.oauth.api.openid
 
 import com.sbgcore.oauth.api.openid.exchange.*
-import com.sbgcore.oauth.api.openid.flows.assertion.AssertionRedemptionFlow
-import com.sbgcore.oauth.api.openid.flows.authorization.AuthorizationCodeFlow
-import com.sbgcore.oauth.api.openid.flows.password.PasswordFlow
-import com.sbgcore.oauth.api.openid.flows.refresh.RefreshFlow
+import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
+import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
+import com.sbgcore.oauth.api.openid.exchange.flows.password.PasswordFlow
+import com.sbgcore.oauth.api.openid.exchange.flows.refresh.RefreshFlow
 import com.sbgcore.oauth.api.openid.introspection.*
 import io.ktor.application.*
 import io.ktor.routing.route
