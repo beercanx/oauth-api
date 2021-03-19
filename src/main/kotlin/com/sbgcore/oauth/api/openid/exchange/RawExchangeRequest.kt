@@ -35,51 +35,97 @@ data class RawExchangeRequest(
 
     // SsoTokenRequest
     @SerialName("sso_token") val ssoToken: String? = null
-)
+) {
+    override fun toString(): String {
+        return "RawExchangeRequest(" +
+                "grantType=$grantType, " +
+                "code=REDACTED, " +
+                "redirectUri=$redirectUri, " +
+                "codeVerifier=REDACTED, " +
+                "clientId=$clientId, " +
+                "scope=$scope, " +
+                "username=$username, " +
+                "password=REDACTED, " +
+                "refreshToken=REDACTED, " +
+                "assertion=REDACTED, " +
+                "ssoToken=REDACTED" +
+                ")"
+    }
+}
 
 sealed class ValidatedConfidentialExchangeRequest {
     abstract val principal: ConfidentialClient
+    override fun toString(): String {
+        return "ValidatedConfidentialExchangeRequest(principal=$principal)"
+    }
 }
 
 sealed class ValidatedPublicExchangeRequest {
     abstract val principal: PublicClient
+    override fun toString(): String {
+        return "ValidatedPublicExchangeRequest(principal=$principal)"
+    }
 }
 
 data class AuthorizationCodeRequest(
     override val principal: ConfidentialClient,
     val code: String,
     val redirectUri: Url
-) : ValidatedConfidentialExchangeRequest()
+) : ValidatedConfidentialExchangeRequest() {
+    override fun toString(): String {
+        return "AuthorizationCodeRequest(principal=$principal, code=REDACTED, redirectUri=$redirectUri)"
+    }
+}
 
 data class PkceAuthorizationCodeRequest(
     override val principal: PublicClient,
     val code: String,
     val redirectUri: Url,
     val codeVerifier: String
-) : ValidatedPublicExchangeRequest()
+) : ValidatedPublicExchangeRequest() {
+    override fun toString(): String {
+        return "PkceAuthorizationCodeRequest(principal=$principal, code=REDACTED, redirectUri=$redirectUri, codeVerifier=REDACTED)"
+    }
+}
 
 data class PasswordRequest(
     override val principal: ConfidentialClient,
     val scopes: Set<Scopes>,
     val username: String,
     val password: String
-) : ValidatedConfidentialExchangeRequest()
+) : ValidatedConfidentialExchangeRequest() {
+    override fun toString(): String {
+        return "PasswordRequest(principal=$principal, scopes=$scopes, username='$username', password=REDACTED)"
+    }
+}
 
 data class RefreshTokenRequest(
     override val principal: ConfidentialClient,
     val scopes: Set<Scopes>,
     val refreshToken: String
-) : ValidatedConfidentialExchangeRequest()
+) : ValidatedConfidentialExchangeRequest() {
+    override fun toString(): String {
+        return "RefreshTokenRequest(principal=$principal, scopes=$scopes, refreshToken=REDACTED)"
+    }
+}
 
 data class AssertionRequest(
     override val principal: ConfidentialClient,
     val assertion: String
-) : ValidatedConfidentialExchangeRequest()
+) : ValidatedConfidentialExchangeRequest() {
+    override fun toString(): String {
+        return "AssertionRequest(principal=$principal, assertion=REDACTED)"
+    }
+}
 
 data class SsoTokenRequest(
     override val principal: ConfidentialClient,
     val ssoToken: String
-) : ValidatedConfidentialExchangeRequest()
+) : ValidatedConfidentialExchangeRequest() {
+    override fun toString(): String {
+        return "SsoTokenRequest(principal=$principal, ssoToken=REDACTED)"
+    }
+}
 
 val RawExchangeRequest.isPKCE: Boolean
     get() = !codeVerifier.isNullOrBlank()
