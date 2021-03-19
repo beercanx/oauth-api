@@ -28,7 +28,7 @@ fun Application.openIdRoutes(
                 tokenExchangeRoute(passwordFlow, refreshFlow, authorizationCodeFlow, assertionRedemptionFlow)
             }
             route("/introspect") {
-                // TODO - Implement
+                tokenIntrospectionRoute(introspectionService)
             }
             route("/revoke") {
                 // TODO - Implement

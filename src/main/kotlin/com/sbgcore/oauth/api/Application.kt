@@ -2,6 +2,7 @@ package com.sbgcore.oauth.api
 
 import com.sbgcore.oauth.api.authentication.ClientSecret
 import com.sbgcore.oauth.api.authentication.ConfidentialClient
+import com.sbgcore.oauth.api.customer.MatchService
 import com.sbgcore.oauth.api.ktor.basic
 import com.sbgcore.oauth.api.customer.openbet.OpenBetMatchService
 import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
@@ -11,6 +12,7 @@ import com.sbgcore.oauth.api.openid.exchange.flows.refresh.RefreshFlow
 import com.sbgcore.oauth.api.openid.exchange.tokens.AccessTokenService
 import com.sbgcore.oauth.api.openid.introspection.IntrospectionService
 import com.sbgcore.oauth.api.openid.openIdRoutes
+import com.sbgcore.oauth.api.storage.AccessTokenRepository
 import com.sbgcore.oauth.api.storage.nitrite.NitriteAccessTokenRepository
 import com.sbgcore.oauth.api.storage.nitrite.NitriteClientSecretRepository
 import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
@@ -125,10 +127,10 @@ fun Application.main() {
     }
 
     // Repositories
-    val accessTokenRepository = NitriteAccessTokenRepository()
+    val accessTokenRepository: AccessTokenRepository = NitriteAccessTokenRepository()
 
     // Services
-    val loginService = OpenBetMatchService(oxiHttpClient)
+    val loginService: MatchService = OpenBetMatchService(oxiHttpClient)
     val accessTokenService = AccessTokenService(accessTokenRepository)
 
     // Flows
@@ -136,7 +138,7 @@ fun Application.main() {
     val refreshFlow = RefreshFlow()
     val authorizationCodeFlow = AuthorizationCodeFlow()
     val assertionRedemptionFlow = AssertionRedemptionFlow()
-    val introspectionService = IntrospectionService()
+    val introspectionService = IntrospectionService(accessTokenRepository)
 
     //
     // Setup the well known routes
