@@ -6,7 +6,7 @@ import com.sbgcore.oauth.api.openid.exchange.flows.ConfidentialFlow
 
 class RefreshFlow : ConfidentialFlow<RefreshTokenRequest> {
 
-    override fun exchange(request: RefreshTokenRequest): ExchangeResponse {
+    override suspend fun exchange(request: RefreshTokenRequest): ExchangeResponse {
         TODO("Not yet implemented: $request")
     }
 }

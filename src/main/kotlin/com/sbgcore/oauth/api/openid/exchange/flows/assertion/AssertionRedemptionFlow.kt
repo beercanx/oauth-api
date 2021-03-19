@@ -7,7 +7,7 @@ import com.sbgcore.oauth.api.openid.exchange.flows.ConfidentialFlow
 // TODO - Verify name
 class AssertionRedemptionFlow : ConfidentialFlow<AssertionRequest> {
 
-    override fun exchange(request: AssertionRequest): ExchangeResponse {
+    override suspend fun exchange(request: AssertionRequest): ExchangeResponse {
         TODO("Not yet implemented: $request")
     }
 }

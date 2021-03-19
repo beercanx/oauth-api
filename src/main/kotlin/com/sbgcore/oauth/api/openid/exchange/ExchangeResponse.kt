@@ -2,6 +2,7 @@
 
 package com.sbgcore.oauth.api.openid.exchange
 
+import com.sbgcore.oauth.api.customer.FailureReason
 import com.sbgcore.oauth.api.openid.Scopes
 import com.sbgcore.oauth.api.openid.SerializableEnum
 import com.sbgcore.oauth.api.openid.exchange.tokens.TokenType
@@ -58,9 +59,11 @@ data class FailedExchangeResponse(
      * Human-readable ASCII text providing additional information, used to assist the client developer in
      * understanding the error that occurred.
      */
-    val error_description: String?
+    val error_description: String? = null
 
-) : ExchangeResponse()
+) : ExchangeResponse() {
+    constructor(error: ErrorType, failure: FailureReason) : this(error, failure.toString())
+}
 
 @Serializable
 enum class ErrorType : SerializableEnum {

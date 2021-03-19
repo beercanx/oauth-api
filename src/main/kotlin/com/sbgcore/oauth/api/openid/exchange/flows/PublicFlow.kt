@@ -5,5 +5,5 @@ import com.sbgcore.oauth.api.openid.exchange.ValidatedConfidentialExchangeReques
 import com.sbgcore.oauth.api.openid.exchange.ValidatedPublicExchangeRequest
 
 interface PublicFlow<A : ValidatedPublicExchangeRequest> {
-    fun exchange(request: A): ExchangeResponse
+    suspend fun exchange(request: A): ExchangeResponse
 }

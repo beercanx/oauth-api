@@ -12,11 +12,11 @@ import io.ktor.routing.routing
 
 // TODO - Consider changing Application from the base library to a custom class so we don't need to include dependencies in method signature
 fun Application.openIdRoutes(
-    passwordFlow: PasswordFlow = PasswordFlow(),
-    refreshFlow: RefreshFlow = RefreshFlow(),
-    authorizationCodeFlow: AuthorizationCodeFlow = AuthorizationCodeFlow(),
-    assertionRedemptionFlow: AssertionRedemptionFlow = AssertionRedemptionFlow(),
-    introspectionService: IntrospectionService = IntrospectionService()
+    passwordFlow: PasswordFlow,
+    refreshFlow: RefreshFlow,
+    authorizationCodeFlow: AuthorizationCodeFlow,
+    assertionRedemptionFlow: AssertionRedemptionFlow,
+    introspectionService: IntrospectionService
 ) {
     routing {
         route("/openid/v1") {
