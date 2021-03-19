@@ -8,8 +8,10 @@ import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemption
 import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.password.PasswordFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.refresh.RefreshFlow
+import com.sbgcore.oauth.api.openid.exchange.tokens.AccessTokenService
 import com.sbgcore.oauth.api.openid.introspection.IntrospectionService
 import com.sbgcore.oauth.api.openid.openIdRoutes
+import com.sbgcore.oauth.api.storage.nitrite.NitriteAccessTokenRepository
 import com.sbgcore.oauth.api.storage.nitrite.NitriteClientSecretRepository
 import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
 import com.skybettingandgaming.oxi.client.ktor.XmlFeature
@@ -122,9 +124,15 @@ fun Application.main() {
         }
     }
 
-    val loginService = OpenBetMatchService(oxiHttpClient)
+    // Repositories
+    val accessTokenRepository = NitriteAccessTokenRepository()
 
-    val passwordFlow = PasswordFlow(loginService)
+    // Services
+    val loginService = OpenBetMatchService(oxiHttpClient)
+    val accessTokenService = AccessTokenService(accessTokenRepository)
+
+    // Flows
+    val passwordFlow = PasswordFlow(loginService, accessTokenService)
     val refreshFlow = RefreshFlow()
     val authorizationCodeFlow = AuthorizationCodeFlow()
     val assertionRedemptionFlow = AssertionRedemptionFlow()

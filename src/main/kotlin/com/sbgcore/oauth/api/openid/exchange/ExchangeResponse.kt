@@ -1,4 +1,4 @@
-@file:UseSerializers(DurationInMillisecondsSerializer::class)
+@file:UseSerializers(UUIDSerializer::class)
 
 package com.sbgcore.oauth.api.openid.exchange
 
@@ -6,11 +6,12 @@ import com.sbgcore.oauth.api.customer.FailureReason
 import com.sbgcore.oauth.api.openid.Scopes
 import com.sbgcore.oauth.api.openid.SerializableEnum
 import com.sbgcore.oauth.api.openid.exchange.tokens.TokenType
-import com.sbgcore.oauth.api.serializers.DurationInMillisecondsSerializer
+import com.sbgcore.oauth.api.openid.exchange.tokens.TokenType.Bearer
+import com.sbgcore.oauth.api.serializers.UUIDSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import java.time.Duration
+import java.util.*
 
 sealed class ExchangeResponse
 
@@ -22,19 +23,19 @@ data class SuccessExchangeResponse(
     /**
      * The access token issued by the authorization server.
      */
-    val access_token: String, // TODO - Review type
+    @SerialName("access_token") val accessToken: UUID,
 
     /**
      * The type of the token issued as described in https://tools.ietf.org/html/rfc6749#section-7.1
      */
-    val token_type: TokenType,
+    @SerialName("token_type") val tokenType: TokenType = Bearer,
 
     /**
      * The lifetime in seconds of the access token.  For example, the value "3600" denotes that the access token will
      * expire in one hour from the time the response was generated. If omitted, the authorization server SHOULD provide
      * the expiration time via other means or document the default value.
      */
-    val expires_in: Duration,
+    @SerialName("expires_in") val expiresIn: Long,
 
     /**
      * OPTIONAL if identical to the scope requested by the client; otherwise, REQUIRED.

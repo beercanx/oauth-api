@@ -53,7 +53,12 @@ class OpenBetMatchService(private val httpClient: HttpClient) : MatchService {
                         val temporary = result.hasStatusFlag(TEMPORARY_PIN_FLAG)
                         val lastLogin = offsetDateTimeOxiXmlAdapter.unmarshal(result.lastLogin) // TODO - Update OXI DTO to do this for us.
 
-                        MatchSuccess(temporary, lastLogin)
+                        MatchSuccess(
+                            customerId = result.custId,
+                            username = result.userName,
+                            temporaryPassword = temporary,
+                            lastLogin = lastLogin
+                        )
                     }
                 }
             }

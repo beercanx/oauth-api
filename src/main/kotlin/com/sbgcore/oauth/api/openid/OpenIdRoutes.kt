@@ -18,6 +18,7 @@ fun Application.openIdRoutes(
     assertionRedemptionFlow: AssertionRedemptionFlow,
     introspectionService: IntrospectionService
 ) {
+    // TODO - Ensure cache control headers are set to prevent caching
     routing {
         route("/openid/v1") {
             route("/authorize") {
