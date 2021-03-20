@@ -7,7 +7,7 @@ sealed class MatchResponse
 data class MatchSuccess(
     val customerId: Long,
     val username: String,
-    val temporaryPassword: Boolean,
+    val temporary: Boolean,
     val lastLogin: OffsetDateTime
 ) : MatchResponse()
 
