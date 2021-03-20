@@ -6,6 +6,7 @@ import com.sbgcore.oauth.api.ktor.basic
 import com.sbgcore.oauth.api.openid.ClientId
 import com.sbgcore.oauth.api.openid.openIdRoutes
 import com.sbgcore.oauth.api.storage.NitriteClientSecretRepository
+import com.sbgcore.oauth.api.swagger.swaggerRoutes
 import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -13,6 +14,7 @@ import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.locations.*
+import io.ktor.routing.*
 import io.ktor.serialization.*
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 import org.slf4j.LoggerFactory
@@ -80,12 +82,18 @@ fun Application.main() {
         }
     }
 
-    // Setup the well known routes
-    wellKnownRoutes()
+    routing {
 
-    // Setup the OpenID connect routes
-    openIdRoutes()
+        // Setup the well known routes
+        wellKnownRoutes()
 
-    // TODO - Account routes
-    // TODO - Product transfer routes
+        // Setup the OpenID connect routes
+        openIdRoutes()
+
+        // TODO - Account routes
+        // TODO - Product transfer routes
+
+        // Swagger UI and spec
+        swaggerRoutes()
+    }
 }
