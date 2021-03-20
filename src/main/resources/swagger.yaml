@@ -64,19 +64,22 @@ components:
       properties:
         grant_type:
           required: true
-          enum:
-            - password
+          type: string
+          example: password
         username:
           required: true
           type: string
+          example: aardvark
           description: The username of the user to token exchange for (aka login as).
         password:
           required: true
           type: string
+          example: 121212
           description: The password of the user to token exchange for (aka login as).
-        scopes:
+        scope:
           required: false
           type: string
+          example: openid
           description: The requested scopes to be assigned to the token once exchanged.
 
     token-exchange-response-success:

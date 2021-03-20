@@ -9,7 +9,6 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger name="com.skybettingandgaming.oxi.client" level="INFO"/>
     <logger name="org.dizitart.no2" level="INFO"/>
     <logger name="uk.co.jemos.podam" level="INFO"/>
     <logger name="org.eclipse.jetty" level="INFO"/>

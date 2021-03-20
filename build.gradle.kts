@@ -14,8 +14,6 @@ repositories {
     mavenCentral()
     maven("https://kotlin.bintray.com/ktor")
     maven("https://kotlin.bintray.com/kotlinx")
-    maven("https://artifactory.euw.platformservices.io/artifactory/sbg-core-maven-hosted")
-    maven("https://artifactory.euw.platformservices.io/artifcatory/sbg-core-maven-virtual")
 }
 
 dependencies {
@@ -47,10 +45,6 @@ dependencies {
 
     // Configuration
     implementation("com.typesafe:config:1.4.1")
-
-    // OXI Client
-    implementation("com.skybettingandgaming.oxi:oxi-client:1.14")
-    implementation("com.skybettingandgaming.oxi:oxi-client-kt:0.0.2")
 
     // Nitrate - NoSQL DB
     implementation("org.dizitart:nitrite:3.4.3") // https://www.dizitart.org/nitrite-database

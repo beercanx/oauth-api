@@ -7,8 +7,8 @@ import org.dizitart.kno2.filters.eq
 import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite
 import org.dizitart.no2.IndexOptions.indexOptions
-import org.dizitart.no2.IndexType.Unique
 import org.dizitart.no2.IndexType.NonUnique
+import org.dizitart.no2.IndexType.Unique
 import org.dizitart.no2.Nitrite
 import java.util.*
 
