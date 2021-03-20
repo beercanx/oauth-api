@@ -1,21 +1,22 @@
 package com.sbgcore.oauth.api.openid
 
 import com.sbgcore.oauth.api.openid.exchange.*
-import com.sbgcore.oauth.api.openid.flows.assertion.AssertionRedemptionFlow
-import com.sbgcore.oauth.api.openid.flows.authorization.AuthorizationCodeFlow
-import com.sbgcore.oauth.api.openid.flows.password.PasswordFlow
-import com.sbgcore.oauth.api.openid.flows.refresh.RefreshFlow
+import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
+import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
+import com.sbgcore.oauth.api.openid.exchange.flows.password.PasswordFlow
+import com.sbgcore.oauth.api.openid.exchange.flows.refresh.RefreshFlow
 import com.sbgcore.oauth.api.openid.introspection.*
 import io.ktor.routing.*
 
 // TODO - Consider changing Application from the base library to a custom class so we don't need to include dependencies in method signature
 fun Route.openIdRoutes(
-    passwordFlow: PasswordFlow = PasswordFlow(),
-    refreshFlow: RefreshFlow = RefreshFlow(),
-    authorizationCodeFlow: AuthorizationCodeFlow = AuthorizationCodeFlow(),
-    assertionRedemptionFlow: AssertionRedemptionFlow = AssertionRedemptionFlow(),
-    introspectionService: IntrospectionService = IntrospectionService()
+    passwordFlow: PasswordFlow,
+    refreshFlow: RefreshFlow,
+    authorizationCodeFlow: AuthorizationCodeFlow,
+    assertionRedemptionFlow: AssertionRedemptionFlow,
+    introspectionService: IntrospectionService
 ) {
+    // TODO - Ensure cache control headers are set to prevent caching
     route("/openid/v1") {
         route("/authorize") {
             // TODO - Implement
@@ -24,7 +25,7 @@ fun Route.openIdRoutes(
             tokenExchangeRoute(passwordFlow, refreshFlow, authorizationCodeFlow, assertionRedemptionFlow)
         }
         route("/introspect") {
-            // TODO - Implement
+            tokenIntrospectionRoute(introspectionService)
         }
         route("/revoke") {
             // TODO - Implement

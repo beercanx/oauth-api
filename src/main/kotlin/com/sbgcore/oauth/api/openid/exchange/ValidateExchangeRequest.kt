@@ -77,14 +77,7 @@ private fun Parameters.toRawExchangeRequest(): RawExchangeRequest {
 
     return RawExchangeRequest(
         // All
-        grantType = when(get("grant_type")) {
-            "authorization_code" -> AuthorizationCode
-            "password" -> Password
-            "refresh_token" -> RefreshToken
-            "urn:ietf:params:oauth:grant-type:jwt-bearer" -> Assertion
-            "sso_token" -> SsoToken
-            else -> throw Exception("Bad Request")
-        },
+        grantType = get("grant_type")?.let(::enumByValue) ?: throw Exception("Bad Request"),
 
         // AuthorizationCodeRequest && PkceAuthorizationCodeRequest
         code = get("code"),

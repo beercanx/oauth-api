@@ -2,7 +2,6 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val ktorVersion: String by project
-val arrowVersion: String by project
 
 plugins {
     idea
@@ -15,11 +14,14 @@ repositories {
     mavenCentral()
     maven("https://kotlin.bintray.com/ktor")
     maven("https://kotlin.bintray.com/kotlinx")
+    maven("https://artifactory.euw.platformservices.io/artifactory/sbg-core-maven-hosted")
+    maven("https://artifactory.euw.platformservices.io/artifcatory/sbg-core-maven-virtual")
 }
 
 dependencies {
     // Use the Kotlin JDK 8 standard library
     implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("reflect"))
 
     // Logging
     implementation("ch.qos.logback:logback-classic:1.2.1")
@@ -40,10 +42,15 @@ dependencies {
     implementation("io.ktor:ktor-server-sessions:$ktorVersion")
 
     // Ktor HTTP client
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-client-json-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+    implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+
+    // Configuration
+    implementation("com.typesafe:config:1.4.1")
+
+    // OXI Client
+    implementation("com.skybettingandgaming.oxi:oxi-client:1.14")
+    implementation("com.skybettingandgaming.oxi:oxi-client-kt:0.0.2")
 
     // Nitrate - NoSQL DB
     implementation("org.dizitart:nitrite:3.4.3") // https://www.dizitart.org/nitrite-database

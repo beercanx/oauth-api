@@ -1,4 +1,4 @@
-package com.sbgcore.oauth.api.openid.flows.authorization
+package com.sbgcore.oauth.api.openid.exchange.flows.authorization
 
 import org.dizitart.no2.objects.Id
 import java.time.OffsetDateTime

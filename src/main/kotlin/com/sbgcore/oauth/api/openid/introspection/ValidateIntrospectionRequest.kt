@@ -10,12 +10,13 @@ import io.ktor.util.pipeline.*
 
 suspend fun PipelineContext<*, ApplicationCall>.validateIntrospectionRequest(): ValidatedIntrospectionRequest {
 
-    val rawIntrospectionRequest = call.receive<RawIntrospectionRequest>()
-
     val principal = validClientPrincipal(call.principal<ConfidentialClient>())
-    val token = rawIntrospectionRequest.validateStringParameter(RawIntrospectionRequest::token)
 
-    val hint = rawIntrospectionRequest.hint
+    val raw = call.receive<RawIntrospectionRequest>()
+
+    val token = raw.validateStringParameter(RawIntrospectionRequest::token)
+    val hint = raw.hint
+
     return if (hint == null) {
         IntrospectionRequest(principal, token)
     } else {

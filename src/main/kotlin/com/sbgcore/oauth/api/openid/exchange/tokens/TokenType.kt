@@ -1,13 +1,13 @@
-package com.sbgcore.oauth.api.openid
+package com.sbgcore.oauth.api.openid.exchange.tokens
 
+import com.sbgcore.oauth.api.openid.SerializableEnum
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class ClientId : SerializableEnum {
+enum class TokenType : SerializableEnum {
 
-    @SerialName("consumer-x") ConsumerX,
-    @SerialName("consumer-z") ConsumerZ,
+    @SerialName("bearer") Bearer,
 
     ;
 
