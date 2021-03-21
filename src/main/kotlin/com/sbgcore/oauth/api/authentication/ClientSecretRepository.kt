@@ -1,7 +1,7 @@
 package com.sbgcore.oauth.api.authentication
 
 import com.sbgcore.oauth.api.openid.ClientId
-import com.sbgcore.oauth.api.enumByValue
+import com.sbgcore.oauth.api.enums.enumByValue
 import com.sbgcore.oauth.api.Repository
 import java.util.*
 

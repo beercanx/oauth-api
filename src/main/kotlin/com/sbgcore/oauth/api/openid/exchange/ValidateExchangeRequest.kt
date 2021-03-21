@@ -4,7 +4,7 @@ import com.sbgcore.oauth.api.authentication.ConfidentialClient
 import com.sbgcore.oauth.api.authentication.ClientPrincipal
 import com.sbgcore.oauth.api.authentication.PublicClient
 import com.sbgcore.oauth.api.openid.Scopes
-import com.sbgcore.oauth.api.enumByValue
+import com.sbgcore.oauth.api.enums.enumByValue
 import com.sbgcore.oauth.api.openid.exchange.GrantType.*
 import com.sbgcore.oauth.api.openid.validateStringParameter
 import io.ktor.http.Parameters

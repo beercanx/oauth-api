@@ -4,7 +4,6 @@ package com.sbgcore.oauth.api.openid.exchange
 
 import com.sbgcore.oauth.api.customer.FailureReason
 import com.sbgcore.oauth.api.openid.Scopes
-import com.sbgcore.oauth.api.SerializableEnum
 import com.sbgcore.oauth.api.tokens.TokenType
 import com.sbgcore.oauth.api.tokens.TokenType.Bearer
 import com.sbgcore.oauth.api.serializers.ScopeSerializer
@@ -68,7 +67,7 @@ data class FailedExchangeResponse(
 }
 
 @Serializable
-enum class ErrorType : SerializableEnum {
+enum class ErrorType {
 
     /**
      * The request is missing a required parameter, includes an unsupported parameter value (other than grant type),
@@ -109,8 +108,4 @@ enum class ErrorType : SerializableEnum {
     @SerialName("invalid_scope") InvalidScope,
 
     ;
-
-    override val value: String by lazy {
-        getSerialName(serializer())
-    }
 }

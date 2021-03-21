@@ -1,36 +1,29 @@
 package com.sbgcore.oauth.api.openid
 
-import com.sbgcore.oauth.api.SerializableEnum
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.sbgcore.oauth.api.enums.WithValue
 
-@Serializable
-enum class Scopes : SerializableEnum {
+enum class Scopes(override val value: String) : WithValue {
 
-    @SerialName("openid") OpenId, // Can I get user info with this client?
+    OpenId("openid"), // Can I get user info with this client?
 
     // TODO - Break down into know groups or edge cases.
-    @SerialName("profile::read") ProfileRead, // Can I read my profile data with this client?
-    @SerialName("profile::write") ProfileWrite, // Can I make changes to my profile with this client?
+    ProfileRead("profile::read"), // Can I read my profile data with this client?
+    ProfileWrite("profile::write"), // Can I make changes to my profile with this client?
 
     // TODO - Rethink maybe, might not be as cut and dry and enables verifying vs indicating it needs doing.
-    @SerialName("account::verify") AccountVerify, // Can I verify my account? (aka have I verified or not)
-    @SerialName("account::upgrade") AccountUpgrade, // Can I upgrade my account? (ditto)
+    AccountVerify("account::verify"), // Can I verify my account? (aka have I verified or not)
+    AccountUpgrade("account::upgrade"), // Can I upgrade my account? (ditto)
 
-    @SerialName("bet::place") BetPlace, // Can I place a bet with this client?
+    BetPlace("bet::place"), // Can I place a bet with this client?
 
-    @SerialName("bet::promotion::claim") BetPromotionClaim, // Can I claim a bet promotion with this client?
+    BetPromotionClaim("bet::promotion::claim"), // Can I claim a bet promotion with this client?
 
-    @SerialName("game::view::restricted") GameViewRestricted, // Can I view restricted game content with this client?
+    GameViewRestricted("game::view::restricted"), // Can I view restricted game content with this client?
 
-    @SerialName("game::play::free") GamePlayFree, // Can I play free games with this client?
-    @SerialName("game::play::paid") GamePlayPaid, // Can I play paid games with this client?
+    GamePlayFree("game::play::free"), // Can I play free games with this client?
+    GamePlayPaid("game::play::paid"), // Can I play paid games with this client?
 
-    @SerialName("game::promotion::claim") GamePromotionClaim, // Can I claim a game promotion with this client?
+    GamePromotionClaim("game::promotion::claim"), // Can I claim a game promotion with this client?
 
     ;
-
-    override val value: String by lazy {
-        getSerialName(serializer())
-    }
 }
