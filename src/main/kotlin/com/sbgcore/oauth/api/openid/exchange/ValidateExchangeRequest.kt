@@ -85,10 +85,10 @@ private fun Parameters.toRawExchangeRequest(): RawExchangeRequest {
 
         // PkceAuthorizationCodeRequest
         codeVerifier = get("code_verifier"),
-        clientId = get("client_id"),
+        clientId = get("client_id")?.let(::enumByValue),
 
         // PasswordRequest && RefreshTokenRequest
-        scope = get("scope"),
+        scope = get("scope")?.split(" ")?.mapNotNull { string -> enumByValue<Scopes>(string) }?.toSet(),
 
         // PasswordRequest
         username = get("username"),
@@ -106,11 +106,7 @@ private fun Parameters.toRawExchangeRequest(): RawExchangeRequest {
 }
 
 private fun RawExchangeRequest.validateScopes(principal: ConfidentialClient): Set<Scopes> {
-    return validateStringParameter(RawExchangeRequest::scope)
-        .split(" ")
-        .mapNotNull { string -> enumByValue<Scopes>(string) }
-        .filter { scope -> scope.canBeIssuedTo(principal) }
-        .toSet()
+    return scope?.filter { scope -> scope.canBeIssuedTo(principal) }?.toSet() ?: emptySet()
 }
 
 private fun Scopes.canBeIssuedTo(principal: ConfidentialClient): Boolean {

@@ -2,6 +2,7 @@ package com.sbgcore.oauth.api.openid.exchange
 
 import com.sbgcore.oauth.api.authentication.ConfidentialClient
 import com.sbgcore.oauth.api.authentication.PublicClient
+import com.sbgcore.oauth.api.openid.ClientId
 import com.sbgcore.oauth.api.openid.Scopes
 import io.ktor.http.Url
 import kotlinx.serialization.SerialName
@@ -18,10 +19,10 @@ data class RawExchangeRequest(
 
     // PkceAuthorizationCodeRequest
     @SerialName("code_verifier") val codeVerifier: String? = null,
-    @SerialName("client_id") val clientId: String? = null,
+    @SerialName("client_id") val clientId: ClientId? = null,
 
     // PasswordRequest && RefreshTokenRequest
-    val scope: String? = null,
+    val scope: Set<Scopes>? = null,
 
     // PasswordRequest
     val username: String? = null,
