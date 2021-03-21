@@ -1,8 +1,6 @@
-package com.sbgcore.oauth.api.storage.nitrite
+package com.sbgcore.oauth.api.tokens
 
 import com.sbgcore.oauth.api.openid.ClientId
-import com.sbgcore.oauth.api.openid.exchange.tokens.AccessToken
-import com.sbgcore.oauth.api.storage.AccessTokenRepository
 import org.dizitart.kno2.filters.eq
 import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite

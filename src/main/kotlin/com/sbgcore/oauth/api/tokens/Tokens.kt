@@ -1,6 +1,6 @@
-package com.sbgcore.oauth.api.openid.exchange.tokens
+package com.sbgcore.oauth.api.tokens
 
-import com.sbgcore.oauth.api.openid.SerializableEnum
+import com.sbgcore.oauth.api.SerializableEnum
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

@@ -1,7 +1,7 @@
 package com.sbgcore.oauth.api.openid.introspection
 
-import com.sbgcore.oauth.api.openid.exchange.tokens.AccessToken
-import com.sbgcore.oauth.api.storage.AccessTokenRepository
+import com.sbgcore.oauth.api.tokens.AccessToken
+import com.sbgcore.oauth.api.tokens.AccessTokenRepository
 import java.time.OffsetDateTime.now
 import java.util.*
 

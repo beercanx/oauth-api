@@ -1,7 +1,7 @@
-package com.sbgcore.oauth.api.storage
+package com.sbgcore.oauth.api.tokens
 
 import com.sbgcore.oauth.api.openid.ClientId
-import com.sbgcore.oauth.api.openid.exchange.tokens.AccessToken
+import com.sbgcore.oauth.api.Repository
 import java.util.UUID
 
 /**

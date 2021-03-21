@@ -9,11 +9,11 @@ import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemption
 import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.password.PasswordFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.refresh.RefreshFlow
-import com.sbgcore.oauth.api.openid.exchange.tokens.AccessTokenService
+import com.sbgcore.oauth.api.tokens.AccessTokenService
 import com.sbgcore.oauth.api.openid.introspection.IntrospectionService
 import com.sbgcore.oauth.api.openid.openIdRoutes
-import com.sbgcore.oauth.api.storage.nitrite.NitriteAccessTokenRepository
-import com.sbgcore.oauth.api.storage.nitrite.NitriteClientSecretRepository
+import com.sbgcore.oauth.api.tokens.NitriteAccessTokenRepository
+import com.sbgcore.oauth.api.authentication.NitriteClientSecretRepository
 import com.sbgcore.oauth.api.swagger.swaggerRoutes
 import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
 import com.typesafe.config.ConfigFactory

@@ -2,6 +2,7 @@ package com.sbgcore.oauth.api.openid
 
 import com.sbgcore.oauth.api.authentication.ClientPrincipal
 import com.sbgcore.oauth.api.authentication.PublicClient
+import com.sbgcore.oauth.api.enumByValue
 
 import io.ktor.application.*
 import io.ktor.auth.*

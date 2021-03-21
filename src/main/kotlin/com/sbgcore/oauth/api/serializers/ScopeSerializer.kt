@@ -1,7 +1,7 @@
 package com.sbgcore.oauth.api.serializers
 
 import com.sbgcore.oauth.api.openid.Scopes
-import com.sbgcore.oauth.api.openid.enumByValue
+import com.sbgcore.oauth.api.enumByValue
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor

@@ -1,4 +1,4 @@
-package com.sbgcore.oauth.api.storage
+package com.sbgcore.oauth.api
 
 interface Repository<TYPE, ID> {
 

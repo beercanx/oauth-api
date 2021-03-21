@@ -1,6 +1,6 @@
 package com.sbgcore.oauth.api.customer.internal
 
-import com.sbgcore.oauth.api.storage.Repository
+import com.sbgcore.oauth.api.Repository
 
 interface InternalCredentialRepository : Repository<InternalCredential, String> {
 

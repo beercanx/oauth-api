@@ -1,4 +1,4 @@
-package com.sbgcore.oauth.api.openid.exchange.tokens
+package com.sbgcore.oauth.api.tokens
 
 import com.sbgcore.oauth.api.openid.ClientId
 import com.sbgcore.oauth.api.openid.Scopes

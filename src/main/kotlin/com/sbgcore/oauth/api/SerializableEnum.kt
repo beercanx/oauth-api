@@ -1,10 +1,10 @@
-package com.sbgcore.oauth.api.openid
+package com.sbgcore.oauth.api
 
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
 
+@Deprecated("Should be possible to replace usage of this by better kotlinx.serialisation integration, right?")
 interface SerializableEnum {
 
     private val format
@@ -28,6 +28,7 @@ interface SerializableEnum {
 /**
  * Find a [SerializableEnum] by its JSON value.
  */
+@Deprecated("Should be possible to replace usage of this by better kotlinx.serialisation integration, right?")
 inline fun <reified A> enumByValue(value: String): A? where A : Enum<A>, A : SerializableEnum {
     return enumValues<A>().find { a -> a.value == value }
 }

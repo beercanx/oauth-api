@@ -1,8 +1,7 @@
-package com.sbgcore.oauth.api.openid.exchange.tokens
+package com.sbgcore.oauth.api.tokens
 
 import com.sbgcore.oauth.api.openid.ClientId
 import com.sbgcore.oauth.api.openid.Scopes
-import com.sbgcore.oauth.api.storage.AccessTokenRepository
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
 import java.util.*

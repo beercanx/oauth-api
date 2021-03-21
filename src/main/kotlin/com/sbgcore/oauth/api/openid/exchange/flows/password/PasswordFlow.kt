@@ -9,7 +9,7 @@ import com.sbgcore.oauth.api.openid.exchange.FailedExchangeResponse
 import com.sbgcore.oauth.api.openid.exchange.PasswordRequest
 import com.sbgcore.oauth.api.openid.exchange.SuccessExchangeResponse
 import com.sbgcore.oauth.api.openid.exchange.flows.ConfidentialFlow
-import com.sbgcore.oauth.api.openid.exchange.tokens.AccessTokenService
+import com.sbgcore.oauth.api.tokens.AccessTokenService
 import java.time.temporal.ChronoUnit.SECONDS
 
 class PasswordFlow(
