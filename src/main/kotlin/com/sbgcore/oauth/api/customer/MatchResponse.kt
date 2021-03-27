@@ -11,12 +11,12 @@ data class MatchSuccess(
     val lastLogin: OffsetDateTime
 ) : MatchResponse()
 
-data class MatchFailure(val failureReason: FailureReason) : MatchResponse()
+data class MatchFailure(val reason: MatchFailureReason) : MatchResponse()
 
 /**
  * TODO - Taking openbet out of the equation, should we? what should we?
  */
-enum class FailureReason {
+enum class MatchFailureReason {
 
     Mismatch,
 

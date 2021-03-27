@@ -1,13 +1,5 @@
 package com.sbgcore.oauth.api.customer.openbet
 
-import com.sbgcore.oauth.api.customer.FailureReason.*
-import com.sbgcore.oauth.api.customer.MatchFailure
-import com.sbgcore.oauth.api.customer.MatchResponse
-import com.sbgcore.oauth.api.customer.MatchService
-import com.sbgcore.oauth.api.customer.MatchSuccess
-import io.ktor.client.*
-import io.ktor.client.request.*
-
 //class OpenBetMatchService(private val httpClient: HttpClient) : MatchService {
 //
 //    private val offsetDateTimeOxiXmlAdapter = OffsetDateTimeOxiXmlAdapter()

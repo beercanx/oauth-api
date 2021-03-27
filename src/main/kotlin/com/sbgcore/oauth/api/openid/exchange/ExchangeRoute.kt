@@ -20,7 +20,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.pipeline.*
 
-fun Route.tokenExchangeRoute(
+fun Route.exchangeRoute(
     passwordFlow: PasswordFlow,
     refreshFlow: RefreshFlow,
     authorizationCodeFlow: AuthorizationCodeFlow,

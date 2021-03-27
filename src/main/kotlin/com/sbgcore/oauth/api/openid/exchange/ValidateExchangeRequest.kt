@@ -5,7 +5,7 @@ import com.sbgcore.oauth.api.authentication.ClientPrincipal
 import com.sbgcore.oauth.api.authentication.PublicClient
 import com.sbgcore.oauth.api.openid.Scopes
 import com.sbgcore.oauth.api.enums.enumByValue
-import com.sbgcore.oauth.api.openid.exchange.GrantType.*
+import com.sbgcore.oauth.api.openid.GrantType.*
 import com.sbgcore.oauth.api.openid.validateStringParameter
 import io.ktor.http.Parameters
 import io.ktor.http.URLBuilder

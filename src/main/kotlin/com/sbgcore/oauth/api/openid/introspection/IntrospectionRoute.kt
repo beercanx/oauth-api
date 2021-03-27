@@ -6,7 +6,7 @@ import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
-fun Route.tokenIntrospectionRoute(
+fun Route.introspectionRoute(
     introspectionService: IntrospectionService
 ) {
     authenticate<ConfidentialClient> {

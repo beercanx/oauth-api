@@ -20,7 +20,7 @@ class PasswordFlow(
     override suspend fun exchange(request: PasswordRequest): ExchangeResponse {
 
         return when(val match = matchService.match(username = request.username, password = request.password)) {
-            is MatchFailure -> FailedExchangeResponse(InvalidGrant, match.failureReason) // TODO - Double check
+            is MatchFailure -> FailedExchangeResponse(InvalidGrant, match.reason) // TODO - Double check
             is MatchSuccess -> {
 
                 val accessToken = accessTokenService.issue(

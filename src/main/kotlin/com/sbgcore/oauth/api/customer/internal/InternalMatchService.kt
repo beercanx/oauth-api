@@ -1,6 +1,6 @@
 package com.sbgcore.oauth.api.customer.internal
 
-import com.sbgcore.oauth.api.customer.FailureReason.Mismatch
+import com.sbgcore.oauth.api.customer.MatchFailureReason.Mismatch
 import com.sbgcore.oauth.api.customer.MatchFailure
 import com.sbgcore.oauth.api.customer.MatchResponse
 import com.sbgcore.oauth.api.customer.MatchService

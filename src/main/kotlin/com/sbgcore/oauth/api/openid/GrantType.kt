@@ -1,4 +1,4 @@
-package com.sbgcore.oauth.api.openid.exchange
+package com.sbgcore.oauth.api.openid
 
 import com.sbgcore.oauth.api.enums.WithValue
 import kotlinx.serialization.SerialName

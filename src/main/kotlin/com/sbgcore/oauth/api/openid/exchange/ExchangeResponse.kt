@@ -2,7 +2,7 @@
 
 package com.sbgcore.oauth.api.openid.exchange
 
-import com.sbgcore.oauth.api.customer.FailureReason
+import com.sbgcore.oauth.api.customer.MatchFailureReason
 import com.sbgcore.oauth.api.openid.Scopes
 import com.sbgcore.oauth.api.tokens.TokenType
 import com.sbgcore.oauth.api.tokens.TokenType.Bearer
@@ -63,7 +63,7 @@ data class FailedExchangeResponse(
     val error_description: String? = null
 
 ) : ExchangeResponse() {
-    constructor(error: ErrorType, failure: FailureReason) : this(error, failure.toString())
+    constructor(error: ErrorType, failure: MatchFailureReason) : this(error, failure.toString())
 }
 
 @Serializable
