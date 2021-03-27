@@ -38,6 +38,7 @@ fun PipelineContext<*, ApplicationCall>.validPublicClient(parameters: Parameters
     }
 }
 
-fun validatePublicClient(clientId: String): PublicClient? {
+private fun validatePublicClient(clientId: String): PublicClient? {
+    // TODO - Check if client is public before wrapping in PublicClient
     return enumByValue<ClientId>(clientId)?.let(::PublicClient)
 }

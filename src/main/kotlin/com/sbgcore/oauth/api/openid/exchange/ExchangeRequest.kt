@@ -54,14 +54,23 @@ data class RawExchangeRequest(
     }
 }
 
-sealed class ValidatedConfidentialExchangeRequest {
+sealed class ConfidentialExchangeRequest
+
+object InvalidConfidentialExchangeRequest : ConfidentialExchangeRequest()
+
+sealed class ValidatedConfidentialExchangeRequest : ConfidentialExchangeRequest() {
     abstract val principal: ConfidentialClient
     override fun toString(): String {
         return "ValidatedConfidentialExchangeRequest(principal=$principal)"
     }
 }
 
-sealed class ValidatedPublicExchangeRequest {
+sealed class PublicExchangeRequest
+
+object InvalidPublicExchangeRequest : PublicExchangeRequest()
+
+sealed class ValidatedPublicExchangeRequest : PublicExchangeRequest()
+{
     abstract val principal: PublicClient
     override fun toString(): String {
         return "ValidatedPublicExchangeRequest(principal=$principal)"

@@ -14,12 +14,12 @@ import io.ktor.http.Url
 fun validateExchangeRequest(
     principal: ConfidentialClient,
     parameters: Parameters
-): ValidatedConfidentialExchangeRequest {
+): ConfidentialExchangeRequest = returnOnException(InvalidConfidentialExchangeRequest) {
 
     // Receive the posted form, unless we implement ContentNegotiation that supports URL encoded forms.
     val rawExchangeRequest = parameters.toRawExchangeRequest()
 
-    return when (rawExchangeRequest.grantType) {
+    when (rawExchangeRequest.grantType) {
         AuthorizationCode -> {
             val code = rawExchangeRequest.validateStringParameter(RawExchangeRequest::code)
             val redirectUri = rawExchangeRequest.validateRedirectUri(principal)
@@ -55,12 +55,12 @@ fun validateExchangeRequest(
 fun validatePkceExchangeRequest(
     principal: PublicClient,
     parameters: Parameters
-): ValidatedPublicExchangeRequest {
+): PublicExchangeRequest = returnOnException(InvalidPublicExchangeRequest)  {
 
     // Receive the posted form, unless we implement ContentNegotiation that supports URL encoded forms.
     val raw = parameters.toRawExchangeRequest()
 
-    return if(raw.grantType == AuthorizationCode && raw.isPKCE) {
+    if(raw.grantType == AuthorizationCode && raw.isPKCE) {
 
         val code = raw.validateStringParameter(RawExchangeRequest::code)
         val redirectUri = raw.validateRedirectUri(principal)
@@ -68,8 +68,14 @@ fun validatePkceExchangeRequest(
 
         PkceAuthorizationCodeRequest(principal, code, redirectUri, codeVerifier)
     } else {
-        throw Exception("Bad Request")
+        InvalidPublicExchangeRequest // TODO - Invalid Grant or Request?
     }
+}
+
+private fun <A : C, B : C, C> returnOnException(onException: B, block: () -> A): C  = try {
+    block()
+} catch (exception: Exception) {
+    onException
 }
 
 // TODO - See if we can extend Kotlinx Serialisation to support this instead

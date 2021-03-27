@@ -3,6 +3,7 @@ package com.sbgcore.oauth.api.openid.exchange
 import com.sbgcore.oauth.api.authentication.ConfidentialClient
 import com.sbgcore.oauth.api.authentication.PublicClient
 import com.sbgcore.oauth.api.ktor.authenticate
+import com.sbgcore.oauth.api.openid.exchange.ErrorType.InvalidRequest
 import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.password.PasswordFlow
@@ -39,6 +40,7 @@ fun Route.tokenExchangeRoute(
                         is RefreshTokenRequest -> refreshFlow.exchange(request)
                         is AssertionRequest -> assertionRedemptionFlow.exchange(request)
                         is SsoTokenRequest -> TODO("Not yet implemented: $request")
+                        is InvalidConfidentialExchangeRequest -> FailedExchangeResponse(InvalidRequest) // TODO - Extend to include more detail?
                     }
 
                     return@post when(response) {
@@ -55,6 +57,7 @@ fun Route.tokenExchangeRoute(
 
                         val response = when (val result = validatePkceExchangeRequest(client, parameters)) {
                             is PkceAuthorizationCodeRequest -> authorizationCodeFlow.exchange(result)
+                            is InvalidPublicExchangeRequest -> FailedExchangeResponse(InvalidRequest) // TODO - Extend to include more detail?
                         }
 
                         return@post when(response) {
