@@ -2,7 +2,7 @@ package com.sbgcore.oauth.api.openid.exchange
 
 import com.sbgcore.oauth.api.authentication.ConfidentialClient
 import com.sbgcore.oauth.api.authentication.PublicClient
-import com.sbgcore.oauth.api.openid.ClientId
+import com.sbgcore.oauth.api.client.ClientId
 import com.sbgcore.oauth.api.openid.Scopes
 import io.ktor.http.Url
 import kotlinx.serialization.SerialName

@@ -1,6 +1,6 @@
 package com.sbgcore.oauth.api.tokens
 
-import com.sbgcore.oauth.api.openid.ClientId
+import com.sbgcore.oauth.api.client.ClientId
 import com.sbgcore.oauth.api.Repository
 import java.util.UUID
 

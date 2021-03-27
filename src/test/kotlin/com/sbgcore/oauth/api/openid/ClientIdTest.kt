@@ -1,7 +1,7 @@
 package com.sbgcore.oauth.api.openid
 
-import com.sbgcore.oauth.api.openid.ClientId.ConsumerX
-import com.sbgcore.oauth.api.openid.ClientId.ConsumerZ
+import com.sbgcore.oauth.api.client.ClientId.ConsumerX
+import com.sbgcore.oauth.api.client.ClientId.ConsumerZ
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 

@@ -1,7 +1,10 @@
 package com.sbgcore.oauth.api.openid
 
+import com.sbgcore.oauth.api.client.ClientId
 import com.sbgcore.oauth.api.authentication.ClientPrincipal
 import com.sbgcore.oauth.api.authentication.PublicClient
+import com.sbgcore.oauth.api.client.ClientConfiguration
+import com.sbgcore.oauth.api.client.ClientConfigurationRepository
 import com.sbgcore.oauth.api.enums.enumByValue
 
 import io.ktor.application.*
@@ -32,13 +35,17 @@ fun <A> A.validateStringParameter(parameter: KProperty1<A, String?>): String {
 /**
  * Extract the client_id from the body, check that its a valid Public Client and then save it as the current Principal.
  */
-fun PipelineContext<*, ApplicationCall>.validPublicClient(parameters: Parameters): PublicClient? {
-    return parameters["client_id"]?.let(::validatePublicClient)?.also { client ->
-        call.authentication.principal(client)
-    }
-}
+fun PipelineContext<*, ApplicationCall>.validPublicClient(
+    clientConfigurationRepository: ClientConfigurationRepository,
+    parameters: Parameters,
+): PublicClient? {
 
-private fun validatePublicClient(clientId: String): PublicClient? {
-    // TODO - Check if client is public before wrapping in PublicClient
-    return enumByValue<ClientId>(clientId)?.let(::PublicClient)
+    return parameters["client_id"]
+        ?.let<String, ClientId?>(::enumByValue)
+        ?.let(clientConfigurationRepository::findById)
+        ?.takeIf(ClientConfiguration::isPublic)
+        ?.let(::PublicClient)
+        ?.also { client ->
+            call.authentication.principal(client)
+        }
 }

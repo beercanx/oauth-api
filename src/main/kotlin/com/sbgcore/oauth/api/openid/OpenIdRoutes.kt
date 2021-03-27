@@ -1,5 +1,6 @@
 package com.sbgcore.oauth.api.openid
 
+import com.sbgcore.oauth.api.client.ClientConfigurationRepository
 import com.sbgcore.oauth.api.openid.exchange.*
 import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
@@ -14,7 +15,8 @@ fun Route.openIdRoutes(
     refreshFlow: RefreshFlow,
     authorizationCodeFlow: AuthorizationCodeFlow,
     assertionRedemptionFlow: AssertionRedemptionFlow,
-    introspectionService: IntrospectionService
+    introspectionService: IntrospectionService,
+    clientConfigurationRepository: ClientConfigurationRepository
 ) {
     // TODO - Ensure cache control headers are set to prevent caching
     route("/openid/v1") {
@@ -22,7 +24,13 @@ fun Route.openIdRoutes(
             // TODO - Implement
         }
         route("/token") {
-            tokenExchangeRoute(passwordFlow, refreshFlow, authorizationCodeFlow, assertionRedemptionFlow)
+            tokenExchangeRoute(
+                passwordFlow,
+                refreshFlow,
+                authorizationCodeFlow,
+                assertionRedemptionFlow,
+                clientConfigurationRepository
+            )
         }
         route("/introspect") {
             tokenIntrospectionRoute(introspectionService)

@@ -2,6 +2,7 @@ package com.sbgcore.oauth.api.openid.exchange
 
 import com.sbgcore.oauth.api.authentication.ConfidentialClient
 import com.sbgcore.oauth.api.authentication.PublicClient
+import com.sbgcore.oauth.api.client.ClientConfigurationRepository
 import com.sbgcore.oauth.api.ktor.authenticate
 import com.sbgcore.oauth.api.openid.exchange.ErrorType.InvalidRequest
 import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
@@ -23,7 +24,8 @@ fun Route.tokenExchangeRoute(
     passwordFlow: PasswordFlow,
     refreshFlow: RefreshFlow,
     authorizationCodeFlow: AuthorizationCodeFlow,
-    assertionRedemptionFlow: AssertionRedemptionFlow
+    assertionRedemptionFlow: AssertionRedemptionFlow,
+    clientConfigurationRepository: ClientConfigurationRepository
 ) {
     // Optional because we have to cater for public clients using PKCE
     authenticate<ConfidentialClient>(optional = true) {
@@ -52,7 +54,7 @@ fun Route.tokenExchangeRoute(
 
             // Handle PKCE requests for public clients
             when (val parameters = call.receiveOrNull<Parameters>()) {
-                is Parameters -> when (val client = validPublicClient(parameters)) {
+                is Parameters -> when (val client = validPublicClient(clientConfigurationRepository, parameters)) {
                     is PublicClient -> {
 
                         val response = when (val result = validatePkceExchangeRequest(client, parameters)) {

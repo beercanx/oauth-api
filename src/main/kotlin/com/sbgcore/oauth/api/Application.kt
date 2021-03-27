@@ -14,9 +14,10 @@ import com.sbgcore.oauth.api.openid.introspection.IntrospectionService
 import com.sbgcore.oauth.api.openid.openIdRoutes
 import com.sbgcore.oauth.api.tokens.NitriteAccessTokenRepository
 import com.sbgcore.oauth.api.authentication.NitriteClientSecretRepository
+import com.sbgcore.oauth.api.client.ClientConfiguration
+import com.sbgcore.oauth.api.client.StaticClientConfigurationRepository
 import com.sbgcore.oauth.api.swagger.swaggerRoutes
 import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
-import com.typesafe.config.ConfigFactory
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.features.*
@@ -71,9 +72,8 @@ fun Application.main() {
         }
     }
 
-    val config = ConfigFactory.load().getConfig("com.sbgcore.oauth.api")
-
     val clientSecretRepository = NitriteClientSecretRepository()
+    val clientConfigurationRepository = StaticClientConfigurationRepository()
 
     install(Authentication) {
         basic<ConfidentialClient> {
@@ -82,10 +82,11 @@ fun Application.main() {
                 // TODO - Refactor into testable unit
                 clientSecretRepository
                     .findAllByClientId(clientId)
-                    .filter { secret ->
-                        OpenBSDBCrypt.checkPassword(secret.secret, clientSecret.toCharArray())
-                    }
+                    .asSequence()
+                    .filter { secret -> OpenBSDBCrypt.checkPassword(secret.secret, clientSecret.toCharArray()) }
                     .map(ClientSecret::clientId)
+                    .mapNotNull(clientConfigurationRepository::findById)
+                    .filter(ClientConfiguration::isConfidential)
                     .map(::ConfidentialClient)
                     .firstOrNull()
             }
@@ -121,7 +122,14 @@ fun Application.main() {
         //
         // Setup the OpenID connect routes
         //
-        openIdRoutes(passwordFlow, refreshFlow, authorizationCodeFlow, assertionRedemptionFlow, introspectionService)
+        openIdRoutes(
+            passwordFlow,
+            refreshFlow,
+            authorizationCodeFlow,
+            assertionRedemptionFlow,
+            introspectionService,
+            clientConfigurationRepository
+        )
 
         // TODO - Account routes
         // TODO - Product transfer routes

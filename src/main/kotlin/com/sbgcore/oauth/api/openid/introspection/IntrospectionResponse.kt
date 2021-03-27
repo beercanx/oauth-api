@@ -1,6 +1,6 @@
 package com.sbgcore.oauth.api.openid.introspection
 
-import com.sbgcore.oauth.api.openid.ClientId
+import com.sbgcore.oauth.api.client.ClientId
 import com.sbgcore.oauth.api.openid.Scopes
 import com.sbgcore.oauth.api.serializers.ScopeSerializer
 import kotlinx.serialization.SerialName
