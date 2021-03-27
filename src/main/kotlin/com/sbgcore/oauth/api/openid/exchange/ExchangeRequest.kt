@@ -136,6 +136,3 @@ data class SsoTokenRequest(
         return "SsoTokenRequest(principal=$principal, ssoToken=REDACTED)"
     }
 }
-
-val RawExchangeRequest.isPKCE: Boolean
-    get() = !codeVerifier.isNullOrBlank()

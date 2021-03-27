@@ -1,6 +1,8 @@
 package com.sbgcore.oauth.api.client
 
-data class ClientConfiguration(val id: ClientId, val type: ClientType) {
+import io.ktor.http.*
+
+data class ClientConfiguration(val id: ClientId, val type: ClientType, val redirectUrls: Set<Url>) {
     val isConfidential = type == ClientType.Confidential
     val isPublic = type == ClientType.Public
 }

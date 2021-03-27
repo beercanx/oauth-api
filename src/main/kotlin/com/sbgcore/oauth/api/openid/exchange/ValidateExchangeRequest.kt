@@ -24,6 +24,9 @@ fun validateExchangeRequest(
             val code = rawExchangeRequest.validateStringParameter(RawExchangeRequest::code)
             val redirectUri = rawExchangeRequest.validateRedirectUri(principal)
 
+            // TODO - Validate the [code] is a valid code via a repository
+            // TODO - Validate the [redirect_uri] is the same as what was used to generate the [code]
+
             AuthorizationCodeRequest(principal, code, redirectUri)
         }
         Password -> {
@@ -60,7 +63,7 @@ fun validatePkceExchangeRequest(
     // Receive the posted form, unless we implement ContentNegotiation that supports URL encoded forms.
     val raw = parameters.toRawExchangeRequest()
 
-    if(raw.grantType == AuthorizationCode && raw.isPKCE) {
+    if(raw.grantType == AuthorizationCode) {
 
         val code = raw.validateStringParameter(RawExchangeRequest::code)
         val redirectUri = raw.validateRedirectUri(principal)
@@ -123,8 +126,12 @@ private fun Scopes.canBeIssuedTo(principal: ConfidentialClient): Boolean {
 private fun RawExchangeRequest.validateRedirectUri(principal: ClientPrincipal): Url {
 
     val rawRedirectUri = validateStringParameter(RawExchangeRequest::redirectUri)
+    val redirectUrl = URLBuilder(rawRedirectUri).build()
 
-    // TODO - Look up from config based on the provided principal id
-
-    return URLBuilder(rawRedirectUri).build()
+    // Design of this system means we expect exact matches for callbacks.
+    return if(principal.configuration.redirectUrls.contains(redirectUrl)) {
+        redirectUrl
+    } else {
+        throw Exception("Invalid redirect uri: $redirectUrl")
+    }
 }

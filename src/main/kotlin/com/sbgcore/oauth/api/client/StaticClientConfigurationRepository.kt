@@ -3,6 +3,8 @@ package com.sbgcore.oauth.api.client
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import com.typesafe.config.ConfigException
+import io.ktor.config.*
+import io.ktor.http.*
 
 /**
  * A static Typesafe Config implementation of the [ClientConfigurationRepository].
@@ -29,7 +31,8 @@ class StaticClientConfigurationRepository(private val repository: Config) : Clie
             val config = repository.getConfig(id.value)
             ClientConfiguration(
                 id = id,
-                type = config.getEnum(ClientType::class.java, "type")
+                type = config.getEnum(ClientType::class.java, "type"),
+                redirectUrls = config.tryGetStringList("redirectUrls")?.map(::Url)?.toSet() ?: emptySet()
             )
         } else {
             null
