@@ -13,16 +13,16 @@ interface ClientSecretRepository : Repository<ClientSecret, UUID> {
     /**
      * Find all the [ClientSecret]'s issued to a given [ClientId].
      */
-    fun findAllByClientId(clientId: ClientId): Set<ClientSecret>
+    fun findAllByClientId(clientId: ClientId): Sequence<ClientSecret>
 
     /**
      * Find all the [ClientSecret]'s issued to a given [ClientId],
      * but takes a [String] and looks up the [ClientId] first.
      */
-    fun findAllByClientId(clientId: String): Set<ClientSecret> {
+    fun findAllByClientId(clientId: String): Sequence<ClientSecret> {
         val enum = enumByValue<ClientId>(clientId)
         return if(enum == null) {
-            emptySet()
+            emptySequence()
         } else {
             findAllByClientId(enum)
         }

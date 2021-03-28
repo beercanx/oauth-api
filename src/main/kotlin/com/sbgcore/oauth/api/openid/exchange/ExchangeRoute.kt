@@ -1,5 +1,6 @@
 package com.sbgcore.oauth.api.openid.exchange
 
+import com.sbgcore.oauth.api.authentication.ClientAuthenticationService
 import com.sbgcore.oauth.api.authentication.ConfidentialClient
 import com.sbgcore.oauth.api.authentication.PublicClient
 import com.sbgcore.oauth.api.client.ClientConfigurationRepository
@@ -9,7 +10,6 @@ import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemption
 import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.password.PasswordFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.refresh.RefreshFlow
-import com.sbgcore.oauth.api.openid.validPublicClient
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
@@ -21,11 +21,11 @@ import io.ktor.routing.*
 import io.ktor.util.pipeline.*
 
 fun Route.exchangeRoute(
+    clientAuthService: ClientAuthenticationService,
     passwordFlow: PasswordFlow,
     refreshFlow: RefreshFlow,
     authorizationCodeFlow: AuthorizationCodeFlow,
-    assertionRedemptionFlow: AssertionRedemptionFlow,
-    clientConfigurationRepository: ClientConfigurationRepository
+    assertionRedemptionFlow: AssertionRedemptionFlow
 ) {
     // Optional because we have to cater for public clients using PKCE
     authenticate<ConfidentialClient>(optional = true) {
@@ -54,7 +54,7 @@ fun Route.exchangeRoute(
 
             // Handle PKCE requests for public clients
             when (val parameters = call.receiveOrNull<Parameters>()) {
-                is Parameters -> when (val client = validPublicClient(clientConfigurationRepository, parameters)) {
+                is Parameters -> when (val client = parameters["client_id"]?.let(clientAuthService::publicClient)) {
                     is PublicClient -> {
 
                         val response = when (val result = validatePkceExchangeRequest(client, parameters)) {

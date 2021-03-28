@@ -8,15 +8,15 @@ import com.sbgcore.oauth.api.customer.MatchSuccess
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt.checkPassword
 import java.time.OffsetDateTime.now
 
-class InternalMatchService(
-    private val repository: InternalCredentialRepository
+class CustomerMatchService(
+    private val customerCredentialRepository: CustomerCredentialRepository
 ) : MatchService {
 
     // TODO - Think how we will track match failures, lock an account, reset tracking of failures, enable unlocking.
 
     override suspend fun match(username: String, password: String): MatchResponse {
 
-        val credential = repository.findByUsername(username.toUpperCase())
+        val credential = customerCredentialRepository.findByUsername(username.toUpperCase())
 
         return if (credential != null && checkPassword(credential.secret, password.toCharArray())) {
 

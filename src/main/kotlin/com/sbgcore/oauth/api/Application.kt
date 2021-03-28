@@ -1,9 +1,9 @@
 package com.sbgcore.oauth.api
 
-import com.sbgcore.oauth.api.authentication.ClientSecret
+import com.sbgcore.oauth.api.authentication.ClientAuthenticationService
 import com.sbgcore.oauth.api.authentication.ConfidentialClient
-import com.sbgcore.oauth.api.customer.internal.InternalMatchService
-import com.sbgcore.oauth.api.customer.internal.NitriteInternalCredentialRepository
+import com.sbgcore.oauth.api.customer.internal.CustomerMatchService
+import com.sbgcore.oauth.api.customer.internal.NitriteCustomerCredentialRepository
 import com.sbgcore.oauth.api.ktor.basic
 import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
@@ -14,7 +14,6 @@ import com.sbgcore.oauth.api.openid.introspection.IntrospectionService
 import com.sbgcore.oauth.api.openid.openIdRoutes
 import com.sbgcore.oauth.api.tokens.NitriteAccessTokenRepository
 import com.sbgcore.oauth.api.authentication.NitriteClientSecretRepository
-import com.sbgcore.oauth.api.client.ClientConfiguration
 import com.sbgcore.oauth.api.client.StaticClientConfigurationRepository
 import com.sbgcore.oauth.api.swagger.swaggerRoutes
 import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
@@ -26,7 +25,6 @@ import io.ktor.http.content.*
 import io.ktor.locations.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
-import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 
 @Suppress("unused") // Inform the IDE that we are actually using this
 @KtorExperimentalLocationsAPI
@@ -72,46 +70,38 @@ fun Application.main() {
         }
     }
 
+    //
+    // Dependencies for injection
+    //
+
+    // Clients
     val clientSecretRepository = NitriteClientSecretRepository()
     val clientConfigurationRepository = StaticClientConfigurationRepository()
+    val clientAuthenticationService = ClientAuthenticationService(clientSecretRepository, clientConfigurationRepository)
+
+    // Tokens
+    val accessTokenRepository = NitriteAccessTokenRepository()
+    val accessTokenService = AccessTokenService(accessTokenRepository)
+    val introspectionService = IntrospectionService(accessTokenRepository)
+
+    // Customer
+    val customerCredentialRepository = NitriteCustomerCredentialRepository()
+    val customerMatchService = CustomerMatchService(customerCredentialRepository)
+
+    // Flows
+    val passwordFlow = PasswordFlow(customerMatchService, accessTokenService)
+    val refreshFlow = RefreshFlow()
+    val authorizationCodeFlow = AuthorizationCodeFlow()
+    val assertionRedemptionFlow = AssertionRedemptionFlow()
 
     install(Authentication) {
         basic<ConfidentialClient> {
             realm = "skybettingandgaming"
             validate { (clientId, clientSecret) ->
-                // TODO - Refactor into testable unit
-                clientSecretRepository
-                    .findAllByClientId(clientId)
-                    .asSequence()
-                    .filter { secret -> OpenBSDBCrypt.checkPassword(secret.secret, clientSecret.toCharArray()) }
-                    .map(ClientSecret::clientId)
-                    .mapNotNull(clientConfigurationRepository::findById)
-                    .filter(ClientConfiguration::isConfidential)
-                    .map(::ConfidentialClient)
-                    .firstOrNull()
+                clientAuthenticationService.confidentialClient(clientId, clientSecret)
             }
         }
     }
-
-
-    //
-    // Dependencies for injection
-    //
-
-    // Repositories
-    val accessTokenRepository = NitriteAccessTokenRepository()
-    val internalCredentialRepository = NitriteInternalCredentialRepository()
-
-    // Services
-    val matchService = InternalMatchService(internalCredentialRepository)
-    val accessTokenService = AccessTokenService(accessTokenRepository)
-
-    // Flows
-    val passwordFlow = PasswordFlow(matchService, accessTokenService)
-    val refreshFlow = RefreshFlow()
-    val authorizationCodeFlow = AuthorizationCodeFlow()
-    val assertionRedemptionFlow = AssertionRedemptionFlow()
-    val introspectionService = IntrospectionService(accessTokenRepository)
 
     routing {
         //
@@ -123,12 +113,12 @@ fun Application.main() {
         // Setup the OpenID connect routes
         //
         openIdRoutes(
+            clientAuthenticationService,
             passwordFlow,
             refreshFlow,
             authorizationCodeFlow,
             assertionRedemptionFlow,
-            introspectionService,
-            clientConfigurationRepository
+            introspectionService
         )
 
         // TODO - Account routes

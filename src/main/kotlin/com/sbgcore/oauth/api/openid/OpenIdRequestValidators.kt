@@ -35,17 +35,18 @@ fun <A> A.validateStringParameter(parameter: KProperty1<A, String?>): String {
 /**
  * Extract the client_id from the body, check that its a valid Public Client and then save it as the current Principal.
  */
-fun PipelineContext<*, ApplicationCall>.validPublicClient(
-    clientConfigurationRepository: ClientConfigurationRepository,
-    parameters: Parameters,
-): PublicClient? {
-
-    return parameters["client_id"]
-        ?.let<String, ClientId?>(::enumByValue)
-        ?.let(clientConfigurationRepository::findById)
-        ?.takeIf(ClientConfiguration::isPublic)
-        ?.let(::PublicClient)
-        ?.also { client ->
-            call.authentication.principal(client)
-        }
-}
+//@Deprecated("")
+//fun PipelineContext<*, ApplicationCall>.validPublicClient(
+//    clientConfigurationRepository: ClientConfigurationRepository,
+//    parameters: Parameters,
+//): PublicClient? {
+//
+//    return parameters["client_id"]
+//        ?.let<String, ClientId?>(::enumByValue)
+//        ?.let(clientConfigurationRepository::findById)
+//        ?.takeIf(ClientConfiguration::isPublic)
+//        ?.let(::PublicClient)
+//        ?.also { client ->
+//            call.authentication.principal(client)
+//        }
+//}

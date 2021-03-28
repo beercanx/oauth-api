@@ -57,7 +57,7 @@ class NitriteClientSecretRepository(database: Nitrite) : ClientSecretRepository 
         return repository.find(ClientSecret::id eq id).firstOrDefault()
     }
 
-    override fun findAllByClientId(clientId: ClientId): Set<ClientSecret> {
-        return repository.find(ClientSecret::clientId eq clientId).toSet()
+    override fun findAllByClientId(clientId: ClientId): Sequence<ClientSecret> {
+        return repository.find(ClientSecret::clientId eq clientId).asSequence()
     }
 }

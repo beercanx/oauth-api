@@ -1,5 +1,6 @@
 package com.sbgcore.oauth.api.openid
 
+import com.sbgcore.oauth.api.authentication.ClientAuthenticationService
 import com.sbgcore.oauth.api.client.ClientConfigurationRepository
 import com.sbgcore.oauth.api.openid.exchange.*
 import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
@@ -11,12 +12,12 @@ import io.ktor.routing.*
 
 // TODO - Consider changing Application from the base library to a custom class so we don't need to include dependencies in method signature
 fun Route.openIdRoutes(
+    clientAuthenticationService: ClientAuthenticationService,
     passwordFlow: PasswordFlow,
     refreshFlow: RefreshFlow,
     authorizationCodeFlow: AuthorizationCodeFlow,
     assertionRedemptionFlow: AssertionRedemptionFlow,
-    introspectionService: IntrospectionService,
-    clientConfigurationRepository: ClientConfigurationRepository
+    introspectionService: IntrospectionService
 ) {
     // TODO - Ensure cache control headers are set to prevent caching
     route("/openid/v1") {
@@ -25,11 +26,11 @@ fun Route.openIdRoutes(
         }
         route("/token") {
             exchangeRoute(
+                clientAuthenticationService,
                 passwordFlow,
                 refreshFlow,
                 authorizationCodeFlow,
-                assertionRedemptionFlow,
-                clientConfigurationRepository
+                assertionRedemptionFlow
             )
         }
         route("/introspect") {

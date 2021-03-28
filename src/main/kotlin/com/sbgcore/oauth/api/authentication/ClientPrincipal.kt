@@ -11,11 +11,10 @@ sealed class ClientPrincipal : Principal {
 }
 
 data class ConfidentialClient(
-    override val id: ClientId,
     override val configuration: ClientConfiguration
 ) : ClientPrincipal() {
 
-    constructor(configuration: ClientConfiguration) : this(configuration.id, configuration)
+    override val id: ClientId = configuration.id
 
     init {
         require(configuration.type == ClientType.Confidential) { "type cannot be [${configuration.type}]" }
@@ -23,11 +22,10 @@ data class ConfidentialClient(
 }
 
 data class PublicClient(
-    override val id: ClientId,
     override val configuration: ClientConfiguration
 ) : ClientPrincipal() {
 
-    constructor(configuration: ClientConfiguration) : this(configuration.id, configuration)
+    override val id: ClientId = configuration.id
 
     init {
         require(configuration.type == ClientType.Public) { "type cannot be [${configuration.type}]" }
