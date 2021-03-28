@@ -4,19 +4,13 @@ import com.sbgcore.oauth.api.client.ClientConfiguration
 import com.sbgcore.oauth.api.client.ClientConfigurationRepository
 import com.sbgcore.oauth.api.client.ClientId
 import com.sbgcore.oauth.api.client.ClientId.*
-import com.sbgcore.oauth.api.client.ClientType
 import com.sbgcore.oauth.api.client.ClientType.Confidential
 import com.sbgcore.oauth.api.client.ClientType.Public
 import io.kotest.assertions.assertSoftly
-import io.kotest.matchers.nulls.beNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNot
-import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
