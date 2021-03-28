@@ -15,6 +15,7 @@ import io.kotest.matchers.shouldNot
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -51,6 +52,7 @@ class ClientAuthenticationServiceTest {
 
     private val clientConfigurationRepository = mockk<ClientConfigurationRepository> {
         every { findByClientId(any<ClientId>()) } returns null
+        every { findByClientId(any<String>()) } returns null
     }
 
     private val checkPassword = mockk<(String, CharArray) -> Boolean> {
@@ -84,6 +86,7 @@ class ClientAuthenticationServiceTest {
 
         @Test
         fun `return null when client secret does not exist`() {
+
             underTest.confidentialClient("consumer-z", "consumer-z-secret") shouldBe null
         }
 
@@ -119,11 +122,39 @@ class ClientAuthenticationServiceTest {
     @Nested
     inner class PublicClientTest {
 
-        // publicClient - Happy Path
-        // Should be able to handle the client being public
+        @Test
+        fun `return a PublicClient when its a public client`() {
 
-        // publicClient - Unhappy Path
-        // Should be able to handle the client configuration not existing
-        // Should be able to handle the client not being public
+            every { clientConfigurationRepository.findByClientId(any<String>()) } returns consumerYConfiguration
+
+            val client = underTest.publicClient("consumer-y")
+            client.shouldNotBeNull()
+
+            assertSoftly(client) {
+                id shouldBe ConsumerY
+                configuration.id shouldBe ConsumerY
+                configuration.type shouldBe Public
+            }
+        }
+
+        @Test
+        fun `return null when client configuration does not exist`() {
+
+            underTest.publicClient("consumer-x") shouldBe null
+        }
+
+        @Test
+        fun `return null when client is not public`() {
+
+            every { clientConfigurationRepository.findByClientId(any<String>()) } returns consumerZConfiguration
+
+            underTest.publicClient("consumer-z") shouldBe null
+        }
+
+        @Test
+        fun `return null when client id is null`() {
+
+            underTest.publicClient(null) shouldBe null
+        }
     }
 }
