@@ -4,15 +4,25 @@ import com.sbgcore.oauth.api.client.ClientConfiguration
 import com.sbgcore.oauth.api.client.ClientConfigurationRepository
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 
-class ClientAuthenticationService(
+class ClientAuthenticationService internal constructor(
     private val clientSecretRepository: ClientSecretRepository,
-    private val clientConfigurationRepository: ClientConfigurationRepository
+    private val clientConfigurationRepository: ClientConfigurationRepository,
+    private val checkPassword: (String, CharArray) -> Boolean
 ) {
+
+    constructor(
+        clientSecretRepository: ClientSecretRepository,
+        clientConfigurationRepository: ClientConfigurationRepository
+    ) : this(
+        clientSecretRepository,
+        clientConfigurationRepository,
+        OpenBSDBCrypt::checkPassword
+    )
 
     fun confidentialClient(clientId: String, clientSecret: String): ConfidentialClient? {
         return clientSecretRepository
             .findAllByClientId(clientId)
-            .filter { secret -> OpenBSDBCrypt.checkPassword(secret.secret, clientSecret.toCharArray()) }
+            .filter { secret -> checkPassword(secret.secret, clientSecret.toCharArray()) }
             .map(ClientSecret::clientId)
             .mapNotNull(clientConfigurationRepository::findByClientId)
             .filter(ClientConfiguration::isConfidential)
