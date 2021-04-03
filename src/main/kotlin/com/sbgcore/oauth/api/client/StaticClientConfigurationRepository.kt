@@ -24,6 +24,7 @@ class StaticClientConfigurationRepository(private val repository: Config) : Clie
 
     /**
      * @throws ConfigException.Missing if a client config value is absent or null
+     * @throws ConfigException.BadValue if a client config value is not convertible to required type
      * @throws ConfigException.WrongType if a client config value is not convertible to required type
      */
     override fun findById(id: ClientId): ClientConfiguration? {
