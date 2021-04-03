@@ -9,6 +9,7 @@ import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite
 import org.dizitart.no2.IndexOptions.indexOptions
 import org.dizitart.no2.IndexType.NonUnique
+import org.dizitart.no2.IndexType.Unique
 import org.dizitart.no2.Nitrite
 import java.security.SecureRandom
 import java.util.*
@@ -32,7 +33,11 @@ class NitriteClientSecretRepository(database: Nitrite) : ClientSecretRepository 
 
     private val repository = database.getRepository<ClientSecret> {
 
+        // Index to aid looking up secrets by clientId
         createIndex(ClientSecret::clientId.name, indexOptions(NonUnique))
+
+        // Index to prevent the same hashed secret from being duplicated
+        createIndex(ClientSecret::secret.name, indexOptions(Unique))
 
         val secureRandom = SecureRandom()
         fun generateSalt(length: Int = 16) = ByteArray(size = length).also(secureRandom::nextBytes)

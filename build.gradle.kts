@@ -68,6 +68,9 @@ dependencies {
     // Ktor client test kit
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("io.ktor:ktor-client-mock-jvm:$ktorVersion")
+
+    // Test data generation
+    testImplementation("org.apache.commons:commons-lang3:3.12.0")
 }
 
 application {
