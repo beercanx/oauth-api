@@ -57,6 +57,7 @@ data class RawExchangeRequest(
 
 sealed class ConfidentialExchangeRequest
 
+// TODO - Extend to support validation failure reasons?
 object InvalidConfidentialExchangeRequest : ConfidentialExchangeRequest()
 
 sealed class ValidatedConfidentialExchangeRequest : ConfidentialExchangeRequest() {
@@ -68,6 +69,7 @@ sealed class ValidatedConfidentialExchangeRequest : ConfidentialExchangeRequest(
 
 sealed class PublicExchangeRequest
 
+// TODO - Extend to support validation failure reasons?
 object InvalidPublicExchangeRequest : PublicExchangeRequest()
 
 sealed class ValidatedPublicExchangeRequest : PublicExchangeRequest() {

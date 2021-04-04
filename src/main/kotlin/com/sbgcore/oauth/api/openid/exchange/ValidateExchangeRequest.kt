@@ -73,6 +73,7 @@ fun validatePkceExchangeRequest(
     }
 }
 
+// TODO - Extend to support validation failure reasons?
 private fun <A : C, B : C, C> returnOnException(onException: B, block: () -> A): C = try {
     block()
 } catch (exception: Exception) {
