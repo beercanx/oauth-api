@@ -1,8 +1,8 @@
 package com.sbgcore.oauth.api.tokens
 
-import com.sbgcore.oauth.api.client.ClientId
 import com.sbgcore.oauth.api.Repository
-import java.util.UUID
+import com.sbgcore.oauth.api.client.ClientId
+import java.util.*
 
 /**
  * A [Repository] for storing [AccessToken]'s

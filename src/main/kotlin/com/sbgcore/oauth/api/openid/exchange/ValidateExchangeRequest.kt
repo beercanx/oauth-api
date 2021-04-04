@@ -1,15 +1,13 @@
 package com.sbgcore.oauth.api.openid.exchange
 
-import com.sbgcore.oauth.api.client.ConfidentialClient
 import com.sbgcore.oauth.api.client.ClientPrincipal
+import com.sbgcore.oauth.api.client.ConfidentialClient
 import com.sbgcore.oauth.api.client.PublicClient
-import com.sbgcore.oauth.api.openid.Scopes
 import com.sbgcore.oauth.api.enums.enumByValue
 import com.sbgcore.oauth.api.openid.GrantType.*
+import com.sbgcore.oauth.api.openid.Scopes
 import com.sbgcore.oauth.api.openid.validateStringParameter
-import io.ktor.http.Parameters
-import io.ktor.http.URLBuilder
-import io.ktor.http.Url
+import io.ktor.http.*
 
 fun validateExchangeRequest(
     principal: ConfidentialClient,
@@ -58,12 +56,12 @@ fun validateExchangeRequest(
 fun validatePkceExchangeRequest(
     principal: PublicClient,
     parameters: Parameters
-): PublicExchangeRequest = returnOnException(InvalidPublicExchangeRequest)  {
+): PublicExchangeRequest = returnOnException(InvalidPublicExchangeRequest) {
 
     // Receive the posted form, unless we implement ContentNegotiation that supports URL encoded forms.
     val raw = parameters.toRawExchangeRequest()
 
-    if(raw.grantType == AuthorizationCode) {
+    if (raw.grantType == AuthorizationCode) {
 
         val code = raw.validateStringParameter(RawExchangeRequest::code)
         val redirectUri = raw.validateRedirectUri(principal)
@@ -75,7 +73,7 @@ fun validatePkceExchangeRequest(
     }
 }
 
-private fun <A : C, B : C, C> returnOnException(onException: B, block: () -> A): C  = try {
+private fun <A : C, B : C, C> returnOnException(onException: B, block: () -> A): C = try {
     block()
 } catch (exception: Exception) {
     onException
@@ -129,7 +127,7 @@ private fun RawExchangeRequest.validateRedirectUri(principal: ClientPrincipal): 
     val redirectUrl = URLBuilder(rawRedirectUri).build()
 
     // Design of this system means we expect exact matches for callbacks.
-    return if(principal.configuration.redirectUrls.contains(redirectUrl)) {
+    return if (principal.configuration.redirectUrls.contains(redirectUrl)) {
         redirectUrl
     } else {
         throw Exception("Invalid redirect uri: $redirectUrl")

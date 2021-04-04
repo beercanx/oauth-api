@@ -1,12 +1,13 @@
 package com.sbgcore.oauth.api.openid
 
 import com.sbgcore.oauth.api.client.ClientAuthenticationService
-import com.sbgcore.oauth.api.openid.exchange.*
+import com.sbgcore.oauth.api.openid.exchange.exchangeRoute
 import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.password.PasswordFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.refresh.RefreshFlow
-import com.sbgcore.oauth.api.openid.introspection.*
+import com.sbgcore.oauth.api.openid.introspection.IntrospectionService
+import com.sbgcore.oauth.api.openid.introspection.introspectionRoute
 import io.ktor.routing.*
 
 // TODO - Consider changing Application from the base library to a custom class so we don't need to include dependencies in method signature

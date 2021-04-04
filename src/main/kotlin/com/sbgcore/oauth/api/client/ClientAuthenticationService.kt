@@ -28,7 +28,7 @@ class ClientAuthenticationService internal constructor(
             .firstOrNull()
     }
 
-    fun publicClient(clientId: String?) : PublicClient? {
+    fun publicClient(clientId: String?): PublicClient? {
         return clientId
             ?.let(clientConfigurationRepository::findByClientId)
             ?.takeIf(ClientConfiguration::isPublic)

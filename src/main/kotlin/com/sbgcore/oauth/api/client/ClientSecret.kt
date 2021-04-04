@@ -2,7 +2,6 @@
 
 package com.sbgcore.oauth.api.client
 
-import com.sbgcore.oauth.api.client.ClientId
 import com.sbgcore.oauth.api.serializers.UUIDSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers

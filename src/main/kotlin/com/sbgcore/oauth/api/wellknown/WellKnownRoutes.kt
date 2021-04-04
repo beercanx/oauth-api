@@ -1,7 +1,7 @@
 package com.sbgcore.oauth.api.wellknown
 
-import io.ktor.application.call
-import io.ktor.response.respond
+import io.ktor.application.*
+import io.ktor.response.*
 import io.ktor.routing.*
 
 fun Route.wellKnownRoutes(wellKnown: WellKnown = WellKnown()) {

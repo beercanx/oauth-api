@@ -18,7 +18,7 @@ data class ActiveIntrospectionResponse(
     @SerialName("exp") val expirationTime: Long,
     @SerialName("iat") val issuedAt: Long,
     @SerialName("nbf") val notBefore: Long
-): IntrospectionResponse()
+) : IntrospectionResponse()
 
 @Serializable
-data class InactiveIntrospectionResponse(val active: Boolean = false): IntrospectionResponse()
+data class InactiveIntrospectionResponse(val active: Boolean = false) : IntrospectionResponse()

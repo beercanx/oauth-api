@@ -23,7 +23,7 @@ class PasswordFlow(
 
         // TODO - Implement and call the Authorisation Service (mostly handles scopes)
 
-        return when(val match = matchService.match(username = request.username, password = request.password)) {
+        return when (val match = matchService.match(username = request.username, password = request.password)) {
             is MatchFailure -> FailedExchangeResponse(InvalidGrant, "Mismatch")
             is MatchSuccess -> {
 

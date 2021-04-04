@@ -40,7 +40,7 @@ class NitriteClientSecretRepository(database: Nitrite) : ClientSecretRepository 
 
         val secureRandom = SecureRandom()
         fun generateSalt(length: Int = 16) = ByteArray(size = length).also(secureRandom::nextBytes)
-        fun hash(secret: String) = OpenBSDBCrypt.generate(secret.toCharArray(),generateSalt(), 6)
+        fun hash(secret: String) = OpenBSDBCrypt.generate(secret.toCharArray(), generateSalt(), 6)
         fun new(uuid: String, id: ClientId, secret: String) = ClientSecret(fromString(uuid), id, hash(secret))
 
         insert(new("a8d695e0-17e7-4da5-a422-9760faa47053", ConsumerZ, "7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu"))

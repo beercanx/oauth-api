@@ -1,14 +1,8 @@
 package com.sbgcore.oauth.api.ktor
 
 import com.sbgcore.oauth.api.client.ClientPrincipal
-
-import io.ktor.auth.Authentication
-import io.ktor.auth.BasicAuthenticationProvider
-import io.ktor.auth.basic
-import io.ktor.auth.authenticate
-
-import io.ktor.routing.Route
-
+import io.ktor.auth.*
+import io.ktor.routing.*
 import kotlin.reflect.jvm.jvmName
 
 /**

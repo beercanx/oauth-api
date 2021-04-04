@@ -17,7 +17,7 @@ fun <A : ClientPrincipal> validClientPrincipal(principal: A?): A {
  */
 fun <A> A.validateStringParameter(parameter: KProperty1<A, String?>): String {
     // TODO - Verify this is all we need to do
-    return when(val value = parameter.get(this)?.trim()) {
+    return when (val value = parameter.get(this)?.trim()) {
         null, "" -> throw Exception("Null or blank parameter: ${parameter.name}")
         else -> value
     }

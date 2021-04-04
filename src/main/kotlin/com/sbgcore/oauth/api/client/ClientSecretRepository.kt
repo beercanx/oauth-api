@@ -1,7 +1,7 @@
 package com.sbgcore.oauth.api.client
 
-import com.sbgcore.oauth.api.enums.enumByValue
 import com.sbgcore.oauth.api.Repository
+import com.sbgcore.oauth.api.enums.enumByValue
 import java.util.*
 
 /**
@@ -20,7 +20,7 @@ interface ClientSecretRepository : Repository<ClientSecret, UUID> {
      */
     fun findAllByClientId(clientId: String): Sequence<ClientSecret> {
         val enum = enumByValue<ClientId>(clientId)
-        return if(enum == null) {
+        return if (enum == null) {
             emptySequence()
         } else {
             findAllByClientId(enum)

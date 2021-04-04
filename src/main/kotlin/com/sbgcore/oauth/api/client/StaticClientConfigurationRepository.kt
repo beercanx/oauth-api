@@ -1,8 +1,8 @@
 package com.sbgcore.oauth.api.client
 
 import com.typesafe.config.Config
-import com.typesafe.config.ConfigFactory
 import com.typesafe.config.ConfigException
+import com.typesafe.config.ConfigFactory
 import io.ktor.config.*
 import io.ktor.http.*
 
@@ -28,7 +28,7 @@ class StaticClientConfigurationRepository(private val repository: Config) : Clie
      * @throws ConfigException.WrongType if a client config value is not convertible to required type
      */
     override fun findById(id: ClientId): ClientConfiguration? {
-        return if(repository.hasPath(id.value)) {
+        return if (repository.hasPath(id.value)) {
             val config = repository.getConfig(id.value)
             ClientConfiguration(
                 id = id,

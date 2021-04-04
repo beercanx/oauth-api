@@ -1,6 +1,9 @@
 package com.sbgcore.oauth.api.customer.internal
 
-import com.sbgcore.oauth.api.customer.*
+import com.sbgcore.oauth.api.customer.MatchFailure
+import com.sbgcore.oauth.api.customer.MatchResponse
+import com.sbgcore.oauth.api.customer.MatchService
+import com.sbgcore.oauth.api.customer.MatchSuccess
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 
 class CustomerMatchService internal constructor(

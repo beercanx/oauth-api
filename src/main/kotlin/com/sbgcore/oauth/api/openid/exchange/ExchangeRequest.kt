@@ -1,11 +1,11 @@
 package com.sbgcore.oauth.api.openid.exchange
 
+import com.sbgcore.oauth.api.client.ClientId
 import com.sbgcore.oauth.api.client.ConfidentialClient
 import com.sbgcore.oauth.api.client.PublicClient
-import com.sbgcore.oauth.api.client.ClientId
 import com.sbgcore.oauth.api.openid.GrantType
 import com.sbgcore.oauth.api.openid.Scopes
-import io.ktor.http.Url
+import io.ktor.http.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -70,8 +70,7 @@ sealed class PublicExchangeRequest
 
 object InvalidPublicExchangeRequest : PublicExchangeRequest()
 
-sealed class ValidatedPublicExchangeRequest : PublicExchangeRequest()
-{
+sealed class ValidatedPublicExchangeRequest : PublicExchangeRequest() {
     abstract val principal: PublicClient
     override fun toString(): String {
         return "ValidatedPublicExchangeRequest(principal=$principal)"
