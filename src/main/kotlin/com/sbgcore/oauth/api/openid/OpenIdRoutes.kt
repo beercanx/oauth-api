@@ -1,7 +1,6 @@
 package com.sbgcore.oauth.api.openid
 
-import com.sbgcore.oauth.api.authentication.ClientAuthenticationService
-import com.sbgcore.oauth.api.client.ClientConfigurationRepository
+import com.sbgcore.oauth.api.client.ClientAuthenticationService
 import com.sbgcore.oauth.api.openid.exchange.*
 import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow

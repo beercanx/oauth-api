@@ -1,7 +1,7 @@
 package com.sbgcore.oauth.api.openid.exchange
 
-import com.sbgcore.oauth.api.authentication.ConfidentialClient
-import com.sbgcore.oauth.api.authentication.PublicClient
+import com.sbgcore.oauth.api.client.ConfidentialClient
+import com.sbgcore.oauth.api.client.PublicClient
 import com.sbgcore.oauth.api.client.ClientId
 import com.sbgcore.oauth.api.openid.GrantType
 import com.sbgcore.oauth.api.openid.Scopes

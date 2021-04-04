@@ -1,8 +1,8 @@
 package com.sbgcore.oauth.api.openid.exchange
 
-import com.sbgcore.oauth.api.authentication.ConfidentialClient
-import com.sbgcore.oauth.api.authentication.ClientPrincipal
-import com.sbgcore.oauth.api.authentication.PublicClient
+import com.sbgcore.oauth.api.client.ConfidentialClient
+import com.sbgcore.oauth.api.client.ClientPrincipal
+import com.sbgcore.oauth.api.client.PublicClient
 import com.sbgcore.oauth.api.openid.Scopes
 import com.sbgcore.oauth.api.enums.enumByValue
 import com.sbgcore.oauth.api.openid.GrantType.*

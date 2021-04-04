@@ -1,6 +1,6 @@
 package com.sbgcore.oauth.api.ktor
 
-import com.sbgcore.oauth.api.authentication.ClientPrincipal
+import com.sbgcore.oauth.api.client.ClientPrincipal
 
 import io.ktor.auth.Authentication
 import io.ktor.auth.BasicAuthenticationProvider

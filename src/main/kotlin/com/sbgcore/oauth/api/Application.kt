@@ -1,7 +1,7 @@
 package com.sbgcore.oauth.api
 
-import com.sbgcore.oauth.api.authentication.ClientAuthenticationService
-import com.sbgcore.oauth.api.authentication.ConfidentialClient
+import com.sbgcore.oauth.api.client.ClientAuthenticationService
+import com.sbgcore.oauth.api.client.ConfidentialClient
 import com.sbgcore.oauth.api.customer.internal.CustomerMatchService
 import com.sbgcore.oauth.api.customer.internal.NitriteCustomerCredentialRepository
 import com.sbgcore.oauth.api.ktor.basic
@@ -13,7 +13,7 @@ import com.sbgcore.oauth.api.tokens.AccessTokenService
 import com.sbgcore.oauth.api.openid.introspection.IntrospectionService
 import com.sbgcore.oauth.api.openid.openIdRoutes
 import com.sbgcore.oauth.api.tokens.NitriteAccessTokenRepository
-import com.sbgcore.oauth.api.authentication.NitriteClientSecretRepository
+import com.sbgcore.oauth.api.client.NitriteClientSecretRepository
 import com.sbgcore.oauth.api.client.StaticClientConfigurationRepository
 import com.sbgcore.oauth.api.customer.internal.NitriteCustomerStatusRepository
 import com.sbgcore.oauth.api.swagger.swaggerRoutes

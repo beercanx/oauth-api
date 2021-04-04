@@ -1,6 +1,6 @@
 @file:UseSerializers(UUIDSerializer::class)
 
-package com.sbgcore.oauth.api.authentication
+package com.sbgcore.oauth.api.client
 
 import com.sbgcore.oauth.api.client.ClientId
 import com.sbgcore.oauth.api.serializers.UUIDSerializer

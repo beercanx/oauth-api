@@ -1,7 +1,7 @@
 package com.sbgcore.oauth.api.customer
 
 // Who are you?
-interface AuthenticationService {
+interface CustomerAuthenticationService {
 
     // Match you
     // Record any authentication failures

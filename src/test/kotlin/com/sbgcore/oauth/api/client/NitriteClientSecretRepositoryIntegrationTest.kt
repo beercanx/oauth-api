@@ -1,4 +1,4 @@
-package com.sbgcore.oauth.api.authentication
+package com.sbgcore.oauth.api.client
 
 import com.sbgcore.oauth.api.client.ClientId.ConsumerX
 import com.sbgcore.oauth.api.client.ClientId.ConsumerY

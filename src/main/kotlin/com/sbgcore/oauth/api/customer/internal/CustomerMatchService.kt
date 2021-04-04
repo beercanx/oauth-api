@@ -1,11 +1,19 @@
 package com.sbgcore.oauth.api.customer.internal
 
 import com.sbgcore.oauth.api.customer.*
-import org.bouncycastle.crypto.generators.OpenBSDBCrypt.checkPassword
+import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 
-class CustomerMatchService(
-    private val customerCredentialRepository: CustomerCredentialRepository
+class CustomerMatchService internal constructor(
+    private val customerCredentialRepository: CustomerCredentialRepository,
+    private val checkPassword: (String, CharArray) -> Boolean
 ) : MatchService {
+
+    constructor(
+        customerCredentialRepository: CustomerCredentialRepository
+    ) : this(
+        customerCredentialRepository,
+        OpenBSDBCrypt::checkPassword
+    )
 
     override suspend fun match(username: String, password: String): MatchResponse {
 
@@ -23,9 +31,7 @@ class CustomerMatchService(
             }
 
             // Credential matched
-            else -> MatchSuccess(
-                username = credential.username, // TODO - Convert to typed object
-            )
+            else -> MatchSuccess(username = credential.username)
         }
     }
 }

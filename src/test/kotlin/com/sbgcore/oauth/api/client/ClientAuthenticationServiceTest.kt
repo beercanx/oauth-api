@@ -1,8 +1,6 @@
-package com.sbgcore.oauth.api.authentication
+package com.sbgcore.oauth.api.client
 
-import com.sbgcore.oauth.api.client.ClientConfiguration
-import com.sbgcore.oauth.api.client.ClientConfigurationRepository
-import com.sbgcore.oauth.api.client.ClientId
+import com.sbgcore.oauth.api.client.*
 import com.sbgcore.oauth.api.client.ClientId.*
 import com.sbgcore.oauth.api.client.ClientType.Confidential
 import com.sbgcore.oauth.api.client.ClientType.Public

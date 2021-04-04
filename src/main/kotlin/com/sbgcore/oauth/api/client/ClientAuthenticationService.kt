@@ -1,7 +1,5 @@
-package com.sbgcore.oauth.api.authentication
+package com.sbgcore.oauth.api.client
 
-import com.sbgcore.oauth.api.client.ClientConfiguration
-import com.sbgcore.oauth.api.client.ClientConfigurationRepository
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 
 class ClientAuthenticationService internal constructor(

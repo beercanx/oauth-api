@@ -1,14 +1,6 @@
 package com.sbgcore.oauth.api.openid.authorize
 
-import com.sbgcore.oauth.api.authentication.ConfidentialClient
-import com.sbgcore.oauth.api.ktor.authenticate
-import com.sbgcore.oauth.api.openid.introspection.IntrospectionRequest
-import com.sbgcore.oauth.api.openid.introspection.IntrospectionRequestWithHint
-import com.sbgcore.oauth.api.openid.introspection.IntrospectionService
-import com.sbgcore.oauth.api.openid.introspection.validateIntrospectionRequest
 import io.ktor.application.*
-import io.ktor.request.*
-import io.ktor.response.*
 import io.ktor.routing.*
 
 fun Route.authorizationRoute() {

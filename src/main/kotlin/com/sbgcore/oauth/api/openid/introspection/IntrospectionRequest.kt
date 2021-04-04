@@ -1,6 +1,6 @@
 package com.sbgcore.oauth.api.openid.introspection
 
-import com.sbgcore.oauth.api.authentication.ConfidentialClient
+import com.sbgcore.oauth.api.client.ConfidentialClient
 import com.sbgcore.oauth.api.tokens.Tokens
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

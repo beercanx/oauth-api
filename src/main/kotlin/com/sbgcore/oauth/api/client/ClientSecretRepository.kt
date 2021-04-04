@@ -1,8 +1,7 @@
-package com.sbgcore.oauth.api.authentication
+package com.sbgcore.oauth.api.client
 
 import com.sbgcore.oauth.api.enums.enumByValue
 import com.sbgcore.oauth.api.Repository
-import com.sbgcore.oauth.api.client.ClientId
 import java.util.*
 
 /**
