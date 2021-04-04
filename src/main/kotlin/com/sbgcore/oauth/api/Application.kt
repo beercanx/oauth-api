@@ -88,7 +88,7 @@ fun Application.main() {
     // Customer
     val customerCredentialRepository = NitriteCustomerCredentialRepository()
     val customerStatusRepository = NitriteCustomerStatusRepository()
-    val customerMatchService = CustomerMatchService(customerCredentialRepository, customerStatusRepository)
+    val customerMatchService = CustomerMatchService(customerCredentialRepository)
 
     // Flows
     val passwordFlow = PasswordFlow(customerMatchService, accessTokenService)

@@ -14,7 +14,7 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
     private val tokenAge = 2L
     private val tokenAgeUnit = ChronoUnit.HOURS
 
-    fun issue(customerId: Long, username: String, clientId: ClientId, scopes: Set<Scopes>): AccessToken {
+    fun issue(username: String, clientId: ClientId, scopes: Set<Scopes>): AccessToken {
 
         val id = UUID.randomUUID()
         val value = UUID.randomUUID()
@@ -30,7 +30,6 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
         return AccessToken(
             id = id,
             value = value,
-            customerId = customerId,
             username = username,
             clientId = clientId,
             scopes = scopes,

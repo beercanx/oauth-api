@@ -18,11 +18,6 @@ interface Token {
     val value: UUID
 
     /**
-     * The machine readable identifier, for the subject of this token.
-     */
-    val customerId: Long
-
-    /**
      * The human readable identifier, for the subject of this token.
      */
     val username: String

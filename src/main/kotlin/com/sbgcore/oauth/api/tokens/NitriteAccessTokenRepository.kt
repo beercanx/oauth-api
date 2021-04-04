@@ -30,9 +30,6 @@ class NitriteAccessTokenRepository(database: Nitrite) : AccessTokenRepository {
         // To support the day to day look up of an access token
         createIndex(AccessToken::value.name, indexOptions(Unique))
 
-        // To support finding all access tokens for a specific customer id
-        createIndex(AccessToken::customerId.name, indexOptions(NonUnique))
-
         // To support finding all access tokens for a specific username
         createIndex(AccessToken::username.name, indexOptions(NonUnique))
 
@@ -55,10 +52,6 @@ class NitriteAccessTokenRepository(database: Nitrite) : AccessTokenRepository {
 
     override fun findByValue(value: UUID): AccessToken? {
         return repository.find(AccessToken::value eq value).firstOrDefault()
-    }
-
-    override fun findAllByCustomerId(customerId: Long): Set<AccessToken> {
-        return repository.find(AccessToken::customerId eq customerId).toSet()
     }
 
     override fun findAllByUsername(username: String): Set<AccessToken> {

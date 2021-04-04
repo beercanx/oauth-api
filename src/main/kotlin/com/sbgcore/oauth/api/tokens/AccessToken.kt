@@ -16,7 +16,6 @@ import java.util.*
 data class AccessToken(
     @Id override val id: UUID,
     override val value: UUID, // TODO - Replace by a secure random hash so it doesn't look like an ID?
-    override val customerId: Long,
     override val username: String,
     override val clientId: ClientId,
     override val scopes: Set<Scopes>,
@@ -25,6 +24,6 @@ data class AccessToken(
     override val notBefore: OffsetDateTime  // TODO - Does OffsetDateTimeSerializer return the right format?
 ) : Token {
     override fun toString(): String {
-        return "AccessToken(id=$id, value=REDACTED, customerId=$customerId, username='$username', clientId=$clientId, scopes=$scopes, issuedAt=$issuedAt, expiresAt=$expiresAt, notBefore=$notBefore)"
+        return "AccessToken(id=$id, value=REDACTED, username='$username', clientId=$clientId, scopes=$scopes, issuedAt=$issuedAt, expiresAt=$expiresAt, notBefore=$notBefore)"
     }
 }

@@ -19,12 +19,15 @@ class PasswordFlow(
 
     override suspend fun exchange(request: PasswordRequest): ExchangeResponse {
 
+        // TODO - Implement and call the Authentication Service (matching and state)
+
+        // TODO - Implement and call the Authorisation Service (mostly handles scopes)
+
         return when(val match = matchService.match(username = request.username, password = request.password)) {
-            is MatchFailure -> FailedExchangeResponse(InvalidGrant, match.reason) // TODO - Double check
+            is MatchFailure -> FailedExchangeResponse(InvalidGrant, "Mismatch")
             is MatchSuccess -> {
 
                 val accessToken = accessTokenService.issue(
-                    customerId = match.customerId,
                     username = match.username,
                     clientId = request.principal.id,
                     scopes = request.scopes

@@ -26,7 +26,7 @@ class IntrospectionService(private val accessTokenRepository: AccessTokenReposit
                 scope = scopes,
                 clientId = clientId,
                 username = username,
-                subject = customerId.toString(),
+                subject = username,
                 expirationTime = expiresAt.toEpochSecond(),
                 issuedAt = issuedAt.toEpochSecond(),
                 notBefore = notBefore.toEpochSecond()

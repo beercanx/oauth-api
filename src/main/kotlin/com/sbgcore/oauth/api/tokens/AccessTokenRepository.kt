@@ -15,11 +15,6 @@ interface AccessTokenRepository : Repository<AccessToken, UUID> {
     fun findByValue(value: UUID): AccessToken?
 
     /**
-     * Find all the [AccessToken]'s issued for a given customer id.
-     */
-    fun findAllByCustomerId(customerId: Long): Set<AccessToken>
-
-    /**
      * Find all the [AccessToken]'s issued for a given username.
      */
     fun findAllByUsername(username: String): Set<AccessToken>
