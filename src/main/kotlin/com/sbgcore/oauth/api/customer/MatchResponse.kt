@@ -20,12 +20,14 @@ enum class MatchFailureReason {
 
     Mismatch,
 
-    // TODO - Do we care, should we, is this just here because of the openbet solution?
+    // Should only be used when we have confirmed credentials
     Locked,
 
     // TODO - Do we care, should we, is this just here because of the openbet solution?
+    @Deprecated("Use Mismatch", ReplaceWith("Mismatch"))
     Conflict,
 
     // TODO - Do we care, should we, is this just here because of the openbet solution?
+    @Deprecated("Use Mismatch", ReplaceWith("Mismatch"))
     Other
 }

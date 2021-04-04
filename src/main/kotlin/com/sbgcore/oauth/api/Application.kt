@@ -15,6 +15,7 @@ import com.sbgcore.oauth.api.openid.openIdRoutes
 import com.sbgcore.oauth.api.tokens.NitriteAccessTokenRepository
 import com.sbgcore.oauth.api.authentication.NitriteClientSecretRepository
 import com.sbgcore.oauth.api.client.StaticClientConfigurationRepository
+import com.sbgcore.oauth.api.customer.internal.NitriteCustomerStatusRepository
 import com.sbgcore.oauth.api.swagger.swaggerRoutes
 import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
 import io.ktor.application.*
@@ -86,7 +87,8 @@ fun Application.main() {
 
     // Customer
     val customerCredentialRepository = NitriteCustomerCredentialRepository()
-    val customerMatchService = CustomerMatchService(customerCredentialRepository)
+    val customerStatusRepository = NitriteCustomerStatusRepository()
+    val customerMatchService = CustomerMatchService(customerCredentialRepository, customerStatusRepository)
 
     // Flows
     val passwordFlow = PasswordFlow(customerMatchService, accessTokenService)
