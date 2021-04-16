@@ -6,7 +6,6 @@
 
 package com.sbgcore.oauth.api.ktor.auth.bearer
 
-import com.sbgcore.oauth.api.openid.Scopes
 import io.ktor.application.*
 import io.ktor.auth.*
 
@@ -19,8 +18,6 @@ class OAuth2BearerAuthenticationProvider internal constructor(
 ) : AuthenticationProvider(configuration) {
 
     internal val realm: String? = configuration.realm
-
-    internal val requiredScopes: Set<Scopes> = configuration.requiredScopes
 
     internal val authenticationFunction = configuration.authenticationFunction
 
@@ -39,11 +36,6 @@ class OAuth2BearerAuthenticationProvider internal constructor(
          * Specifies realm to be passed in `WWW-Authenticate` header
          */
         var realm: String? = null
-
-        /**
-         * Specifies the minimum required scopes.
-         */
-        var requiredScopes: Set<Scopes> = emptySet()
 
         /**
          * Sets a validation function that will check given [OAuth2BearerCredential] instance and return [Principal],

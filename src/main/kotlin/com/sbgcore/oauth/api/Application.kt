@@ -7,10 +7,9 @@ import com.sbgcore.oauth.api.client.StaticClientConfigurationRepository
 import com.sbgcore.oauth.api.customer.internal.CustomerMatchService
 import com.sbgcore.oauth.api.customer.internal.NitriteCustomerCredentialRepository
 import com.sbgcore.oauth.api.customer.internal.NitriteCustomerStatusRepository
-import com.sbgcore.oauth.api.ktor.auth.AccessTokenWithOpenId
+import com.sbgcore.oauth.api.ktor.auth.AccessToken
 import com.sbgcore.oauth.api.ktor.auth.basic
 import com.sbgcore.oauth.api.ktor.auth.bearer.oAuth2Bearer
-import com.sbgcore.oauth.api.openid.Scopes.OpenId
 import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.password.PasswordFlow
@@ -110,11 +109,10 @@ fun Application.main() {
                 clientAuthenticationService.confidentialClient(clientId, clientSecret)
             }
         }
-        oAuth2Bearer(AccessTokenWithOpenId) {
+        oAuth2Bearer(AccessToken) {
             realm = "skybettingandgaming"
-            requiredScopes = setOf(OpenId)
-            validate { (token, requiredScopes) ->
-                tokenAuthenticationService.accessTokenWithScopes(token, requiredScopes)
+            validate { (token) ->
+                tokenAuthenticationService.accessToken(token)
             }
         }
     }

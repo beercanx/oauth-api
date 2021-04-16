@@ -1,16 +1,15 @@
 package com.sbgcore.oauth.api.tokens
 
-import com.sbgcore.oauth.api.openid.Scopes
-import java.util.*
+import java.time.OffsetDateTime.now
 
 class TokenAuthenticationService(private val repository: AccessTokenRepository) {
 
-    fun accessTokenWithScopes(token: String, requiredScopes: Set<Scopes>): AccessToken? {
+    fun accessToken(token: String): AccessToken? {
         val accessToken = repository.findByValue(token)
         return when {
             accessToken == null -> null
-            accessToken.scopes.containsAll(requiredScopes) -> accessToken
-            else -> null
+            now().isAfter(accessToken.expiresAt) -> null
+            else -> accessToken
         }
     }
 }
