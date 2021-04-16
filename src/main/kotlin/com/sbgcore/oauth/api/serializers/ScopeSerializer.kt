@@ -12,15 +12,22 @@ import kotlinx.serialization.encoding.Encoder
 /**
  * Custom scope field serializer because OAuth spec requires it to be a space separated string field.
  */
-class ScopeSerializer(@Suppress("UNUSED_PARAMETER") serializer: KSerializer<Scopes>) : KSerializer<Set<Scopes>> {
+class ScopeSerializer() : KSerializer<Set<Scopes>> {
+
+    constructor(@Suppress("UNUSED_PARAMETER") serializer: KSerializer<Scopes>) : this()
 
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("com.sbgcore.oauth.api.openid.Scope", STRING)
 
     override fun serialize(encoder: Encoder, value: Set<Scopes>) {
-        encoder.encodeString(value.joinToString(separator = " ", transform = Scopes::value))
+        encoder.encodeString(serialize(value))
     }
 
     override fun deserialize(decoder: Decoder): Set<Scopes> {
-        return decoder.decodeString().split(" ").mapNotNull<String, Scopes>(::enumByValue).toSet()
+        return deserialize(decoder.decodeString())
     }
+
+    fun serialize(data: Set<Scopes>): String = data.joinToString(separator = " ", transform = Scopes::value)
+
+    fun deserialize(data: String): Set<Scopes> = data.split(" ").mapNotNull<String, Scopes>(::enumByValue).toSet()
+
 }
