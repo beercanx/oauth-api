@@ -6,6 +6,7 @@ import com.sbgcore.oauth.api.client.ClientId
 import com.sbgcore.oauth.api.openid.Scopes
 import com.sbgcore.oauth.api.serializers.OffsetDateTimeSerializer
 import com.sbgcore.oauth.api.serializers.UUIDSerializer
+import io.ktor.auth.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import org.dizitart.no2.objects.Id
@@ -22,7 +23,7 @@ data class AccessToken(
     override val issuedAt: OffsetDateTime,  // TODO - Does OffsetDateTimeSerializer return the right format?
     override val expiresAt: OffsetDateTime, // TODO - Does OffsetDateTimeSerializer return the right format?
     override val notBefore: OffsetDateTime  // TODO - Does OffsetDateTimeSerializer return the right format?
-) : Token {
+) : Token, Principal {
     override fun toString(): String {
         return "AccessToken(id=$id, value=REDACTED, username='$username', clientId=$clientId, scopes=$scopes, issuedAt=$issuedAt, expiresAt=$expiresAt, notBefore=$notBefore)"
     }

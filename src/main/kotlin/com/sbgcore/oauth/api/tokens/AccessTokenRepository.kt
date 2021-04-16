@@ -15,6 +15,11 @@ interface AccessTokenRepository : Repository<AccessToken, UUID> {
     fun findByValue(value: UUID): AccessToken?
 
     /**
+     * Find an [AccessToken] based on its value.
+     */
+    fun findByValue(value: String): AccessToken?
+
+    /**
      * Find all the [AccessToken]'s issued for a given username.
      */
     fun findAllByUsername(username: String): Set<AccessToken>

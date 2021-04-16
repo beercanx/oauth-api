@@ -1,7 +1,7 @@
 package com.sbgcore.oauth.api.openid.introspection
 
 import com.sbgcore.oauth.api.client.ConfidentialClient
-import com.sbgcore.oauth.api.ktor.authenticate
+import com.sbgcore.oauth.api.ktor.auth.authenticate
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*

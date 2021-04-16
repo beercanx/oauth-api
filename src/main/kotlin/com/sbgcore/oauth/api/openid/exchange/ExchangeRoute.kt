@@ -3,7 +3,7 @@ package com.sbgcore.oauth.api.openid.exchange
 import com.sbgcore.oauth.api.client.ClientAuthenticationService
 import com.sbgcore.oauth.api.client.ConfidentialClient
 import com.sbgcore.oauth.api.client.PublicClient
-import com.sbgcore.oauth.api.ktor.authenticate
+import com.sbgcore.oauth.api.ktor.auth.authenticate
 import com.sbgcore.oauth.api.openid.exchange.ErrorType.InvalidRequest
 import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow

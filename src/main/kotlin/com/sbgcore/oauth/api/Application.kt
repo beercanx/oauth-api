@@ -7,16 +7,21 @@ import com.sbgcore.oauth.api.client.StaticClientConfigurationRepository
 import com.sbgcore.oauth.api.customer.internal.CustomerMatchService
 import com.sbgcore.oauth.api.customer.internal.NitriteCustomerCredentialRepository
 import com.sbgcore.oauth.api.customer.internal.NitriteCustomerStatusRepository
-import com.sbgcore.oauth.api.ktor.basic
+import com.sbgcore.oauth.api.ktor.auth.AccessTokenWithOpenId
+import com.sbgcore.oauth.api.ktor.auth.basic
+import com.sbgcore.oauth.api.ktor.auth.bearer.oAuth2Bearer
+import com.sbgcore.oauth.api.openid.Scopes.OpenId
 import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.password.PasswordFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.refresh.RefreshFlow
 import com.sbgcore.oauth.api.openid.introspection.IntrospectionService
 import com.sbgcore.oauth.api.openid.openIdRoutes
+import com.sbgcore.oauth.api.openid.userinfo.UserInfoService
 import com.sbgcore.oauth.api.swagger.swaggerRoutes
 import com.sbgcore.oauth.api.tokens.AccessTokenService
 import com.sbgcore.oauth.api.tokens.NitriteAccessTokenRepository
+import com.sbgcore.oauth.api.tokens.TokenAuthenticationService
 import com.sbgcore.oauth.api.wellknown.wellKnownRoutes
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -84,11 +89,13 @@ fun Application.main() {
     val accessTokenRepository = NitriteAccessTokenRepository()
     val accessTokenService = AccessTokenService(accessTokenRepository)
     val introspectionService = IntrospectionService(accessTokenRepository)
+    val tokenAuthenticationService = TokenAuthenticationService(accessTokenRepository)
 
     // Customer
     val customerCredentialRepository = NitriteCustomerCredentialRepository()
     val customerStatusRepository = NitriteCustomerStatusRepository()
     val customerMatchService = CustomerMatchService(customerCredentialRepository)
+    val userInfoService = UserInfoService()
 
     // Flows
     val passwordFlow = PasswordFlow(customerMatchService, accessTokenService)
@@ -101,6 +108,13 @@ fun Application.main() {
             realm = "skybettingandgaming"
             validate { (clientId, clientSecret) ->
                 clientAuthenticationService.confidentialClient(clientId, clientSecret)
+            }
+        }
+        oAuth2Bearer(AccessTokenWithOpenId) {
+            realm = "skybettingandgaming"
+            requiredScopes = setOf(OpenId)
+            validate { (token, requiredScopes) ->
+                tokenAuthenticationService.accessTokenWithScopes(token, requiredScopes)
             }
         }
     }
@@ -120,7 +134,8 @@ fun Application.main() {
             refreshFlow,
             authorizationCodeFlow,
             assertionRedemptionFlow,
-            introspectionService
+            introspectionService,
+            userInfoService
         )
 
         // TODO - Account routes

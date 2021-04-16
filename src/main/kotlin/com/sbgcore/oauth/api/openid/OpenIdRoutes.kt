@@ -8,6 +8,8 @@ import com.sbgcore.oauth.api.openid.exchange.flows.password.PasswordFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.refresh.RefreshFlow
 import com.sbgcore.oauth.api.openid.introspection.IntrospectionService
 import com.sbgcore.oauth.api.openid.introspection.introspectionRoute
+import com.sbgcore.oauth.api.openid.userinfo.UserInfoService
+import com.sbgcore.oauth.api.openid.userinfo.userInfoRoute
 import io.ktor.routing.*
 
 // TODO - Consider changing Application from the base library to a custom class so we don't need to include dependencies in method signature
@@ -17,7 +19,8 @@ fun Route.openIdRoutes(
     refreshFlow: RefreshFlow,
     authorizationCodeFlow: AuthorizationCodeFlow,
     assertionRedemptionFlow: AssertionRedemptionFlow,
-    introspectionService: IntrospectionService
+    introspectionService: IntrospectionService,
+    userInfoService: UserInfoService
 ) {
     // TODO - Ensure cache control headers are set to prevent caching
     route("/openid/v1") {
@@ -38,6 +41,9 @@ fun Route.openIdRoutes(
         }
         route("/revoke") {
             // TODO - Implement
+        }
+        route("/userinfo") {
+            userInfoRoute(userInfoService)
         }
     }
 }

@@ -4,8 +4,8 @@ import com.sbgcore.oauth.api.openid.Scopes
 import io.ktor.auth.*
 
 /**
- * Represents an OAuth2 Bearer [token] and required [scopes]
+ * Represents an OAuth2 Bearer [token] and [requiredScopes]
  * @property token
- * @property scopes
+ * @property requiredScopes
  */
-data class OAuth2BearerCredential(val token: String, val scopes: Set<Scopes>) : Credential
+data class OAuth2BearerCredential(val token: String, val requiredScopes: Set<Scopes>) : Credential

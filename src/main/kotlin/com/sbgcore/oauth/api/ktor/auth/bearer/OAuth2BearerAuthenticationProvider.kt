@@ -20,7 +20,7 @@ class OAuth2BearerAuthenticationProvider internal constructor(
 
     internal val realm: String? = configuration.realm
 
-    internal val scopes: Set<Scopes> = configuration.scopes
+    internal val requiredScopes: Set<Scopes> = configuration.requiredScopes
 
     internal val authenticationFunction = configuration.authenticationFunction
 
@@ -43,7 +43,7 @@ class OAuth2BearerAuthenticationProvider internal constructor(
         /**
          * Specifies the minimum required scopes.
          */
-        var scopes: Set<Scopes> = emptySet()
+        var requiredScopes: Set<Scopes> = emptySet()
 
         /**
          * Sets a validation function that will check given [OAuth2BearerCredential] instance and return [Principal],

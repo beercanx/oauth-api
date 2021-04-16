@@ -8,7 +8,7 @@ import io.ktor.request.*
 /**
  * Retrieves Basic authentication credentials for this [ApplicationRequest]
  */
-fun ApplicationRequest.oAuth2BearerAuthenticationCredentials(scopes: Set<Scopes>): OAuth2BearerCredential? {
+fun ApplicationRequest.oAuth2BearerAuthenticationCredentials(requiredScopes: Set<Scopes>): OAuth2BearerCredential? {
     when (val authHeader = parseAuthorizationHeader()) {
         is HttpAuthHeader.Single -> {
             // Verify the auth scheme is HTTP Bearer. According to RFC 2617, the authorization scheme should not be case
@@ -17,7 +17,7 @@ fun ApplicationRequest.oAuth2BearerAuthenticationCredentials(scopes: Set<Scopes>
                 return null
             }
 
-            return OAuth2BearerCredential(authHeader.blob, scopes)
+            return OAuth2BearerCredential(authHeader.blob, requiredScopes)
         }
         else -> return null
     }

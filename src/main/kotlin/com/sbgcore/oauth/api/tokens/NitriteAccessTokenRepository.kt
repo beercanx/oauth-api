@@ -54,6 +54,10 @@ class NitriteAccessTokenRepository(database: Nitrite) : AccessTokenRepository {
         return repository.find(AccessToken::value eq value).firstOrDefault()
     }
 
+    override fun findByValue(value: String): AccessToken? {
+        return repository.find(AccessToken::value eq value).firstOrDefault()
+    }
+
     override fun findAllByUsername(username: String): Set<AccessToken> {
         return repository.find(AccessToken::username eq username).toSet()
     }

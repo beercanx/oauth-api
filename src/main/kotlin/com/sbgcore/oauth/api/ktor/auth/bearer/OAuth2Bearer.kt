@@ -19,11 +19,11 @@ fun Authentication.Configuration.oAuth2Bearer(
 ) {
     val provider = OAuth2BearerAuthenticationProvider(OAuth2BearerAuthenticationProvider.Configuration(name).apply(configure))
     val realm = provider.realm
-    val scopes = provider.scopes
+    val requiredScopes = provider.requiredScopes
     val authenticate = provider.authenticationFunction
 
     provider.pipeline.intercept(AuthenticationPipeline.RequestAuthentication) { context ->
-        val credentials = call.request.oAuth2BearerAuthenticationCredentials(scopes)
+        val credentials = call.request.oAuth2BearerAuthenticationCredentials(requiredScopes)
         val principal = credentials?.let { authenticate(call, it) }
 
         val cause = when {
@@ -34,7 +34,7 @@ fun Authentication.Configuration.oAuth2Bearer(
 
         if (cause != null) {
             context.challenge(oAuth2BearerAuthenticationChallengeKey, cause) {
-                call.respond(UnauthorizedResponse(oAuth2BearerAuthChallenge(realm, scopes)))
+                call.respond(UnauthorizedResponse(oAuth2BearerAuthChallenge(realm, requiredScopes)))
                 it.complete()
             }
         }
