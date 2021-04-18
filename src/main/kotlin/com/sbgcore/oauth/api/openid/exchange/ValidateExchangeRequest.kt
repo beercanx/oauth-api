@@ -118,8 +118,8 @@ private fun RawExchangeRequest.validateScopes(principal: ConfidentialClient): Se
 }
 
 private fun Scopes.canBeIssuedTo(principal: ConfidentialClient): Boolean {
-    // TODO - Look up from config based on the provided principal id
-    return true
+    val configuration = principal.configuration
+    return configuration.requiredScopes.contains(this) || configuration.optionalScopes.contains(this)
 }
 
 private fun RawExchangeRequest.validateRedirectUri(principal: ClientPrincipal): Url {

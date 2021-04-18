@@ -68,7 +68,9 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
             underTest.findById(ConsumerY) shouldBe ClientConfiguration(
                 id = ConsumerY,
                 type = Public,
-                redirectUrls = setOf(Url("uk.co.baconi.consumer-y://callback"))
+                redirectUrls = setOf(Url("uk.co.baconi.consumer-y://callback")),
+                requiredScopes = emptySet(),
+                optionalScopes = emptySet(),
             )
         }
 
