@@ -8,10 +8,10 @@ import io.ktor.http.*
 import io.ktor.response.*
 
 /**
- * Requires a client of type [C] before the inner block is called, if there isn't one it will respond with a 500.
- * This is because its intended to be used inside an [authenticate] block.
+ * Extracts a client of type [C] before the inner block is called.
+ *  - If there is no principal of tha type, then an [IllegalStateException] is thrown.
  */
-inline fun <reified C : ClientPrincipal> ApplicationContext.requireClient(block: ApplicationContext.(C) -> Unit) {
+inline fun <reified C : ClientPrincipal> ApplicationContext.extractClient(block: ApplicationContext.(C) -> Unit) {
 
     // If the application is setup correctly this should not be null.
     val client = checkNotNull(call.principal<C>()) {

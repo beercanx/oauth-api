@@ -2,7 +2,7 @@ package com.sbgcore.oauth.api.openid.introspection
 
 import com.sbgcore.oauth.api.client.ConfidentialClient
 import com.sbgcore.oauth.api.ktor.auth.authenticate
-import com.sbgcore.oauth.api.ktor.auth.requireClient
+import com.sbgcore.oauth.api.ktor.auth.extractClient
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -10,9 +10,9 @@ import io.ktor.routing.*
 fun Route.introspectionRoute(
     introspectionService: IntrospectionService
 ) {
-    authenticate<ConfidentialClient> {
+    authenticate(ConfidentialClient::class) {
         post {
-            requireClient<ConfidentialClient> { principal ->
+            extractClient<ConfidentialClient> { principal ->
 
                 val response = when (val request = validateIntrospectionRequest(principal)) {
                     is IntrospectionRequest -> introspectionService.introspect(request)

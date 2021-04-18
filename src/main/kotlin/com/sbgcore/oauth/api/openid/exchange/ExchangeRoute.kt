@@ -27,7 +27,7 @@ fun Route.exchangeRoute(
     assertionRedemptionFlow: AssertionRedemptionFlow
 ) {
     // Optional because we have to cater for public clients using PKCE
-    authenticate<ConfidentialClient>(optional = true) {
+    authenticate(ConfidentialClient::class, optional = true) {
         post {
             // Handle standard exchanges for confidential clients
             when (val client = call.principal<ConfidentialClient>()) {

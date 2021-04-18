@@ -7,9 +7,9 @@ import com.sbgcore.oauth.api.client.TypesafeClientConfigurationRepository
 import com.sbgcore.oauth.api.customer.CustomerMatchService
 import com.sbgcore.oauth.api.customer.NitriteCustomerCredentialRepository
 import com.sbgcore.oauth.api.customer.NitriteCustomerStatusRepository
-import com.sbgcore.oauth.api.ktor.auth.AccessToken
 import com.sbgcore.oauth.api.ktor.auth.basic
 import com.sbgcore.oauth.api.ktor.auth.bearer.oAuth2Bearer
+import com.sbgcore.oauth.api.ktor.auth.oAuth2Bearer
 import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.password.PasswordFlow
@@ -18,6 +18,7 @@ import com.sbgcore.oauth.api.openid.introspection.IntrospectionService
 import com.sbgcore.oauth.api.openid.openIdRoutes
 import com.sbgcore.oauth.api.openid.userinfo.UserInfoService
 import com.sbgcore.oauth.api.swagger.swaggerRoutes
+import com.sbgcore.oauth.api.tokens.AccessToken
 import com.sbgcore.oauth.api.tokens.AccessTokenService
 import com.sbgcore.oauth.api.tokens.NitriteAccessTokenRepository
 import com.sbgcore.oauth.api.tokens.TokenAuthenticationService
@@ -109,7 +110,7 @@ fun Application.main() {
                 clientAuthenticationService.confidentialClient(clientId, clientSecret)
             }
         }
-        oAuth2Bearer(AccessToken) {
+        oAuth2Bearer<AccessToken> {
             realm = "skybettingandgaming"
             validate { (token) ->
                 tokenAuthenticationService.accessToken(token)

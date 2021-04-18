@@ -1,15 +1,25 @@
 package com.sbgcore.oauth.api.ktor.auth
 
 import com.sbgcore.oauth.api.ktor.ApplicationContext
+import com.sbgcore.oauth.api.ktor.auth.bearer.OAuth2BearerAuthenticationProvider
+import com.sbgcore.oauth.api.ktor.auth.bearer.oAuth2Bearer
 import com.sbgcore.oauth.api.ktor.auth.bearer.oAuth2BearerAuthChallenge
 import com.sbgcore.oauth.api.openid.Scopes
 import com.sbgcore.oauth.api.tokens.AccessToken
 import io.ktor.application.*
 import io.ktor.auth.*
-import io.ktor.response.*
 import io.ktor.http.HttpHeaders.WWWAuthenticate
+import io.ktor.response.*
+import kotlin.reflect.jvm.jvmName
 
-const val AccessToken = "AccessToken"
+/**
+ * Provides a typed way to define which principle type this OAuth2 bearer auth will provide.
+ */
+inline fun <reified T : Principal> Authentication.Configuration.oAuth2Bearer(
+    noinline configure: OAuth2BearerAuthenticationProvider.Configuration.() -> Unit,
+) {
+    oAuth2Bearer(T::class.jvmName, configure)
+}
 
 typealias AccessTokenBlock = suspend ApplicationContext.(AccessToken) -> Unit
 
