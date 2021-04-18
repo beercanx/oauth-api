@@ -11,9 +11,12 @@ import io.ktor.response.*
  * Requires a client of type [C] before the inner block is called, if there isn't one it will respond with a 500.
  * This is because its intended to be used inside an [authenticate] block.
  */
-suspend inline fun <reified C : ClientPrincipal> ApplicationContext.requireClient(block: ApplicationContext.(C) -> Unit) {
-    when (val client = call.principal<C>()) {
-        null -> call.respond(HttpStatusCode.InternalServerError)
-        else -> block(client)
+inline fun <reified C : ClientPrincipal> ApplicationContext.requireClient(block: ApplicationContext.(C) -> Unit) {
+
+    // If the application is setup correctly this should not be null.
+    val client = checkNotNull(call.principal<C>()) {
+        "${C::class.simpleName} should not be null"
     }
+
+    block(client)
 }

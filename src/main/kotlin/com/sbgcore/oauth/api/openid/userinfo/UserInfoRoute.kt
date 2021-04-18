@@ -1,7 +1,7 @@
 package com.sbgcore.oauth.api.openid.userinfo
 
 import com.sbgcore.oauth.api.ktor.auth.AccessToken
-import com.sbgcore.oauth.api.ktor.auth.requireAccessTokenWithScopes
+import com.sbgcore.oauth.api.ktor.auth.requireScopes
 import com.sbgcore.oauth.api.openid.Scopes.OpenId
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -13,7 +13,7 @@ fun Route.userInfoRoute(
 ) {
     authenticate(AccessToken) {
         get {
-            requireAccessTokenWithScopes(OpenId) { accessToken ->
+            requireScopes(OpenId) { accessToken ->
                 call.respond(userInfoService.getUserInfo(accessToken))
             }
         }
