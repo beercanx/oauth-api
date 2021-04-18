@@ -1,4 +1,4 @@
-package com.sbgcore.oauth.api.customer.internal
+package com.sbgcore.oauth.api.customer
 
 enum class CustomerState {
     Active,

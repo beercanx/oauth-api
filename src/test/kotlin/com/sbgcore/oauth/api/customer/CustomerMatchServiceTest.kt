@@ -1,7 +1,5 @@
-package com.sbgcore.oauth.api.customer.internal
+package com.sbgcore.oauth.api.customer
 
-import com.sbgcore.oauth.api.customer.MatchFailure
-import com.sbgcore.oauth.api.customer.MatchSuccess
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
@@ -32,7 +30,7 @@ class CustomerMatchServiceTest {
         every { checkPassword.invoke("P@55w0rd", "P@55w0rd".toCharArray()) } returns true
 
         assertSoftly(underTest.match("arthur", "P@55w0rd")) {
-            it.shouldBeInstanceOf<MatchSuccess>()
+            it.shouldBeInstanceOf<CustomerMatchSuccess>()
             it.username shouldBe "ARTHUR"
         }
     }
@@ -43,7 +41,7 @@ class CustomerMatchServiceTest {
         every { repository.findByUsername(any()) } returns null
 
         listOf("arthur", "Arthur", "ArThUr", "aRtHuR").forEach { username ->
-            underTest.match(username, "P@55w0rd") should beInstanceOf<MatchFailure>()
+            underTest.match(username, "P@55w0rd") should beInstanceOf<CustomerMatchFailure>()
         }
 
         verify(exactly = 4) { repository.findByUsername("ARTHUR") }
@@ -54,7 +52,7 @@ class CustomerMatchServiceTest {
 
         every { repository.findByUsername(any()) } returns null
 
-        underTest.match("badger", "P@55w0rd") should beInstanceOf<MatchFailure>()
+        underTest.match("badger", "P@55w0rd") should beInstanceOf<CustomerMatchFailure>()
     }
 
     @Test
@@ -67,6 +65,6 @@ class CustomerMatchServiceTest {
 
         every { checkPassword.invoke("P@55w0rd", "password".toCharArray()) } returns false
 
-        underTest.match("collin", "password") should beInstanceOf<MatchFailure>()
+        underTest.match("collin", "password") should beInstanceOf<CustomerMatchFailure>()
     }
 }

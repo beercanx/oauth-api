@@ -1,20 +1,18 @@
 package com.sbgcore.oauth.api.openid.introspection
 
+import com.sbgcore.oauth.api.checkNotBlank
 import com.sbgcore.oauth.api.client.ConfidentialClient
-import com.sbgcore.oauth.api.openid.validClientPrincipal
-import com.sbgcore.oauth.api.openid.validateStringParameter
+import com.sbgcore.oauth.api.ktor.ApplicationContext
 import io.ktor.application.*
-import io.ktor.auth.*
 import io.ktor.request.*
-import io.ktor.util.pipeline.*
 
-suspend fun PipelineContext<*, ApplicationCall>.validateIntrospectionRequest(): ValidatedIntrospectionRequest {
-
-    val principal = validClientPrincipal(call.principal<ConfidentialClient>())
+suspend fun ApplicationContext.validateIntrospectionRequest(
+    principal: ConfidentialClient
+): ValidatedIntrospectionRequest {
 
     val raw = call.receive<RawIntrospectionRequest>()
 
-    val token = raw.validateStringParameter(RawIntrospectionRequest::token)
+    val token = checkNotBlank(raw.token) { "token" }
     val hint = raw.hint
 
     return if (hint == null) {

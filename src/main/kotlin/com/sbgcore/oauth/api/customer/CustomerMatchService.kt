@@ -1,15 +1,11 @@
-package com.sbgcore.oauth.api.customer.internal
+package com.sbgcore.oauth.api.customer
 
-import com.sbgcore.oauth.api.customer.MatchFailure
-import com.sbgcore.oauth.api.customer.MatchResponse
-import com.sbgcore.oauth.api.customer.MatchService
-import com.sbgcore.oauth.api.customer.MatchSuccess
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 
 class CustomerMatchService internal constructor(
     private val customerCredentialRepository: CustomerCredentialRepository,
     private val checkPassword: (String, CharArray) -> Boolean
-) : MatchService {
+) {
 
     constructor(
         customerCredentialRepository: CustomerCredentialRepository
@@ -18,23 +14,26 @@ class CustomerMatchService internal constructor(
         OpenBSDBCrypt::checkPassword
     )
 
-    override suspend fun match(username: String, password: String): MatchResponse {
+    /**
+     * Check if the provided username and password matches what we have stored.
+     */
+    fun match(username: String, password: String): CustomerMatchResponse {
 
         val credential = customerCredentialRepository.findByUsername(username.toUpperCase())
 
         return when {
 
             // No credential
-            credential == null -> MatchFailure
+            credential == null -> CustomerMatchFailure
 
             // Credentials did not match
             !checkPassword(credential.secret, password.toCharArray()) -> {
                 // TODO - Increment failure recorder
-                MatchFailure
+                CustomerMatchFailure
             }
 
             // Credential matched
-            else -> MatchSuccess(username = credential.username)
+            else -> CustomerMatchSuccess(username = credential.username)
         }
     }
 }

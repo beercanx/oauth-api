@@ -1,5 +1,6 @@
-package com.sbgcore.oauth.api.customer.internal
+package com.sbgcore.oauth.api.customer
 
+import com.sbgcore.oauth.api.customer.CustomerCredential
 import io.kotest.matchers.string.shouldNotContain
 import org.junit.jupiter.api.Test
 

@@ -1,4 +1,4 @@
-package com.sbgcore.oauth.api.customer.internal
+package com.sbgcore.oauth.api.customer
 
 import org.dizitart.no2.objects.Id
 

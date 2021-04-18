@@ -9,10 +9,12 @@ import io.ktor.http.*
 /**
  * A static Typesafe Config implementation of the [ClientConfigurationRepository].
  */
-class StaticClientConfigurationRepository(private val repository: Config) : ClientConfigurationRepository {
+class TypesafeClientConfigurationRepository internal constructor(
+    private val repository: Config
+) : ClientConfigurationRepository {
 
     /**
-     * Create a new instance of [StaticClientConfigurationRepository] with an isolated [Config] instance.
+     * Create a new instance of [TypesafeClientConfigurationRepository] with an isolated [Config] instance.
      */
     constructor() : this(
         ConfigFactory.load().getConfig("com.sbgcore.oauth.api.clients")

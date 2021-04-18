@@ -1,12 +1,12 @@
 package com.sbgcore.oauth.api.openid.exchange
 
+import com.sbgcore.oauth.api.checkNotBlank
 import com.sbgcore.oauth.api.client.ClientPrincipal
 import com.sbgcore.oauth.api.client.ConfidentialClient
 import com.sbgcore.oauth.api.client.PublicClient
 import com.sbgcore.oauth.api.enums.enumByValue
 import com.sbgcore.oauth.api.openid.GrantType.*
 import com.sbgcore.oauth.api.openid.Scopes
-import com.sbgcore.oauth.api.openid.validateStringParameter
 import io.ktor.http.*
 
 fun validateExchangeRequest(
@@ -15,12 +15,12 @@ fun validateExchangeRequest(
 ): ConfidentialExchangeRequest = returnOnException(InvalidConfidentialExchangeRequest) {
 
     // Receive the posted form, unless we implement ContentNegotiation that supports URL encoded forms.
-    val rawExchangeRequest = parameters.toRawExchangeRequest()
+    val raw = parameters.toRawExchangeRequest()
 
-    when (rawExchangeRequest.grantType) {
+    when (raw.grantType) {
         AuthorizationCode -> {
-            val code = rawExchangeRequest.validateStringParameter(RawExchangeRequest::code)
-            val redirectUri = rawExchangeRequest.validateRedirectUri(principal)
+            val code = checkNotBlank(raw.code) { "code" }
+            val redirectUri = raw.validateRedirectUri(principal)
 
             // TODO - Validate the [code] is a valid code via a repository
             // TODO - Validate the [redirect_uri] is the same as what was used to generate the [code]
@@ -28,25 +28,25 @@ fun validateExchangeRequest(
             AuthorizationCodeRequest(principal, code, redirectUri)
         }
         Password -> {
-            val scopes = rawExchangeRequest.validateScopes(principal)
-            val username = rawExchangeRequest.validateStringParameter(RawExchangeRequest::username)
-            val password = rawExchangeRequest.validateStringParameter(RawExchangeRequest::password)
+            val scopes = raw.validateScopes(principal)
+            val username = checkNotBlank(raw.username) { "username" }
+            val password = checkNotBlank(raw.password) { "password" }
 
             PasswordRequest(principal, scopes, username, password)
         }
         RefreshToken -> {
-            val scopes = rawExchangeRequest.validateScopes(principal)
-            val refreshToken = rawExchangeRequest.validateStringParameter(RawExchangeRequest::refreshToken)
+            val scopes = raw.validateScopes(principal)
+            val refreshToken = checkNotBlank(raw.refreshToken) { "refreshToken" }
 
             RefreshTokenRequest(principal, scopes, refreshToken)
         }
         Assertion -> {
-            val assertion = rawExchangeRequest.validateStringParameter(RawExchangeRequest::assertion)
+            val assertion = checkNotBlank(raw.assertion) { "assertion" }
 
             AssertionRequest(principal, assertion)
         }
         SsoToken -> {
-            val ssoToken = rawExchangeRequest.validateStringParameter(RawExchangeRequest::ssoToken)
+            val ssoToken = checkNotBlank(raw.ssoToken) { "ssoToken" }
 
             SsoTokenRequest(principal, ssoToken)
         }
@@ -63,9 +63,9 @@ fun validatePkceExchangeRequest(
 
     if (raw.grantType == AuthorizationCode) {
 
-        val code = raw.validateStringParameter(RawExchangeRequest::code)
+        val code = checkNotBlank(raw.code) { "code" }
         val redirectUri = raw.validateRedirectUri(principal)
-        val codeVerifier = raw.validateStringParameter(RawExchangeRequest::codeVerifier)
+        val codeVerifier = checkNotBlank(raw.codeVerifier) { "codeVerifier" }
 
         PkceAuthorizationCodeRequest(principal, code, redirectUri, codeVerifier)
     } else {
@@ -124,7 +124,7 @@ private fun Scopes.canBeIssuedTo(principal: ConfidentialClient): Boolean {
 
 private fun RawExchangeRequest.validateRedirectUri(principal: ClientPrincipal): Url {
 
-    val rawRedirectUri = validateStringParameter(RawExchangeRequest::redirectUri)
+    val rawRedirectUri = checkNotBlank(redirectUri) { "redirectUri" }
     val redirectUrl = URLBuilder(rawRedirectUri).build()
 
     // Design of this system means we expect exact matches for callbacks.

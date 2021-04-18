@@ -1,6 +1,6 @@
-package com.sbgcore.oauth.api.customer.internal
+package com.sbgcore.oauth.api.customer
 
-import com.sbgcore.oauth.api.customer.internal.CustomerState.Active
+import com.sbgcore.oauth.api.customer.CustomerState.Active
 import org.dizitart.kno2.filters.eq
 import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite
@@ -12,7 +12,7 @@ class NitriteCustomerStatusRepository(database: Nitrite) : CustomerStatusReposit
      * Create a new instance of [NitriteCustomerStatusRepository] with an in-memory instance of [Nitrite]
      */
     constructor() : this(
-        nitrite(userId = "internal-customer-status", password = ":_,z;&b7&]u{E'!&fz<PL35NvqTKx'5")
+        nitrite(userId = "customer-status", password = ":_,z;&b7&]u{E'!&fz<PL35NvqTKx'5")
     )
 
     private val repository = database.getRepository<CustomerStatus> {

@@ -39,7 +39,7 @@ class NitriteAccessTokenRepository(database: Nitrite) : AccessTokenRepository {
 
     override fun insert(new: AccessToken) {
         // TODO - Add async logic to implement automatic deletes, given this is a basic in memory nosql implementation.
-        repository.insert(new) // TODO - Verify if we need to assert if token was actually inserted.
+        repository.insert(new)
     }
 
     override fun delete(id: UUID) {

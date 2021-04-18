@@ -1,4 +1,4 @@
-package com.sbgcore.oauth.api.customer.internal
+package com.sbgcore.oauth.api.customer
 
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 import org.dizitart.kno2.filters.eq
@@ -13,7 +13,7 @@ class NitriteCustomerCredentialRepository(database: Nitrite) : CustomerCredentia
      * Create a new instance of [NitriteCustomerCredentialRepository] with an in-memory instance of [Nitrite]
      */
     constructor() : this(
-        nitrite(userId = "internal-credential", password = "B29Lwg24wcLD_5P2_LSu?6vcGAM+-Luc")
+        nitrite(userId = "customer-credential", password = "B29Lwg24wcLD_5P2_LSu?6vcGAM+-Luc")
     )
 
     private val repository = database.getRepository<CustomerCredential> {

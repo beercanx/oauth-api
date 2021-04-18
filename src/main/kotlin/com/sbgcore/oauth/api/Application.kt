@@ -3,10 +3,10 @@ package com.sbgcore.oauth.api
 import com.sbgcore.oauth.api.client.ClientAuthenticationService
 import com.sbgcore.oauth.api.client.ConfidentialClient
 import com.sbgcore.oauth.api.client.NitriteClientSecretRepository
-import com.sbgcore.oauth.api.client.StaticClientConfigurationRepository
-import com.sbgcore.oauth.api.customer.internal.CustomerMatchService
-import com.sbgcore.oauth.api.customer.internal.NitriteCustomerCredentialRepository
-import com.sbgcore.oauth.api.customer.internal.NitriteCustomerStatusRepository
+import com.sbgcore.oauth.api.client.TypesafeClientConfigurationRepository
+import com.sbgcore.oauth.api.customer.CustomerMatchService
+import com.sbgcore.oauth.api.customer.NitriteCustomerCredentialRepository
+import com.sbgcore.oauth.api.customer.NitriteCustomerStatusRepository
 import com.sbgcore.oauth.api.ktor.auth.AccessToken
 import com.sbgcore.oauth.api.ktor.auth.basic
 import com.sbgcore.oauth.api.ktor.auth.bearer.oAuth2Bearer
@@ -81,7 +81,7 @@ fun Application.main() {
 
     // Clients
     val clientSecretRepository = NitriteClientSecretRepository()
-    val clientConfigurationRepository = StaticClientConfigurationRepository()
+    val clientConfigurationRepository = TypesafeClientConfigurationRepository()
     val clientAuthenticationService = ClientAuthenticationService(clientSecretRepository, clientConfigurationRepository)
 
     // Tokens

@@ -1,8 +1,8 @@
 package com.sbgcore.oauth.api.openid.exchange.flows.password
 
-import com.sbgcore.oauth.api.customer.MatchFailure
-import com.sbgcore.oauth.api.customer.MatchService
-import com.sbgcore.oauth.api.customer.MatchSuccess
+import com.sbgcore.oauth.api.customer.CustomerMatchService
+import com.sbgcore.oauth.api.customer.CustomerMatchFailure
+import com.sbgcore.oauth.api.customer.CustomerMatchSuccess
 import com.sbgcore.oauth.api.openid.exchange.ErrorType.InvalidGrant
 import com.sbgcore.oauth.api.openid.exchange.ExchangeResponse
 import com.sbgcore.oauth.api.openid.exchange.FailedExchangeResponse
@@ -13,7 +13,7 @@ import com.sbgcore.oauth.api.tokens.AccessTokenService
 import java.time.temporal.ChronoUnit.SECONDS
 
 class PasswordFlow(
-    private val matchService: MatchService,
+    private val matchService: CustomerMatchService,
     private val accessTokenService: AccessTokenService
 ) : ConfidentialFlow<PasswordRequest> {
 
@@ -24,8 +24,8 @@ class PasswordFlow(
         // TODO - Implement and call the Authorisation Service (mostly handles scopes)
 
         return when (val match = matchService.match(username = request.username, password = request.password)) {
-            is MatchFailure -> FailedExchangeResponse(InvalidGrant, "Mismatch")
-            is MatchSuccess -> {
+            is CustomerMatchFailure -> FailedExchangeResponse(InvalidGrant, "Mismatch")
+            is CustomerMatchSuccess -> {
 
                 val accessToken = accessTokenService.issue(
                     username = match.username,

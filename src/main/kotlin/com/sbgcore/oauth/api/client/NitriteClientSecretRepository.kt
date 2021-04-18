@@ -22,7 +22,6 @@ import java.util.UUID.fromString
  */
 class NitriteClientSecretRepository(database: Nitrite) : ClientSecretRepository {
 
-
     /**
      * Create a new instance of [NitriteClientSecretRepository] with an in-memory instance of [Nitrite]
      */

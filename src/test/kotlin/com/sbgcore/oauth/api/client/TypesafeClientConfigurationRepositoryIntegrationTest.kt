@@ -17,7 +17,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-class StaticClientConfigurationRepositoryIntegrationTest {
+class TypesafeClientConfigurationRepositoryIntegrationTest {
 
     private val repository = spyk(
         ConfigFactory.parseString(
@@ -33,7 +33,7 @@ class StaticClientConfigurationRepositoryIntegrationTest {
         )
     )
 
-    private val underTest: ClientConfigurationRepository = spyk(StaticClientConfigurationRepository(repository))
+    private val underTest: ClientConfigurationRepository = spyk(TypesafeClientConfigurationRepository(repository))
 
     @Nested
     inner class Insert {
