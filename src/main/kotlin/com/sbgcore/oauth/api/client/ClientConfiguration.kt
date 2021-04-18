@@ -7,6 +7,8 @@ data class ClientConfiguration(
     val id: ClientId,
     val type: ClientType,
     val redirectUrls: Set<Url>,
+
+    // TODO - Verify the spec, is there such a thing as require and optional or is it just scopes....
     val requiredScopes : Set<Scopes>,
     val optionalScopes : Set<Scopes>
 ) {
