@@ -38,8 +38,7 @@ class TypesafeClientConfigurationRepository internal constructor(
                 id = id,
                 type = config.getEnum(ClientType::class.java, "type"),
                 redirectUrls = config.tryGetStringList("redirectUrls").toUrls(),
-                requiredScopes = config.tryGetStringList("scopes.required").toScopes(),
-                optionalScopes = config.tryGetStringList("scopes.optional").toScopes(),
+                allowedScopes = config.tryGetStringList("allowedScopes").toScopes(),
             )
         } else {
             null

@@ -45,11 +45,6 @@ fun validateExchangeRequest(
 
             AssertionRequest(principal, assertion)
         }
-        SsoToken -> {
-            val ssoToken = checkNotBlank(raw.ssoToken) { "ssoToken" }
-
-            SsoTokenRequest(principal, ssoToken)
-        }
     }
 }
 
@@ -107,9 +102,6 @@ private fun Parameters.toRawExchangeRequest(): RawExchangeRequest {
 
         // AssertionRequest
         assertion = get("assertion"),
-
-        // SsoTokenRequest
-        ssoToken = get("sso_token")
     )
 }
 
@@ -118,8 +110,7 @@ private fun RawExchangeRequest.validateScopes(principal: ConfidentialClient): Se
 }
 
 private fun Scopes.canBeIssuedTo(principal: ConfidentialClient): Boolean {
-    val configuration = principal.configuration
-    return configuration.requiredScopes.contains(this) || configuration.optionalScopes.contains(this)
+    return principal.configuration.allowedScopes.contains(this)
 }
 
 private fun RawExchangeRequest.validateRedirectUri(principal: ClientPrincipal): Url {

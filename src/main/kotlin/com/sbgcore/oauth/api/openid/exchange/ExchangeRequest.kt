@@ -35,8 +35,6 @@ data class RawExchangeRequest(
     // AssertionRequest
     val assertion: String? = null,
 
-    // SsoTokenRequest
-    @SerialName("sso_token") val ssoToken: String? = null
 ) {
     override fun toString(): String {
         return "RawExchangeRequest(" +
@@ -50,7 +48,6 @@ data class RawExchangeRequest(
                 "password=REDACTED, " +
                 "refreshToken=REDACTED, " +
                 "assertion=REDACTED, " +
-                "ssoToken=REDACTED" +
                 ")"
     }
 }
@@ -130,11 +127,3 @@ data class AssertionRequest(
     }
 }
 
-data class SsoTokenRequest(
-    override val principal: ConfidentialClient,
-    val ssoToken: String
-) : ValidatedConfidentialExchangeRequest() {
-    override fun toString(): String {
-        return "SsoTokenRequest(principal=$principal, ssoToken=REDACTED)"
-    }
-}

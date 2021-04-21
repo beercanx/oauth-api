@@ -69,8 +69,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
                 id = ConsumerY,
                 type = Public,
                 redirectUrls = setOf(Url("uk.co.baconi.consumer-y://callback")),
-                requiredScopes = emptySet(),
-                optionalScopes = emptySet(),
+                allowedScopes = emptySet(),
             )
         }
 

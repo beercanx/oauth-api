@@ -19,9 +19,6 @@ enum class GrantType : WithValue {
     @SerialName("urn:ietf:params:oauth:grant-type:jwt-bearer") Assertion {
         override val value = "urn:ietf:params:oauth:grant-type:jwt-bearer"
     },
-    @SerialName("sso_token") SsoToken {
-        override val value = "sso_token"
-    },
 
     ;
 

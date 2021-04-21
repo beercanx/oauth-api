@@ -40,7 +40,6 @@ fun Route.exchangeRoute(
                         is PasswordRequest -> passwordFlow.exchange(request)
                         is RefreshTokenRequest -> refreshFlow.exchange(request)
                         is AssertionRequest -> assertionRedemptionFlow.exchange(request)
-                        is SsoTokenRequest -> TODO("Not yet implemented: $request")
                         is InvalidConfidentialExchangeRequest -> FailedExchangeResponse(InvalidRequest) // TODO - Extend to include more detail?
                     }
 
