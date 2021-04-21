@@ -11,7 +11,7 @@ sealed class IntrospectionResponse
 @Serializable
 data class ActiveIntrospectionResponse(
     val active: Boolean = true,
-    val scope: Set<Scopes>,
+    @Serializable(with = ScopeSerializer::class) val scope: Set<Scopes>,
     @SerialName("client_id") val clientId: ClientId,
     val username: String,
     @SerialName("sub") val subject: String,

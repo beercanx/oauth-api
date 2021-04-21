@@ -3,6 +3,7 @@
 package com.sbgcore.oauth.api.openid.exchange
 
 import com.sbgcore.oauth.api.openid.Scopes
+import com.sbgcore.oauth.api.serializers.ScopeSerializer
 import com.sbgcore.oauth.api.tokens.TokenType
 import com.sbgcore.oauth.api.tokens.TokenType.Bearer
 import com.sbgcore.oauth.api.serializers.UUIDSerializer
@@ -39,7 +40,7 @@ data class SuccessExchangeResponse(
      * OPTIONAL if identical to the scope requested by the client; otherwise, REQUIRED.
      * The scope of the access token as described by https://tools.ietf.org/html/rfc6749#section-3.3
      */
-    val scope: Set<Scopes>
+    @Serializable(with = ScopeSerializer::class) val scope: Set<Scopes>
 
 ) : ExchangeResponse()
 

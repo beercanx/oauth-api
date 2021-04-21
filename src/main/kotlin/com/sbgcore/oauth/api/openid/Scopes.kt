@@ -1,11 +1,8 @@
 package com.sbgcore.oauth.api.openid
 
 import com.sbgcore.oauth.api.enums.WithValue
-import com.sbgcore.oauth.api.serializers.ScopeSerializer
-import kotlinx.serialization.Serializable
 
-@Serializable(with = ScopeSerializer::class)
-enum class Scopes(override val value: String, val claims: Set<Claims> = emptySet()) : WithValue {
+enum class Scopes(override val value: String) : WithValue {
 
     OpenId("openid"), // Can I get user info with this client?
 
