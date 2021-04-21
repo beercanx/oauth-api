@@ -11,6 +11,7 @@ import kotlinx.serialization.encoding.Encoder
 
 /**
  * Custom scope field serializer because OAuth spec requires it to be a space separated string field.
+ * For example it will look like: `openid profile::read`
  */
 class ScopeSerializer() : KSerializer<Set<Scopes>> {
 

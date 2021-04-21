@@ -1,24 +1,18 @@
 package com.sbgcore.oauth.api.openid
 
 import com.sbgcore.oauth.api.enums.WithValue
+import com.sbgcore.oauth.api.serializers.EnumWithValueSerializer
+import com.sbgcore.oauth.api.serializers.GrantTypeSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable
-enum class GrantType : WithValue {
+@Serializable(with = GrantTypeSerializer::class)
+enum class GrantType(override val value: String) : WithValue {
 
-    @SerialName("authorization_code") AuthorizationCode {
-        override val value = "authorization_code"
-    },
-    @SerialName("password") Password {
-        override val value = "password"
-    },
-    @SerialName("refresh_token") RefreshToken {
-        override val value = "refresh_token"
-    },
-    @SerialName("urn:ietf:params:oauth:grant-type:jwt-bearer") Assertion {
-        override val value = "urn:ietf:params:oauth:grant-type:jwt-bearer"
-    },
+    AuthorizationCode("authorization_code"),
+    Password("password"),
+    RefreshToken("refresh_token"),
+    Assertion("urn:ietf:params:oauth:grant-type:jwt-bearer"),
 
     ;
 
