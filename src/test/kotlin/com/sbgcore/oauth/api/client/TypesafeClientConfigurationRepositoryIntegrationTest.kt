@@ -2,6 +2,7 @@ package com.sbgcore.oauth.api.client
 
 import com.sbgcore.oauth.api.client.ClientId.*
 import com.sbgcore.oauth.api.client.ClientType.Public
+import com.sbgcore.oauth.api.enums.enumToJson
 import com.typesafe.config.ConfigException
 import com.typesafe.config.ConfigFactory
 import io.kotest.assertions.assertSoftly
@@ -84,20 +85,20 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
 
             every { repository.hasPath(any()) } returns true
 
-            every { repository.getConfig(ConsumerZ.value) } returns ConfigFactory.parseString(
+            every { repository.getConfig(enumToJson(ConsumerZ)) } returns ConfigFactory.parseString(
                 """
                     type: Aardvark
                 """.trimIndent()
             )
 
-            every { repository.getConfig(ConsumerX.value) } returns ConfigFactory.parseString(
+            every { repository.getConfig(enumToJson(ConsumerX)) } returns ConfigFactory.parseString(
                 """
                     type: Public,
                     redirectUrls: true
                 """.trimIndent()
             )
 
-            every { repository.getConfig(ConsumerY.value) } returns ConfigFactory.empty()
+            every { repository.getConfig(enumToJson(ConsumerY)) } returns ConfigFactory.empty()
 
             assertSoftly {
 
@@ -134,7 +135,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
         @Test
         fun `should call findById`() {
 
-            underTest.findByClientId(ConsumerY.value) shouldNotBe null
+            underTest.findByClientId(ConsumerY) shouldNotBe null
 
             verify { underTest.findById(ConsumerY) }
         }

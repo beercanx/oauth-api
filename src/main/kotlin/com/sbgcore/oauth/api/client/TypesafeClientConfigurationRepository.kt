@@ -1,6 +1,7 @@
 package com.sbgcore.oauth.api.client
 
-import com.sbgcore.oauth.api.enums.enumByValue
+import com.sbgcore.oauth.api.enums.enumByJson
+import com.sbgcore.oauth.api.enums.enumToJson
 import com.sbgcore.oauth.api.openid.Scopes
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigException
@@ -32,8 +33,9 @@ class TypesafeClientConfigurationRepository internal constructor(
      * @throws ConfigException.WrongType if a client config value is not convertible to required type
      */
     override fun findById(id: ClientId): ClientConfiguration? {
-        return if (repository.hasPath(id.value)) {
-            val config = repository.getConfig(id.value)
+        val clientIdValue = enumToJson(id)
+        return if (repository.hasPath(clientIdValue)) {
+            val config = repository.getConfig(clientIdValue)
             ClientConfiguration(
                 id = id,
                 type = config.getEnum(ClientType::class.java, "type"),
@@ -50,6 +52,6 @@ class TypesafeClientConfigurationRepository internal constructor(
     }
 
     private fun List<String>?.toScopes(): Set<Scopes> {
-        return this?.mapNotNull<String, Scopes>(::enumByValue)?.toSet() ?: emptySet()
+        return this?.mapNotNull{scope -> enumByJson<Scopes>(scope)}?.toSet() ?: emptySet()
     }
 }

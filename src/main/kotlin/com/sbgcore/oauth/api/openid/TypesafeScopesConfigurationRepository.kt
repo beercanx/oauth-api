@@ -1,7 +1,8 @@
 package com.sbgcore.oauth.api.openid
 
 import com.sbgcore.oauth.api.client.TypesafeClientConfigurationRepository
-import com.sbgcore.oauth.api.enums.enumByValue
+import com.sbgcore.oauth.api.enums.enumByJson
+import com.sbgcore.oauth.api.enums.enumToJson
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigException
 import com.typesafe.config.ConfigFactory
@@ -28,8 +29,9 @@ class TypesafeScopesConfigurationRepository internal constructor(
      * @throws ConfigException.WrongType if a scope config value is not convertible to required type
      */
     override fun findById(id: Scopes): ScopesConfiguration? {
-        return if (repository.hasPath(id.value)) {
-            val config = repository.getConfig(id.value)
+        val scopesValue = enumToJson(id)
+        return if (repository.hasPath(scopesValue)) {
+            val config = repository.getConfig(scopesValue)
             ScopesConfiguration(
                 id = id,
                 claims = config.tryGetStringList("claims").toClaims()
@@ -40,6 +42,6 @@ class TypesafeScopesConfigurationRepository internal constructor(
     }
 
     private fun List<String>?.toClaims(): Set<Claims> {
-        return this?.mapNotNull<String, Claims>(::enumByValue)?.toSet() ?: emptySet()
+        return this?.mapNotNull{claims -> enumByJson<Claims>(claims)}?.toSet() ?: emptySet()
     }
 }

@@ -1,10 +1,12 @@
 package com.sbgcore.oauth.api.openid.exchange
 
 import com.sbgcore.oauth.api.checkNotBlank
+import com.sbgcore.oauth.api.client.ClientId
 import com.sbgcore.oauth.api.client.ClientPrincipal
 import com.sbgcore.oauth.api.client.ConfidentialClient
 import com.sbgcore.oauth.api.client.PublicClient
-import com.sbgcore.oauth.api.enums.enumByValue
+import com.sbgcore.oauth.api.enums.enumByJson
+import com.sbgcore.oauth.api.openid.GrantType
 import com.sbgcore.oauth.api.openid.GrantType.*
 import com.sbgcore.oauth.api.openid.Scopes
 import io.ktor.http.*
@@ -80,7 +82,7 @@ private fun Parameters.toRawExchangeRequest(): RawExchangeRequest {
 
     return RawExchangeRequest(
         // All
-        grantType = get("grant_type")?.let(::enumByValue) ?: throw Exception("Bad Request"),
+        grantType = get("grant_type")?.let { s -> enumByJson<GrantType>(s) } ?: throw Exception("Bad Request"),
 
         // AuthorizationCodeRequest && PkceAuthorizationCodeRequest
         code = get("code"),
@@ -88,10 +90,10 @@ private fun Parameters.toRawExchangeRequest(): RawExchangeRequest {
 
         // PkceAuthorizationCodeRequest
         codeVerifier = get("code_verifier"),
-        clientId = get("client_id")?.let(::enumByValue),
+        clientId = get("client_id")?.let { s -> enumByJson<ClientId>(s) },
 
         // PasswordRequest && RefreshTokenRequest
-        scope = get("scope")?.split(" ")?.mapNotNull { string -> enumByValue<Scopes>(string) }?.toSet(),
+        scope = get("scope")?.split(" ")?.mapNotNull { s -> enumByJson<Scopes>(s) }?.toSet(),
 
         // PasswordRequest
         username = get("username"),
