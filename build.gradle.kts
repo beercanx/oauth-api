@@ -8,6 +8,7 @@ plugins {
     application
     kotlin("jvm") version "1.4.31"
     kotlin("plugin.serialization") version "1.4.31"
+    id("io.gatling.gradle") version "3.5.1"
 }
 
 repositories {
@@ -75,6 +76,10 @@ dependencies {
 
 application {
     mainClassName = "com.sbgcore.oauth.api.MainKt"
+}
+
+apply {
+    from("gradle/gatling.gradle")
 }
 
 tasks.withType<KotlinCompile> {
