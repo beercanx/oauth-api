@@ -12,14 +12,17 @@ class LoginIntrospectUserInfoSimulation extends Simulation {
 
   private val scn = scenario("Login, Introspect and get User Info")
     .exec(withClient("consumer-z", "7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu")) // TODO - Extract into config?
-    .feed(customers)
+    .feed(customers.circular)
     .exec(passwordFlow)
+    .exitHereIfFailed
     .exec(introspectAccessToken)
+    .exitHereIfFailed
     .exec(userInfoWithAccessToken)
+    .exitHereIfFailed
 
   private val httpProtocol = http
     .baseUrl("http://localhost:8080")
     .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
 
-  setUp(scn.inject(atOnceUsers(1)).protocols(httpProtocol))
+  setUp(scn.inject(atOnceUsers(3)).protocols(httpProtocol))
 }

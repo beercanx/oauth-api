@@ -14,7 +14,7 @@ fun Route.introspectionRoute(
         post {
             extractClient<ConfidentialClient> { principal ->
 
-                val response = when (val request = validateIntrospectionRequest(principal)) {
+                val response = when (val request = validateIntrospectionRequest(principal).also { call.application.log.info("introspect($it)") }) {
                     is IntrospectionRequest -> introspectionService.introspect(request)
                     is IntrospectionRequestWithHint -> introspectionService.introspect(request)
                 }

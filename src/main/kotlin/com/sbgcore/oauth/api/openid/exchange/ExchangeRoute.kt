@@ -35,7 +35,7 @@ fun Route.exchangeRoute(
 
                     val parameters = call.receive<Parameters>()
 
-                    val response = when (val request = validateExchangeRequest(client, parameters)) {
+                    val response = when (val request = validateExchangeRequest(client, parameters).also { call.application.log.info("exchange($it)") }) {
                         is AuthorizationCodeRequest -> authorizationCodeFlow.exchange(request)
                         is PasswordRequest -> passwordFlow.exchange(request)
                         is RefreshTokenRequest -> refreshFlow.exchange(request)

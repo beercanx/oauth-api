@@ -17,9 +17,9 @@ object Customers {
     private def customer(username: String, password: String) = Map("username" -> username, "password" -> password)
 
     val customers: Array[Map[String, String]] = Array(
-      customer("aardvark", "121212"),
-      customer("badger", "212121"),
-      customer("elephant", "122112")
+      customer("AARDVARK", "121212"),
+      customer("BADGER", "212121"),
+      customer("ELEPHANT", "122112")
     )
 
   }

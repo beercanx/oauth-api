@@ -11,7 +11,7 @@ object OAuth2 {
      */
     def bearerAuth(token: Expression[String]): Expression[String] = session => for {
       token <- token(session)
-    } yield s"""Bearer: $token"""
+    } yield s"""Bearer $token"""
 
   }
 

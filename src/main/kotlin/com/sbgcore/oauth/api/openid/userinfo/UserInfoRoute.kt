@@ -14,6 +14,7 @@ fun Route.userInfoRoute(
     authenticate(AccessToken::class) {
         get {
             requireScopes(OpenId) { accessToken ->
+                call.application.log.info("userInfo($accessToken)")
                 call.respond(userInfoService.getUserInfo(accessToken))
             }
         }

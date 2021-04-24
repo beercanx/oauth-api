@@ -82,6 +82,12 @@ apply {
     from("gradle/gatling.gradle")
 }
 
+tasks.withType<io.gatling.gradle.GatlingRunTask> {
+    outputs.upToDateWhen {
+        false
+    }
+}
+
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = "11"
