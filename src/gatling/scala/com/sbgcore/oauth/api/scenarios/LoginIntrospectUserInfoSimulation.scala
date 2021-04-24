@@ -7,11 +7,12 @@ import com.sbgcore.oauth.api.feeders.Clients.Setup.withClient
 import com.sbgcore.oauth.api.feeders.Customers.Feeders.customers
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+import scala.concurrent.duration._
 
 class LoginIntrospectUserInfoSimulation extends Simulation {
 
   private val scn = scenario("Login, Introspect and get User Info")
-    .exec(withClient("consumer-z", "7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu")) // TODO - Extract into config?
+    .exec(withClient("consumer-z", "7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu")) // TODO - Extract into environmental config
     .feed(customers.circular)
     .exec(passwordFlow)
     .exitHereIfFailed
@@ -21,8 +22,8 @@ class LoginIntrospectUserInfoSimulation extends Simulation {
     .exitHereIfFailed
 
   private val httpProtocol = http
-    .baseUrl("http://localhost:8080")
-    .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
+    .baseUrl("http://localhost:8080") // TODO - Extract into environmental config
+    .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0") // TODO - Use various types
 
-  setUp(scn.inject(atOnceUsers(3)).protocols(httpProtocol))
+  setUp(scn.inject(constantUsersPerSec(200).during(1.minutes)).protocols(httpProtocol))
 }

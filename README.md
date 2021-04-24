@@ -54,3 +54,11 @@ These Ktor features have been picked as they looked useful:
  * https://ktor.io/servers/features/content-negotiation/serialization-converter.html
  * https://ktor.io/clients/index.html
  * https://ktor.io/clients/http-client/features/json-feature.html
+
+Gatling resources:
+ * https://gatling.io/docs/current/http/http_request
+ * https://gatling.io/docs/current/session/feeder
+ * https://gatling.io/docs/current/http/http_check
+ * https://gatling.io/docs/current/session/session_api
+ * https://github.com/gatling/gatling-gradle-plugin-demo
+ * https://devqa.io/gatling-oath2-authentication

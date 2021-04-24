@@ -5,7 +5,7 @@
         </encoder>
     </appender>
 
-    <logger name="io.gatling.http.engine.response" level="DEBUG"/> <!-- TRACE for ALL and DEBUG for FAILURES -->
+    <logger name="io.gatling.http.engine.response" level="WARN"/> <!-- TRACE for ALL and DEBUG for FAILURES -->
 
     <root level="WARN">
         <appender-ref ref="STDOUT"/>
