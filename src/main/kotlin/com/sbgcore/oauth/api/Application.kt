@@ -10,6 +10,7 @@ import com.sbgcore.oauth.api.customer.NitriteCustomerStatusRepository
 import com.sbgcore.oauth.api.ktor.auth.basic
 import com.sbgcore.oauth.api.ktor.auth.bearer.oAuth2Bearer
 import com.sbgcore.oauth.api.ktor.auth.oAuth2Bearer
+import com.sbgcore.oauth.api.openid.TypesafeScopesConfigurationRepository
 import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
 import com.sbgcore.oauth.api.openid.exchange.flows.password.PasswordFlow
@@ -90,12 +91,13 @@ fun Application.main() {
     val accessTokenService = AccessTokenService(accessTokenRepository)
     val introspectionService = IntrospectionService(accessTokenRepository)
     val tokenAuthenticationService = TokenAuthenticationService(accessTokenRepository)
+    val scopesConfigurationRepository = TypesafeScopesConfigurationRepository()
 
     // Customer
     val customerCredentialRepository = NitriteCustomerCredentialRepository()
     val customerStatusRepository = NitriteCustomerStatusRepository()
     val customerMatchService = CustomerMatchService(customerCredentialRepository)
-    val userInfoService = UserInfoService()
+    val userInfoService = UserInfoService(scopesConfigurationRepository)
 
     // Flows
     val passwordFlow = PasswordFlow(customerMatchService, accessTokenService)

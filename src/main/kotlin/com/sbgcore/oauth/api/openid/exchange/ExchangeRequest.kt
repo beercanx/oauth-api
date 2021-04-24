@@ -5,6 +5,7 @@ import com.sbgcore.oauth.api.client.ConfidentialClient
 import com.sbgcore.oauth.api.client.PublicClient
 import com.sbgcore.oauth.api.openid.GrantType
 import com.sbgcore.oauth.api.openid.Scopes
+import com.sbgcore.oauth.api.serializers.ScopeSerializer
 import io.ktor.http.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -23,7 +24,7 @@ data class RawExchangeRequest(
     @SerialName("client_id") val clientId: ClientId? = null,
 
     // PasswordRequest && RefreshTokenRequest
-    val scope: Set<Scopes>? = null,
+    @Serializable(with = ScopeSerializer::class) val scope: Set<Scopes>? = null,
 
     // PasswordRequest
     val username: String? = null,
@@ -35,9 +36,7 @@ data class RawExchangeRequest(
     // AssertionRequest
     val assertion: String? = null,
 
-    // SsoTokenRequest
-    @SerialName("sso_token") val ssoToken: String? = null
-) {
+    ) {
     override fun toString(): String {
         return "RawExchangeRequest(" +
                 "grantType=$grantType, " +
@@ -50,7 +49,6 @@ data class RawExchangeRequest(
                 "password=REDACTED, " +
                 "refreshToken=REDACTED, " +
                 "assertion=REDACTED, " +
-                "ssoToken=REDACTED" +
                 ")"
     }
 }
@@ -130,11 +128,3 @@ data class AssertionRequest(
     }
 }
 
-data class SsoTokenRequest(
-    override val principal: ConfidentialClient,
-    val ssoToken: String
-) : ValidatedConfidentialExchangeRequest() {
-    override fun toString(): String {
-        return "SsoTokenRequest(principal=$principal, ssoToken=REDACTED)"
-    }
-}

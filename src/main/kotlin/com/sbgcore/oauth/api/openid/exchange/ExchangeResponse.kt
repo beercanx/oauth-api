@@ -3,9 +3,9 @@
 package com.sbgcore.oauth.api.openid.exchange
 
 import com.sbgcore.oauth.api.openid.Scopes
+import com.sbgcore.oauth.api.serializers.ScopeSerializer
 import com.sbgcore.oauth.api.tokens.TokenType
 import com.sbgcore.oauth.api.tokens.TokenType.Bearer
-import com.sbgcore.oauth.api.serializers.ScopeSerializer
 import com.sbgcore.oauth.api.serializers.UUIDSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

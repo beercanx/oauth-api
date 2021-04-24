@@ -14,16 +14,14 @@ class ClientConfigurationTest {
         id = ConsumerX,
         type = Confidential,
         redirectUrls = emptySet(),
-        requiredScopes = emptySet(),
-        optionalScopes = emptySet(),
+        allowedScopes = emptySet(),
     )
 
     private val consumerY = ClientConfiguration(
         id = ConsumerY,
         type = Public,
         redirectUrls = emptySet(),
-        requiredScopes = emptySet(),
-        optionalScopes = emptySet(),
+        allowedScopes = emptySet(),
     )
 
     @Nested

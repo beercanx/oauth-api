@@ -6,13 +6,12 @@ import io.kotest.matchers.collections.beEmpty
 import io.kotest.matchers.collections.containExactly
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.mockk.mockk
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 
 class ScopeSerializerTest {
 
-    private val underTest = ScopeSerializer(mockk())
+    private val underTest = ScopeSerializer()
 
     private val json = Json { encodeDefaults = true }
     private fun encode(scope: Set<Scopes>): String = json.encodeToString(underTest, scope)

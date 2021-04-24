@@ -1,12 +1,14 @@
 package com.sbgcore.oauth.api.client
 
-import com.sbgcore.oauth.api.enums.WithValue
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-enum class ClientId(override val value: String) : WithValue {
+@Serializable
+enum class ClientId {
 
-    ConsumerX("consumer-x"),
-    ConsumerY("consumer-y"),
-    ConsumerZ("consumer-z"),
+    @SerialName("consumer-x") ConsumerX,
+    @SerialName("consumer-y") ConsumerY,
+    @SerialName("consumer-z") ConsumerZ,
 
     ;
 

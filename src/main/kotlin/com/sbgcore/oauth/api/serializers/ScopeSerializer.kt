@@ -1,6 +1,7 @@
 package com.sbgcore.oauth.api.serializers
 
-import com.sbgcore.oauth.api.enums.enumByValue
+import com.sbgcore.oauth.api.enums.enumByJson
+import com.sbgcore.oauth.api.enums.enumToJson
 import com.sbgcore.oauth.api.openid.Scopes
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
@@ -11,10 +12,15 @@ import kotlinx.serialization.encoding.Encoder
 
 /**
  * Custom scope field serializer because OAuth spec requires it to be a space separated string field.
+ * For example it will look like: `openid profile::read`
  */
-class ScopeSerializer() : KSerializer<Set<Scopes>> {
+class ScopeSerializer(private val scopesSerializer: KSerializer<Scopes>) : KSerializer<Set<Scopes>> {
 
-    constructor(@Suppress("UNUSED_PARAMETER") serializer: KSerializer<Scopes>) : this()
+    constructor() : this(Scopes.serializer())
+
+    companion object {
+        private const val EMPTY = ""
+    }
 
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("com.sbgcore.oauth.api.openid.Scope", STRING)
 
@@ -26,8 +32,12 @@ class ScopeSerializer() : KSerializer<Set<Scopes>> {
         return deserialize(decoder.decodeString())
     }
 
-    fun serialize(data: Set<Scopes>): String = data.joinToString(separator = " ", transform = Scopes::value)
+    fun serialize(data: Set<Scopes>): String = data.joinToString(separator = " ") { scope ->
+        enumToJson(scopesSerializer, scope) ?: EMPTY
+    }
 
-    fun deserialize(data: String): Set<Scopes> = data.split(" ").mapNotNull<String, Scopes>(::enumByValue).toSet()
+    fun deserialize(data: String): Set<Scopes> = data.split(" ").mapNotNull { scope ->
+        enumByJson(scopesSerializer, scope)
+    }.toSet()
 
 }

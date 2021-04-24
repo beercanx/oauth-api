@@ -154,7 +154,7 @@ class NitriteClientSecretRepositoryIntegrationTest {
             val clientSecret = ClientSecret(id = randomUUID(), clientId = ConsumerY, secret = "aardvark")
             underTest.insert(clientSecret)
 
-            assertSoftly(underTest.findAllByClientId(ConsumerY.value)) {
+            assertSoftly(underTest.findAllByClientId(ConsumerY)) {
                 it shouldHaveCount 1
                 it shouldContain clientSecret
             }
@@ -174,7 +174,7 @@ class NitriteClientSecretRepositoryIntegrationTest {
                 underTest.insert(clientSecret)
             }
 
-            assertSoftly(underTest.findAllByClientId(ConsumerY.value)) {
+            assertSoftly(underTest.findAllByClientId(ConsumerY)) {
                 it shouldHaveCount 10
                 it shouldNotContain consumerXClientSecret
             }
@@ -182,7 +182,7 @@ class NitriteClientSecretRepositoryIntegrationTest {
 
         @Test
         fun `should return empty sequence when no record exists`() {
-            underTest.findAllByClientId(ConsumerY.value) should beEmpty()
+            underTest.findAllByClientId(ConsumerY) should beEmpty()
         }
 
         @Test
