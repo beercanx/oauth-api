@@ -12,7 +12,7 @@ class LoginIntrospectUserInfoSimulation extends Simulation {
 
   private val scn = scenario("Login, Introspect and get User Info")
     .exec(withClient("consumer-z", "7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu")) // TODO - Extract into config?
-    .feed(customers.random)
+    .feed(customers)
     .exec(passwordFlow)
     .exec(introspectAccessToken)
     .exec(userInfoWithAccessToken)

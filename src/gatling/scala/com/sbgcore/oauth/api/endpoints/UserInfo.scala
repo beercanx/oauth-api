@@ -11,7 +11,7 @@ import io.gatling.core.check.CheckBuilder
 import io.gatling.core.check.jsonpath.JsonPathCheckType
 import io.gatling.core.session.Expression
 import io.gatling.core.structure.ChainBuilder
-import io.gatling.http.HeaderNames.{Accept, Authorization, ContentType}
+import io.gatling.http.HeaderNames.{Accept, Authorization}
 import io.gatling.http.HeaderValues.ApplicationJson
 import io.gatling.http.Predef._
 

@@ -6,8 +6,8 @@ import com.sbgcore.oauth.api.endpoints.TokenExchange.Configuration.endpoint
 import com.sbgcore.oauth.api.feeders.Clients.Expressions.{clientId, clientSecret}
 import com.sbgcore.oauth.api.feeders.Customers.Expressions.{password, username}
 import io.gatling.core.Predef._
+import io.gatling.core.check.CheckBuilder
 import io.gatling.core.check.jsonpath.JsonPathCheckType
-import io.gatling.core.check.{Check, CheckBuilder}
 import io.gatling.core.session.Expression
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.HeaderNames.{Accept, ContentType}
