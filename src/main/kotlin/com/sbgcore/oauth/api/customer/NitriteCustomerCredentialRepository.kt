@@ -25,6 +25,8 @@ class NitriteCustomerCredentialRepository(database: Nitrite) : CustomerCredentia
 
         // Add some initial test users
         insert(CustomerCredential(username = "AARDVARK", secret = hash("121212")))
+        insert(CustomerCredential(username = "BADGER", secret = hash("212121")))
+        insert(CustomerCredential(username = "ELEPHANT", secret = hash("122112")))
     }
 
     override fun insert(new: CustomerCredential) {
