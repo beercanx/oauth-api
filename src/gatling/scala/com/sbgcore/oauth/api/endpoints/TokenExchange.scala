@@ -46,11 +46,9 @@ object TokenExchange {
       .ofType[Int]
       .is(7200)
 
-    val hasScopes: CheckBuilder[JsonPathCheckType, JsonNode, Array[String]] = jsonPath("scope")
+    val hasScopes: CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("scope")
       .ofType[String]
-      .transform(scope => scope.split(' '))
       .exists
-      .saveAs(SCOPES)
 
   }
 

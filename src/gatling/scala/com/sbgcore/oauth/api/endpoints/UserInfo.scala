@@ -23,10 +23,6 @@ object UserInfo {
 
   }
 
-  object Expressions {
-
-  }
-
   object Checks {
 
     def hasSubject(subject: Expression[String]): CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("sub")
