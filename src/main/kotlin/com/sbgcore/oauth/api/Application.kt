@@ -31,6 +31,7 @@ import io.ktor.http.content.*
 import io.ktor.locations.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
+import okhttp3.internal.closeQuietly
 
 @Suppress("unused") // Inform the IDE that we are actually using this
 @KtorExperimentalLocationsAPI
@@ -103,6 +104,14 @@ fun Application.main() {
     val refreshFlow = RefreshFlow()
     val authorizationCodeFlow = AuthorizationCodeFlow()
     val assertionRedemptionFlow = AssertionRedemptionFlow()
+
+    // Graceful Shutdown
+    environment.monitor.subscribe(ApplicationStopped) {
+        closeAndLog(clientSecretRepository)
+        closeAndLog(accessTokenRepository)
+        closeAndLog(customerCredentialRepository)
+        closeAndLog(customerStatusRepository)
+    }
 
     install(Authentication) {
         basic<ConfidentialClient> {
