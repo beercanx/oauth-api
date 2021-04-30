@@ -18,6 +18,8 @@ import java.util.*
  */
 class NitriteAccessTokenRepository(database: Nitrite) : AccessTokenRepository {
 
+    private val expirationManager = NitriteAccessTokenExpirationManager()
+
     /**
      * Create a new instance of [NitriteAccessTokenRepository] with an in-memory instance of [Nitrite]
      */
@@ -38,12 +40,13 @@ class NitriteAccessTokenRepository(database: Nitrite) : AccessTokenRepository {
     }
 
     override fun insert(new: AccessToken) {
-        // TODO - Add async logic to implement automatic deletes, given this is a basic in memory nosql implementation.
         repository.insert(new)
+        expirationManager.expireAfter(new.id, new.expiresAt, ::delete)
     }
 
     override fun delete(id: UUID) {
         repository.remove(AccessToken::id eq id)
+        expirationManager.remove(id)
     }
 
     override fun findById(id: UUID): AccessToken? {

@@ -11,6 +11,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import org.dizitart.no2.objects.Id
 import java.time.OffsetDateTime
+import java.time.OffsetDateTime.now
 import java.util.*
 
 @Serializable
@@ -24,6 +25,9 @@ data class AccessToken(
     override val expiresAt: OffsetDateTime, // TODO - Does OffsetDateTimeSerializer return the right format?
     override val notBefore: OffsetDateTime  // TODO - Does OffsetDateTimeSerializer return the right format?
 ) : Token, Principal {
+
+    fun hasExpired(): Boolean = now().isAfter(expiresAt)
+
     override fun toString(): String {
         return "AccessToken(id=$id, value=REDACTED, username='$username', clientId=$clientId, scopes=$scopes, issuedAt=$issuedAt, expiresAt=$expiresAt, notBefore=$notBefore)"
     }

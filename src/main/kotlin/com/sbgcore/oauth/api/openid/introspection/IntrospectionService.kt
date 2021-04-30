@@ -18,10 +18,9 @@ class IntrospectionService(private val accessTokenRepository: AccessTokenReposit
     }
 
     private fun AccessToken?.toIntrospectionResponse(): IntrospectionResponse {
-        val now by lazy { now() }
         return when {
             this == null -> InactiveIntrospectionResponse()
-            now.isAfter(expiresAt) -> InactiveIntrospectionResponse() // TODO - Remove from repository?
+            hasExpired() -> InactiveIntrospectionResponse()
             else -> ActiveIntrospectionResponse(
                 scope = scopes,
                 clientId = clientId,
