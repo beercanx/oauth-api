@@ -8,7 +8,6 @@ import com.sbgcore.oauth.api.customer.CustomerMatchService
 import com.sbgcore.oauth.api.customer.NitriteCustomerCredentialRepository
 import com.sbgcore.oauth.api.customer.NitriteCustomerStatusRepository
 import com.sbgcore.oauth.api.ktor.auth.basic
-import com.sbgcore.oauth.api.ktor.auth.bearer.oAuth2Bearer
 import com.sbgcore.oauth.api.ktor.auth.oAuth2Bearer
 import com.sbgcore.oauth.api.openid.TypesafeScopesConfigurationRepository
 import com.sbgcore.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow

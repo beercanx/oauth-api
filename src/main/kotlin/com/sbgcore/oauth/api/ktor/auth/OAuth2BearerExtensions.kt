@@ -24,20 +24,20 @@ inline fun <reified T : Principal> Authentication.Configuration.oAuth2Bearer(
 typealias AccessTokenBlock = suspend ApplicationContext.(AccessToken) -> Unit
 
 /**
- * Requires an [AccessToken] principle to have been issued the [scopes] before the inner block is called:
- *  - If it does not have the [scopes] issued then a 403 with a [WWWAuthenticate] header will be issued.
+ * Attempts to authorize an [AccessToken] principle against the required [Scopes] before the inner block is called:
+ *  - If it does not have the required [Scopes] issued then a 403 with a [WWWAuthenticate] header will be issued.
  *  - If there is no [AccessToken] then an [IllegalStateException] will be thrown, which will generate a 500 response.
  */
-suspend fun ApplicationContext.requireScopes(vararg scopes: Scopes, block: AccessTokenBlock) {
-    return requireScopes(scopes.toSet(), block)
+suspend fun ApplicationContext.authorizeAccessToken(vararg required: Scopes, block: AccessTokenBlock) {
+    return authorizeAccessToken(required.toSet(), block)
 }
 
 /**
- * Requires an [AccessToken] principle to have been issued the [scopes] before the inner block is called:
- *  - If it does not have the [scopes] issued then a 403 with a [WWWAuthenticate] header will be issued.
+ * Attempts to authorize an [AccessToken] principle against the required [Scopes] before the inner block is called:
+ *  - If it does not have the required [Scopes] issued then a 403 with a [WWWAuthenticate] header will be issued.
  *  - If there is no [AccessToken] then an [IllegalStateException] will be thrown, which will generate a 500 response.
  */
-suspend fun ApplicationContext.requireScopes(scopes: Set<Scopes>, block: AccessTokenBlock) {
+suspend fun ApplicationContext.authorizeAccessToken(required: Set<Scopes>, block: AccessTokenBlock) {
 
     // If the application is setup correctly this should not be null.
     val accessToken = checkNotNull(call.principal<AccessToken>()) {
@@ -47,9 +47,9 @@ suspend fun ApplicationContext.requireScopes(scopes: Set<Scopes>, block: AccessT
     when {
 
         // Check that the access token contains all the required scopes.
-        accessToken.scopes.containsAll(scopes) -> block(accessToken)
+        accessToken.scopes.containsAll(required) -> block(accessToken)
 
         // This access token is not authorised to call the application block.
-        else -> call.respond(ForbiddenResponse(oAuth2BearerAuthChallenge("skybettingandgaming", scopes)))
+        else -> call.respond(ForbiddenResponse(oAuth2BearerAuthChallenge("skybettingandgaming", required)))
     }
 }
