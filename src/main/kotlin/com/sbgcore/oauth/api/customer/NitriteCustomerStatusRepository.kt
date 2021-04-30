@@ -5,8 +5,9 @@ import org.dizitart.kno2.filters.eq
 import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite
 import org.dizitart.no2.Nitrite
+import java.io.Closeable
 
-class NitriteCustomerStatusRepository(database: Nitrite) : CustomerStatusRepository {
+class NitriteCustomerStatusRepository(database: Nitrite) : CustomerStatusRepository, Closeable by database {
 
     /**
      * Create a new instance of [NitriteCustomerStatusRepository] with an in-memory instance of [Nitrite]

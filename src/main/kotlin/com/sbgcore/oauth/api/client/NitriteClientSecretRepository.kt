@@ -10,6 +10,7 @@ import org.dizitart.no2.IndexOptions.indexOptions
 import org.dizitart.no2.IndexType.NonUnique
 import org.dizitart.no2.IndexType.Unique
 import org.dizitart.no2.Nitrite
+import java.io.Closeable
 import java.security.SecureRandom
 import java.util.*
 import java.util.UUID.fromString
@@ -20,7 +21,7 @@ import java.util.UUID.fromString
  * - https://www.dizitart.org/nitrite-database/
  * - https://www.dizitart.org/nitrite-database/#potassium-nitrite
  */
-class NitriteClientSecretRepository(database: Nitrite) : ClientSecretRepository {
+class NitriteClientSecretRepository(database: Nitrite) : ClientSecretRepository, Closeable by database {
 
     /**
      * Create a new instance of [NitriteClientSecretRepository] with an in-memory instance of [Nitrite]

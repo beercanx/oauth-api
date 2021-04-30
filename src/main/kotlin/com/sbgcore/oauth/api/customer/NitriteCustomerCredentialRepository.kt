@@ -5,9 +5,10 @@ import org.dizitart.kno2.filters.eq
 import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite
 import org.dizitart.no2.Nitrite
+import java.io.Closeable
 import java.security.SecureRandom
 
-class NitriteCustomerCredentialRepository(database: Nitrite) : CustomerCredentialRepository {
+class NitriteCustomerCredentialRepository(database: Nitrite) : CustomerCredentialRepository, Closeable by database {
 
     /**
      * Create a new instance of [NitriteCustomerCredentialRepository] with an in-memory instance of [Nitrite]

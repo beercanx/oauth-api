@@ -8,6 +8,7 @@ import org.dizitart.no2.IndexOptions.indexOptions
 import org.dizitart.no2.IndexType.NonUnique
 import org.dizitart.no2.IndexType.Unique
 import org.dizitart.no2.Nitrite
+import java.io.Closeable
 import java.util.*
 
 /**
@@ -16,7 +17,7 @@ import java.util.*
  * - https://www.dizitart.org/nitrite-database/
  * - https://www.dizitart.org/nitrite-database/#potassium-nitrite
  */
-class NitriteAccessTokenRepository(database: Nitrite) : AccessTokenRepository {
+class NitriteAccessTokenRepository(database: Nitrite) : AccessTokenRepository, Closeable by database {
 
     private val expirationManager = NitriteAccessTokenExpirationManager()
 
