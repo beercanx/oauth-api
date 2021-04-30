@@ -5,8 +5,9 @@ import java.io.Closeable
 
 fun Application.closeAndLog(closeable: Closeable) {
     try {
+        log.info("Closing ${closeable::class}")
         closeable.close()
     } catch (exception: Exception) {
-        log.error("Exception while closing ${closeable::class}", exception)
+        log.error("Exception closing ${closeable::class}", exception)
     }
 }
