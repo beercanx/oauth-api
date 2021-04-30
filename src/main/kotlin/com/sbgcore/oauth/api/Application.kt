@@ -31,7 +31,6 @@ import io.ktor.http.content.*
 import io.ktor.locations.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
-import okhttp3.internal.closeQuietly
 
 @Suppress("unused") // Inform the IDE that we are actually using this
 @KtorExperimentalLocationsAPI
@@ -154,5 +153,12 @@ fun Application.main() {
         // Swagger UI and spec
         //
         swaggerRoutes()
+
+        //
+        // Setup some generic static assets
+        //
+        static("assets") {
+            resources("assets")
+        }
     }
 }

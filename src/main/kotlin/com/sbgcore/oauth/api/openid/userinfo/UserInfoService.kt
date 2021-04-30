@@ -4,9 +4,9 @@ import com.sbgcore.oauth.api.openid.Claims
 import com.sbgcore.oauth.api.openid.ScopesConfiguration
 import com.sbgcore.oauth.api.openid.ScopesConfigurationRepository
 import com.sbgcore.oauth.api.tokens.AccessToken
-import com.sbgcore.oauth.api.tokens.AccessTokenRepository
-import java.time.OffsetDateTime.now
-import java.util.*
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 
 class UserInfoService(private val scopesConfigurationRepository: ScopesConfigurationRepository) {
 
@@ -22,7 +22,8 @@ class UserInfoService(private val scopesConfigurationRepository: ScopesConfigura
             .toMap()
     }
 
-    private fun getClaim(accessToken: AccessToken, claim: Claims): Pair<Claims, Any?> = claim to when(claim) {
+    // TODO - Replace with a data class, might help with custom serialisers?
+    private fun getClaim(accessToken: AccessToken, claim: Claims): Pair<Claims, Any?> = claim to when (claim) {
         Claims.Subject -> accessToken.username
         Claims.Name -> TODO()
         Claims.GivenName -> TODO()
@@ -31,11 +32,9 @@ class UserInfoService(private val scopesConfigurationRepository: ScopesConfigura
         Claims.Nickname -> TODO()
         Claims.PreferredUserName -> TODO()
         Claims.ProfileUrl -> TODO()
-        Claims.PictureUrl -> TODO()
-        Claims.WebsiteUrl -> TODO()
+        Claims.PictureUrl -> "/assets/profile-images/${profileImages.random()}"
         Claims.Email -> TODO()
         Claims.EmailVerified -> TODO()
-        Claims.Gender -> TODO()
         Claims.Birthdate -> TODO()
         Claims.ZoneInfo -> TODO()
         Claims.Locale -> TODO()
@@ -43,5 +42,18 @@ class UserInfoService(private val scopesConfigurationRepository: ScopesConfigura
         Claims.PhoneNumberVerified -> TODO()
         Claims.Address -> TODO()
         Claims.UpdatedAt -> TODO()
+    }
+
+    private val profileImages: List<String> by lazy {
+        getResourceFiles("/assets/profile-images/")
+    }
+
+    @Throws(IOException::class)
+    fun getResourceFiles(path: String): List<String> = this::class.java.getResourceAsStream(path).use { stream ->
+        return if (stream == null) {
+            emptyList()
+        } else {
+            BufferedReader(InputStreamReader(stream)).readLines()
+        }
     }
 }

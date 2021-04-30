@@ -62,3 +62,6 @@ Gatling resources:
  * https://gatling.io/docs/current/session/session_api
  * https://github.com/gatling/gatling-gradle-plugin-demo
  * https://devqa.io/gatling-oath2-authentication
+
+Static assets:
+ * https://pixabay.com/vectors/people-character-faces-real-305836/

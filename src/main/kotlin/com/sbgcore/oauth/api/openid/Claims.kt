@@ -66,14 +66,6 @@ enum class Claims {
     @SerialName("picture") PictureUrl,
 
     /**
-     * URL of the End-User's Web page or blog. This Web page SHOULD contain information published by the End-User or an
-     * organization that the End-User is affiliated with.
-     *
-     * TODO - Remove as fairly certain 99.99% of cases we have no need to capture, store or supply this data.
-     */
-    @SerialName("website") WebsiteUrl,
-
-    /**
      * End-User's preferred e-mail address. Its value MUST conform to the RFC 5322
      * [https://www.rfc-editor.org/rfc/rfc5322.txt] addr-spec syntax. The RP MUST NOT rely upon this value being unique.
      */
@@ -86,14 +78,6 @@ enum class Claims {
      * and dependent upon the trust framework or contractual agreements within which the parties are operating.
      */
     @SerialName("email_verified") EmailVerified,
-
-    /**
-     * End-User's gender. Values defined by this specification are female and male. Other values MAY be used when
-     * neither of the defined values are applicable.
-     *
-     * TODO - Remove as fairly certain 99.99% of cases we have no need to capture, store or supply this data.
-     */
-    @SerialName("gender") Gender,
 
     /**
      * End-User's birthday, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format. The year MAY be 0000,
