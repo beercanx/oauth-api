@@ -82,7 +82,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "com.sbgcore.oauth.api.MainKt"
+    mainClassName = "uk.co.baconi.oauth.api.MainKt"
 }
 
 apply {
