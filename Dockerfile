@@ -2,7 +2,6 @@
 ## Build the source code ##
 ###########################
 FROM openjdk:11-jdk-slim as BUILDER
-LABEL maintainer=james.bacon@skybettingandgaming.com
 
 ## Copy code for build
 COPY src/ /opt/code/src
@@ -29,7 +28,6 @@ RUN unzip oauth-api.zip
 ## Create production image ##
 #############################
 FROM openjdk:11-jre-slim
-LABEL maintainer=james.bacon@skybettingandgaming.com
 
 ## Switch to the code
 WORKDIR /opt/distribution

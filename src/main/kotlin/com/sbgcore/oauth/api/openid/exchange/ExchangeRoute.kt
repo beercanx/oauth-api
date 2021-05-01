@@ -1,5 +1,6 @@
 package com.sbgcore.oauth.api.openid.exchange
 
+import com.sbgcore.oauth.api.OAuth2Server.REALM
 import com.sbgcore.oauth.api.client.ClientAuthenticationService
 import com.sbgcore.oauth.api.client.ConfidentialClient
 import com.sbgcore.oauth.api.client.PublicClient
@@ -19,6 +20,7 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.pipeline.*
+import kotlin.text.Charsets.UTF_8
 
 interface ExchangeRoute {
 
@@ -75,7 +77,7 @@ interface ExchangeRoute {
                 // 401 - Invalid credentials?
                 // TODO - Review this "default" error response
                 // TODO - Setup a common response provider
-                return@post call.respond(UnauthorizedResponse(basicAuthChallenge("skybettingandgaming", Charsets.UTF_8)))
+                return@post call.respond(UnauthorizedResponse(basicAuthChallenge(REALM, UTF_8)))
             }
         }
     }

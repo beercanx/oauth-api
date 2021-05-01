@@ -34,10 +34,6 @@ OAuth and related RFCs
  * https://tools.ietf.org/html/rfc7521 - Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants
  * https://tools.ietf.org/html/rfc7523 - JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants
  * https://tools.ietf.org/html/rfc7636 - Proof Key for Code Exchange by OAuth Public Clients
-
-This project was based on the CORE/gradle-kotlin-starter and the Ktor Project Generator.
- * https://stash.skybet.net/projects/CORES/repos/gradle-kotlin-starter/browse
- * https://ktor.io/quickstart/generator.html
  
 These Ktor features have been picked as they looked useful:
  * https://ktor.io/servers/features/routing.html

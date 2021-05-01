@@ -36,6 +36,8 @@ import io.ktor.serialization.*
 @KtorExperimentalLocationsAPI
 object OAuth2Server : WellKnownRoutes, OAuthRoutes, SwaggerRoutes {
 
+    const val REALM = "oauth-api"
+
     // Clients
     val clientSecretRepository = NitriteClientSecretRepository()
     val clientConfigurationRepository = TypesafeClientConfigurationRepository()
@@ -112,13 +114,13 @@ object OAuth2Server : WellKnownRoutes, OAuthRoutes, SwaggerRoutes {
 
         install(Authentication) {
             basic<ConfidentialClient> {
-                realm = "skybettingandgaming"
+                realm = REALM
                 validate { (clientId, clientSecret) ->
                     clientAuthService.confidentialClient(clientId, clientSecret)
                 }
             }
             oAuth2Bearer<AccessToken> {
-                realm = "skybettingandgaming"
+                realm = REALM
                 validate { (token) ->
                     tokenAuthenticationService.accessToken(token)
                 }

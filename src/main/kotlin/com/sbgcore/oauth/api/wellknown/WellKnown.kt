@@ -9,8 +9,8 @@ class WellKnown {
 
         // TODO - Something like load from config?
         return OpenIdConfiguration(
-            issuer = "https://auth.test.skybetservices.com.skybet.net",
-            authorization_endpoint = "https://auth.test.skybetservices.com.skybet.net/openid/v1/authorize"
+            issuer = "https://auth.localhost.me",
+            authorization_endpoint = "https://auth.localhost.me/oauth/v1/authorize"
         )
     }
 
@@ -33,8 +33,9 @@ class WellKnown {
         // TODO - Something like load from config?
         return ProductConfiguration(
             products = listOf(
-                Product(id = "fantasyfootball"),
-                Product(id = "itv7")
+                Product(id = "consumer-x"),
+                Product(id = "consumer-y"),
+                Product(id = "consumer-z"),
             )
         )
     }

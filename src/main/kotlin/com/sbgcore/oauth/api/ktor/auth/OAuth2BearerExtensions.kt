@@ -1,5 +1,6 @@
 package com.sbgcore.oauth.api.ktor.auth
 
+import com.sbgcore.oauth.api.OAuth2Server.REALM
 import com.sbgcore.oauth.api.ktor.ApplicationContext
 import com.sbgcore.oauth.api.ktor.auth.bearer.OAuth2BearerAuthenticationProvider
 import com.sbgcore.oauth.api.ktor.auth.bearer.oAuth2Bearer
@@ -50,6 +51,6 @@ suspend fun ApplicationContext.authorizeAccessToken(required: Set<Scopes>, block
         accessToken.scopes.containsAll(required) -> block(accessToken)
 
         // This access token is not authorised to call the application block.
-        else -> call.respond(ForbiddenResponse(oAuth2BearerAuthChallenge("skybettingandgaming", required)))
+        else -> call.respond(ForbiddenResponse(oAuth2BearerAuthChallenge(REALM, required)))
     }
 }
