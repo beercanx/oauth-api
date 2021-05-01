@@ -47,6 +47,7 @@ fun validateExchangeRequest(
 
             AssertionRequest(principal, assertion)
         }
+        null -> InvalidConfidentialExchangeRequest // TODO - Extend to report 'unsupported_grant_type'
     }
 }
 
@@ -82,7 +83,7 @@ private fun Parameters.toRawExchangeRequest(): RawExchangeRequest {
 
     return RawExchangeRequest(
         // All
-        grantType = get("grant_type")?.let { s -> enumByJson<GrantType>(s) } ?: throw Exception("Bad Request"),
+        grantType = get("grant_type")?.let { s -> enumByJson<GrantType>(s) },
 
         // AuthorizationCodeRequest && PkceAuthorizationCodeRequest
         code = get("code"),

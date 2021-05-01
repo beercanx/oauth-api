@@ -13,28 +13,28 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RawExchangeRequest(
     // All
-    @SerialName("grant_type") val grantType: GrantType,
+    @SerialName("grant_type") val grantType: GrantType?,
 
     // AuthorizationCodeRequest && PkceAuthorizationCodeRequest
     val code: String? = null,
-    @SerialName("redirect_uri") val redirectUri: String? = null,
+    @SerialName("redirect_uri") val redirectUri: String?,
 
     // PkceAuthorizationCodeRequest
-    @SerialName("code_verifier") val codeVerifier: String? = null,
-    @SerialName("client_id") val clientId: ClientId? = null,
+    @SerialName("code_verifier") val codeVerifier: String?,
+    @SerialName("client_id") val clientId: ClientId?,
 
     // PasswordRequest && RefreshTokenRequest
-    @Serializable(with = ScopeSerializer::class) val scope: Set<Scopes>? = null,
+    @Serializable(with = ScopeSerializer::class) val scope: Set<Scopes>?,
 
     // PasswordRequest
-    val username: String? = null,
-    val password: String? = null,
+    val username: String?,
+    val password: String?,
 
     // RefreshTokenRequest
-    @SerialName("refresh_token") val refreshToken: String? = null,
+    @SerialName("refresh_token") val refreshToken: String?,
 
     // AssertionRequest
-    val assertion: String? = null,
+    val assertion: String?,
 
     ) {
     override fun toString(): String {
