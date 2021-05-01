@@ -1,6 +1,5 @@
 package uk.co.baconi.oauth.api.tokens
 
-import uk.co.baconi.oauth.api.client.ClientId
 import org.dizitart.kno2.filters.eq
 import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite
@@ -8,6 +7,7 @@ import org.dizitart.no2.IndexOptions.indexOptions
 import org.dizitart.no2.IndexType.NonUnique
 import org.dizitart.no2.IndexType.Unique
 import org.dizitart.no2.Nitrite
+import uk.co.baconi.oauth.api.client.ClientId
 import java.io.Closeable
 import java.util.*
 
@@ -52,10 +52,6 @@ class NitriteAccessTokenRepository(database: Nitrite) : AccessTokenRepository, C
 
     override fun findById(id: UUID): AccessToken? {
         return repository.find(AccessToken::id eq id).firstOrDefault()
-    }
-
-    override fun findByValue(value: UUID): AccessToken? {
-        return repository.find(AccessToken::value eq value).firstOrDefault()
     }
 
     override fun findByValue(value: String): AccessToken? {

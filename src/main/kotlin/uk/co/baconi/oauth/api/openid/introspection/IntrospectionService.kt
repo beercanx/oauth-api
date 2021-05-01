@@ -12,7 +12,7 @@ class IntrospectionService(private val accessTokenRepository: AccessTokenReposit
     fun introspect(request: IntrospectionRequestWithHint) = lookup(request.token).toIntrospectionResponse()
 
     private fun lookup(token: String): AccessToken? = try {
-        accessTokenRepository.findByValue(UUID.fromString(token))
+        accessTokenRepository.findByValue(token)
     } catch (exception: Exception) {
         null
     }
