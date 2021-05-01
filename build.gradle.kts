@@ -6,8 +6,8 @@ val ktorVersion: String by project
 plugins {
     idea
     application
-    kotlin("jvm") version "1.4.31"
-    kotlin("plugin.serialization") version "1.4.31"
+    kotlin("jvm") version "1.4.32"
+    kotlin("plugin.serialization") version "1.4.32"
     id("io.gatling.gradle") version "3.5.1"
 }
 
@@ -43,6 +43,13 @@ dependencies {
     // Ktor HTTP client
     implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
     implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+
+    // Kotlinx Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+
+    // Kotlinx Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3-native-mt")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.3-native-mt")
 
     // Configuration
     implementation("com.typesafe:config:1.4.1")
