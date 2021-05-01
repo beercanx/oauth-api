@@ -16,14 +16,14 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
-class WellKnownRoutesTest {
+class WellKnownRoutesTest : WellKnownRoutes {
 
-    private val mockWellKnown = mockk<WellKnown>()
+    override val wellKnown = mockk<WellKnown>()
     private val underTest: Application.() -> Unit = {
 
         // The routes we are testing
         routing {
-            wellKnownRoutes(mockWellKnown)
+            wellKnownRoutes()
         }
 
         // Add support for returning data classes
@@ -35,7 +35,7 @@ class WellKnownRoutesTest {
     @Test
     fun `well known openid configuration endpoint should return OpenID configuration`() {
 
-        every { mockWellKnown.getOpenIdConfiguration() } returns OpenIdConfiguration(
+        every { wellKnown.getOpenIdConfiguration() } returns OpenIdConfiguration(
             "issuer",
             "endpoint"
         )
@@ -53,7 +53,7 @@ class WellKnownRoutesTest {
     @Test
     fun `well known jwks endpoint should return some JWKS`() {
 
-        every { mockWellKnown.getJsonWebKeySet() } returns JsonWebKeySet(
+        every { wellKnown.getJsonWebKeySet() } returns JsonWebKeySet(
             emptySet()
         )
 
@@ -70,7 +70,7 @@ class WellKnownRoutesTest {
     @Test
     fun `well known openid product endpoint should return some product configuration`() {
 
-        every { mockWellKnown.getProductConfiguration() } returns ProductConfiguration(emptyList())
+        every { wellKnown.getProductConfiguration() } returns ProductConfiguration(emptyList())
 
         withTestApplication(underTest) {
             handleRequest(HttpMethod.Get, "/.well-known/product-configuration").apply {
