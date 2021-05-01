@@ -1,12 +1,14 @@
 package uk.co.baconi.oauth.api.client
 
-import uk.co.baconi.oauth.api.client.ClientId.*
-import uk.co.baconi.oauth.api.client.ClientType.Public
-import uk.co.baconi.oauth.api.enums.enumToJson
 import com.typesafe.config.ConfigException
 import com.typesafe.config.ConfigFactory
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.beEmpty
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.throwable.shouldHaveMessage
@@ -17,6 +19,11 @@ import io.mockk.spyk
 import io.mockk.verify
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import uk.co.baconi.oauth.api.client.ClientId.*
+import uk.co.baconi.oauth.api.client.ClientType.Public
+import uk.co.baconi.oauth.api.enums.enumToJson
+import uk.co.baconi.oauth.api.enums.serialise
+import uk.co.baconi.oauth.api.openid.Scopes.OpenId
 
 class TypesafeClientConfigurationRepositoryIntegrationTest {
 
@@ -57,6 +64,164 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
             shouldThrow<IllegalStateException> {
                 underTest.delete(mockk())
             } shouldHaveMessage "Delete operation is not supported"
+        }
+    }
+
+    @Nested
+    inner class ToUrls {
+
+        init {
+            every { repository.hasPath(any()) } returns true
+        }
+
+        @Test
+        fun `should be able to handle missing entry`() {
+
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
+                """
+                    type: Public
+                """.trimIndent()
+            )
+
+            assertSoftly(underTest.findById(ConsumerZ)) {
+                shouldNotBeNull()
+                redirectUrls should beEmpty()
+            }
+        }
+
+        @Test
+        fun `should be able to handle null entry`() {
+
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
+                """
+                    type: Public,
+                    redirectUrls: null
+                """.trimIndent()
+            )
+
+            assertSoftly(underTest.findById(ConsumerZ)) {
+                shouldNotBeNull()
+                redirectUrls should beEmpty()
+            }
+        }
+
+        @Test
+        fun `should be able to handle empty entry`() {
+
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
+                """
+                    type: Public,
+                    redirectUrls: []
+                """.trimIndent()
+            )
+
+            assertSoftly(underTest.findById(ConsumerZ)) {
+                shouldNotBeNull()
+                redirectUrls should beEmpty()
+            }
+        }
+
+        @Test
+        fun `should be able to handle valid url entry`() {
+
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
+                """
+                    type: Public,
+                    redirectUrls: ["uk.co.consumer-z://callback"]
+                """.trimIndent()
+            )
+
+            assertSoftly(underTest.findById(ConsumerZ)) {
+                shouldNotBeNull()
+                redirectUrls shouldContain Url("uk.co.consumer-z://callback")
+            }
+        }
+    }
+
+    @Nested
+    inner class ToScopes {
+
+        init {
+            every { repository.hasPath(any()) } returns true
+        }
+
+        @Test
+        fun `should be able to handle missing entry`() {
+
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
+                """
+                    type: Public
+                """.trimIndent()
+            )
+
+            assertSoftly(underTest.findById(ConsumerZ)) {
+                shouldNotBeNull()
+                allowedScopes should beEmpty()
+            }
+        }
+
+        @Test
+        fun `should be able to handle null entry`() {
+
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
+                """
+                    type: Public,
+                    allowedScopes: null
+                """.trimIndent()
+            )
+
+            assertSoftly(underTest.findById(ConsumerZ)) {
+                shouldNotBeNull()
+                allowedScopes should beEmpty()
+            }
+        }
+
+        @Test
+        fun `should be able to handle empty entry`() {
+
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
+                """
+                    type: Public,
+                    allowedScopes: []
+                """.trimIndent()
+            )
+
+            assertSoftly(underTest.findById(ConsumerZ)) {
+                shouldNotBeNull()
+                allowedScopes should beEmpty()
+            }
+        }
+
+        @Test
+        fun `should be able to handle invalid scope entry`() {
+
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
+                """
+                    type: Public,
+                    allowedScopes: [aardvark]
+                """.trimIndent()
+            )
+
+            assertSoftly(underTest.findById(ConsumerZ)) {
+                shouldNotBeNull()
+                allowedScopes should beEmpty()
+            }
+        }
+
+        @Test
+        fun `should be able to handle valid scope entry`() {
+
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
+                """
+                    type: Public,
+                    allowedScopes: [openid]
+                """.trimIndent()
+            )
+
+            assertSoftly(underTest.findById(ConsumerZ)) {
+                shouldNotBeNull()
+                allowedScopes shouldContainExactly setOf(OpenId)
+            }
         }
     }
 
