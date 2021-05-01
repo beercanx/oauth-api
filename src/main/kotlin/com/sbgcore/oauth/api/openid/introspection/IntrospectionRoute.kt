@@ -7,19 +7,22 @@ import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
-fun Route.introspectionRoute(
-    introspectionService: IntrospectionService
-) {
-    authenticate(ConfidentialClient::class) {
-        post {
-            extractClient<ConfidentialClient> { principal ->
+interface IntrospectionRoute {
 
-                val response = when (val request = validateIntrospectionRequest(principal)) {
-                    is IntrospectionRequest -> introspectionService.introspect(request)
-                    is IntrospectionRequestWithHint -> introspectionService.introspect(request)
+    val introspectionService: IntrospectionService
+
+    fun Route.introspectionRoute() {
+        authenticate(ConfidentialClient::class) {
+            post {
+                extractClient<ConfidentialClient> { principal ->
+
+                    val response = when (val request = validateIntrospectionRequest(principal)) {
+                        is IntrospectionRequest -> introspectionService.introspect(request)
+                        is IntrospectionRequestWithHint -> introspectionService.introspect(request)
+                    }
+
+                    call.respond(response)
                 }
-
-                call.respond(response)
             }
         }
     }

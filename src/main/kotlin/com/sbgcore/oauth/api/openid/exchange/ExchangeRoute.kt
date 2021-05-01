@@ -14,50 +14,37 @@ import io.ktor.auth.*
 import io.ktor.http.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.auth.*
+import io.ktor.http.auth.HttpAuthHeader.Companion.basicAuthChallenge
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.pipeline.*
 
-fun Route.exchangeRoute(
-    clientAuthService: ClientAuthenticationService,
-    passwordFlow: PasswordFlow,
-    refreshFlow: RefreshFlow,
-    authorizationCodeFlow: AuthorizationCodeFlow,
-    assertionRedemptionFlow: AssertionRedemptionFlow
-) {
-    // Optional because we have to cater for public clients using PKCE
-    authenticate(ConfidentialClient::class, optional = true) {
-        post {
-            // Handle standard exchanges for confidential clients
-            when (val client = call.principal<ConfidentialClient>()) {
-                is ConfidentialClient -> {
+interface ExchangeRoute {
 
-                    val parameters = call.receive<Parameters>()
+    val passwordFlow: PasswordFlow
+    val refreshFlow: RefreshFlow
+    val authorizationCodeFlow: AuthorizationCodeFlow
+    val assertionRedemptionFlow: AssertionRedemptionFlow
+    val clientAuthService: ClientAuthenticationService
 
-                    val response = when (val request = validateExchangeRequest(client, parameters)) {
-                        is AuthorizationCodeRequest -> authorizationCodeFlow.exchange(request)
-                        is PasswordRequest -> passwordFlow.exchange(request)
-                        is RefreshTokenRequest -> refreshFlow.exchange(request)
-                        is AssertionRequest -> assertionRedemptionFlow.exchange(request)
-                        is InvalidConfidentialExchangeRequest -> FailedExchangeResponse(InvalidRequest) // TODO - Extend to include more detail?
-                    }
+    fun Route.exchangeRoute() {
 
-                    return@post when(response) {
-                        is SuccessExchangeResponse -> call.respond(response)
-                        is FailedExchangeResponse ->  call.respond(BadRequest, response) // TODO - Review if the spec allows for any other type of response codes, maybe around invalid_client responses.
-                    }
-                }
-            }
+        // Optional because we have to cater for public clients using PKCE
+        authenticate(ConfidentialClient::class, optional = true) {
+            post {
+                // Handle standard exchanges for confidential clients
+                when (val client = call.principal<ConfidentialClient>()) {
+                    is ConfidentialClient -> {
 
-            // Handle PKCE requests for public clients
-            when (val parameters = call.receiveOrNull<Parameters>()) {
-                is Parameters -> when (val client = parameters["client_id"]?.let(clientAuthService::publicClient)) {
-                    is PublicClient -> {
+                        val parameters = call.receive<Parameters>()
 
-                        val response = when (val result = validatePkceExchangeRequest(client, parameters)) {
-                            is PkceAuthorizationCodeRequest -> authorizationCodeFlow.exchange(result)
-                            is InvalidPublicExchangeRequest -> FailedExchangeResponse(InvalidRequest) // TODO - Extend to include more detail?
+                        val response = when (val request = validateExchangeRequest(client, parameters)) {
+                            is AuthorizationCodeRequest -> authorizationCodeFlow.exchange(request)
+                            is PasswordRequest -> passwordFlow.exchange(request)
+                            is RefreshTokenRequest -> refreshFlow.exchange(request)
+                            is AssertionRequest -> assertionRedemptionFlow.exchange(request)
+                            is InvalidConfidentialExchangeRequest -> FailedExchangeResponse(InvalidRequest) // TODO - Extend to include more detail?
                         }
 
                         return@post when(response) {
@@ -66,12 +53,30 @@ fun Route.exchangeRoute(
                         }
                     }
                 }
-            }
 
-            // 401 - Invalid credentials?
-            // TODO - Review this "default" error response
-            // TODO - Setup a common response provider
-            return@post call.respond(UnauthorizedResponse(HttpAuthHeader.basicAuthChallenge("skybettingandgaming", Charsets.UTF_8)))
+                // Handle PKCE requests for public clients
+                when (val parameters = call.receiveOrNull<Parameters>()) {
+                    is Parameters -> when (val client = parameters["client_id"]?.let(clientAuthService::publicClient)) {
+                        is PublicClient -> {
+
+                            val response = when (val result = validatePkceExchangeRequest(client, parameters)) {
+                                is PkceAuthorizationCodeRequest -> authorizationCodeFlow.exchange(result)
+                                is InvalidPublicExchangeRequest -> FailedExchangeResponse(InvalidRequest) // TODO - Extend to include more detail?
+                            }
+
+                            return@post when(response) {
+                                is SuccessExchangeResponse -> call.respond(response)
+                                is FailedExchangeResponse ->  call.respond(BadRequest, response) // TODO - Review if the spec allows for any other type of response codes, maybe around invalid_client responses.
+                            }
+                        }
+                    }
+                }
+
+                // 401 - Invalid credentials?
+                // TODO - Review this "default" error response
+                // TODO - Setup a common response provider
+                return@post call.respond(UnauthorizedResponse(basicAuthChallenge("skybettingandgaming", Charsets.UTF_8)))
+            }
         }
     }
 }
