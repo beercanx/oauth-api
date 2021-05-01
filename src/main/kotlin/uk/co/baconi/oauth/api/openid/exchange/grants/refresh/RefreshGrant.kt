@@ -1,8 +1,8 @@
-package uk.co.baconi.oauth.api.openid.exchange.flows.refresh
+package uk.co.baconi.oauth.api.openid.exchange.grants.refresh
 
 import uk.co.baconi.oauth.api.openid.exchange.ExchangeResponse
 import uk.co.baconi.oauth.api.openid.exchange.RefreshTokenRequest
-import uk.co.baconi.oauth.api.openid.exchange.flows.ConfidentialGrant
+import uk.co.baconi.oauth.api.openid.exchange.grants.ConfidentialGrant
 
 class RefreshGrant : ConfidentialGrant<RefreshTokenRequest> {
 

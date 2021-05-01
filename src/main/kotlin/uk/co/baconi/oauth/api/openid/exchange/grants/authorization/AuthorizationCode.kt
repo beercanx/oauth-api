@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.api.openid.exchange.flows.authorization
+package uk.co.baconi.oauth.api.openid.exchange.grants.authorization
 
 import io.ktor.http.*
 import org.dizitart.no2.objects.Id

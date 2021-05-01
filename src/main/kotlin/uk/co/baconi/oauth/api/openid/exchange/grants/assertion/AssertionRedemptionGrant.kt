@@ -1,8 +1,8 @@
-package uk.co.baconi.oauth.api.openid.exchange.flows.assertion
+package uk.co.baconi.oauth.api.openid.exchange.grants.assertion
 
 import uk.co.baconi.oauth.api.openid.exchange.AssertionRequest
 import uk.co.baconi.oauth.api.openid.exchange.ExchangeResponse
-import uk.co.baconi.oauth.api.openid.exchange.flows.ConfidentialGrant
+import uk.co.baconi.oauth.api.openid.exchange.grants.ConfidentialGrant
 
 // TODO - Verify name
 class AssertionRedemptionGrant : ConfidentialGrant<AssertionRequest> {

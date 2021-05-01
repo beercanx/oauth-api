@@ -11,10 +11,10 @@ import uk.co.baconi.oauth.api.ktor.auth.basic
 import uk.co.baconi.oauth.api.ktor.auth.oAuth2Bearer
 import uk.co.baconi.oauth.api.openid.OAuthRoutes
 import uk.co.baconi.oauth.api.openid.TypesafeScopesConfigurationRepository
-import uk.co.baconi.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionGrant
-import uk.co.baconi.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeGrant
-import uk.co.baconi.oauth.api.openid.exchange.flows.password.PasswordCredentialsGrant
-import uk.co.baconi.oauth.api.openid.exchange.flows.refresh.RefreshGrant
+import uk.co.baconi.oauth.api.openid.exchange.grants.assertion.AssertionRedemptionGrant
+import uk.co.baconi.oauth.api.openid.exchange.grants.authorization.AuthorizationCodeGrant
+import uk.co.baconi.oauth.api.openid.exchange.grants.password.PasswordCredentialsGrant
+import uk.co.baconi.oauth.api.openid.exchange.grants.refresh.RefreshGrant
 import uk.co.baconi.oauth.api.openid.introspection.IntrospectionService
 import uk.co.baconi.oauth.api.openid.userinfo.UserInfoService
 import uk.co.baconi.oauth.api.swagger.SwaggerRoutes
