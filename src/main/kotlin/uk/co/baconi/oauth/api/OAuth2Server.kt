@@ -11,10 +11,10 @@ import uk.co.baconi.oauth.api.ktor.auth.basic
 import uk.co.baconi.oauth.api.ktor.auth.oAuth2Bearer
 import uk.co.baconi.oauth.api.openid.OAuthRoutes
 import uk.co.baconi.oauth.api.openid.TypesafeScopesConfigurationRepository
-import uk.co.baconi.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
-import uk.co.baconi.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
-import uk.co.baconi.oauth.api.openid.exchange.flows.password.PasswordFlow
-import uk.co.baconi.oauth.api.openid.exchange.flows.refresh.RefreshFlow
+import uk.co.baconi.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionGrant
+import uk.co.baconi.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeGrant
+import uk.co.baconi.oauth.api.openid.exchange.flows.password.PasswordCredentialsGrant
+import uk.co.baconi.oauth.api.openid.exchange.flows.refresh.RefreshGrant
 import uk.co.baconi.oauth.api.openid.introspection.IntrospectionService
 import uk.co.baconi.oauth.api.openid.userinfo.UserInfoService
 import uk.co.baconi.oauth.api.swagger.SwaggerRoutes
@@ -56,11 +56,11 @@ object OAuth2Server : WellKnownRoutes, OAuthRoutes, SwaggerRoutes {
     val customerMatchService = CustomerMatchService(customerCredentialRepository)
     override val userInfoService = UserInfoService(scopesConfigurationRepository)
 
-    // Flows
-    override val passwordFlow = PasswordFlow(customerMatchService, accessTokenService)
-    override val refreshFlow = RefreshFlow()
-    override val authorizationCodeFlow = AuthorizationCodeFlow()
-    override val assertionRedemptionFlow = AssertionRedemptionFlow()
+    // OAuth Grants
+    override val passwordCredentialsGrant = PasswordCredentialsGrant(customerMatchService, accessTokenService)
+    override val refreshGrant = RefreshGrant()
+    override val authorizationCodeGrant = AuthorizationCodeGrant()
+    override val assertionRedemptionGrant = AssertionRedemptionGrant()
 
     fun Application.module() {
 

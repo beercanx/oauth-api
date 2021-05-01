@@ -6,7 +6,7 @@ info:
   version: 0.0.1
 
 paths:
-  /openid/v1/token:
+  /oauth/v1/token:
     post:
       tags:
         - OAuth
@@ -20,7 +20,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               oneOf:
-                - $ref: '#/components/schemas/token-exchange-request-password-flow'
+                - $ref: '#/components/schemas/token-exchange-request-password-grant'
+                - $ref: '#/components/schemas/token-exchange-request-confidential-client-authorization-code-grant'
+                - $ref: '#/components/schemas/token-exchange-request-public-client-authorization-code-grant'
 
       responses:
         200:
@@ -28,8 +30,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/token-exchange-response-success'
+                $ref: '#/components/schemas/token-exchange-response-success'
         400:
           description: You did something wrong
           content:
@@ -48,39 +49,74 @@ paths:
           $ref: '#/components/responses/service-unavailable-error'
 
       security:
-        - clientCredentials: []
+        - confidentialClientCredentials: []
 
 components:
   securitySchemes:
-    clientCredentials:
+    confidentialClientCredentials:
       description: Client credentials of a confidential client.
       type: http
       scheme: basic
 
   schemas:
-    token-exchange-request-password-flow:
-      description: Request parameters for completing a Token Exchange using the Password flow.
+    token-exchange-request-password-grant:
+      description: Request parameters for completing a Token Exchange using the Password grant.
       type: object
       properties:
         grant_type:
           required: true
           type: string
           example: password
+          description: Value MUST be set to "password".
         username:
           required: true
           type: string
           example: aardvark
-          description: The username of the user to token exchange for (aka login as).
+          description: The resource owner username.
         password:
           required: true
           type: string
           example: 121212
-          description: The password of the user to token exchange for (aka login as).
+          description: The resource owner password.
         scope:
           required: false
           type: string
           example: openid
-          description: The requested scopes to be assigned to the token once exchanged.
+          description: The scope of the access request as described by
+          [RFC6749 Section 3.3](https://tools.ietf.org/html/rfc6749#section-3.3).
+
+    token-exchange-request-confidential-client-authorization-code-grant:
+      type: object
+      properties:
+        grant_type:
+          required: true
+          type: string
+          example: authorization_code
+          description: Value MUST be set to "authorization_code".
+        code:
+          required: true
+          type: string
+          example: abc-123
+          description: The authorization code received from the authorization server.
+        redirect_uri:
+          required: true
+          type: string
+          example: https://consumer-x.localhost.me/callback
+          description:
+            The "redirect_uri" parameter that was included in the authorization request as described in
+            [RFC6749 Section 4.1.1](https://tools.ietf.org/html/rfc6749#section-4.1.1), and their values MUST be
+            identical.
+
+    token-exchange-request-public-client-authorization-code-grant:
+      allOf:
+        - $ref: '#/components/schemas/token-exchange-request-authorization-code-grant'
+        - type: object
+          properties:
+            client_id:
+              required: true
+              type: string
+              example: consumer-x
+              description: ID of the public client
 
     token-exchange-response-success:
       description: The success response returned when completing a Token Exchange.
