@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.serializers
 
-import uk.co.baconi.oauth.api.enums.enumByJson
-import uk.co.baconi.oauth.api.enums.enumToJson
+import uk.co.baconi.oauth.api.enums.deserialise
+import uk.co.baconi.oauth.api.enums.serialise
 import uk.co.baconi.oauth.api.openid.Scopes
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
@@ -33,11 +33,11 @@ class ScopeSerializer(private val scopesSerializer: KSerializer<Scopes>) : KSeri
     }
 
     fun serialize(data: Set<Scopes>): String = data.joinToString(separator = " ") { scope ->
-        enumToJson(scopesSerializer, scope) ?: EMPTY
+        serialise(scopesSerializer, scope) ?: EMPTY
     }
 
     fun deserialize(data: String): Set<Scopes> = data.split(" ").mapNotNull { scope ->
-        enumByJson(scopesSerializer, scope)
+        deserialise(scopesSerializer, scope)
     }.toSet()
 
 }

@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.client
 
 import uk.co.baconi.oauth.api.Repository
-import uk.co.baconi.oauth.api.enums.enumByJson
+import uk.co.baconi.oauth.api.enums.deserialise
 import java.util.*
 
 /**
@@ -19,7 +19,7 @@ interface ClientSecretRepository : Repository<ClientSecret, UUID> {
      * but takes a [String] and looks up the [ClientId] first.
      */
     fun findAllByClientId(clientId: String): Sequence<ClientSecret> {
-        val enum = enumByJson<ClientId>(clientId)
+        val enum = deserialise<ClientId>(clientId)
         return if (enum == null) {
             emptySequence()
         } else {
