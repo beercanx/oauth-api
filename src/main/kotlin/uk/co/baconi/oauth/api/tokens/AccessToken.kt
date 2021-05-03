@@ -1,26 +1,20 @@
 package uk.co.baconi.oauth.api.tokens
 
+import io.ktor.auth.*
+import org.dizitart.no2.objects.Id
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.openid.Scopes
-import uk.co.baconi.oauth.api.serializers.OffsetDateTimeSerializer
-import uk.co.baconi.oauth.api.serializers.UUIDSerializer
-import io.ktor.auth.*
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.UseSerializers
-import org.dizitart.no2.objects.Id
 import java.time.OffsetDateTime
 import java.time.OffsetDateTime.now
-import java.util.*
 
 data class AccessToken(
-    @Id override val id: UUID,
-    override val value: UUID, // TODO - Replace by a secure random hash so it doesn't look like an ID?
+    @Id override val value: String,
     override val username: String,
     override val clientId: ClientId,
     override val scopes: Set<Scopes>,
-    override val issuedAt: OffsetDateTime,  // TODO - Does OffsetDateTimeSerializer return the right format?
-    override val expiresAt: OffsetDateTime, // TODO - Does OffsetDateTimeSerializer return the right format?
-    override val notBefore: OffsetDateTime  // TODO - Does OffsetDateTimeSerializer return the right format?
+    override val issuedAt: OffsetDateTime,
+    override val expiresAt: OffsetDateTime,
+    override val notBefore: OffsetDateTime
 ) : Token, Principal {
 
     companion object
@@ -28,7 +22,7 @@ data class AccessToken(
     fun hasExpired(): Boolean = now().isAfter(expiresAt)
 
     override fun toString(): String {
-        return "AccessToken(id=$id, value=REDACTED, username='$username', clientId=$clientId, scopes=$scopes, issuedAt=$issuedAt, expiresAt=$expiresAt, notBefore=$notBefore)"
+        return "AccessToken(value=REDACTED, username='$username', clientId=$clientId, scopes=$scopes, issuedAt=$issuedAt, expiresAt=$expiresAt, notBefore=$notBefore)"
     }
 
     /**
@@ -42,7 +36,6 @@ data class AccessToken(
 
         other as AccessToken
 
-        if (id != other.id) return false
         if (value != other.value) return false
         if (username != other.username) return false
         if (clientId != other.clientId) return false
@@ -58,8 +51,7 @@ data class AccessToken(
      * Generated because when you generate [equals] you have to generated [hashCode].
      */
     override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + value.hashCode()
+        var result = value.hashCode()
         result = 31 * result + username.hashCode()
         result = 31 * result + clientId.hashCode()
         result = 31 * result + scopes.hashCode()

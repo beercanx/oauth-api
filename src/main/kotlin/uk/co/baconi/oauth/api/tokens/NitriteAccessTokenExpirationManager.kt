@@ -5,34 +5,33 @@ import java.lang.Thread.sleep
 import java.time.OffsetDateTime
 import java.time.OffsetDateTime.now
 import java.time.temporal.ChronoUnit.MILLIS
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 /**
  * An expiration manager for [AccessToken]'s that are managed by a [Nitrite] database.
  */
 class NitriteAccessTokenExpirationManager internal constructor(
-    private val threads: ConcurrentHashMap<UUID, Thread>
+    private val threads: ConcurrentHashMap<String, Thread>
 ) {
 
     /**
      * Restricted access because why does anything other than the [NitriteAccessTokenRepository] need this.
      */
-    internal constructor() : this(ConcurrentHashMap<UUID, Thread>())
+    internal constructor() : this(ConcurrentHashMap<String, Thread>())
 
     /**
-     * @param id of the [AccessToken] this will expire.
+     * @param value of the [AccessToken] this will expire.
      * @param expiresAt when the [AccessToken] expires as an [OffsetDateTime].
      * @param expire what to do when this [AccessToken] expires.
      */
-    fun expireAfter(id: UUID, expiresAt: OffsetDateTime, expire: (UUID) -> Unit) {
+    fun expireAfter(value: String, expiresAt: OffsetDateTime, expire: (String) -> Unit) {
 
-        threads[id] = Thread {
+        threads[value] = Thread {
 
             // Sleep thread until token expires
             try {
                 val expiresIn = now().until(expiresAt, MILLIS)
-                if(expiresIn > 0) {
+                if (expiresIn > 0) {
                     sleep(expiresIn)
                 }
             } catch (exception: InterruptedException) {
@@ -42,10 +41,10 @@ class NitriteAccessTokenExpirationManager internal constructor(
             }
 
             // Expire the token
-            expire(id)
+            expire(value)
 
             // Remove the thread tracker
-            threads.remove(id)
+            threads.remove(value)
 
         }.also { thread ->
             // Start the thread.
@@ -56,7 +55,7 @@ class NitriteAccessTokenExpirationManager internal constructor(
     /**
      * Removes an expiration tracker and stops it.
      */
-    fun remove(id: UUID) {
-        threads.remove(id)?.interrupt()
+    fun remove(value: String) {
+        threads.remove(value)?.interrupt()
     }
 }

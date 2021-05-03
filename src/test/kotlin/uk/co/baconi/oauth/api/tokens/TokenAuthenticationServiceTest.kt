@@ -19,7 +19,7 @@ class TokenAuthenticationServiceTest {
         @Test
         fun `should return null if there is no matching access token in the repository`() {
 
-            every { repository.findByValue(any<String>()) } returns null
+            every { repository.findByValue(any()) } returns null
 
             underTest.accessToken("aardvark") should beNull()
         }
@@ -27,7 +27,7 @@ class TokenAuthenticationServiceTest {
         @Test
         fun `should return null if discovered the access token has expired`() {
 
-            every { repository.findByValue(any<String>()) } returns mockk {
+            every { repository.findByValue(any()) } returns mockk {
                 every { hasExpired() } returns true
             }
 
@@ -41,7 +41,7 @@ class TokenAuthenticationServiceTest {
                 every { hasExpired() } returns false
             }
 
-            every { repository.findByValue(any<String>()) } returns accessToken
+            every { repository.findByValue(any()) } returns accessToken
 
             underTest.accessToken("aardvark") shouldBe accessToken
         }

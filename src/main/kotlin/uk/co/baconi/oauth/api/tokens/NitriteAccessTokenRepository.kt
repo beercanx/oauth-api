@@ -5,11 +5,9 @@ import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite
 import org.dizitart.no2.IndexOptions.indexOptions
 import org.dizitart.no2.IndexType.NonUnique
-import org.dizitart.no2.IndexType.Unique
 import org.dizitart.no2.Nitrite
 import uk.co.baconi.oauth.api.client.ClientId
 import java.io.Closeable
-import java.util.*
 
 /**
  * A Nitrite implementation of the [AccessTokenRepository].
@@ -30,9 +28,6 @@ class NitriteAccessTokenRepository(database: Nitrite) : AccessTokenRepository, C
 
     private val repository = database.getRepository<AccessToken> {
 
-        // To support the day to day look up of an access token
-        createIndex(AccessToken::value.name, indexOptions(Unique))
-
         // To support finding all access tokens for a specific username
         createIndex(AccessToken::username.name, indexOptions(NonUnique))
 
@@ -42,20 +37,16 @@ class NitriteAccessTokenRepository(database: Nitrite) : AccessTokenRepository, C
 
     override fun insert(new: AccessToken) {
         repository.insert(new)
-        expirationManager.expireAfter(new.id, new.expiresAt, ::delete)
+        expirationManager.expireAfter(new.value, new.expiresAt, ::delete)
     }
 
-    override fun delete(id: UUID) {
-        repository.remove(AccessToken::id eq id)
+    override fun delete(id: String) {
+        repository.remove(AccessToken::value eq id)
         expirationManager.remove(id)
     }
 
-    override fun findById(id: UUID): AccessToken? {
-        return repository.find(AccessToken::id eq id).firstOrDefault()
-    }
-
-    override fun findByValue(value: String): AccessToken? {
-        return repository.find(AccessToken::value eq value).firstOrDefault()
+    override fun findById(id: String): AccessToken? {
+        return repository.find(AccessToken::value eq id).firstOrDefault()
     }
 
     override fun findAllByUsername(username: String): Set<AccessToken> {

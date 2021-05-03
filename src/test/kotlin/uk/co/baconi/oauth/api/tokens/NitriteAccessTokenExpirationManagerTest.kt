@@ -19,16 +19,16 @@ import java.util.concurrent.TimeUnit.SECONDS
 @Timeout(10, unit = SECONDS)
 class NitriteAccessTokenExpirationManagerTest {
 
-    private val threads = ConcurrentHashMap<UUID, Thread>()
+    private val threads = ConcurrentHashMap<String, Thread>()
     private val underTest = NitriteAccessTokenExpirationManager(threads)
 
     @Test
     fun `should expire token after the given datetime`() {
 
         val latch = CountDownLatch(1)
-        val id = UUID.randomUUID()
+        val id = UUID.randomUUID().toString()
         val expireAt = now().plus(50, MILLIS)
-        val expire: (UUID) -> Unit = mockk {
+        val expire: (String) -> Unit = mockk {
             every { this@mockk.invoke(any()) } answers {
 
                 // should add the thread to the map
@@ -52,9 +52,9 @@ class NitriteAccessTokenExpirationManagerTest {
     @Test
     fun `should stop and remove the thread when requested`() {
 
-        val id = UUID.randomUUID()
+        val id = UUID.randomUUID().toString()
         val expireAt = now().plus(1, HOURS)
-        val expire: (UUID) -> Unit = mockk {
+        val expire: (String) -> Unit = mockk {
             every { this@mockk.invoke(any()) } returns Unit
         }
 

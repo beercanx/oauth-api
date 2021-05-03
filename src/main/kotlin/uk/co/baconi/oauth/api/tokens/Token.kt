@@ -3,19 +3,13 @@ package uk.co.baconi.oauth.api.tokens
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.openid.Scopes
 import java.time.OffsetDateTime
-import java.util.*
 
 interface Token {
 
     /**
-     * The id of the issued access token, here because its believed we'll need to do relationships at some point.
-     */
-    val id: UUID
-
-    /**
      * The actual value of the token, consumers would see this as the access_token value.
      */
-    val value: UUID
+    val value: String
 
     /**
      * The human readable identifier, for the subject of this token.

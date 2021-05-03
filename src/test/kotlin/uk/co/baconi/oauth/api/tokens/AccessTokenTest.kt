@@ -7,11 +7,8 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.client.ClientId.ConsumerZ
-import java.time.OffsetDateTime
 import java.time.OffsetDateTime.now
-import java.util.*
 import java.util.UUID.randomUUID
 
 class AccessTokenTest {
@@ -23,8 +20,7 @@ class AccessTokenTest {
         fun `should return true if expires at is in the past`() {
             withClue("hasExpired") {
                 AccessToken(
-                    id = randomUUID(),
-                    value = randomUUID(),
+                    value = randomUUID().toString(),
                     username = "aardvark",
                     clientId = ConsumerZ,
                     scopes = emptySet(),
@@ -39,8 +35,7 @@ class AccessTokenTest {
         fun `should return false if expires at is in the future`() {
             withClue("hasExpired") {
                 AccessToken(
-                    id = randomUUID(),
-                    value = randomUUID(),
+                    value = randomUUID().toString(),
                     username = "aardvark",
                     clientId = ConsumerZ,
                     scopes = emptySet(),
@@ -57,18 +52,19 @@ class AccessTokenTest {
 
         @Test
         fun `should not include access toke value`() {
-            val value = randomUUID()
-            assertSoftly(AccessToken(
-                id = randomUUID(),
-                value = value,
-                username = "aardvark",
-                clientId = ConsumerZ,
-                scopes = emptySet(),
-                issuedAt = now(),
-                expiresAt = now().minusDays(1),
-                notBefore = now()
-            ).toString()) {
-                shouldNotContain(value.toString())
+            val value = randomUUID().toString()
+            assertSoftly(
+                AccessToken(
+                    value = value,
+                    username = "aardvark",
+                    clientId = ConsumerZ,
+                    scopes = emptySet(),
+                    issuedAt = now(),
+                    expiresAt = now().minusDays(1),
+                    notBefore = now()
+                ).toString()
+            ) {
+                shouldNotContain(value)
                 shouldContain("value=REDACTED")
             }
         }
