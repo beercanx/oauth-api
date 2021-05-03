@@ -66,10 +66,6 @@ class NitriteAccessTokenRepositoryIntegrationTest {
             val accessToken2 = AccessToken.new(username = "aardvark").also(underTest::insert)
 
             assertSoftly {
-
-                accessToken1 shouldNotBe accessToken2
-                accessToken1 shouldNotBeSameInstanceAs accessToken2
-
                 underTest.findById(accessToken1.id) shouldBe accessToken1
                 underTest.findById(accessToken2.id) shouldBe accessToken2
             }
