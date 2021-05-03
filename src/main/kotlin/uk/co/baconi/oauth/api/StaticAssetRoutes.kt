@@ -25,7 +25,7 @@ interface StaticAssetRoutes {
         }
 
         // General, fallback offering
-        static("assets") {
+        location<Assets> {
             resources("assets")
         }
     }
