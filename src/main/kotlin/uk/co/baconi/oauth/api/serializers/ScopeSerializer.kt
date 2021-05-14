@@ -7,7 +7,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import uk.co.baconi.oauth.api.enums.EnumSerialisation.Companion.INSTANCE
-import uk.co.baconi.oauth.api.openid.Scopes
+import uk.co.baconi.oauth.api.scopes.Scopes
 
 /**
  * Custom scope field serializer because OAuth spec requires it to be a space separated string field.

@@ -5,7 +5,7 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.api.openid.Scopes
+import uk.co.baconi.oauth.api.scopes.Scopes
 
 class SerialiseTest {
 

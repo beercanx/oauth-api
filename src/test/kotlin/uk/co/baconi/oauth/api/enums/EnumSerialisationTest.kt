@@ -12,7 +12,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonNull
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.api.openid.Scopes
+import uk.co.baconi.oauth.api.scopes.Scopes
 
 class EnumSerialisationTest {
 

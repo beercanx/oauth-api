@@ -2,7 +2,7 @@ package uk.co.baconi.oauth.api.client
 
 import io.ktor.http.*
 import org.dizitart.no2.objects.Id
-import uk.co.baconi.oauth.api.openid.Scopes
+import uk.co.baconi.oauth.api.scopes.Scopes
 
 data class ClientConfiguration(
     @Id val id: ClientId,

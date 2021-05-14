@@ -2,7 +2,7 @@ package uk.co.baconi.oauth.api.client
 
 import uk.co.baconi.oauth.api.enums.deserialise
 import uk.co.baconi.oauth.api.enums.serialise
-import uk.co.baconi.oauth.api.openid.Scopes
+import uk.co.baconi.oauth.api.scopes.Scopes
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigException
 import com.typesafe.config.ConfigFactory

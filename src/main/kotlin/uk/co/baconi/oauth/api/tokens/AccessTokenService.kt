@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.tokens
 
 import uk.co.baconi.oauth.api.client.ClientId
-import uk.co.baconi.oauth.api.openid.Scopes
+import uk.co.baconi.oauth.api.scopes.Scopes
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
 import java.util.*

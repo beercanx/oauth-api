@@ -1,8 +1,5 @@
 package uk.co.baconi.oauth.api.wellknown
 
-import uk.co.baconi.oauth.api.jwk.JsonWebKey
-import uk.co.baconi.oauth.api.jwk.JsonWebKeySet
-
 class WellKnownService {
 
     fun getOpenIdConfiguration(): OpenIdConfiguration {

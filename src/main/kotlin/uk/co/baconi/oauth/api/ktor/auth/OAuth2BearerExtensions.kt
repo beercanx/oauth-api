@@ -5,7 +5,7 @@ import uk.co.baconi.oauth.api.ktor.ApplicationContext
 import uk.co.baconi.oauth.api.ktor.auth.bearer.OAuth2BearerAuthenticationProvider
 import uk.co.baconi.oauth.api.ktor.auth.bearer.oAuth2Bearer
 import uk.co.baconi.oauth.api.ktor.auth.bearer.oAuth2BearerAuthChallenge
-import uk.co.baconi.oauth.api.openid.Scopes
+import uk.co.baconi.oauth.api.scopes.Scopes
 import uk.co.baconi.oauth.api.tokens.AccessToken
 import io.ktor.application.*
 import io.ktor.auth.*

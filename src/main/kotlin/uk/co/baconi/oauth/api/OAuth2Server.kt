@@ -9,20 +9,17 @@ import uk.co.baconi.oauth.api.customer.NitriteCustomerCredentialRepository
 import uk.co.baconi.oauth.api.customer.NitriteCustomerStatusRepository
 import uk.co.baconi.oauth.api.ktor.auth.basic
 import uk.co.baconi.oauth.api.ktor.auth.oAuth2Bearer
-import uk.co.baconi.oauth.api.openid.OAuthRoutes
-import uk.co.baconi.oauth.api.openid.TypesafeScopesConfigurationRepository
-import uk.co.baconi.oauth.api.openid.exchange.grants.assertion.AssertionRedemptionGrant
-import uk.co.baconi.oauth.api.openid.exchange.grants.authorization.AuthorizationCodeGrant
-import uk.co.baconi.oauth.api.openid.exchange.grants.password.PasswordCredentialsGrant
-import uk.co.baconi.oauth.api.openid.exchange.grants.refresh.RefreshGrant
-import uk.co.baconi.oauth.api.openid.introspection.IntrospectionService
-import uk.co.baconi.oauth.api.openid.userinfo.UserInfoService
-import uk.co.baconi.oauth.api.swagger.SwaggerRoutes
+import uk.co.baconi.oauth.api.scopes.TypesafeScopesConfigurationRepository
+import uk.co.baconi.oauth.api.exchange.grants.assertion.AssertionRedemptionGrant
+import uk.co.baconi.oauth.api.exchange.grants.authorization.AuthorizationCodeGrant
+import uk.co.baconi.oauth.api.exchange.grants.password.PasswordCredentialsGrant
+import uk.co.baconi.oauth.api.exchange.grants.refresh.RefreshGrant
+import uk.co.baconi.oauth.api.introspection.IntrospectionService
+import uk.co.baconi.oauth.api.userinfo.UserInfoService
 import uk.co.baconi.oauth.api.tokens.AccessToken
 import uk.co.baconi.oauth.api.tokens.AccessTokenService
 import uk.co.baconi.oauth.api.tokens.NitriteAccessTokenRepository
 import uk.co.baconi.oauth.api.tokens.TokenAuthenticationService
-import uk.co.baconi.oauth.api.wellknown.WellKnownRoutes
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.features.*
@@ -31,8 +28,24 @@ import io.ktor.http.content.*
 import io.ktor.locations.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
+import uk.co.baconi.oauth.api.assets.StaticAssetsRoute
+import uk.co.baconi.oauth.api.authorization.AuthorizationRoute
+import uk.co.baconi.oauth.api.exchange.ExchangeRoute
+import uk.co.baconi.oauth.api.introspection.IntrospectionRoute
+import uk.co.baconi.oauth.api.revocation.RevocationRoute
+import uk.co.baconi.oauth.api.swagger.SwaggerRoute
+import uk.co.baconi.oauth.api.userinfo.UserInfoRoute
+import uk.co.baconi.oauth.api.wellknown.WellKnownRoute
 
-object OAuth2Server : WellKnownRoutes, OAuthRoutes, SwaggerRoutes, StaticAssetRoutes {
+object OAuth2Server : AuthorizationRoute,
+    ExchangeRoute,
+    IntrospectionRoute,
+    RevocationRoute,
+    StaticAssetsRoute,
+    SwaggerRoute,
+    UserInfoRoute,
+    WellKnownRoute
+{
 
     const val REALM = "oauth-api"
 
@@ -127,19 +140,19 @@ object OAuth2Server : WellKnownRoutes, OAuthRoutes, SwaggerRoutes, StaticAssetRo
 
         routing {
             //
-            // Setup the well known routes
+            // Setup the OAuth / OIDC routes
             //
-            wellKnownRoutes()
-
-            //
-            // Setup the OAuth routes
-            //
-            oAuthRoutes()
+            authorization()
+            exchange()
+            introspection()
+            revocation()
+            userInfo()
+            wellKnown()
 
             //
             // Swagger UI and spec
             //
-            swaggerRoutes()
+            swagger()
 
             //
             // Setup some generic static assets
