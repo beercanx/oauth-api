@@ -32,28 +32,26 @@ import io.ktor.locations.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
 
-@Suppress("unused") // Inform the IDE that we are actually using this
-@KtorExperimentalLocationsAPI
 object OAuth2Server : WellKnownRoutes, OAuthRoutes, SwaggerRoutes, StaticAssetRoutes {
 
     const val REALM = "oauth-api"
 
     // Clients
-    val clientSecretRepository = NitriteClientSecretRepository()
-    val clientConfigurationRepository = TypesafeClientConfigurationRepository()
+    private val clientSecretRepository = NitriteClientSecretRepository()
+    private val clientConfigurationRepository = TypesafeClientConfigurationRepository()
     override val clientAuthService = ClientAuthenticationService(clientSecretRepository, clientConfigurationRepository)
 
     // Tokens
-    val accessTokenRepository = NitriteAccessTokenRepository()
-    val accessTokenService = AccessTokenService(accessTokenRepository)
+    private val accessTokenRepository = NitriteAccessTokenRepository()
+    private val accessTokenService = AccessTokenService(accessTokenRepository)
     override val introspectionService = IntrospectionService(accessTokenRepository)
-    val tokenAuthenticationService = TokenAuthenticationService(accessTokenRepository)
-    val scopesConfigurationRepository = TypesafeScopesConfigurationRepository()
+    private val tokenAuthenticationService = TokenAuthenticationService(accessTokenRepository)
+    private val scopesConfigurationRepository = TypesafeScopesConfigurationRepository()
 
     // Customer
-    val customerCredentialRepository = NitriteCustomerCredentialRepository()
-    val customerStatusRepository = NitriteCustomerStatusRepository()
-    val customerMatchService = CustomerMatchService(customerCredentialRepository)
+    private val customerCredentialRepository = NitriteCustomerCredentialRepository()
+    private val customerStatusRepository = NitriteCustomerStatusRepository()
+    private val customerMatchService = CustomerMatchService(customerCredentialRepository)
     override val userInfoService = UserInfoService(scopesConfigurationRepository)
 
     // OAuth Grants

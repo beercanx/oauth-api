@@ -11,7 +11,7 @@ import uk.co.baconi.oauth.api.ktor.ApplicationContext
 object Assets {
 
     @Location("/profile-images/{filename}")
-    data class ProfileImages(val filename: String)
+    data class ProfileImages(val assets: Assets, val filename: String)
 
 }
 
