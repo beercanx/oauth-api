@@ -8,6 +8,7 @@ import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.locations.*
 import io.ktor.routing.*
 import io.ktor.serialization.json
 import io.ktor.server.testing.handleRequest
@@ -16,26 +17,29 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
-class WellKnownRoutesTest : WellKnownRoutes {
+class WellKnownServiceRoutesTest : WellKnownRoutes {
 
-    override val wellKnown = mockk<WellKnown>()
+    override val wellKnownService = mockk<WellKnownService>()
     private val underTest: Application.() -> Unit = {
-
-        // The routes we are testing
-        routing {
-            wellKnownRoutes()
-        }
 
         // Add support for returning data classes
         install(ContentNegotiation) {
             json()
+        }
+
+        // Add support for "typed" locations
+        install(Locations)
+
+        // The routes we are testing
+        routing {
+            wellKnownRoutes()
         }
     }
 
     @Test
     fun `well known openid configuration endpoint should return OpenID configuration`() {
 
-        every { wellKnown.getOpenIdConfiguration() } returns OpenIdConfiguration(
+        every { wellKnownService.getOpenIdConfiguration() } returns OpenIdConfiguration(
             "issuer",
             "endpoint"
         )
@@ -53,7 +57,7 @@ class WellKnownRoutesTest : WellKnownRoutes {
     @Test
     fun `well known jwks endpoint should return some JWKS`() {
 
-        every { wellKnown.getJsonWebKeySet() } returns JsonWebKeySet(
+        every { wellKnownService.getJsonWebKeySet() } returns JsonWebKeySet(
             emptySet()
         )
 
@@ -70,7 +74,7 @@ class WellKnownRoutesTest : WellKnownRoutes {
     @Test
     fun `well known openid product endpoint should return some product configuration`() {
 
-        every { wellKnown.getProductConfiguration() } returns ProductConfiguration(emptyList())
+        every { wellKnownService.getProductConfiguration() } returns ProductConfiguration(emptyList())
 
         withTestApplication(underTest) {
             handleRequest(HttpMethod.Get, "/.well-known/product-configuration").apply {
