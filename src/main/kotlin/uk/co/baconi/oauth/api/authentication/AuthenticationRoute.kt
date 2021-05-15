@@ -25,6 +25,7 @@ interface AuthenticationRoute {
             // TODO - Create a base page template
             // TODO - Create a login page template
 
+            // TODO - Add form validation (client-side)
             call.respondHtml {
 
                 lang = "en"
@@ -107,6 +108,10 @@ interface AuthenticationRoute {
             // TODO - Handle login form submission
             // TODO - Check csrf_token before processing anything
 
+            // TODO - Add form validation (server side)
+            //          Respond 400?
+            //          Respond with html form filled in and validation messages shown?
+            //          How do we tied both client and server side validation?
 
             val parameters = call.receiveParameters()
             application.log.trace("${call.request.local.uri} with: $parameters")
