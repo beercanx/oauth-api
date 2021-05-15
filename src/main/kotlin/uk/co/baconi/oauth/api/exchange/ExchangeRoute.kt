@@ -58,6 +58,7 @@ interface ExchangeRoute {
 
                 // Handle PKCE requests for public clients
                 when (val parameters = call.receiveOrNull<Parameters>()) {
+                    // TODO - Look at using https://ktor.io/docs/double-receive.html#usage to enable PublicClient in an authenticate block
                     is Parameters -> when (val client = parameters["client_id"]?.let(clientAuthService::publicClient)) {
                         is PublicClient -> {
 

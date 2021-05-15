@@ -3,7 +3,6 @@ package uk.co.baconi.oauth.api.authorization
 import io.ktor.application.*
 import io.ktor.locations.*
 import io.ktor.routing.*
-import io.ktor.routing.get
 
 interface AuthorizationRoute {
 

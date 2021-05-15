@@ -29,6 +29,9 @@ dependencies {
     // Ktor server layer
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
 
+    // Ktor view layer
+    implementation("io.ktor:ktor-html-builder:$ktorVersion")
+
     // Ktor content negotiation
     implementation("io.ktor:ktor-serialization:$ktorVersion")
 
