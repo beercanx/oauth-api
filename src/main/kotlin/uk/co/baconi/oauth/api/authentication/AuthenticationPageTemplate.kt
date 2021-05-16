@@ -35,6 +35,8 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
         }
 
         private fun INPUT.applyValidation(parameters: Parameters) {
+            // TODO - Add accessibility describe tag when invalid.
+            // TODO - Include invalid-feedback element when invalid.
             classes = classes + if(parameters[name].isNullOrBlank()) {
                 "is-invalid"
             } else {
@@ -81,7 +83,7 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
                             autoComplete = true
                             insert(username)
                         }
-                        div("invalid-feedback") {
+                        div("invalid-feedback") { // TODO - Don't render when input was valid
                             +"Please provide a username."
                         }
                     }
@@ -97,7 +99,7 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
                             autoComplete = true
                             insert(password)
                         }
-                        div("invalid-feedback") {
+                        div("invalid-feedback") { // TODO - Don't render when input was valid
                             +"Please provide a password."
                         }
                     }
