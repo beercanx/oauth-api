@@ -1,6 +1,7 @@
 package uk.co.baconi.oauth.api.authentication
 
 import io.ktor.html.*
+import io.ktor.http.*
 import io.ktor.locations.*
 import kotlinx.html.*
 import uk.co.baconi.oauth.api.kotlinx.html.PageTemplate
@@ -9,14 +10,20 @@ import java.util.*
 class AuthenticationPageTemplate(private val locations: Locations) : Template<HTML> {
 
     companion object {
+
         fun AuthenticationPageTemplate.csrfToken(token: UUID) {
-            csrfToken {
-                value = token.toString()
-            }
+            csrfToken { value = token.toString() }
+        }
+
+        fun AuthenticationPageTemplate.prefill(parameters: Parameters) {
+            username { value = parameters[name] ?: "" }
+            password { value = parameters[name] ?: "" }
         }
     }
 
     private val csrfToken = Placeholder<INPUT>()
+    private val username = Placeholder<INPUT>()
+    private val password = Placeholder<INPUT>()
 
     override fun HTML.apply() {
 
@@ -49,6 +56,7 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
                             name = "username"
                             placeholder = "Enter username"
                             autoComplete = true
+                            insert(username)
                         }
                     }
 
@@ -61,6 +69,7 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
                             name = "password"
                             placeholder = "Password"
                             autoComplete = true
+                            insert(password)
                         }
                     }
 
