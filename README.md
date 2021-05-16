@@ -51,6 +51,10 @@ These Ktor features have been picked as they looked useful:
  * https://ktor.io/clients/index.html
  * https://ktor.io/clients/http-client/features/json-feature.html
 
+Ktor Views:
+ * https://ktor.io/docs/html-dsl.html
+ * https://getbootstrap.com/docs/5.0/forms/overview
+
 Gatling resources:
  * https://gatling.io/docs/current/http/http_request
  * https://gatling.io/docs/current/session/feeder
@@ -61,3 +65,7 @@ Gatling resources:
 
 Static assets:
  * https://pixabay.com/vectors/people-character-faces-real-305836/
+
+Future resources:
+ * https://github.com/JetBrains/kotlin-wrappers
+ * https://tailwindcss.com/docs/installation

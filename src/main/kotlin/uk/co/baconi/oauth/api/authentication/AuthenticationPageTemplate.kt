@@ -11,13 +11,35 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
 
     companion object {
 
+        const val CSRF_TOKEN = "csrf_token"
+        const val USERNAME = "username"
+        const val PASSWORD = "password"
+
         fun AuthenticationPageTemplate.csrfToken(token: UUID) {
             csrfToken { value = token.toString() }
         }
 
         fun AuthenticationPageTemplate.prefill(parameters: Parameters) {
-            username { value = parameters[name] ?: "" }
-            password { value = parameters[name] ?: "" }
+            username {
+                prefill(parameters)
+                applyValidation(parameters)
+            }
+            password {
+                prefill(parameters)
+                applyValidation(parameters)
+            }
+        }
+
+        private fun INPUT.prefill(parameters: Parameters) {
+            value = parameters[name] ?: ""
+        }
+
+        private fun INPUT.applyValidation(parameters: Parameters) {
+            classes = classes + if(parameters[name].isNullOrBlank()) {
+                "is-invalid"
+            } else {
+                "is-valid"
+            }
         }
     }
 
@@ -39,37 +61,46 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
                     +"Authentication"
                 }
 
-                postForm(action = locations.href(AuthenticationLocation)) {
+                postForm {
                     id = "login-form"
+                    action = locations.href(AuthenticationLocation)
 
                     hiddenInput {
-                        name = "csrf_token"
+                        name = CSRF_TOKEN
                         insert(csrfToken)
                     }
 
                     div(classes = "mb-3") {
                         label(classes = "form-label") {
                             htmlFor = "username"
-                            text("Username: ")
+                            text("Username")
                         }
                         textInput(classes = "form-control") { // TODO - Convert from username to email, as its bad UX or at least allow email login as well.
-                            name = "username"
+                            name = USERNAME
                             placeholder = "Enter username"
                             autoComplete = true
+                            required = true
                             insert(username)
+                        }
+                        div("invalid-feedback") {
+                            +"Please provide a username."
                         }
                     }
 
                     div(classes = "mb-3") {
                         label(classes = "form-label") {
                             htmlFor = "password"
-                            text("Password: ")
+                            text("Password")
                         }
                         passwordInput(classes = "form-control") {
-                            name = "password"
+                            name = PASSWORD
                             placeholder = "Password"
                             autoComplete = true
+                            required = true
                             insert(password)
+                        }
+                        div("invalid-feedback") {
+                            +"Please provide a password."
                         }
                     }
 
