@@ -15,21 +15,6 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
         const val USERNAME = "username"
         const val PASSWORD = "password"
 
-        fun AuthenticationPageTemplate.csrfToken(token: UUID) {
-            csrfToken { value = token.toString() }
-        }
-
-        fun AuthenticationPageTemplate.prefill(parameters: Parameters) {
-            username {
-                prefill(parameters)
-                applyValidation(parameters)
-            }
-            password {
-                prefill(parameters)
-                applyValidation(parameters)
-            }
-        }
-
         private fun INPUT.prefill(parameters: Parameters) {
             value = parameters[name] ?: ""
         }
@@ -48,6 +33,21 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
     private val csrfToken = Placeholder<INPUT>()
     private val username = Placeholder<INPUT>()
     private val password = Placeholder<INPUT>()
+
+    fun csrfToken(token: UUID) {
+        csrfToken { value = token.toString() }
+    }
+
+    fun prefill(parameters: Parameters) {
+        username {
+            prefill(parameters)
+            applyValidation(parameters)
+        }
+        password {
+            prefill(parameters)
+            applyValidation(parameters)
+        }
+    }
 
     override fun HTML.apply() {
 
