@@ -16,6 +16,7 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
     val csrfToken = Placeholder<INPUT>()
     val username = Placeholder<INPUT>()
     val password = Placeholder<INPUT>()
+    val beforeInput = Placeholder<FORM>()
 
     override fun HTML.apply() {
 
@@ -39,6 +40,8 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
                         name = CSRF_TOKEN
                         insert(csrfToken)
                     }
+
+                    insert(beforeInput)
 
                     div(classes = "mb-3") {
                         label(classes = "form-label") {

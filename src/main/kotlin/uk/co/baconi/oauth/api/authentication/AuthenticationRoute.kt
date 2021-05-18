@@ -2,6 +2,7 @@ package uk.co.baconi.oauth.api.authentication
 
 import io.ktor.application.*
 import io.ktor.html.*
+import io.ktor.http.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
@@ -9,8 +10,7 @@ import io.ktor.locations.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
-import kotlinx.html.INPUT
-import kotlinx.html.classes
+import kotlinx.html.*
 import uk.co.baconi.oauth.api.authorization.AuthorizationLocation
 import uk.co.baconi.oauth.api.ktor.ApplicationContext
 import java.util.*
@@ -21,16 +21,9 @@ interface AuthenticationRoute {
     // TODO - Consider if we need the pre-authenticated session to be created and destroyed by Authorization instead.
 
     private fun ApplicationContext.getAuthenticationSession(): AuthenticationSession {
-        return call.sessions.getOrSet { AuthenticationSession(UUID.randomUUID()) }
-    }
-
-    // TODO - Decide if this is good or bad pattern
-    private fun INPUT.fillIn(data: String?) {
-        if(data.isNullOrBlank()) {
-            classes = classes + "is-invalid"
-        } else {
-            value = data
-            classes = classes + "is-valid"
+        return call.sessions.getOrSet {
+            application.log.debug("Creating new AuthenticationSession")
+            AuthenticationSession(UUID.randomUUID())
         }
     }
 
@@ -40,11 +33,7 @@ interface AuthenticationRoute {
 
             val session = getAuthenticationSession()
 
-            call.respondHtmlTemplate(AuthenticationPageTemplate(locations)) {
-                csrfToken {
-                    value = session.csrfToken
-                }
-            }
+            renderAuthenticationPage(session)
         }
 
         post<AuthenticationLocation> {
@@ -52,39 +41,17 @@ interface AuthenticationRoute {
             val session = getAuthenticationSession()
 
             // Force return so we don't accidentally place code after this block
-            return@post when(val request = validateAuthenticationRequest()) {
-
-                // TODO - Can the rendering requirements be stream lined but still readable?
+            return@post when (val request = validateAuthenticationRequest()) {
 
                 is InvalidAuthenticationCsrfToken -> {
-                    call.respondHtmlTemplate(AuthenticationPageTemplate(locations), Forbidden) {
-                        csrfToken {
-                            value = session.csrfToken
-                        }
-                        username {
-                            fillIn(request.username)
-                        }
-                        password {
-                            fillIn(request.password)
-                        }
-                        // TODO - Display error message(s)
-                        //      Please retry, we received an invalid CSRF token.
+                    renderAuthenticationPage(session, request, Forbidden) {
+                        +"Please retry, we received an invalid CSRF token."
                     }
                 }
 
                 is InvalidAuthenticationRequest -> {
-                    call.respondHtmlTemplate(AuthenticationPageTemplate(locations), BadRequest) {
-                        csrfToken {
-                            value = session.csrfToken
-                        }
-                        username {
-                            fillIn(request.username)
-                        }
-                        password {
-                            fillIn(request.password)
-                        }
-                        // TODO - Display error message(s)
-                        //      Please retry, we received
+                    renderAuthenticationPage(session, request, BadRequest) {
+                        +"Please fill out and retry, we need both your username and password to log you in."
                     }
                 }
 
@@ -92,25 +59,23 @@ interface AuthenticationRoute {
 
                     // TODO - FailedLogin
                     doesNotMatchCustomer(request) -> {
-                        call.respondHtmlTemplate(AuthenticationPageTemplate(locations), Unauthorized) {
-                            csrfToken {
-                                value = session.csrfToken
-                            }
-                            username {
-                                fillIn(request.username)
-                            }
-                            password {
-                                fillIn(request.password)
-                            }
-                            // TODO - Display failure message(s)
-                            //      Please check and try again or if you have forgotten your details recover them here.
+
+                        renderAuthenticationPage(session, request, Unauthorized) {
+                            +"Please check and try again or if you have forgotten your details, recover them "
+                            a(href = "/recovery") { +"here" } // TODO - Implement recovery mechanism?
+                            +"."
                         }
                     }
 
                     // TODO - SuccessfulLogin
                     else -> {
                         // TODO - Create full session.
-                        // TODO - Destroy pre-authenticated session.
+                        //call.sessions.set()
+
+                        // Destroy pre-authenticated session.
+                        call.sessions.clear<AuthenticationSession>()
+
+                        // Go back to authorization
                         call.respondRedirect(href(AuthorizationLocation))
                     }
                 }
@@ -131,6 +96,45 @@ interface AuthenticationRoute {
                 }
             }
              */
+        }
+    }
+
+    private suspend fun ApplicationContext.renderAuthenticationPage(
+        session: AuthenticationSession,
+        request: AuthenticationRequest? = null,
+        status: HttpStatusCode = HttpStatusCode.OK,
+        failureMessage: (DIV.(Placeholder<DIV>) -> Unit)? = null
+    ) {
+        call.respondHtmlTemplate(AuthenticationPageTemplate(locations), status) {
+            csrfToken {
+                value = session.csrfToken
+            }
+            if (request != null) {
+                username {
+                    fillIn(request.username)
+                }
+                password {
+                    fillIn(request.password)
+                }
+            }
+            if (failureMessage != null) {
+                beforeInput {
+                    div("alert alert-danger") {
+                        role = "alert"
+                        insert(Placeholder<DIV>().apply { invoke(content = failureMessage) })
+                    }
+                }
+            }
+        }
+    }
+
+    // TODO - Decide if this is good or bad pattern
+    private fun INPUT.fillIn(data: String?) {
+        if (data.isNullOrBlank()) {
+            classes = classes + "is-invalid"
+        } else {
+            value = data
+            classes = classes + "is-valid"
         }
     }
 

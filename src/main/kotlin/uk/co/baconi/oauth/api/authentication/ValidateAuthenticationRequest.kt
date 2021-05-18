@@ -8,7 +8,7 @@ import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companio
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.USERNAME
 import uk.co.baconi.oauth.api.ktor.ApplicationContext
 
-suspend fun ApplicationContext.validateAuthenticationRequest(): AuthenticationRequest<*, *> {
+suspend fun ApplicationContext.validateAuthenticationRequest(): AuthenticationRequest {
 
     val parameters = call.receiveParameters()
     val session = call.sessions.get<AuthenticationSession>()

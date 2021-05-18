@@ -28,8 +28,10 @@ import io.ktor.http.content.*
 import io.ktor.locations.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
+import io.ktor.sessions.*
 import uk.co.baconi.oauth.api.assets.StaticAssetsRoute
 import uk.co.baconi.oauth.api.authentication.AuthenticationRoute
+import uk.co.baconi.oauth.api.authentication.AuthenticationSession
 import uk.co.baconi.oauth.api.authorization.AuthorizationRoute
 import uk.co.baconi.oauth.api.exchange.ExchangeRoute
 import uk.co.baconi.oauth.api.introspection.IntrospectionRoute
@@ -115,6 +117,11 @@ object OAuth2Server : AuthenticationRoute,
                     )
                 )
             }
+        }
+
+        // Create some session types
+        install(Sessions) {
+            cookie<AuthenticationSession>("AuthenticationSession", storage = SessionStorageMemory())
         }
 
         // Graceful Shutdown
