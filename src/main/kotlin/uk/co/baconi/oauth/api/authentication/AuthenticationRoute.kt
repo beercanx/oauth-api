@@ -31,26 +31,21 @@ interface AuthenticationRoute {
 
         get<AuthenticationLocation> {
 
-            val session = getAuthenticationSession()
-
-            renderAuthenticationPage(session)
+            renderAuthenticationPage()
         }
 
         post<AuthenticationLocation> {
 
-            val session = getAuthenticationSession()
-
-            // Force return so we don't accidentally place code after this block
             return@post when (val request = validateAuthenticationRequest()) {
 
                 is InvalidAuthenticationCsrfToken -> {
-                    renderAuthenticationPage(session, request, Forbidden) {
+                    renderAuthenticationPage(request, Forbidden) {
                         +"Please retry, we received an invalid CSRF token."
                     }
                 }
 
                 is InvalidAuthenticationRequest -> {
-                    renderAuthenticationPage(session, request, BadRequest) {
+                    renderAuthenticationPage(request, BadRequest) {
                         +"Please fill out and retry, we need both your username and password to log you in."
                     }
                 }
@@ -60,9 +55,9 @@ interface AuthenticationRoute {
                     // TODO - FailedLogin
                     doesNotMatchCustomer(request) -> {
 
-                        renderAuthenticationPage(session, request, Unauthorized) {
+                        renderAuthenticationPage(request, Unauthorized) {
                             +"Please check and try again or if you have forgotten your details, recover them "
-                            a(href = "/recovery") { +"here" } // TODO - Implement recovery mechanism?
+                            a(href = "/recovery", classes = "alert-link") { +"here" } // TODO - Implement recovery mechanism?
                             +"."
                         }
                     }
@@ -100,11 +95,11 @@ interface AuthenticationRoute {
     }
 
     private suspend fun ApplicationContext.renderAuthenticationPage(
-        session: AuthenticationSession,
         request: AuthenticationRequest? = null,
         status: HttpStatusCode = HttpStatusCode.OK,
         failureMessage: (DIV.(Placeholder<DIV>) -> Unit)? = null
     ) {
+        val session = getAuthenticationSession()
         call.respondHtmlTemplate(AuthenticationPageTemplate(locations), status) {
             csrfToken {
                 value = session.csrfToken
