@@ -21,7 +21,7 @@ class PasswordCredentialsGrant(
         // TODO - Implement and call the Authorisation Service (mostly handles scopes)
 
         return when (val authentication = authenticationService.authenticate(request)) {
-            is Authentication.Failure -> FailedExchangeResponse(InvalidGrant) // TODO - Consider failure descriptions
+            is Authentication.Failure -> FailedExchangeResponse(InvalidGrant, authentication.reason.toString()) // TODO - Consider failure descriptions
             is Authentication.Success -> {
 
                 val accessToken = accessTokenService.issue(

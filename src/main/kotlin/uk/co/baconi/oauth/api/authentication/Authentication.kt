@@ -4,6 +4,14 @@ sealed class Authentication {
 
     data class Success(val username: String) : Authentication()
 
-    // TODO - Work out what data we need to return
-    object Failure : Authentication()
+    data class Failure(val reason: Reason) : Authentication() {
+
+        enum class Reason {
+            Missing,
+            Mismatched,
+            Suspended,
+            Closed,
+            ChangePassword
+        }
+    }
 }
