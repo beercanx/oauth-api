@@ -1,25 +1,5 @@
 package uk.co.baconi.oauth.api
 
-import uk.co.baconi.oauth.api.client.ClientAuthenticationService
-import uk.co.baconi.oauth.api.client.ConfidentialClient
-import uk.co.baconi.oauth.api.client.NitriteClientSecretRepository
-import uk.co.baconi.oauth.api.client.TypesafeClientConfigurationRepository
-import uk.co.baconi.oauth.api.customer.CustomerMatchService
-import uk.co.baconi.oauth.api.customer.NitriteCustomerCredentialRepository
-import uk.co.baconi.oauth.api.customer.NitriteCustomerStatusRepository
-import uk.co.baconi.oauth.api.ktor.auth.basic
-import uk.co.baconi.oauth.api.ktor.auth.oAuth2Bearer
-import uk.co.baconi.oauth.api.scopes.TypesafeScopesConfigurationRepository
-import uk.co.baconi.oauth.api.exchange.grants.assertion.AssertionRedemptionGrant
-import uk.co.baconi.oauth.api.exchange.grants.authorization.AuthorizationCodeGrant
-import uk.co.baconi.oauth.api.exchange.grants.password.PasswordCredentialsGrant
-import uk.co.baconi.oauth.api.exchange.grants.refresh.RefreshGrant
-import uk.co.baconi.oauth.api.introspection.IntrospectionService
-import uk.co.baconi.oauth.api.userinfo.UserInfoService
-import uk.co.baconi.oauth.api.tokens.AccessToken
-import uk.co.baconi.oauth.api.tokens.AccessTokenService
-import uk.co.baconi.oauth.api.tokens.NitriteAccessTokenRepository
-import uk.co.baconi.oauth.api.tokens.TokenAuthenticationService
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.features.*
@@ -34,11 +14,29 @@ import uk.co.baconi.oauth.api.authentication.AuthenticationRoute
 import uk.co.baconi.oauth.api.authentication.AuthenticationService
 import uk.co.baconi.oauth.api.authentication.AuthenticationSession
 import uk.co.baconi.oauth.api.authorization.AuthorizationRoute
+import uk.co.baconi.oauth.api.client.*
+import uk.co.baconi.oauth.api.customer.CustomerMatchService
+import uk.co.baconi.oauth.api.customer.NitriteCustomerCredentialRepository
+import uk.co.baconi.oauth.api.customer.NitriteCustomerStatusRepository
 import uk.co.baconi.oauth.api.exchange.ExchangeRoute
+import uk.co.baconi.oauth.api.exchange.grants.assertion.AssertionRedemptionGrant
+import uk.co.baconi.oauth.api.exchange.grants.authorization.AuthorizationCodeGrant
+import uk.co.baconi.oauth.api.exchange.grants.password.PasswordCredentialsGrant
+import uk.co.baconi.oauth.api.exchange.grants.refresh.RefreshGrant
 import uk.co.baconi.oauth.api.introspection.IntrospectionRoute
+import uk.co.baconi.oauth.api.introspection.IntrospectionService
+import uk.co.baconi.oauth.api.ktor.auth.basic
+import uk.co.baconi.oauth.api.ktor.auth.body
+import uk.co.baconi.oauth.api.ktor.auth.oAuth2Bearer
 import uk.co.baconi.oauth.api.revocation.RevocationRoute
+import uk.co.baconi.oauth.api.scopes.TypesafeScopesConfigurationRepository
 import uk.co.baconi.oauth.api.swagger.SwaggerRoute
+import uk.co.baconi.oauth.api.tokens.AccessToken
+import uk.co.baconi.oauth.api.tokens.AccessTokenService
+import uk.co.baconi.oauth.api.tokens.NitriteAccessTokenRepository
+import uk.co.baconi.oauth.api.tokens.TokenAuthenticationService
 import uk.co.baconi.oauth.api.userinfo.UserInfoRoute
+import uk.co.baconi.oauth.api.userinfo.UserInfoService
 import uk.co.baconi.oauth.api.wellknown.WellKnownRoute
 
 object OAuth2Server : AuthenticationRoute,
@@ -49,8 +47,7 @@ object OAuth2Server : AuthenticationRoute,
     StaticAssetsRoute,
     SwaggerRoute,
     UserInfoRoute,
-    WellKnownRoute
-{
+    WellKnownRoute {
 
     const val REALM = "oauth-api"
 
@@ -127,6 +124,8 @@ object OAuth2Server : AuthenticationRoute,
             cookie<AuthenticationSession>("AuthenticationSession", storage = SessionStorageMemory())
         }
 
+        install(DoubleReceive)
+
         // Graceful Shutdown
         environment.monitor.subscribe(ApplicationStopped) {
             closeAndLog(clientSecretRepository)
@@ -140,6 +139,14 @@ object OAuth2Server : AuthenticationRoute,
                 realm = REALM
                 validate { (clientId, clientSecret) ->
                     clientAuthService.confidentialClient(clientId, clientSecret)
+                }
+            }
+            body<PublicClient> {
+                realm = REALM
+                userParamName = "client_id"
+                passwordParamName = "client_id"
+                validate { (clientId) ->
+                    clientAuthService.publicClient(clientId)
                 }
             }
             oAuth2Bearer<AccessToken> {

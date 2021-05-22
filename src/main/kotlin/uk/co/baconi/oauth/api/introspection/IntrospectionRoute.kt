@@ -7,7 +7,6 @@ import io.ktor.application.*
 import io.ktor.locations.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import io.ktor.routing.post
 
 interface IntrospectionRoute {
 
