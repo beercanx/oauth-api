@@ -4,16 +4,14 @@ import org.dizitart.no2.objects.Id
 
 data class CustomerCredential(
     @Id val username: String,
-    val secret: String,
-    val temporary: Boolean = false,
-    val locked: Boolean = false
+    val secret: String
 ) {
 
     /**
      * Generated to exclude [secret] from the toString output.
      */
     override fun toString(): String {
-        return "CustomerCredential(username='$username', secret='REDACTED', temporary=$temporary, locked=$locked)"
+        return "CustomerCredential(username='$username', secret='REDACTED')"
     }
 
     /**

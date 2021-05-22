@@ -18,6 +18,8 @@ import java.util.*
 
 interface AuthenticationRoute {
 
+    val authenticationService: AuthenticationService
+
     // TODO - Consider if we need the pre-authenticated session to be created and destroyed by Authorization instead.
 
     private fun ApplicationContext.getAuthenticationSession(): AuthenticationSession {
@@ -38,32 +40,30 @@ interface AuthenticationRoute {
 
             return@post when (val request = validateAuthenticationRequest()) {
 
-                is InvalidAuthenticationCsrfToken -> {
+                is AuthenticationRequest.InvalidCsrf -> {
                     renderAuthenticationPage(request, Forbidden) {
                         +"Please retry, we received an invalid CSRF token."
                     }
                 }
 
-                is InvalidAuthenticationRequest -> {
+                is AuthenticationRequest.InvalidFields -> {
                     renderAuthenticationPage(request, BadRequest) {
                         +"Please fill out and retry, we need both your username and password to log you in."
                     }
                 }
 
-                is ValidatedAuthenticationRequest -> when { // TODO - Call authentication service
+                is AuthenticationRequest.Valid -> when (val result = authenticationService.authenticate(request)) {
 
-                    // TODO - FailedLogin
-                    doesNotMatchCustomer(request) -> {
-
-                        renderAuthenticationPage(request, Unauthorized) {
-                            +"Please check and try again or if you have forgotten your details, recover them "
-                            a(href = "/recovery", classes = "alert-link") { +"here" } // TODO - Implement recovery mechanism?
-                            +"."
-                        }
+                    is Authentication.Failure -> renderAuthenticationPage(request, Unauthorized) {
+                        +"Please check and try again or if you have forgotten your details, recover them "
+                        a(
+                            href = "/recovery",
+                            classes = "alert-link"
+                        ) { +"here" } // TODO - Implement recovery mechanism?
+                        +"."
                     }
 
-                    // TODO - SuccessfulLogin
-                    else -> {
+                    is Authentication.Success -> {
                         // TODO - Create full session.
                         //call.sessions.set()
 
@@ -75,22 +75,6 @@ interface AuthenticationRoute {
                     }
                 }
             }
-
-            /*
-            when(val request = validateAuthenticationRequest(session, parameters)) {
-                is ValidLoginRequest -> when(val result = authenticationService.authenticate(request)) {
-                    is FailedLogin -> call.respondHtmlTemplate(AuthenticationPageTemplate(locations), BadRequest) {
-                        csrfToken(session.csrfToken)
-                        // TODO - Display failure message, aka the generic one if they don't exist, wrong credentials or we've crapped out talking to our DB
-                    }
-                    is SuccessfulLogin -> {
-                        // TODO - Create full session.
-                        // TODO - Destroy pre-authenticated session.
-                        call.respondRedirect(href(AuthorizationLocation))
-                    }
-                }
-            }
-             */
         }
     }
 
@@ -131,10 +115,5 @@ interface AuthenticationRoute {
             value = data
             classes = classes + "is-valid"
         }
-    }
-
-    // TODO - Call a service to validate the customer.
-    private fun doesNotMatchCustomer(request: ValidatedAuthenticationRequest): Boolean {
-        return false
     }
 }

@@ -17,23 +17,20 @@ class CustomerMatchService internal constructor(
     /**
      * Check if the provided username and password matches what we have stored.
      */
-    fun match(username: String, password: String): CustomerMatchResponse {
+    fun match(username: String, password: String): CustomerMatch {
 
         val credential = customerCredentialRepository.findByUsername(username.toUpperCase())
 
         return when {
 
             // No credential
-            credential == null -> CustomerMatchFailure
+            credential == null -> CustomerMatch.Missing
 
             // Credentials did not match
-            !checkPassword(credential.secret, password.toCharArray()) -> {
-                // TODO - Increment failure recorder
-                CustomerMatchFailure
-            }
+            !checkPassword(credential.secret, password.toCharArray()) -> CustomerMatch.Mismatched
 
             // Credential matched
-            else -> CustomerMatchSuccess(username = credential.username)
+            else -> CustomerMatch.Success(credential.username)
         }
     }
 }

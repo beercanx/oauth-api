@@ -20,15 +20,15 @@ suspend fun ApplicationContext.validateAuthenticationRequest(): AuthenticationRe
     return when {
 
         // Check CSRF Token
-        session == null -> InvalidAuthenticationCsrfToken(username, password)
-        csrfToken.isNullOrBlank() -> InvalidAuthenticationCsrfToken(username, password)
-        session.csrfToken != csrfToken -> InvalidAuthenticationCsrfToken(username, password)
+        session == null -> AuthenticationRequest.InvalidCsrf(username, password)
+        csrfToken.isNullOrBlank() -> AuthenticationRequest.InvalidCsrf(username, password)
+        session.csrfToken != csrfToken -> AuthenticationRequest.InvalidCsrf(username, password)
 
         // Basic field validation
-        username.isNullOrBlank() -> InvalidAuthenticationRequest(username, password)
-        password.isNullOrBlank() -> InvalidAuthenticationRequest(username, password)
+        username.isNullOrBlank() -> AuthenticationRequest.InvalidFields(username, password)
+        password.isNullOrBlank() -> AuthenticationRequest.InvalidFields(username, password)
 
         // Good enough to attempt an authentication
-        else -> ValidatedAuthenticationRequest(username, password)
+        else -> AuthenticationRequest.Valid(username, password)
     }
 }

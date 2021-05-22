@@ -54,9 +54,6 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
                             autoComplete = true
                             insert(username)
                         }
-//                        div("invalid-feedback") { // TODO - Don't render when input was valid
-//                            +"Please provide a username."
-//                        }
                     }
 
                     div(classes = "mb-3") {
@@ -70,9 +67,6 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
                             autoComplete = true
                             insert(password)
                         }
-//                        div("invalid-feedback") { // TODO - Don't render when input was valid
-//                            +"Please provide a password."
-//                        }
                     }
 
                     button(classes = "btn btn-primary w-100") {
