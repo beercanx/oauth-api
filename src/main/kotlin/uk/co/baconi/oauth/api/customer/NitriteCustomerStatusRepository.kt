@@ -1,10 +1,10 @@
 package uk.co.baconi.oauth.api.customer
 
-import uk.co.baconi.oauth.api.customer.CustomerState.Active
 import org.dizitart.kno2.filters.eq
 import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite
 import org.dizitart.no2.Nitrite
+import uk.co.baconi.oauth.api.customer.CustomerState.*
 import java.io.Closeable
 
 class NitriteCustomerStatusRepository(database: Nitrite) : CustomerStatusRepository, Closeable by database {
@@ -19,7 +19,10 @@ class NitriteCustomerStatusRepository(database: Nitrite) : CustomerStatusReposit
     private val repository = database.getRepository<CustomerStatus> {
 
         // Add some initial test users
-        insert(CustomerStatus(username = "AARDVARK", state = Active, isLocked = false, changePassword = false))
+        insert(CustomerStatus(username = "AARDVARK", state = Active))
+        insert(CustomerStatus(username = "BADGER", state = Suspended))
+        insert(CustomerStatus(username = "CICADA", state = Closed))
+        insert(CustomerStatus(username = "ELEPHANT", state = ChangePassword))
     }
 
     override fun insert(new: CustomerStatus) {
