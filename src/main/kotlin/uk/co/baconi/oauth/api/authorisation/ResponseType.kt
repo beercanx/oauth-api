@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.api.authorization
+package uk.co.baconi.oauth.api.authorisation
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

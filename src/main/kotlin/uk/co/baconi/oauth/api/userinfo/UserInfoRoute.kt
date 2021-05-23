@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.userinfo
 
 import uk.co.baconi.oauth.api.ktor.auth.authenticate
-import uk.co.baconi.oauth.api.ktor.auth.authorizeAccessToken
+import uk.co.baconi.oauth.api.ktor.auth.authoriseAccessToken
 import uk.co.baconi.oauth.api.scopes.Scopes.OpenId
 import uk.co.baconi.oauth.api.tokens.AccessToken
 import io.ktor.application.*
@@ -16,7 +16,7 @@ interface UserInfoRoute {
     fun Route.userInfo() {
         authenticate(AccessToken::class) {
             get<UserInfoLocation> {
-                authorizeAccessToken(OpenId) { accessToken ->
+                authoriseAccessToken(OpenId) { accessToken ->
                     call.respond(userInfoService.getUserInfo(accessToken, application.locations))
                 }
             }

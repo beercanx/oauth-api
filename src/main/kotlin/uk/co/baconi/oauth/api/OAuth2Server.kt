@@ -13,14 +13,14 @@ import uk.co.baconi.oauth.api.assets.StaticAssetsRoute
 import uk.co.baconi.oauth.api.authentication.AuthenticationRoute
 import uk.co.baconi.oauth.api.authentication.AuthenticationService
 import uk.co.baconi.oauth.api.authentication.AuthenticationSession
-import uk.co.baconi.oauth.api.authorization.AuthorizationRoute
+import uk.co.baconi.oauth.api.authorisation.AuthorisationRoute
 import uk.co.baconi.oauth.api.client.*
 import uk.co.baconi.oauth.api.customer.CustomerMatchService
 import uk.co.baconi.oauth.api.customer.NitriteCustomerCredentialRepository
 import uk.co.baconi.oauth.api.customer.NitriteCustomerStatusRepository
 import uk.co.baconi.oauth.api.exchange.ExchangeRoute
 import uk.co.baconi.oauth.api.exchange.grants.assertion.AssertionRedemptionGrant
-import uk.co.baconi.oauth.api.exchange.grants.authorization.AuthorizationCodeGrant
+import uk.co.baconi.oauth.api.exchange.grants.authorisation.AuthorisationCodeGrant
 import uk.co.baconi.oauth.api.exchange.grants.password.PasswordCredentialsGrant
 import uk.co.baconi.oauth.api.exchange.grants.refresh.RefreshGrant
 import uk.co.baconi.oauth.api.introspection.IntrospectionRoute
@@ -40,7 +40,7 @@ import uk.co.baconi.oauth.api.userinfo.UserInfoService
 import uk.co.baconi.oauth.api.wellknown.WellKnownRoute
 
 object OAuth2Server : AuthenticationRoute,
-    AuthorizationRoute,
+    AuthorisationRoute,
     ExchangeRoute,
     IntrospectionRoute,
     RevocationRoute,
@@ -74,7 +74,7 @@ object OAuth2Server : AuthenticationRoute,
     // OAuth Grants
     override val passwordCredentialsGrant = PasswordCredentialsGrant(authenticationService, accessTokenService)
     override val refreshGrant = RefreshGrant()
-    override val authorizationCodeGrant = AuthorizationCodeGrant()
+    override val authorisationCodeGrant = AuthorisationCodeGrant()
     override val assertionRedemptionGrant = AssertionRedemptionGrant()
 
     fun Application.module() {
@@ -167,7 +167,7 @@ object OAuth2Server : AuthenticationRoute,
             //
             // Setup the OAuth / OIDC routes
             //
-            authorization()
+            authorisation()
             exchange()
             introspection()
             revocation()

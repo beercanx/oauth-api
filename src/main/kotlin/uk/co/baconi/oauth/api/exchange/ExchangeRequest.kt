@@ -14,11 +14,11 @@ data class RawExchangeRequest(
     // All
     @SerialName("grant_type") val grantType: GrantType?,
 
-    // AuthorizationCodeRequest && PkceAuthorizationCodeRequest
+    // AuthorisationCodeRequest && PkceAuthorisationCodeRequest
     val code: String? = null,
     @SerialName("redirect_uri") val redirectUri: String?,
 
-    // PkceAuthorizationCodeRequest
+    // PkceAuthorisationCodeRequest
     @SerialName("code_verifier") val codeVerifier: String?,
     @SerialName("client_id") val clientId: ClientId?,
 
@@ -76,24 +76,24 @@ sealed class ValidatedPublicExchangeRequest : PublicExchangeRequest() {
     }
 }
 
-data class AuthorizationCodeRequest(
+data class AuthorisationCodeRequest(
     override val principal: ConfidentialClient,
     val code: String,
     val redirectUri: Url
 ) : ValidatedConfidentialExchangeRequest() {
     override fun toString(): String {
-        return "AuthorizationCodeRequest(principal=$principal, code=REDACTED, redirectUri=$redirectUri)"
+        return "AuthorisationCodeRequest(principal=$principal, code=REDACTED, redirectUri=$redirectUri)"
     }
 }
 
-data class PkceAuthorizationCodeRequest(
+data class PkceAuthorisationCodeRequest(
     override val principal: PublicClient,
     val code: String,
     val redirectUri: Url,
     val codeVerifier: String
 ) : ValidatedPublicExchangeRequest() {
     override fun toString(): String {
-        return "PkceAuthorizationCodeRequest(principal=$principal, code=REDACTED, redirectUri=$redirectUri, codeVerifier=REDACTED)"
+        return "PkceAuthorisationCodeRequest(principal=$principal, code=REDACTED, redirectUri=$redirectUri, codeVerifier=REDACTED)"
     }
 }
 

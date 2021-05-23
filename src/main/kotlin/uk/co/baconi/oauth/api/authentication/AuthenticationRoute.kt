@@ -11,13 +11,8 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
 import kotlinx.html.*
-import uk.co.baconi.oauth.api.authorization.AuthorizationLocation
-import uk.co.baconi.oauth.api.authorization.AuthorizationSession
-import uk.co.baconi.oauth.api.authorization.ResponseType
-import uk.co.baconi.oauth.api.client.ClientId
+import uk.co.baconi.oauth.api.authorisation.AuthorisationLocation
 import uk.co.baconi.oauth.api.ktor.ApplicationContext
-import uk.co.baconi.oauth.api.scopes.Scopes
-import java.net.URI
 import java.util.*
 
 
@@ -31,7 +26,7 @@ interface AuthenticationRoute {
 
     fun Route.authentication() {
 
-        // TODO - Consider only support post and requiring the initial render to happen from the AuthorizationLocation
+        // TODO - Consider only support post and requiring the initial render to happen from the AuthorisationLocation
         get<AuthenticationLocation> {
             // TODO - Do we invalidate the AuthenticatedSession on first render?
             // TODO - Consider adding support for just password entry if we have an AuthenticatedSession
@@ -72,8 +67,8 @@ interface AuthenticationRoute {
                         // Destroy pre-authenticated session.
                         call.sessions.clear<AuthenticationSession>()
 
-                        // Go back to authorization
-                        call.respondRedirect(href(AuthorizationLocation(resume = true)))
+                        // Go back to authorisation
+                        call.respondRedirect(href(AuthorisationLocation(resume = true)))
                     }
                 }
             }

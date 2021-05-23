@@ -25,20 +25,20 @@ inline fun <reified T : Principal> Authentication.Configuration.bearer(
 typealias AccessTokenBlock = suspend ApplicationContext.(AccessToken) -> Unit
 
 /**
- * Attempts to authorize an [AccessToken] principle against the required [Scopes] before the inner block is called:
+ * Attempts to authorise an [AccessToken] principle against the required [Scopes] before the inner block is called:
  *  - If it does not have the required [Scopes] issued then a 403 with a [WWWAuthenticate] header will be issued.
  *  - If there is no [AccessToken] then an [IllegalStateException] will be thrown, which will generate a 500 response.
  */
-suspend fun ApplicationContext.authorizeAccessToken(vararg required: Scopes, block: AccessTokenBlock) {
-    return authorizeAccessToken(required.toSet(), block)
+suspend fun ApplicationContext.authoriseAccessToken(vararg required: Scopes, block: AccessTokenBlock) {
+    return authoriseAccessToken(required.toSet(), block)
 }
 
 /**
- * Attempts to authorize an [AccessToken] principle against the required [Scopes] before the inner block is called:
+ * Attempts to authorise an [AccessToken] principle against the required [Scopes] before the inner block is called:
  *  - If it does not have the required [Scopes] issued then a 403 with a [WWWAuthenticate] header will be issued.
  *  - If there is no [AccessToken] then an [IllegalStateException] will be thrown, which will generate a 500 response.
  */
-suspend fun ApplicationContext.authorizeAccessToken(required: Set<Scopes>, block: AccessTokenBlock) {
+suspend fun ApplicationContext.authoriseAccessToken(required: Set<Scopes>, block: AccessTokenBlock) {
 
     // If the application is setup correctly this should not be null.
     val accessToken = checkNotNull(call.principal<AccessToken>()) {

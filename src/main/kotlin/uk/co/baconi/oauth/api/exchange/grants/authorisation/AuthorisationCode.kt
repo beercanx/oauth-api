@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.api.exchange.grants.authorization
+package uk.co.baconi.oauth.api.exchange.grants.authorisation
 
 import io.ktor.http.*
 import org.dizitart.no2.objects.Id
@@ -6,7 +6,7 @@ import java.time.OffsetDateTime
 import java.util.*
 
 // TODO - Expand with consumer issued to details
-data class AuthorizationCode(
+data class AuthorisationCode(
 
     // The actual code
     @Id val value: UUID,
@@ -22,7 +22,7 @@ data class AuthorizationCode(
      * Generated to exclude [value] from the toString output.
      */
     override fun toString(): String {
-        return "AuthorizationCode(value='REDACTED', issuedAt=$issuedAt, redirectUrl=$redirectUrl)"
+        return "AuthorisationCode(value='REDACTED', issuedAt=$issuedAt, redirectUrl=$redirectUrl)"
     }
 
     /**
@@ -32,7 +32,7 @@ data class AuthorizationCode(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as AuthorizationCode
+        other as AuthorisationCode
 
         if (value != other.value) return false
 
