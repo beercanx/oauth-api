@@ -9,9 +9,10 @@ import io.ktor.sessions.*
 import uk.co.baconi.oauth.api.authentication.AuthenticatedSession
 import uk.co.baconi.oauth.api.authentication.AuthenticationLocation
 import uk.co.baconi.oauth.api.authorisation.ResponseType.Code
-import java.util.*
 
 interface AuthorisationRoute {
+
+    val authorisationService: AuthorisationService
 
     fun Route.authorisation() {
 
@@ -77,19 +78,14 @@ interface AuthorisationRoute {
                         // Handle authorisation decision [success]
                         else -> {
 
-                            // TODO - Issue Authorisation Code
-                            val authorisationCode = UUID.randomUUID().toString()
-
-                            /*
-                            val authorisationCode = authorisationCodeService.issue(authenticated)
-                             */
+                            val authorisationCode = authorisationService.issueCode(request, authenticated)
 
                             // Remove any stashed AuthorisationSession
                             call.sessions.clear<AuthorisationSession>()
 
                             call.respondRedirect(
                                 URLBuilder(request.redirectUri).apply {
-                                    parameters.append("code", authorisationCode)
+                                    parameters.append("code", authorisationCode.value)
                                     parameters.append("state", request.state)
                                 }.buildString()
                             )

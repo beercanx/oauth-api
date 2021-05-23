@@ -15,7 +15,9 @@ import uk.co.baconi.oauth.api.authentication.AuthenticationRoute
 import uk.co.baconi.oauth.api.authentication.AuthenticationService
 import uk.co.baconi.oauth.api.authentication.AuthenticationSession
 import uk.co.baconi.oauth.api.authorisation.AuthorisationRoute
+import uk.co.baconi.oauth.api.authorisation.AuthorisationService
 import uk.co.baconi.oauth.api.authorisation.AuthorisationSession
+import uk.co.baconi.oauth.api.authorisation.NitriteAuthorisationCodeRepository
 import uk.co.baconi.oauth.api.client.*
 import uk.co.baconi.oauth.api.customer.CustomerMatchService
 import uk.co.baconi.oauth.api.customer.NitriteCustomerCredentialRepository
@@ -72,6 +74,9 @@ object OAuth2Server : AuthenticationRoute,
     override val userInfoService = UserInfoService(scopesConfigurationRepository)
 
     override val authenticationService = AuthenticationService(customerMatchService, customerStatusRepository)
+
+    private val authorisationCodeRepository = NitriteAuthorisationCodeRepository()
+    override val authorisationService = AuthorisationService(authorisationCodeRepository)
 
     // OAuth Grants
     override val passwordCredentialsGrant = PasswordCredentialsGrant(authenticationService, accessTokenService)
