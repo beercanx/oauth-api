@@ -2,18 +2,17 @@ package uk.co.baconi.oauth.api.authorisation
 
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.scopes.Scopes
-import java.net.URI
 
 sealed class AuthorisationRequest {
 
     object Invalid : AuthorisationRequest()
 
-    data class Aborted(val redirectUri: URI) : AuthorisationRequest()
+    data class Aborted(val redirectUri: String) : AuthorisationRequest()
 
     data class Valid(
         val responseType: ResponseType,
         val clientId: ClientId,
-        val redirectUri: URI,
+        val redirectUri: String,
         val state: String,
         val requestedScope: Set<Scopes>
     ) : AuthorisationRequest() {

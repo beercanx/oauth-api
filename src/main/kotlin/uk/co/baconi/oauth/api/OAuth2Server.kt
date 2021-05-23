@@ -10,10 +10,12 @@ import io.ktor.routing.*
 import io.ktor.serialization.*
 import io.ktor.sessions.*
 import uk.co.baconi.oauth.api.assets.StaticAssetsRoute
+import uk.co.baconi.oauth.api.authentication.AuthenticatedSession
 import uk.co.baconi.oauth.api.authentication.AuthenticationRoute
 import uk.co.baconi.oauth.api.authentication.AuthenticationService
 import uk.co.baconi.oauth.api.authentication.AuthenticationSession
 import uk.co.baconi.oauth.api.authorisation.AuthorisationRoute
+import uk.co.baconi.oauth.api.authorisation.AuthorisationSession
 import uk.co.baconi.oauth.api.client.*
 import uk.co.baconi.oauth.api.customer.CustomerMatchService
 import uk.co.baconi.oauth.api.customer.NitriteCustomerCredentialRepository
@@ -122,6 +124,8 @@ object OAuth2Server : AuthenticationRoute,
         // Create some session types
         install(Sessions) {
             cookie<AuthenticationSession>("AuthenticationSession", storage = SessionStorageMemory())
+            cookie<AuthenticatedSession>("AuthenticatedSession", storage = SessionStorageMemory())
+            cookie<AuthorisationSession>("AuthorisationSession", storage = SessionStorageMemory())
         }
 
         // Enable `call.receive` to work twice without getting an exception

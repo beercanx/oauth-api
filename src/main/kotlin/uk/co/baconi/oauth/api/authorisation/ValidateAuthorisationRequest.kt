@@ -21,9 +21,6 @@ fun ApplicationContext.validateAuthorisationRequest(location: AuthorisationLocat
 
     val clientId = location.client_id?.let { s -> deserialise<ClientId>(s) }
 
-    // TODO - Handle if its not a valid URI
-    val redirectUri = location.redirect_uri?.let(URI::create)
-
     // TODO - Make code shared with RawExchangeRequest
     // TODO - Look into reporting invalid or unknown scopes
     val scope = location.scope?.split(" ")?.mapNotNull { s -> deserialise<Scopes>(s) }?.toSet()
@@ -51,9 +48,7 @@ fun ApplicationContext.validateAuthorisationRequest(location: AuthorisationLocat
 
         location.redirect_uri == null -> AuthorisationRequest.Invalid//(invalid_request, "Missing parameter: redirect_uri")
 
-        redirectUri == null -> AuthorisationRequest.Invalid//(invalid_request, "Invalid parameter: redirect_uri")
-
-        // TODO - Validate redirectUri for the given clientId
+        // TODO - Validate location.redirect_uri for the given clientId
         //AuthorisationRequest.Invalid(invalid_request, "Invalid parameter: redirect_uri")
 
         responseType == null -> AuthorisationRequest.Invalid//(unsupported_response_type, "Unsupported response type: ${location.response_type}")
@@ -62,7 +57,7 @@ fun ApplicationContext.validateAuthorisationRequest(location: AuthorisationLocat
         else -> AuthorisationRequest.Valid(
             responseType = responseType,
             clientId = clientId,
-            redirectUri = redirectUri,
+            redirectUri = location.redirect_uri,
             state = location.state,
             requestedScope = scope ?: emptySet()
         )
