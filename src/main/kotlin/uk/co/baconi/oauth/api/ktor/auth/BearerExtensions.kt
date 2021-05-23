@@ -1,25 +1,25 @@
 package uk.co.baconi.oauth.api.ktor.auth
 
-import uk.co.baconi.oauth.api.OAuth2Server.REALM
-import uk.co.baconi.oauth.api.ktor.ApplicationContext
-import uk.co.baconi.oauth.api.ktor.auth.bearer.OAuth2BearerAuthenticationProvider
-import uk.co.baconi.oauth.api.ktor.auth.bearer.oAuth2Bearer
-import uk.co.baconi.oauth.api.ktor.auth.bearer.oAuth2BearerAuthChallenge
-import uk.co.baconi.oauth.api.scopes.Scopes
-import uk.co.baconi.oauth.api.tokens.AccessToken
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.HttpHeaders.WWWAuthenticate
 import io.ktor.response.*
+import uk.co.baconi.oauth.api.OAuth2Server.REALM
+import uk.co.baconi.oauth.api.ktor.ApplicationContext
+import uk.co.baconi.oauth.api.ktor.auth.bearer.BearerAuthenticationProvider
+import uk.co.baconi.oauth.api.ktor.auth.bearer.bearer
+import uk.co.baconi.oauth.api.ktor.auth.bearer.bearerAuthChallenge
+import uk.co.baconi.oauth.api.scopes.Scopes
+import uk.co.baconi.oauth.api.tokens.AccessToken
 import kotlin.reflect.jvm.jvmName
 
 /**
  * Provides a typed way to define which principle type this OAuth2 bearer auth will provide.
  */
-inline fun <reified T : Principal> Authentication.Configuration.oAuth2Bearer(
-    noinline configure: OAuth2BearerAuthenticationProvider.Configuration.() -> Unit,
+inline fun <reified T : Principal> Authentication.Configuration.bearer(
+    noinline configure: BearerAuthenticationProvider.Configuration.() -> Unit,
 ) {
-    oAuth2Bearer(T::class.jvmName, configure)
+    bearer(T::class.jvmName, configure)
 }
 
 typealias AccessTokenBlock = suspend ApplicationContext.(AccessToken) -> Unit
@@ -51,6 +51,6 @@ suspend fun ApplicationContext.authorizeAccessToken(required: Set<Scopes>, block
         accessToken.scopes.containsAll(required) -> block(accessToken)
 
         // This access token is not authorised to call the application block.
-        else -> call.respond(ForbiddenResponse(oAuth2BearerAuthChallenge(REALM, required)))
+        else -> call.respond(ForbiddenResponse(bearerAuthChallenge(REALM, required)))
     }
 }

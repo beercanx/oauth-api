@@ -26,8 +26,8 @@ import uk.co.baconi.oauth.api.exchange.grants.refresh.RefreshGrant
 import uk.co.baconi.oauth.api.introspection.IntrospectionRoute
 import uk.co.baconi.oauth.api.introspection.IntrospectionService
 import uk.co.baconi.oauth.api.ktor.auth.basic
+import uk.co.baconi.oauth.api.ktor.auth.bearer
 import uk.co.baconi.oauth.api.ktor.auth.body
-import uk.co.baconi.oauth.api.ktor.auth.oAuth2Bearer
 import uk.co.baconi.oauth.api.revocation.RevocationRoute
 import uk.co.baconi.oauth.api.scopes.TypesafeScopesConfigurationRepository
 import uk.co.baconi.oauth.api.swagger.SwaggerRoute
@@ -124,6 +124,7 @@ object OAuth2Server : AuthenticationRoute,
             cookie<AuthenticationSession>("AuthenticationSession", storage = SessionStorageMemory())
         }
 
+        // Enable `call.recieve` to work twice without getting an exception
         install(DoubleReceive)
 
         // Graceful Shutdown
@@ -149,7 +150,7 @@ object OAuth2Server : AuthenticationRoute,
                     clientAuthService.publicClient(clientId)
                 }
             }
-            oAuth2Bearer<AccessToken> {
+            bearer<AccessToken> {
                 realm = REALM
                 validate { (token) ->
                     tokenAuthenticationService.accessToken(token)

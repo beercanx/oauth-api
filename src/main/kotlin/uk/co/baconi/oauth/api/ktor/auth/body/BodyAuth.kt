@@ -1,7 +1,6 @@
 /*
  * Copyright 2014-2020 JetBrains s.r.o and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-
 package uk.co.baconi.oauth.api.ktor.auth.body
 
 import io.ktor.application.*
@@ -11,6 +10,7 @@ import io.ktor.http.*
 import io.ktor.http.auth.*
 import io.ktor.request.*
 import io.ktor.response.*
+import io.ktor.utils.io.charsets.*
 
 /**
  * Represents a Body authentication provider
@@ -110,10 +110,9 @@ private val bodyAuthenticationChallengeKey: Any = "BodyAuth"
 /**
  * Generates a Body challenge as a [HttpAuthHeader].
  */
-private fun bothAuthChallenge(realm: String?) = HttpAuthHeader.Parameterized("Body",
+private fun bothAuthChallenge(realm: String) = HttpAuthHeader.Parameterized("Body",
     LinkedHashMap<String, String>().apply {
-        if (realm != null) {
-            put(HttpAuthHeader.Parameters.Realm, realm)
-        }
+        put(HttpAuthHeader.Parameters.Realm, realm)
+        put(HttpAuthHeader.Parameters.Charset, Charsets.UTF_8.name)
     }
 )
