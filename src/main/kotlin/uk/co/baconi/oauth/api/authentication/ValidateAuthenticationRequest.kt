@@ -3,7 +3,9 @@ package uk.co.baconi.oauth.api.authentication
 import io.ktor.application.*
 import io.ktor.request.*
 import io.ktor.sessions.*
+import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.ABORT
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.CSRF_TOKEN
+import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.LOGIN
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.PASSWORD
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.USERNAME
 import uk.co.baconi.oauth.api.ktor.ApplicationContext
@@ -16,8 +18,12 @@ suspend fun ApplicationContext.validateAuthenticationRequest(): AuthenticationRe
     val csrfToken = parameters[CSRF_TOKEN]
     val username = parameters[USERNAME]
     val password = parameters[PASSWORD]
+    val abort = parameters[ABORT]
 
     return when {
+
+        // Check for user abort
+        abort?.isNotBlank() ?: false -> AuthenticationRequest.Aborted
 
         // Check CSRF Token
         session == null -> AuthenticationRequest.InvalidCsrf(username, password)

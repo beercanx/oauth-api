@@ -9,5 +9,10 @@ sealed class AuthenticationRequest {
 
     data class InvalidFields(override val username: String?, override val password: String?) : AuthenticationRequest()
 
+    object Aborted: AuthenticationRequest() {
+        override val username: String? = null
+        override val password: String? = null
+    }
+
     data class Valid(override val username: String, override val password: String) : AuthenticationRequest()
 }
