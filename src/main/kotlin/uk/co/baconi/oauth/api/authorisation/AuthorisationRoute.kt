@@ -30,6 +30,9 @@ interface AuthorisationRoute {
                 // Handle authorisation request [invalid] / decision [failure]
                 is AuthorisationRequest.Invalid -> {
 
+                    // Remove any stashed AuthorisationSession
+                    call.sessions.clear<AuthorisationSession>()
+
                     // TODO https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
 
                     /*
@@ -39,14 +42,14 @@ interface AuthorisationRoute {
                      * }
                      */
 
-                    // Remove any stashed AuthorisationSession
-                    call.sessions.clear<AuthorisationSession>()
-
                     TODO("Invalid $request")
                 }
 
                 // Handle user aborted
                 is AuthorisationRequest.Aborted -> {
+
+                    // Remove any stashed AuthorisationSession
+                    call.sessions.clear<AuthorisationSession>()
 
                     // Return with error response
                     call.respondRedirect(
@@ -55,9 +58,6 @@ interface AuthorisationRoute {
                             parameters.append("error_description", "User aborted")
                         }.buildString()
                     )
-
-                    // Remove any stashed AuthorisationSession
-                    call.sessions.clear<AuthorisationSession>()
                 }
 
                 // Handle authorisation request [valid]
@@ -84,15 +84,15 @@ interface AuthorisationRoute {
                             val authorisationCode = authorisationCodeService.issue(authenticated)
                              */
 
+                            // Remove any stashed AuthorisationSession
+                            call.sessions.clear<AuthorisationSession>()
+
                             call.respondRedirect(
                                 URLBuilder(request.redirectUri).apply {
                                     parameters.append("code", authorisationCode)
                                     parameters.append("state", request.state)
                                 }.buildString()
                             )
-
-                            // Remove any stashed AuthorisationSession
-                            call.sessions.clear<AuthorisationSession>()
                         }
                     }
                 }
