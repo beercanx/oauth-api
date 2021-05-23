@@ -69,6 +69,8 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
                         }
                     }
 
+                    // TODO - Add an abort button
+
                     button(classes = "btn btn-primary w-100") {
                         name = "login"
                         value = "login"
