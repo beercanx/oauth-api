@@ -2,8 +2,9 @@ package uk.co.baconi.oauth.api.authorisation
 
 import org.dizitart.no2.objects.Id
 import uk.co.baconi.oauth.api.client.ClientId
+import uk.co.baconi.oauth.api.authentication.AuthenticatedUsername
+import uk.co.baconi.oauth.api.scopes.Scopes
 import java.time.OffsetDateTime
-import java.util.*
 
 // TODO - Expand with consumer issued to details
 data class AuthorisationCode(
@@ -18,10 +19,13 @@ data class AuthorisationCode(
     val clientId: ClientId,
 
     // Issued for
-    val username: String,
+    val username: AuthenticatedUsername,
 
     // Added because we need to validate on exchange its the same url as stated in https://tools.ietf.org/html/rfc6749#section-4.1.3
-    val redirectUri: String
+    val redirectUri: String,
+
+    // The requested scopes
+    val requestedScope: Set<Scopes>
 
 ) {
 

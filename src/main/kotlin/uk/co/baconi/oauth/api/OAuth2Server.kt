@@ -14,10 +14,7 @@ import uk.co.baconi.oauth.api.authentication.AuthenticatedSession
 import uk.co.baconi.oauth.api.authentication.AuthenticationRoute
 import uk.co.baconi.oauth.api.authentication.AuthenticationService
 import uk.co.baconi.oauth.api.authentication.AuthenticationSession
-import uk.co.baconi.oauth.api.authorisation.AuthorisationRoute
-import uk.co.baconi.oauth.api.authorisation.AuthorisationService
-import uk.co.baconi.oauth.api.authorisation.AuthorisationSession
-import uk.co.baconi.oauth.api.authorisation.NitriteAuthorisationCodeRepository
+import uk.co.baconi.oauth.api.authorisation.*
 import uk.co.baconi.oauth.api.client.*
 import uk.co.baconi.oauth.api.customer.CustomerMatchService
 import uk.co.baconi.oauth.api.customer.NitriteCustomerCredentialRepository
@@ -73,15 +70,18 @@ object OAuth2Server : AuthenticationRoute,
     private val customerMatchService = CustomerMatchService(customerCredentialRepository)
     override val userInfoService = UserInfoService(scopesConfigurationRepository)
 
+    // Authentication
     override val authenticationService = AuthenticationService(customerMatchService, customerStatusRepository)
 
+    // Authorisation
     private val authorisationCodeRepository = NitriteAuthorisationCodeRepository()
-    override val authorisationService = AuthorisationService(authorisationCodeRepository)
+    override val authorisationCodeService = AuthorisationCodeService(authorisationCodeRepository)
+    private val authorisationService = AuthorisationService(authorisationCodeRepository, accessTokenService)
 
     // OAuth Grants
-    override val passwordCredentialsGrant = PasswordCredentialsGrant(authenticationService, accessTokenService)
+    override val passwordCredentialsGrant = PasswordCredentialsGrant(authenticationService, authorisationService)
     override val refreshGrant = RefreshGrant()
-    override val authorisationCodeGrant = AuthorisationCodeGrant()
+    override val authorisationCodeGrant = AuthorisationCodeGrant(authorisationCodeRepository, authorisationService)
     override val assertionRedemptionGrant = AssertionRedemptionGrant()
 
     fun Application.module() {

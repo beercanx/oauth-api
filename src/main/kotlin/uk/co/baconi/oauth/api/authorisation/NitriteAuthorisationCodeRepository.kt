@@ -6,8 +6,11 @@ import org.dizitart.kno2.nitrite
 import org.dizitart.no2.IndexOptions.indexOptions
 import org.dizitart.no2.IndexType.NonUnique
 import org.dizitart.no2.Nitrite
+import uk.co.baconi.oauth.api.NitriteExpirationManager
 import uk.co.baconi.oauth.api.client.ClientId
 import java.io.Closeable
+import java.time.temporal.ChronoUnit
+import java.time.temporal.ChronoUnit.*
 
 /**
  * A Nitrite implementation of the [AuthorisationCodeRepository].
@@ -16,6 +19,12 @@ import java.io.Closeable
  * - https://www.dizitart.org/nitrite-database/#potassium-nitrite
  */
 class NitriteAuthorisationCodeRepository(database: Nitrite) : AuthorisationCodeRepository, Closeable by database {
+
+    private val expirationManager = NitriteExpirationManager<String>()
+
+    // TODO - Consider place into configuration
+    private val ageAmount = 1L
+    private val ageUnit = MINUTES
 
     /**
      * Create a new instance of [NitriteAuthorisationCodeRepository] with an in-memory instance of [Nitrite]
@@ -28,10 +37,12 @@ class NitriteAuthorisationCodeRepository(database: Nitrite) : AuthorisationCodeR
 
     override fun insert(new: AuthorisationCode) {
         repository.insert(new)
+        expirationManager.expireAfter(new.value, new.issuedAt.plus(ageAmount, ageUnit), ::delete)
     }
 
     override fun delete(id: String) {
         repository.remove(AuthorisationCode::value eq id)
+        expirationManager.remove(id)
     }
 
     override fun findById(id: String): AuthorisationCode? {

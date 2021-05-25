@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.api.tokens
+package uk.co.baconi.oauth.api
 
 import org.dizitart.no2.Nitrite
 import java.lang.Thread.sleep
@@ -8,25 +8,25 @@ import java.time.temporal.ChronoUnit.MILLIS
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * An expiration manager for [AccessToken]'s that are managed by a [Nitrite] database.
+ * An expiration manager for entities that are managed by a [Nitrite] database.
  */
-class NitriteAccessTokenExpirationManager internal constructor(
-    private val threads: ConcurrentHashMap<String, Thread>
+class NitriteExpirationManager<ID : Any> internal constructor(
+    private val threads: ConcurrentHashMap<ID, Thread>
 ) {
 
     /**
-     * Restricted access because why does anything other than the [NitriteAccessTokenRepository] need this.
+     * Restricted access because why does anything other than the [Nitrite] based [Repository] need this.
      */
-    internal constructor() : this(ConcurrentHashMap<String, Thread>())
+    internal constructor() : this(ConcurrentHashMap<ID, Thread>())
 
     /**
-     * @param value of the [AccessToken] this will expire.
-     * @param expiresAt when the [AccessToken] expires as an [OffsetDateTime].
-     * @param expire what to do when this [AccessToken] expires.
+     * @param id of the entity this will expire.
+     * @param expiresAt when the entity expires as an [OffsetDateTime].
+     * @param expire what to do when this entity expires.
      */
-    fun expireAfter(value: String, expiresAt: OffsetDateTime, expire: (String) -> Unit) {
+    fun expireAfter(id: ID, expiresAt: OffsetDateTime, expire: (ID) -> Unit) {
 
-        threads[value] = Thread {
+        threads[id] = Thread {
 
             // Sleep thread until token expires
             try {
@@ -41,10 +41,10 @@ class NitriteAccessTokenExpirationManager internal constructor(
             }
 
             // Expire the token
-            expire(value)
+            expire(id)
 
             // Remove the thread tracker
-            threads.remove(value)
+            threads.remove(id)
 
         }.also { thread ->
             // Start the thread.
@@ -55,7 +55,7 @@ class NitriteAccessTokenExpirationManager internal constructor(
     /**
      * Removes an expiration tracker and stops it.
      */
-    fun remove(value: String) {
+    fun remove(value: ID) {
         threads.remove(value)?.interrupt()
     }
 }

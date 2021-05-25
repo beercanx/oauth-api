@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.api.tokens
+package uk.co.baconi.oauth.api
 
 import io.kotest.matchers.nulls.beNull
 import io.kotest.matchers.should
@@ -17,10 +17,10 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit.SECONDS
 
 @Timeout(10, unit = SECONDS)
-class NitriteAccessTokenExpirationManagerTest {
+class NitriteExpirationManagerTest {
 
     private val threads = ConcurrentHashMap<String, Thread>()
-    private val underTest = NitriteAccessTokenExpirationManager(threads)
+    private val underTest = NitriteExpirationManager(threads)
 
     @Test
     fun `should expire token after the given datetime`() {

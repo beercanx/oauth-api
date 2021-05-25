@@ -25,6 +25,9 @@ fun validateExchangeRequest(
 
             // TODO - Validate the [code] is a valid code via a repository
             // TODO - Validate the [redirect_uri] is the same as what was used to generate the [code]
+            // TODO - Validate the [client_id] is the same as what was used to generate the [code]
+            // TODO - Replace code with AuthorisationCode object
+
 
             AuthorisationCodeRequest(principal, code, redirectUri)
         }

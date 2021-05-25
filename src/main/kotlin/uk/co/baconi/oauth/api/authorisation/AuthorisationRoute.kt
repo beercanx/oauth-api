@@ -12,7 +12,7 @@ import uk.co.baconi.oauth.api.authorisation.ResponseType.Code
 
 interface AuthorisationRoute {
 
-    val authorisationService: AuthorisationService
+    val authorisationCodeService: AuthorisationCodeService
 
     fun Route.authorisation() {
 
@@ -78,7 +78,7 @@ interface AuthorisationRoute {
                         // Handle authorisation decision [success]
                         else -> {
 
-                            val authorisationCode = authorisationService.issueCode(request, authenticated)
+                            val authorisationCode = authorisationCodeService.issue(request, authenticated)
 
                             // Remove any stashed AuthorisationSession
                             call.sessions.clear<AuthorisationSession>()
