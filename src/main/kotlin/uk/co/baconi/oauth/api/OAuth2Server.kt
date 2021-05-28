@@ -130,7 +130,6 @@ object OAuth2Server : AuthenticationRoute,
         install(Sessions) {
             cookie<AuthenticationSession>("AuthenticationSession", storage = SessionStorageMemory())
             cookie<AuthenticatedSession>("AuthenticatedSession", storage = SessionStorageMemory())
-            cookie<AuthorisationSession>("AuthorisationSession", storage = SessionStorageMemory())
         }
 
         // Enable `call.receive` to work twice without getting an exception

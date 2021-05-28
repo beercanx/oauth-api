@@ -5,7 +5,7 @@ import io.ktor.locations.*
 import kotlinx.html.*
 import uk.co.baconi.oauth.api.kotlinx.html.PageTemplate
 
-class AuthenticationPageTemplate(private val locations: Locations) : Template<HTML> {
+class AuthenticationPageTemplate(private val locations: Locations, private val location: AuthenticationLocation) : Template<HTML> {
 
     companion object {
         const val CSRF_TOKEN = "csrf_token"
@@ -36,7 +36,7 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
 
                 postForm {
                     id = "login-form"
-                    action = locations.href(AuthenticationLocation)
+                    action = locations.href(location)
 
                     hiddenInput {
                         name = CSRF_TOKEN

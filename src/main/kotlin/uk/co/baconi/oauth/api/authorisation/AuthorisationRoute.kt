@@ -31,9 +31,6 @@ interface AuthorisationRoute {
                 // Handle authorisation request [invalid] / decision [failure]
                 is AuthorisationRequest.Invalid -> {
 
-                    // Remove any stashed AuthorisationSession
-                    call.sessions.clear<AuthorisationSession>()
-
                     // TODO https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
 
                     /*
@@ -48,9 +45,6 @@ interface AuthorisationRoute {
 
                 // Handle user aborted
                 is AuthorisationRequest.Aborted -> {
-
-                    // Remove any stashed AuthorisationSession
-                    call.sessions.clear<AuthorisationSession>()
 
                     // Return with error response
                     call.respondRedirect(
@@ -68,11 +62,8 @@ interface AuthorisationRoute {
                         // Seek authorisation decision
                         null -> {
 
-                            // Stash the AuthorisationSession
-                            call.sessions.set(AuthorisationSession(request))
-
-                            // Redirect to our "login" page
-                            call.respondRedirect(href(AuthenticationLocation))
+                            // Redirect to our "login" page with a redirect back to here.
+                            call.respondRedirect(href(AuthenticationLocation(href(location))))
                         }
 
                         // Handle authorisation decision [success]
@@ -80,13 +71,11 @@ interface AuthorisationRoute {
 
                             val authorisationCode = authorisationCodeService.issue(request, authenticated)
 
-                            // Remove any stashed AuthorisationSession
-                            call.sessions.clear<AuthorisationSession>()
-
                             call.respondRedirect(
-                                URLBuilder(request.redirectUri).apply {
-                                    parameters.append("code", authorisationCode.value)
-                                    parameters.append("state", request.state)
+                                URLBuilder().apply {
+                                    takeFrom(request.redirectUri)
+                                    parameters["code"] = authorisationCode.value
+                                    parameters["state"] = request.state
                                 }.buildString()
                             )
                         }

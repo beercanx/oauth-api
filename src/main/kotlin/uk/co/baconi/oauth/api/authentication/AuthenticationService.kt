@@ -32,7 +32,7 @@ class AuthenticationService(
         return when (val match = customerMatchService.match(username, password)) {
             is CustomerMatch.Missing -> Authentication.Failure(Reason.Missing)
             is CustomerMatch.Mismatched -> Authentication.Failure(Reason.Mismatched)
-            is CustomerMatch.Success -> when (customerStatusRepository.findByUsername(match.username)?.state) { // TODO - Consider using typed username to prevent issues with case.
+            is CustomerMatch.Success -> when (customerStatusRepository.findByUsername(match.username)?.state) {
                 null -> {
                     logger.error("Unable to find customer status for $username")
                     Authentication.Failure(Reason.Missing)
@@ -40,7 +40,7 @@ class AuthenticationService(
                 CustomerState.Suspended -> Authentication.Failure(Reason.Suspended)
                 CustomerState.Closed -> Authentication.Failure(Reason.Closed)
                 CustomerState.ChangePassword -> Authentication.Failure(Reason.ChangePassword) // TODO - Add support to change password on password match.
-                CustomerState.Active -> Authentication.Success(match.username) // TODO - Consider using typed username to prevent issues with case.
+                CustomerState.Active -> Authentication.Success(match.username)
             }
         }
     }

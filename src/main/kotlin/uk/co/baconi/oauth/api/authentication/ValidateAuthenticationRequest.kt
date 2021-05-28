@@ -1,16 +1,18 @@
 package uk.co.baconi.oauth.api.authentication
 
 import io.ktor.application.*
+import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.sessions.*
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.ABORT
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.CSRF_TOKEN
-import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.LOGIN
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.PASSWORD
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.USERNAME
+import uk.co.baconi.oauth.api.authorisation.AuthorisationLocation
 import uk.co.baconi.oauth.api.ktor.ApplicationContext
+import java.net.URI
 
-suspend fun ApplicationContext.validateAuthenticationRequest(): AuthenticationRequest {
+suspend fun ApplicationContext.validateAuthenticationRequest(location: AuthenticationLocation): AuthenticationRequest {
 
     val parameters = call.receiveParameters()
     val session = call.sessions.get<AuthenticationSession>()
@@ -20,10 +22,17 @@ suspend fun ApplicationContext.validateAuthenticationRequest(): AuthenticationRe
     val password = parameters[PASSWORD]
     val abort = parameters[ABORT]
 
+    // The redirect URI here is an "internal" redirect so it should be relative.
+    val redirect = when {
+        location.redirectUri.isNullOrBlank() -> href(AuthorisationLocation())
+        location.redirectUri.isAbsoluteURI() -> href(AuthorisationLocation())
+        else -> location.redirectUri
+    }
+
     return when {
 
         // Check for user abort
-        abort?.isNotBlank() ?: false -> AuthenticationRequest.Aborted
+        abort?.isNotBlank() ?: false -> AuthenticationRequest.Aborted(redirect)
 
         // Check CSRF Token
         session == null -> AuthenticationRequest.InvalidCsrf(username, password)
@@ -35,6 +44,15 @@ suspend fun ApplicationContext.validateAuthenticationRequest(): AuthenticationRe
         password.isNullOrBlank() -> AuthenticationRequest.InvalidFields(username, password)
 
         // Good enough to attempt an authentication
-        else -> AuthenticationRequest.Valid(username, password)
+        else -> AuthenticationRequest.Valid(username, password, redirect)
     }
+}
+
+/**
+ * Does this [String] contain an absolute [URI]
+ */
+private fun String.isAbsoluteURI(): Boolean = try {
+    URI.create(this).isAbsolute
+} catch (exception: Exception) {
+    false
 }

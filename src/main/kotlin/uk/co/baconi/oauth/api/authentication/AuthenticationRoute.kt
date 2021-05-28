@@ -11,10 +11,8 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
 import kotlinx.html.*
-import uk.co.baconi.oauth.api.authorisation.AuthorisationLocation
 import uk.co.baconi.oauth.api.ktor.ApplicationContext
 import java.util.*
-
 
 interface AuthenticationRoute {
 
@@ -27,24 +25,24 @@ interface AuthenticationRoute {
     fun Route.authentication() {
 
         // TODO - Consider only support post and requiring the initial render to happen from the AuthorisationLocation
-        get<AuthenticationLocation> {
+        get<AuthenticationLocation> { location ->
             // TODO - Do we invalidate the AuthenticatedSession on first render?
             // TODO - Consider adding support for just password entry if we have an AuthenticatedSession
-            renderAuthenticationPage()
+            renderAuthenticationPage(location)
         }
 
-        post<AuthenticationLocation> {
+        post<AuthenticationLocation> { location ->
 
-            return@post when (val request = validateAuthenticationRequest()) {
+            return@post when (val request = validateAuthenticationRequest(location)) {
 
                 is AuthenticationRequest.InvalidCsrf -> {
-                    renderAuthenticationPage(request, Forbidden) {
+                    renderAuthenticationPage(location, request, Forbidden) {
                         +"Please retry, we received an invalid CSRF token."
                     }
                 }
 
                 is AuthenticationRequest.InvalidFields -> {
-                    renderAuthenticationPage(request, BadRequest) {
+                    renderAuthenticationPage(location, request, BadRequest) {
                         +"Please fill out and retry, we need both your username and password to log you in."
                     }
                 }
@@ -54,13 +52,17 @@ interface AuthenticationRoute {
                     // Destroy pre-authenticated session.
                     call.sessions.clear<AuthenticationSession>()
 
-                    // Go back to authorisation
-                    call.respondRedirect(href(AuthorisationLocation(resume = false)))
+                    // Go to redirect uri
+                    call.respondRedirect {
+                        parameters.clear()
+                        takeFrom(request.redirect)
+                        parameters["resume"] = "false"
+                    }
                 }
 
                 is AuthenticationRequest.Valid -> when (val result = authenticationService.authenticate(request)) {
 
-                    is Authentication.Failure -> renderAuthenticationPage(request, Unauthorized) {
+                    is Authentication.Failure -> renderAuthenticationPage(location, request, Unauthorized) {
                         +"Please check and try again or if you have forgotten your details, recover them "
                         a(
                             href = "/recovery",
@@ -76,8 +78,12 @@ interface AuthenticationRoute {
                         // Destroy pre-authenticated session.
                         call.sessions.clear<AuthenticationSession>()
 
-                        // Go back to authorisation
-                        call.respondRedirect(href(AuthorisationLocation(resume = true)))
+                        // Go to redirect uri
+                        call.respondRedirect {
+                            parameters.clear()
+                            takeFrom(request.redirect)
+                            parameters["resume"] = "true"
+                        }
                     }
                 }
             }
@@ -85,12 +91,15 @@ interface AuthenticationRoute {
     }
 
     private suspend fun ApplicationContext.renderAuthenticationPage(
+        location: AuthenticationLocation,
         request: AuthenticationRequest? = null,
         status: HttpStatusCode = HttpStatusCode.OK,
         failureMessage: (DIV.(Placeholder<DIV>) -> Unit)? = null
     ) {
         val session = getAuthenticationSession()
-        call.respondHtmlTemplate(AuthenticationPageTemplate(locations), status) {
+
+        // TODO - Move more into the template than out here.
+        call.respondHtmlTemplate(AuthenticationPageTemplate(locations, location), status) {
             csrfToken {
                 value = session.csrfToken
             }

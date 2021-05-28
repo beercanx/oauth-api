@@ -1,5 +1,7 @@
 package uk.co.baconi.oauth.api.authentication
 
+import io.ktor.http.*
+
 sealed class AuthenticationRequest {
 
     abstract val username: String?
@@ -9,10 +11,14 @@ sealed class AuthenticationRequest {
 
     data class InvalidFields(override val username: String?, override val password: String?) : AuthenticationRequest()
 
-    object Aborted: AuthenticationRequest() {
+    data class Aborted(val redirect: String): AuthenticationRequest() {
         override val username: String? = null
         override val password: String? = null
     }
 
-    data class Valid(override val username: String, override val password: String) : AuthenticationRequest()
+    data class Valid(
+        override val username: String,
+        override val password: String,
+        val redirect: String
+    ) : AuthenticationRequest()
 }
