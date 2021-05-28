@@ -22,7 +22,7 @@ class AccessTokenTest {
             withClue("hasExpired") {
                 AccessToken(
                     value = randomUUID().toString(),
-                    username = AuthenticatedUsername("aardvark"),
+                    username = "aardvark",
                     clientId = ConsumerZ,
                     scopes = emptySet(),
                     issuedAt = now(),
@@ -37,7 +37,7 @@ class AccessTokenTest {
             withClue("hasExpired") {
                 AccessToken(
                     value = randomUUID().toString(),
-                    username = AuthenticatedUsername("aardvark"),
+                    username = "aardvark",
                     clientId = ConsumerZ,
                     scopes = emptySet(),
                     issuedAt = now(),
@@ -57,7 +57,7 @@ class AccessTokenTest {
             assertSoftly(
                 AccessToken(
                     value = value,
-                    username = AuthenticatedUsername("aardvark"),
+                    username = "aardvark",
                     clientId = ConsumerZ,
                     scopes = emptySet(),
                     issuedAt = now(),

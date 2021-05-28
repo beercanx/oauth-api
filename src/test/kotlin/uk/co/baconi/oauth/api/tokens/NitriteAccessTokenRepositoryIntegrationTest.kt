@@ -29,7 +29,7 @@ class NitriteAccessTokenRepositoryIntegrationTest {
         clientId: ClientId = ConsumerZ
     ) = AccessToken(
         value = value,
-        username = AuthenticatedUsername(username),
+        username = username,
         clientId = clientId,
         scopes = setOf(OpenId),
         issuedAt = now(),
@@ -194,7 +194,7 @@ class NitriteAccessTokenRepositoryIntegrationTest {
             val accessToken = AccessToken.new()
             underTest.insert(accessToken)
 
-            assertSoftly(underTest.findAllByUsername(accessToken.username.value)) {
+            assertSoftly(underTest.findAllByUsername(accessToken.username)) {
                 it shouldHaveSize 1
                 it shouldContain accessToken
             }

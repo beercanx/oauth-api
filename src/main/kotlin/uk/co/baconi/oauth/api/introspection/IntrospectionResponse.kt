@@ -1,11 +1,10 @@
 package uk.co.baconi.oauth.api.introspection
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.scopes.Scopes
 import uk.co.baconi.oauth.api.serializers.ScopeSerializer
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import uk.co.baconi.oauth.api.authentication.AuthenticatedUsername
 
 sealed class IntrospectionResponse
 
@@ -14,8 +13,8 @@ data class ActiveIntrospectionResponse(
     val active: Boolean = true,
     @Serializable(with = ScopeSerializer::class) val scope: Set<Scopes>,
     @SerialName("client_id") val clientId: ClientId,
-    val username: AuthenticatedUsername,
-    @SerialName("sub") val subject: AuthenticatedUsername,
+    val username: String,
+    @SerialName("sub") val subject: String,
     @SerialName("exp") val expirationTime: Long,
     @SerialName("iat") val issuedAt: Long,
     @SerialName("nbf") val notBefore: Long
