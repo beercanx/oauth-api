@@ -56,7 +56,7 @@ interface AuthenticationRoute {
                     call.respondRedirect {
                         parameters.clear()
                         takeFrom(request.redirect)
-                        parameters["resume"] = "false"
+                        parameters["abort"] = "true"
                     }
                 }
 
@@ -82,7 +82,6 @@ interface AuthenticationRoute {
                         call.respondRedirect {
                             parameters.clear()
                             takeFrom(request.redirect)
-                            parameters["resume"] = "true"
                         }
                     }
                 }
