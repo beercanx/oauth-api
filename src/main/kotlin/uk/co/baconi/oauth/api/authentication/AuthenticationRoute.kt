@@ -37,7 +37,7 @@ interface AuthenticationRoute {
 
                 is AuthenticationRequest.InvalidCsrf -> {
                     renderAuthenticationPage(location, request, Forbidden) {
-                        +"Please retry, we received an invalid CSRF token."
+                        +"Please check and try again, we received an invalid CSRF token."
                     }
                 }
 
