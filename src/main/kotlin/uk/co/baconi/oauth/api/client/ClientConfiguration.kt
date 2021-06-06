@@ -7,7 +7,7 @@ import uk.co.baconi.oauth.api.scopes.Scopes
 data class ClientConfiguration(
     @Id val id: ClientId,
     val type: ClientType,
-    val redirectUrls: Set<String>,
+    val redirectUris: Set<String>,
     val allowedScopes: Set<Scopes>,
     val allowedResponseTypes: Set<AuthorisationResponseType>
 ) {

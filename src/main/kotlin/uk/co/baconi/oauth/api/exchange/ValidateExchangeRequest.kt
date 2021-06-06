@@ -118,15 +118,15 @@ private fun Scopes.canBeIssuedTo(principal: ConfidentialClient): Boolean {
     return principal.configuration.allowedScopes.contains(this)
 }
 
-private fun RawExchangeRequest.validateRedirectUri(principal: ClientPrincipal): Url {
+// TODO - Verify if this is even required, given the check has been performed already on /authorisation
+private fun RawExchangeRequest.validateRedirectUri(principal: ClientPrincipal): String {
 
-    val rawRedirectUri = checkNotBlank(redirectUri) { "redirectUri" }
-    val redirectUrl = URLBuilder(rawRedirectUri).build()
+    val redirectUri = checkNotBlank(redirectUri) { "redirectUri" }
 
     // Design of this system means we expect exact matches for callbacks.
-    return if (principal.configuration.redirectUrls.contains(redirectUrl)) {
-        redirectUrl
+    return if (principal.configuration.redirectUris.contains(redirectUri)) {
+        redirectUri
     } else {
-        throw Exception("Invalid redirect uri: $redirectUrl")
+        throw Exception("Invalid redirect uri: $redirectUri")
     }
 }

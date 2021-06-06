@@ -13,7 +13,7 @@ class ClientConfigurationTest {
     private val consumerX = ClientConfiguration(
         id = ConsumerX,
         type = Confidential,
-        redirectUrls = emptySet(),
+        redirectUris = emptySet(),
         allowedScopes = emptySet(),
         allowedResponseTypes = emptySet(),
     )
@@ -21,7 +21,7 @@ class ClientConfigurationTest {
     private val consumerY = ClientConfiguration(
         id = ConsumerY,
         type = Public,
-        redirectUrls = emptySet(),
+        redirectUris = emptySet(),
         allowedScopes = emptySet(),
         allowedResponseTypes = emptySet(),
     )
