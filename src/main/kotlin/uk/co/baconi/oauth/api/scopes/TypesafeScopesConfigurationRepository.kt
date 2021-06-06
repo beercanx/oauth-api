@@ -1,12 +1,12 @@
 package uk.co.baconi.oauth.api.scopes
 
-import uk.co.baconi.oauth.api.client.TypesafeClientConfigurationRepository
-import uk.co.baconi.oauth.api.enums.deserialise
-import uk.co.baconi.oauth.api.enums.serialise
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigException
 import com.typesafe.config.ConfigFactory
 import io.ktor.config.*
+import uk.co.baconi.oauth.api.client.TypesafeClientConfigurationRepository
+import uk.co.baconi.oauth.api.enums.deserialise
+import uk.co.baconi.oauth.api.enums.serialise
 import uk.co.baconi.oauth.api.userinfo.Claims
 
 class TypesafeScopesConfigurationRepository internal constructor(
@@ -30,7 +30,7 @@ class TypesafeScopesConfigurationRepository internal constructor(
      * @throws ConfigException.WrongType if a scope config value is not convertible to required type
      */
     override fun findById(id: Scopes): ScopesConfiguration? {
-        val scopesValue = serialise(id)
+        val scopesValue = id.serialise()
         return if (repository.hasPath(scopesValue)) {
             val config = repository.getConfig(scopesValue)
             ScopesConfiguration(
@@ -43,6 +43,6 @@ class TypesafeScopesConfigurationRepository internal constructor(
     }
 
     private fun List<String>?.toClaims(): Set<Claims> {
-        return this?.mapNotNull{claims -> deserialise<Claims>(claims)}?.toSet() ?: emptySet()
+        return this?.mapNotNull { claims -> claims.deserialise<Claims>() }?.toSet() ?: emptySet()
     }
 }

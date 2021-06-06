@@ -75,7 +75,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
         @Test
         fun `should be able to handle missing entry`() {
 
-            every { repository.getConfig(serialise(ConsumerZ)) } returns ConfigFactory.parseString(
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Public
                 """.trimIndent()
@@ -90,7 +90,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
         @Test
         fun `should be able to handle null entry`() {
 
-            every { repository.getConfig(serialise(ConsumerZ)) } returns ConfigFactory.parseString(
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Public,
                     redirectUrls: null
@@ -106,7 +106,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
         @Test
         fun `should be able to handle empty entry`() {
 
-            every { repository.getConfig(serialise(ConsumerZ)) } returns ConfigFactory.parseString(
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Public,
                     redirectUrls: []
@@ -122,7 +122,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
         @Test
         fun `should be able to handle valid uri entry`() {
 
-            every { repository.getConfig(serialise(ConsumerZ)) } returns ConfigFactory.parseString(
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Public,
                     redirectUrls: ["uk.co.consumer-z://callback"]
@@ -146,7 +146,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
         @Test
         fun `should be able to handle missing entry`() {
 
-            every { repository.getConfig(serialise(ConsumerZ)) } returns ConfigFactory.parseString(
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Public
                 """.trimIndent()
@@ -161,7 +161,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
         @Test
         fun `should be able to handle null entry`() {
 
-            every { repository.getConfig(serialise(ConsumerZ)) } returns ConfigFactory.parseString(
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Public,
                     allowedScopes: null
@@ -177,7 +177,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
         @Test
         fun `should be able to handle empty entry`() {
 
-            every { repository.getConfig(serialise(ConsumerZ)) } returns ConfigFactory.parseString(
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Public,
                     allowedScopes: []
@@ -193,7 +193,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
         @Test
         fun `should be able to handle invalid scope entry`() {
 
-            every { repository.getConfig(serialise(ConsumerZ)) } returns ConfigFactory.parseString(
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Public,
                     allowedScopes: [aardvark]
@@ -209,7 +209,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
         @Test
         fun `should be able to handle valid scope entry`() {
 
-            every { repository.getConfig(serialise(ConsumerZ)) } returns ConfigFactory.parseString(
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Public,
                     allowedScopes: [openid]
@@ -249,20 +249,20 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
 
             every { repository.hasPath(any()) } returns true
 
-            every { repository.getConfig(serialise(ConsumerZ)) } returns ConfigFactory.parseString(
+            every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Aardvark
                 """.trimIndent()
             )
 
-            every { repository.getConfig(serialise(ConsumerX)) } returns ConfigFactory.parseString(
+            every { repository.getConfig(ConsumerX.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Public,
                     redirectUrls: true
                 """.trimIndent()
             )
 
-            every { repository.getConfig(serialise(ConsumerY)) } returns ConfigFactory.empty()
+            every { repository.getConfig(ConsumerY.serialise()) } returns ConfigFactory.empty()
 
             assertSoftly {
 

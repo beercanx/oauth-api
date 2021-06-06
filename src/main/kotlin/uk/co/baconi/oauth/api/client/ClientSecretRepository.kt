@@ -19,12 +19,11 @@ interface ClientSecretRepository : Repository<ClientSecret, UUID> {
      * but takes a [String] and looks up the [ClientId] first.
      */
     fun findAllByClientId(clientId: String): Sequence<ClientSecret> {
-        val enum = deserialise<ClientId>(clientId)
+        val enum = clientId.deserialise<ClientId>()
         return if (enum == null) {
             emptySequence()
         } else {
             findAllByClientId(enum)
         }
     }
-
 }

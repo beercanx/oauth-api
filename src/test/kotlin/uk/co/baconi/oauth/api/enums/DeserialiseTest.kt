@@ -10,11 +10,11 @@ class DeserialiseTest {
 
     @Test
     fun `should return enum for string representation`() {
-        deserialise<Scopes>("openid") shouldBe Scopes.OpenId
+        "openid".deserialise<Scopes>() shouldBe Scopes.OpenId
     }
 
     @Test
     fun `should return null for non existent enum`() {
-        deserialise<Scopes>("mock-scope") should beNull()
+        "mock-scope".deserialise<Scopes>() should beNull()
     }
 }

@@ -4,7 +4,7 @@ import uk.co.baconi.oauth.api.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.enums.deserialise
 import uk.co.baconi.oauth.api.ktor.isAbsoluteURI
-import uk.co.baconi.oauth.api.scopes.Scopes
+import uk.co.baconi.oauth.api.scopes.parseAsScopes
 
 /**
  * Validate request based on https://tools.ietf.org/html/rfc6749#section-4.1.1,
@@ -15,23 +15,20 @@ fun validateAuthorisationRequest(
     clientConfigurationRepository: ClientConfigurationRepository
 ): AuthorisationRequest {
 
-    val validClientId = location.client_id?.let { s -> deserialise<ClientId>(s) }
+    val validClientId = location.client_id?.deserialise<ClientId>()
     val validClientConfiguration = validClientId?.let(clientConfigurationRepository::findByClientId)
 
     // Check if the direct uri is defined in the clients configuration
     val validRedirectUri = validClientConfiguration?.redirectUris?.find { r -> r == location.redirect_uri }
 
     // Check if the response type is a supported response type
-    val responseType = location.response_type?.let { s -> deserialise<AuthorisationResponseType>(s) }
+    val responseType = location.response_type?.deserialise<AuthorisationResponseType>()
 
     // Check if the response type is allowed for the client
     val validResponseType = validClientConfiguration?.allowedResponseTypes?.find { r -> r == responseType }
 
-    val rawScopes = location.scope?.split(" ")?.filter(String::isNotBlank)
-    val parsedScopes = rawScopes?.mapNotNull { s -> deserialise<Scopes>(s) }
-    val validScopes = validClientConfiguration?.allowedScopes?.let { allowedScopes ->
-        parsedScopes?.filter { s -> allowedScopes.contains(s) }?.toSet()
-    }
+    // Parse the scopes into the individual stages.
+    val (rawScopes, parsedScopes, validScopes) = location.scope.parseAsScopes(validClientConfiguration)
 
     // TODO - Make sure we validate enough to respond https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
     return when {
@@ -61,12 +58,14 @@ fun validateAuthorisationRequest(
         // The requested scope is invalid, unknown, or malformed.
         rawScopes?.size != parsedScopes?.size -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: scope")
 
+        // TODO - Do we reject if the scope parsed size is different from the valid size?
+
         else -> AuthorisationRequest.Valid(
             responseType = validResponseType,
             clientId = validClientId,
             redirectUri = validRedirectUri,
             state = location.state,
-            requestedScope = validScopes ?: emptySet()
+            requestedScope = validScopes
         )
     }
 }

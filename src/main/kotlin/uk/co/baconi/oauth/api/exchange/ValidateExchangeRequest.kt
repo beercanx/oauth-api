@@ -1,132 +1,130 @@
 package uk.co.baconi.oauth.api.exchange
 
-import uk.co.baconi.oauth.api.checkNotBlank
-import uk.co.baconi.oauth.api.client.ClientId
-import uk.co.baconi.oauth.api.client.ClientPrincipal
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.request.*
 import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.client.PublicClient
 import uk.co.baconi.oauth.api.enums.deserialise
-import uk.co.baconi.oauth.api.exchange.GrantType.*
-import uk.co.baconi.oauth.api.scopes.Scopes
-import io.ktor.http.*
+import uk.co.baconi.oauth.api.exchange.GrantType.AuthorisationCode
+import uk.co.baconi.oauth.api.exchange.GrantType.Password
+import uk.co.baconi.oauth.api.ktor.ApplicationContext
+import uk.co.baconi.oauth.api.scopes.parseAsScopes
 
-fun validateExchangeRequest(
-    principal: ConfidentialClient,
-    parameters: Parameters
-): ConfidentialExchangeRequest = returnOnException(InvalidConfidentialExchangeRequest) {
+private const val GRANT_TYPE = "grant_type"
+private const val CODE = "code"
+private const val REDIRECT_URI = "redirect_uri"
+private const val CODE_VERIFIER = "code_verifier"
+private const val SCOPE = "scope"
+private const val USERNAME = "username"
+private const val PASSWORD = "password"
+private const val REFRESH_TOKEN = "refresh_token"
+private const val ASSERTION = "assertion"
 
-    // Receive the posted form, unless we implement ContentNegotiation that supports URL encoded forms.
-    val raw = parameters.toRawExchangeRequest()
+suspend fun ApplicationContext.validateExchangeRequest(principal: ConfidentialClient): ConfidentialExchangeRequest {
 
-    when (raw.grantType) {
+    val parameters = call.receiveParameters()
+
+    return when (parameters[GRANT_TYPE]?.deserialise<GrantType>()) {
+
         AuthorisationCode -> {
-            val code = checkNotBlank(raw.code) { "code" }
-            val redirectUri = raw.validateRedirectUri(principal)
+            val redirectUri = parameters[REDIRECT_URI]
+            val code = parameters[CODE]
 
-            // TODO - Validate the [code] is a valid code via a repository
-            // TODO - Validate the [redirect_uri] is the same as what was used to generate the [code]
-            // TODO - Validate the [client_id] is the same as what was used to generate the [code]
-            // TODO - Replace code with AuthorisationCode object
+            when {
+                redirectUri == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: redirect_uri
+                redirectUri.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: redirect_uri
+                !principal.hasRedirectUri(redirectUri) -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: redirect_uri
 
+                code == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: code
+                code.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: code
 
-            AuthorisationCodeRequest(principal, code, redirectUri)
+                // TODO - Validate the [code] is a valid code via a repository
+                // TODO - Validate the [redirect_uri] is the same as what was used to generate the [code]
+                // TODO - Validate the [client_id] is the same as what was used to generate the [code]
+                // TODO - Replace code with AuthorisationCode object
+
+                else -> AuthorisationCodeRequest(principal, code, redirectUri)
+            }
         }
+
         Password -> {
-            val scopes = raw.validateScopes(principal)
-            val username = checkNotBlank(raw.username) { "username" }
-            val password = checkNotBlank(raw.password) { "password" }
+            val username = parameters[USERNAME]
+            val password = parameters[PASSWORD]
+            val (rawScopes, parsedScopes, validScopes) = parameters[SCOPE].parseAsScopes(principal)
 
-            PasswordRequest(principal, scopes, username, password)
-        }
-        RefreshToken -> {
-            val scopes = raw.validateScopes(principal)
-            val refreshToken = checkNotBlank(raw.refreshToken) { "refreshToken" }
+            when {
+                username == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: username
+                username.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: username
 
-            RefreshTokenRequest(principal, scopes, refreshToken)
-        }
-        Assertion -> {
-            val assertion = checkNotBlank(raw.assertion) { "assertion" }
+                password == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: password
+                password.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: password
 
-            AssertionRequest(principal, assertion)
+                // The requested scope is invalid, unknown, or malformed.
+                rawScopes?.size != parsedScopes?.size -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: scope
+
+                // TODO - Do we reject if the scope parsed size is different from the valid size?
+
+                else -> PasswordRequest(principal, validScopes, username, password)
+            }
         }
-        null -> InvalidConfidentialExchangeRequest // TODO - Extend to report 'unsupported_grant_type'
+
+//        RefreshToken -> {
+//            val refreshToken = parameters[REFRESH_TOKEN]
+//            val (rawScopes, parsedScopes, validScopes) = parameters[SCOPE].parseAsScopes(principal)
+//
+//            when {
+//                refreshToken == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: refresh_token
+//                refreshToken.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: refresh_token
+//
+//                // The requested scope is invalid, unknown, or malformed.
+//                rawScopes?.size != parsedScopes?.size -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: scope
+//
+//                // TODO - Do we reject if the scope parsed size is different from the valid size?
+//
+//                else -> RefreshTokenRequest(principal, validScopes, refreshToken)
+//            }
+//        }
+//
+//        Assertion -> {
+//            val assertion = parameters[ASSERTION]
+//
+//            when {
+//                assertion == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: assertion
+//                assertion.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: assertion
+//
+//                else -> AssertionRequest(principal, assertion)
+//            }
+//        }
+
+        else -> InvalidConfidentialExchangeRequest // TODO - 'unsupported_grant_type'
     }
 }
 
-fun validatePkceExchangeRequest(
-    principal: PublicClient,
-    parameters: Parameters
-): PublicExchangeRequest = returnOnException(InvalidPublicExchangeRequest) {
+suspend fun ApplicationContext.validatePkceExchangeRequest(principal: PublicClient): PublicExchangeRequest {
 
-    // Receive the posted form, unless we implement ContentNegotiation that supports URL encoded forms.
-    val raw = parameters.toRawExchangeRequest()
+    val parameters = call.receive<Parameters>()
 
-    if (raw.grantType == AuthorisationCode) {
+    val grantType = parameters[GRANT_TYPE]?.deserialise<GrantType>()
+    val redirectUri = parameters[REDIRECT_URI]
+    val code = parameters[CODE]
+    val codeVerifier = parameters[CODE_VERIFIER]
 
-        val code = checkNotBlank(raw.code) { "code" }
-        val redirectUri = raw.validateRedirectUri(principal)
-        val codeVerifier = checkNotBlank(raw.codeVerifier) { "codeVerifier" }
+    return when (grantType) {
+        AuthorisationCode -> when {
+            redirectUri == null -> InvalidPublicExchangeRequest // TODO - Missing Parameter: redirect_uri
+            redirectUri.isBlank() -> InvalidPublicExchangeRequest // TODO - Invalid Parameter: redirect_uri
+            !principal.hasRedirectUri(redirectUri) -> InvalidPublicExchangeRequest // TODO - Invalid Parameter: redirect_uri
 
-        PkceAuthorisationCodeRequest(principal, code, redirectUri, codeVerifier)
-    } else {
-        InvalidPublicExchangeRequest // TODO - Invalid Grant or Request?
-    }
-}
+            code == null -> InvalidPublicExchangeRequest // TODO - Missing Parameter: code
+            code.isBlank() -> InvalidPublicExchangeRequest // TODO - Invalid Parameter: code
 
-// TODO - Extend to support validation failure reasons?
-private fun <A : C, B : C, C> returnOnException(onException: B, block: () -> A): C = try {
-    block()
-} catch (exception: Exception) {
-    onException
-}
+            codeVerifier == null -> InvalidPublicExchangeRequest // TODO - Missing Parameter: code_verifier
+            codeVerifier.isBlank() -> InvalidPublicExchangeRequest // TODO - Invalid Parameter: code_verifier
 
-// TODO - See if we can extend Kotlinx Serialisation to support this instead
-private fun Parameters.toRawExchangeRequest(): RawExchangeRequest {
+            else -> PkceAuthorisationCodeRequest(principal, code, redirectUri, codeVerifier)
+        }
 
-    return RawExchangeRequest(
-        // All
-        grantType = get("grant_type")?.let { s -> deserialise<GrantType>(s) },
-
-        // AuthorisationCodeRequest && PkceAuthorisationCodeRequest
-        code = get("code"),
-        redirectUri = get("redirect_uri"),
-
-        // PkceAuthorisationCodeRequest
-        codeVerifier = get("code_verifier"),
-        clientId = get("client_id")?.let { s -> deserialise<ClientId>(s) },
-
-        // PasswordRequest && RefreshTokenRequest
-        scope = get("scope")?.split(" ")?.mapNotNull { s -> deserialise<Scopes>(s) }?.toSet(),
-
-        // PasswordRequest
-        username = get("username"),
-        password = get("password"),
-
-        // RefreshTokenRequest
-        refreshToken = get("refresh_token"),
-
-        // AssertionRequest
-        assertion = get("assertion"),
-    )
-}
-
-private fun RawExchangeRequest.validateScopes(principal: ConfidentialClient): Set<Scopes> {
-    return scope?.filter { scope -> scope.canBeIssuedTo(principal) }?.toSet() ?: emptySet()
-}
-
-private fun Scopes.canBeIssuedTo(principal: ConfidentialClient): Boolean {
-    return principal.configuration.allowedScopes.contains(this)
-}
-
-// TODO - Verify if this is even required, given the check has been performed already on /authorisation
-private fun RawExchangeRequest.validateRedirectUri(principal: ClientPrincipal): String {
-
-    val redirectUri = checkNotBlank(redirectUri) { "redirectUri" }
-
-    // Design of this system means we expect exact matches for callbacks.
-    return if (principal.configuration.redirectUris.contains(redirectUri)) {
-        redirectUri
-    } else {
-        throw Exception("Invalid redirect uri: $redirectUri")
+        else -> InvalidPublicExchangeRequest // TODO - 'unsupported_grant_type'
     }
 }

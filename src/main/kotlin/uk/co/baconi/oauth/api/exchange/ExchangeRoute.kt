@@ -30,18 +30,14 @@ interface ExchangeRoute {
     val clientAuthService: ClientAuthenticationService
 
     fun Route.exchange() {
-
-        // Optional because we have to cater for public clients using PKCE
-        authenticate(ConfidentialClient::class, PublicClient::class, optional = true) {
+        authenticate(ConfidentialClient::class, PublicClient::class) {
             post<ExchangeLocation> {
 
                 // Handle standard exchanges for confidential clients
                 when (val client = call.principal<ConfidentialClient>()) {
                     is ConfidentialClient -> {
 
-                        val parameters = call.receive<Parameters>()
-
-                        val response = when (val request = validateExchangeRequest(client, parameters)) {
+                        val response = when (val request = validateExchangeRequest(client)) {
                             is AuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
                             is PasswordRequest -> passwordCredentialsGrant.exchange(request)
                             is RefreshTokenRequest -> refreshGrant.exchange(request)
@@ -60,9 +56,7 @@ interface ExchangeRoute {
                 when (val client = call.principal<PublicClient>()) {
                     is PublicClient -> {
 
-                        val parameters = call.receive<Parameters>()
-
-                        val response = when (val result = validatePkceExchangeRequest(client, parameters)) {
+                        val response = when (val result = validatePkceExchangeRequest(client)) {
                             is PkceAuthorisationCodeRequest -> authorisationCodeGrant.exchange(result)
                             is InvalidPublicExchangeRequest -> FailedExchangeResponse(InvalidRequest) // TODO - Extend to include more detail?
                         }
@@ -74,9 +68,7 @@ interface ExchangeRoute {
                     }
                 }
 
-                // 401 - Invalid credentials?
-                // TODO - Review this "default" error response
-                // TODO - Setup a common response provider
+                // TODO - Internal Server Error!
                 return@post call.respond(UnauthorizedResponse(basicAuthChallenge(REALM, UTF_8)))
             }
         }

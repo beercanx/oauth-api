@@ -31,7 +31,7 @@ class TypesafeClientConfigurationRepository internal constructor(
      * @throws ConfigException.WrongType if a client config value is not convertible to required type
      */
     override fun findById(id: ClientId): ClientConfiguration? {
-        val clientIdValue = serialise(id)
+        val clientIdValue = id.serialise()
         return if (repository.hasPath(clientIdValue)) {
             val config = repository.getConfig(clientIdValue)
             ClientConfiguration(
@@ -47,6 +47,6 @@ class TypesafeClientConfigurationRepository internal constructor(
     }
 
     private inline fun <reified T : Enum<T>> List<String>?.toEnumSet(): Set<T> {
-        return this?.mapNotNull { e -> deserialise<T>(e) }?.toSet() ?: emptySet()
+        return this?.mapNotNull { e -> e.deserialise<T>() }?.toSet() ?: emptySet()
     }
 }
