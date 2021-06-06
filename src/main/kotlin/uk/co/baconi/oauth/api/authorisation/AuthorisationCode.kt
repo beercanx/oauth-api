@@ -1,8 +1,8 @@
 package uk.co.baconi.oauth.api.authorisation
 
 import org.dizitart.no2.objects.Id
-import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.authentication.AuthenticatedUsername
+import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.scopes.Scopes
 import java.time.OffsetDateTime
 

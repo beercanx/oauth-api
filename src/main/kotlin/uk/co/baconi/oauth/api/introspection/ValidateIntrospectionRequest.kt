@@ -1,10 +1,10 @@
 package uk.co.baconi.oauth.api.introspection
 
+import io.ktor.application.*
+import io.ktor.request.*
 import uk.co.baconi.oauth.api.checkNotBlank
 import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.ktor.ApplicationContext
-import io.ktor.application.*
-import io.ktor.request.*
 
 suspend fun ApplicationContext.validateIntrospectionRequest(
     principal: ConfidentialClient

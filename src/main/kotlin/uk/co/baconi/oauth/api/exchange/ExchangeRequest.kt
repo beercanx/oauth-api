@@ -1,13 +1,12 @@
 package uk.co.baconi.oauth.api.exchange
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.client.PublicClient
 import uk.co.baconi.oauth.api.scopes.Scopes
 import uk.co.baconi.oauth.api.serializers.ScopeSerializer
-import io.ktor.http.*
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
 @Serializable
 data class RawExchangeRequest(
