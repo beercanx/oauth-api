@@ -1,36 +1,30 @@
 package uk.co.baconi.oauth.api.introspection
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.tokens.Tokens
 
-@Serializable
-data class RawIntrospectionRequest(
-    val token: String?,
-    @SerialName("token_type_hint") val hint: Tokens? = null
-)
+sealed class IntrospectionRequest {
 
-sealed class ValidatedIntrospectionRequest {
-    abstract val principal: ConfidentialClient
-    abstract val token: String
-}
-
-data class IntrospectionRequest(
-    override val principal: ConfidentialClient,
-    override val token: String
-) : ValidatedIntrospectionRequest() {
-    override fun toString(): String {
-        return "IntrospectionRequest(principal=$principal, token='REDACTED')"
+    data class Invalid(val error: String, val description: String) : IntrospectionRequest() {
+        fun toResponse() = InvalidIntrospectionResponse(error, description)
     }
-}
 
-data class IntrospectionRequestWithHint(
-    override val principal: ConfidentialClient,
-    override val token: String,
-    val hint: Tokens
-) : ValidatedIntrospectionRequest() {
-    override fun toString(): String {
-        return "IntrospectionRequestWithHint(principal=$principal, token='REDACTED', hint=$hint)"
+    data class Valid(
+        val principal: ConfidentialClient,
+        val token: String
+    ) : IntrospectionRequest() {
+        override fun toString(): String {
+            return "IntrospectionRequest(principal=$principal, token='REDACTED')"
+        }
+    }
+
+    data class ValidWithHint(
+        val principal: ConfidentialClient,
+        val token: String,
+        val hint: Tokens
+    ) : IntrospectionRequest() {
+        override fun toString(): String {
+            return "IntrospectionRequestWithHint(principal=$principal, token='REDACTED', hint=$hint)"
+        }
     }
 }
