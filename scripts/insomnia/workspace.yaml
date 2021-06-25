@@ -1,6 +1,6 @@
 _type: export
 __export_format: 4
-__export_date: 2021-05-23T14:22:51.439Z
+__export_date: 2021-06-25T10:18:30.280Z
 __export_source: insomnia.desktop.app:v2021.3.0
 resources:
   - _id: req_61dcdd1370fa4f848e54c9b28a72f8e6
@@ -84,7 +84,7 @@ resources:
     _type: request
   - _id: req_497de559dd2f439998f1da68565814a7
     parentId: fld_f77945da59e6438782578a88f91dfc58
-    modified: 1621779557290
+    modified: 1624613497126
     created: 1621772651216
     url: http://localhost:8080/authorise
     name: /authorise
@@ -96,18 +96,20 @@ resources:
         value: code
         description: ""
         id: pair_6eddd32eccdd43119296f52600b7a11b
+        disabled: false
       - name: client_id
-        value: consumer-zs
+        value: consumer-z
         description: ""
         id: pair_c186db7c72d84d11b21c3afd0b7037e3
       - name: redirect_uri
-        value: http://localhost:8080/callback
+        value: http://consumer-z.baconi.co.uk/callback
         description: ""
         id: pair_996a0244dda34a4cbfbd72769efe45a6
       - name: state
         value: "{% uuid 'v4' %}"
         description: ""
         id: pair_93d7ae61fb44418d8837ab613f702b41
+        disabled: false
       - name: scope
         value: ""
         description: ""
@@ -204,22 +206,23 @@ resources:
     _type: request_group
   - _id: req_b8393aec184d436a8ba95403793eed30
     parentId: fld_41b5b23827534e5fb9a0dfbcb9219858
-    modified: 1621682969529
+    modified: 1624614634417
     created: 1617535696788
     url: http://localhost:8080/introspect
     name: /introspect
     description: ""
     method: POST
     body:
-      mimeType: application/json
-      text: >-
-        {
-        	"token": "{% response 'body', 'req_a9ab37147ef6483caa98ce9716998a8a', 'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 3600 %}"
-        }
+      mimeType: application/x-www-form-urlencoded
+      params:
+        - name: token
+          value: "{% response 'body', 'req_a9ab37147ef6483caa98ce9716998a8a',
+            'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 3600 %}"
+          id: pair_7ebf3b2bd09743458af2c0daf6be6078
     parameters: []
     headers:
       - name: Content-Type
-        value: application/json
+        value: application/x-www-form-urlencoded
         id: pair_42fad963ffac472288630c8d5033f205
       - name: Accept
         value: application/json
@@ -232,6 +235,45 @@ resources:
       username: consumer-z
       password: 7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu
     metaSortKey: -1616237718999
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_c420bdd6655f44cd80876b586ae48f68
+    parentId: fld_41b5b23827534e5fb9a0dfbcb9219858
+    modified: 1624615548829
+    created: 1624613896606
+    url: http://localhost:8080/introspect
+    name: /introspect [missing token]
+    description: ""
+    method: POST
+    body:
+      mimeType: application/x-www-form-urlencoded
+      params:
+        - name: token
+          value: a
+          id: pair_65c3c506cfca4f5bb51a5212d07d7447
+          disabled: false
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/x-www-form-urlencoded
+        id: pair_42fad963ffac472288630c8d5033f205
+      - name: Accept
+        value: application/json
+        description: ""
+        id: pair_3348036cf2c249b2a627f4a1b518c95d
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: consumer-z
+      password: 7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu
+    metaSortKey: -1616237718974
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
