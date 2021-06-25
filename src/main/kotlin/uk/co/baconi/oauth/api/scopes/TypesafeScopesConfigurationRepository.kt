@@ -5,9 +5,8 @@ import com.typesafe.config.ConfigException
 import com.typesafe.config.ConfigFactory
 import io.ktor.config.*
 import uk.co.baconi.oauth.api.client.TypesafeClientConfigurationRepository
-import uk.co.baconi.oauth.api.enums.deserialise
 import uk.co.baconi.oauth.api.enums.serialise
-import uk.co.baconi.oauth.api.userinfo.Claims
+import uk.co.baconi.oauth.api.enums.toEnumSet
 
 class TypesafeScopesConfigurationRepository internal constructor(
     private val repository: Config
@@ -35,14 +34,10 @@ class TypesafeScopesConfigurationRepository internal constructor(
             val config = repository.getConfig(scopesValue)
             ScopesConfiguration(
                 id = id,
-                claims = config.tryGetStringList("claims").toClaims()
+                claims = config.tryGetStringList("claims").toEnumSet()
             )
         } else {
             null
         }
-    }
-
-    private fun List<String>?.toClaims(): Set<Claims> {
-        return this?.mapNotNull { claims -> claims.deserialise<Claims>() }?.toSet() ?: emptySet()
     }
 }

@@ -6,6 +6,7 @@ import com.typesafe.config.ConfigFactory
 import io.ktor.config.*
 import uk.co.baconi.oauth.api.enums.deserialise
 import uk.co.baconi.oauth.api.enums.serialise
+import uk.co.baconi.oauth.api.enums.toEnumSet
 
 /**
  * A static Typesafe Config implementation of the [ClientConfigurationRepository].
@@ -44,9 +45,5 @@ class TypesafeClientConfigurationRepository internal constructor(
         } else {
             null
         }
-    }
-
-    private inline fun <reified T : Enum<T>> List<String>?.toEnumSet(): Set<T> {
-        return this?.mapNotNull { e -> e.deserialise<T>() }?.toSet() ?: emptySet()
     }
 }
