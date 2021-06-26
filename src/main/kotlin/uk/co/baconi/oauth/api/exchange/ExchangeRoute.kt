@@ -2,9 +2,10 @@ package uk.co.baconi.oauth.api.exchange
 
 import io.ktor.application.*
 import io.ktor.auth.*
+import io.ktor.http.ContentType.Application.FormUrlEncoded
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
-import io.ktor.locations.*
+import io.ktor.locations.post
 import io.ktor.response.*
 import io.ktor.routing.*
 import uk.co.baconi.oauth.api.client.ClientAuthenticationService
@@ -28,49 +29,51 @@ interface ExchangeRoute {
 
     fun Route.exchange() {
         authenticate(ConfidentialClient::class, PublicClient::class) {
-            post<ExchangeLocation> {
+            contentType(FormUrlEncoded) {
+                post<ExchangeLocation> {
 
-                // Get either the confidential client or the public client authentication.
-                when (val client = call.principal<ClientPrincipal>()) {
+                    // Get either the confidential client or the public client authentication.
+                    when (val client = call.principal<ClientPrincipal>()) {
 
-                    // This shouldn't be possible, as the `authenticate` should have returned a 401
-                    null -> {
-                        application.log.error("Exchange request's principal was null, this shouldn't be possible!")
-                        call.respond(InternalServerError)
-                    }
-
-                    // Handle standard exchanges for confidential clients
-                    is ConfidentialClient -> {
-
-                        val response = when (val request = validateExchangeRequest(client)) {
-                            // TODO - Extend to include more detail?
-                            is InvalidConfidentialExchangeRequest -> FailedExchangeResponse(InvalidRequest)
-                            is AuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
-                            is PasswordRequest -> passwordCredentialsGrant.exchange(request)
-                            is RefreshTokenRequest -> refreshGrant.exchange(request)
-                            is AssertionRequest -> assertionRedemptionGrant.exchange(request)
+                        // This shouldn't be possible, as the `authenticate` should have returned a 401
+                        null -> {
+                            application.log.error("Exchange request's principal was null, this shouldn't be possible!")
+                            call.respond(InternalServerError)
                         }
 
-                        when (response) {
-                            // TODO - Review if the spec allows for any other type of response codes, maybe around invalid_client responses.
-                            is FailedExchangeResponse -> call.respond(BadRequest, response)
-                            is SuccessExchangeResponse -> call.respond(response)
+                        // Handle standard exchanges for confidential clients
+                        is ConfidentialClient -> {
+
+                            val response = when (val request = validateExchangeRequest(client)) {
+                                // TODO - Extend to include more detail?
+                                is InvalidConfidentialExchangeRequest -> FailedExchangeResponse(InvalidRequest)
+                                is AuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
+                                is PasswordRequest -> passwordCredentialsGrant.exchange(request)
+                                is RefreshTokenRequest -> refreshGrant.exchange(request)
+                                is AssertionRequest -> assertionRedemptionGrant.exchange(request)
+                            }
+
+                            when (response) {
+                                // TODO - Review if the spec allows for any other type of response codes, maybe around invalid_client responses.
+                                is FailedExchangeResponse -> call.respond(BadRequest, response)
+                                is SuccessExchangeResponse -> call.respond(response)
+                            }
                         }
-                    }
 
-                    // Handle PKCE requests for public clients
-                    is PublicClient -> {
+                        // Handle PKCE requests for public clients
+                        is PublicClient -> {
 
-                        val response = when (val result = validatePkceExchangeRequest(client)) {
-                            // TODO - Extend to include more detail?
-                            is InvalidPublicExchangeRequest -> FailedExchangeResponse(InvalidRequest)
-                            is PkceAuthorisationCodeRequest -> authorisationCodeGrant.exchange(result)
-                        }
+                            val response = when (val result = validatePkceExchangeRequest(client)) {
+                                // TODO - Extend to include more detail?
+                                is InvalidPublicExchangeRequest -> FailedExchangeResponse(InvalidRequest)
+                                is PkceAuthorisationCodeRequest -> authorisationCodeGrant.exchange(result)
+                            }
 
-                        when (response) {
-                            // TODO - Review if the spec allows for any other type of response codes, maybe around invalid_client responses.
-                            is FailedExchangeResponse -> call.respond(BadRequest, response)
-                            is SuccessExchangeResponse -> call.respond(response)
+                            when (response) {
+                                // TODO - Review if the spec allows for any other type of response codes, maybe around invalid_client responses.
+                                is FailedExchangeResponse -> call.respond(BadRequest, response)
+                                is SuccessExchangeResponse -> call.respond(response)
+                            }
                         }
                     }
                 }
