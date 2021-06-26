@@ -86,7 +86,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "uk.co.baconi.oauth.api.MainKt"
+    mainClass.set("uk.co.baconi.oauth.api.MainKt")
 }
 
 apply {
