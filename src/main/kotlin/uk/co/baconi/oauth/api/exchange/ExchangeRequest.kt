@@ -2,6 +2,7 @@ package uk.co.baconi.oauth.api.exchange
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import uk.co.baconi.oauth.api.authorisation.AuthorisationCode
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.client.PublicClient
@@ -77,13 +78,8 @@ sealed class ValidatedPublicExchangeRequest : PublicExchangeRequest() {
 
 data class AuthorisationCodeRequest(
     override val principal: ConfidentialClient,
-    val code: String,
-    val redirectUri: String
-) : ValidatedConfidentialExchangeRequest() {
-    override fun toString(): String {
-        return "AuthorisationCodeRequest(principal=$principal, code=REDACTED, redirectUri=$redirectUri)"
-    }
-}
+    val code: AuthorisationCode
+) : ValidatedConfidentialExchangeRequest()
 
 data class PkceAuthorisationCodeRequest(
     override val principal: PublicClient,

@@ -5,35 +5,28 @@ import uk.co.baconi.oauth.api.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.scopes.Scopes
 import java.time.OffsetDateTime
+import java.time.OffsetDateTime.now
 
-// TODO - Expand with consumer issued to details
 data class AuthorisationCode(
-
-    // The actual code
     @Id val value: String,
-
-    // Used to calculate when it expires?
     val issuedAt: OffsetDateTime,
-
-    // Issued to
+    val expiresAt: OffsetDateTime,
     val clientId: ClientId,
-
-    // Issued for
     val username: AuthenticatedUsername,
-
-    // Added because we need to validate on exchange its the same url as stated in https://tools.ietf.org/html/rfc6749#section-4.1.3
     val redirectUri: String,
-
-    // The requested scopes
     val requestedScope: Set<Scopes>
-
 ) {
+
+    /**
+     * Returns true if the [AuthorisationCode] has now expired.
+     */
+    fun hasExpired(): Boolean = now().isAfter(expiresAt)
 
     /**
      * Generated to exclude [value] from the toString output.
      */
     override fun toString(): String {
-        return "AuthorisationCode(value='REDACTED', issuedAt=$issuedAt, clientId=$clientId, username='$username', redirectUri='$redirectUri')"
+        return "AuthorisationCode(value='REDACTED', issuedAt=$issuedAt, expiresAt=$expiresAt, clientId=$clientId, username=$username, redirectUri='$redirectUri', requestedScope=$requestedScope)"
     }
 
     /**
