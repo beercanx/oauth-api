@@ -23,8 +23,8 @@ private const val REFRESH_TOKEN = "refresh_token"
 private const val ASSERTION = "assertion"
 
 suspend fun ApplicationContext.validateExchangeRequest(
-    principal: ConfidentialClient,
-    authorisationCodeService: AuthorisationCodeService
+    authorisationCodeService: AuthorisationCodeService,
+    principal: ConfidentialClient
 ): ConfidentialExchangeRequest {
 
     val parameters = call.receiveParameters()
@@ -44,7 +44,7 @@ suspend fun ApplicationContext.validateExchangeRequest(
                 code.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: code
 
                 else -> when (val authorisationCode = authorisationCodeService.validate(principal, code, redirectUri)) {
-                    null -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: code
+                    null -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: code or redirectUri
                     else -> AuthorisationCodeRequest(principal, authorisationCode)
                 }
             }
@@ -110,7 +110,10 @@ suspend fun ApplicationContext.validateExchangeRequest(
     }
 }
 
-suspend fun ApplicationContext.validatePkceExchangeRequest(principal: PublicClient): PublicExchangeRequest {
+suspend fun ApplicationContext.validatePkceExchangeRequest(
+    authorisationCodeService: AuthorisationCodeService,
+    principal: PublicClient
+): PublicExchangeRequest {
 
     val parameters = call.receive<Parameters>()
 
@@ -131,7 +134,10 @@ suspend fun ApplicationContext.validatePkceExchangeRequest(principal: PublicClie
             codeVerifier == null -> InvalidPublicExchangeRequest // TODO - Missing Parameter: code_verifier
             codeVerifier.isBlank() -> InvalidPublicExchangeRequest // TODO - Invalid Parameter: code_verifier
 
-            else -> PkceAuthorisationCodeRequest(principal, code, redirectUri, codeVerifier)
+            else -> when (val authorisationCode = authorisationCodeService.validate(principal, code, redirectUri, codeVerifier)) {
+                null -> InvalidPublicExchangeRequest // TODO - Invalid Parameter: code or codeVerifier or redirectUri
+                else -> PkceAuthorisationCodeRequest(principal, authorisationCode)
+            }
         }
 
         else -> InvalidPublicExchangeRequest // TODO - 'unsupported_grant_type'

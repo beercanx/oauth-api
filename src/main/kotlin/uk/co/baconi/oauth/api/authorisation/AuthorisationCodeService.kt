@@ -2,6 +2,7 @@ package uk.co.baconi.oauth.api.authorisation
 
 import uk.co.baconi.oauth.api.authentication.AuthenticatedSession
 import uk.co.baconi.oauth.api.client.ConfidentialClient
+import uk.co.baconi.oauth.api.client.PublicClient
 import uk.co.baconi.oauth.api.exchange.InvalidConfidentialExchangeRequest
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
@@ -54,5 +55,10 @@ class AuthorisationCodeService(private val repository: AuthorisationCodeReposito
             // Replace code with AuthorisationCode object
             else -> authorisationCode
         }
+    }
+
+    fun validate(client: PublicClient, code: String, redirectUri: String, codeVerifier: String): AuthorisationCode? {
+        // TODO - Implement
+        return null;
     }
 }
