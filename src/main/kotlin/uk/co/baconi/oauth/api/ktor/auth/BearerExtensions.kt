@@ -2,7 +2,9 @@ package uk.co.baconi.oauth.api.ktor.auth
 
 import io.ktor.application.*
 import io.ktor.auth.*
+import io.ktor.http.*
 import io.ktor.http.HttpHeaders.WWWAuthenticate
+import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.response.*
 import uk.co.baconi.oauth.api.OAuth2Server.REALM
 import uk.co.baconi.oauth.api.ktor.ApplicationContext
@@ -40,12 +42,15 @@ suspend fun ApplicationContext.authoriseAccessToken(vararg required: Scopes, blo
  */
 suspend fun ApplicationContext.authoriseAccessToken(required: Set<Scopes>, block: AccessTokenBlock) {
 
-    // If the application is setup correctly this should not be null.
-    val accessToken = checkNotNull(call.principal<AccessToken>()) {
-        "Access Token should not be null"
-    }
+    val accessToken = call.principal<AccessToken>()
 
     when {
+
+        // If the application is setup correctly this should not be null.
+        accessToken == null -> {
+            application.log.error("AccessToken principal was null, there must be a coding mistake somewhere.")
+            call.respond(InternalServerError)
+        }
 
         // Check that the access token contains all the required scopes.
         accessToken.scopes.containsAll(required) -> block(accessToken)
