@@ -7,7 +7,7 @@ import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.client.PublicClient
 import uk.co.baconi.oauth.api.scopes.Scopes
-import uk.co.baconi.oauth.api.serializers.ScopeSerializer
+import uk.co.baconi.oauth.api.scopes.ScopeSerializer
 
 @Serializable
 data class RawExchangeRequest(

@@ -3,7 +3,7 @@ package uk.co.baconi.oauth.api.exchange
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import uk.co.baconi.oauth.api.scopes.Scopes
-import uk.co.baconi.oauth.api.serializers.ScopeSerializer
+import uk.co.baconi.oauth.api.scopes.ScopeSerializer
 import uk.co.baconi.oauth.api.tokens.TokenType
 import uk.co.baconi.oauth.api.tokens.TokenType.Bearer
 
