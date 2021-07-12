@@ -53,7 +53,7 @@ suspend fun ApplicationContext.validateExchangeRequest(
         Password -> {
             val username = parameters[USERNAME]
             val password = parameters[PASSWORD]
-            val (rawMatchedParsed, parsedMatchedValid, validScopes) = parameters[SCOPE].parseAsScopes(principal)
+            val validScopes = parameters[SCOPE].parseAsScopes(principal)
 
             when {
                 username == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: username
@@ -62,13 +62,8 @@ suspend fun ApplicationContext.validateExchangeRequest(
                 password == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: password
                 password.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: password
 
-                // TODO - Do we reject if the scope parameter is missing?
-
                 // The requested scope is invalid, unknown, or malformed.
-                !rawMatchedParsed -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: scope
-
-                // TODO - Do we reject if the scope parsed size is different from the valid size?
-                !parsedMatchedValid -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: scope
+                validScopes == null -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: scope
 
                 else -> PasswordRequest(principal, validScopes, username, password)
             }
