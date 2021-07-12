@@ -1,15 +1,20 @@
 package uk.co.baconi.oauth.api.authorisation
 
 import io.ktor.application.*
+import io.ktor.html.*
 import io.ktor.http.*
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.locations.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
+import kotlinx.html.h1
+import kotlinx.html.p
 import uk.co.baconi.oauth.api.authentication.AuthenticatedSession
 import uk.co.baconi.oauth.api.authentication.AuthenticationLocation
 import uk.co.baconi.oauth.api.authorisation.AuthorisationResponseType.Code
 import uk.co.baconi.oauth.api.client.ClientConfigurationRepository
+import uk.co.baconi.oauth.api.kotlinx.html.PageTemplate
 
 interface AuthorisationRoute {
 
@@ -33,8 +38,21 @@ interface AuthorisationRoute {
                 // Unsafe to redirect when either client or redirect uri is invalid.
                 is AuthorisationRequest.InvalidClient, is AuthorisationRequest.InvalidRedirect -> {
 
-                    // TODO - Render 400 Bad Request HTML page
-                    call.respond(HttpStatusCode.BadRequest)
+                    application.log.warn("Request with invalid client or redirect: {}", location)
+
+                    call.respondHtmlTemplate(PageTemplate(), BadRequest) {
+                        pageTitle {
+                            +"Invalid Request"
+                        }
+                        pageContent {
+                            h1(classes = "text-center") {
+                                +"Invalid Request"
+                            }
+                            p(classes = "text-center") {
+                                + "Invalid client or redirect was used."
+                            }
+                        }
+                    }
                 }
 
                 is AuthorisationRequest.Invalid -> {
