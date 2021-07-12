@@ -13,7 +13,6 @@ import uk.co.baconi.oauth.api.client.ClientAuthenticationService
 import uk.co.baconi.oauth.api.client.ClientPrincipal
 import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.client.PublicClient
-import uk.co.baconi.oauth.api.exchange.ErrorType.InvalidRequest
 import uk.co.baconi.oauth.api.exchange.grants.assertion.AssertionRedemptionGrant
 import uk.co.baconi.oauth.api.exchange.grants.authorisation.AuthorisationCodeGrant
 import uk.co.baconi.oauth.api.exchange.grants.password.PasswordCredentialsGrant
@@ -48,8 +47,7 @@ interface ExchangeRoute {
                         is ConfidentialClient -> {
 
                             val response = when (val request = validateExchangeRequest(authorisationCodeService, client)) {
-                                // TODO - Extend to include more detail?
-                                is InvalidConfidentialExchangeRequest -> FailedExchangeResponse(InvalidRequest)
+                                is InvalidConfidentialExchangeRequest -> FailedExchangeResponse(request.error, request.description)
                                 is AuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
                                 is PasswordRequest -> passwordCredentialsGrant.exchange(request)
                                 is RefreshTokenRequest -> refreshGrant.exchange(request)
@@ -57,7 +55,6 @@ interface ExchangeRoute {
                             }
 
                             when (response) {
-                                // TODO - Review if the spec allows for any other type of response codes, maybe around invalid_client responses.
                                 is FailedExchangeResponse -> call.respond(BadRequest, response)
                                 is SuccessExchangeResponse -> call.respond(response)
                             }
@@ -66,14 +63,12 @@ interface ExchangeRoute {
                         // Handle PKCE requests for public clients
                         is PublicClient -> {
 
-                            val response = when (val result = validatePkceExchangeRequest(authorisationCodeService, client)) {
-                                // TODO - Extend to include more detail?
-                                is InvalidPublicExchangeRequest -> FailedExchangeResponse(InvalidRequest)
-                                is PkceAuthorisationCodeRequest -> authorisationCodeGrant.exchange(result)
+                            val response = when (val request = validatePkceExchangeRequest(authorisationCodeService, client)) {
+                                is InvalidPublicExchangeRequest -> FailedExchangeResponse(request.error, request.description)
+                                is PkceAuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
                             }
 
                             when (response) {
-                                // TODO - Review if the spec allows for any other type of response codes, maybe around invalid_client responses.
                                 is FailedExchangeResponse -> call.respond(BadRequest, response)
                                 is SuccessExchangeResponse -> call.respond(response)
                             }
