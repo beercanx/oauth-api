@@ -4,7 +4,7 @@ import io.ktor.server.application.*
 import io.ktor.server.html.*
 import io.ktor.http.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
-import io.ktor.server.locations.*
+import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
@@ -15,6 +15,7 @@ import uk.co.baconi.oauth.api.authentication.AuthenticationLocation
 import uk.co.baconi.oauth.api.authorisation.AuthorisationResponseType.Code
 import uk.co.baconi.oauth.api.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.kotlinx.html.PageTemplate
+import uk.co.baconi.oauth.api.ktor.href
 
 interface AuthorisationRoute {
 
@@ -74,7 +75,6 @@ interface AuthorisationRoute {
 
                         // Seek authorisation decision
                         null -> {
-
                             // Redirect to our "login" page with a redirect back to here.
                             call.respondRedirect(href(AuthenticationLocation(href(location))))
                         }

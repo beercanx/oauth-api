@@ -25,6 +25,7 @@ dependencies {
 
     // Ktor server layer
     implementation("io.ktor:ktor-server-netty:2.0.2")
+    implementation("io.ktor:ktor-server-auth:2.0.2")
     implementation("io.ktor:ktor-server-hsts:2.0.2")
     implementation("io.ktor:ktor-server-caching-headers:2.0.2")
     implementation("io.ktor:ktor-server-compression:2.0.2")
@@ -40,7 +41,6 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.2")
 
     // Ktor typed routes
-    implementation("io.ktor:ktor-server-locations:2.0.2")
     implementation("io.ktor:ktor-server-resources:2.0.2")
 
     // Ktor metrics

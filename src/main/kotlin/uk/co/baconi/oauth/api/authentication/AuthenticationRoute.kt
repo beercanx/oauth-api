@@ -7,13 +7,14 @@ import io.ktor.http.ContentType.Application.FormUrlEncoded
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
-import io.ktor.server.locations.*
-import io.ktor.server.locations.post
+import io.ktor.server.resources.get
+import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import kotlinx.html.*
 import uk.co.baconi.oauth.api.ktor.ApplicationContext
+import uk.co.baconi.oauth.api.ktor.resourcesFormat
 import java.util.*
 
 interface AuthenticationRoute {
@@ -102,7 +103,7 @@ interface AuthenticationRoute {
         val session = getAuthenticationSession()
 
         // TODO - Move more into the template than out here.
-        call.respondHtmlTemplate(AuthenticationPageTemplate(locations, location), status) {
+        call.respondHtmlTemplate(AuthenticationPageTemplate(resourcesFormat, location), status) {
             csrfToken {
                 value = session.csrfToken
             }

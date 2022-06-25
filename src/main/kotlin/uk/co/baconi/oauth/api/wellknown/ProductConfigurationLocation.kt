@@ -1,6 +1,7 @@
 package uk.co.baconi.oauth.api.wellknown
 
-import io.ktor.server.locations.*
+import io.ktor.resources.*
 
-@Location("/.well-known/product-configuration")
-object ProductConfigurationLocation
+@kotlinx.serialization.Serializable
+@Resource("/.well-known/product-configuration")
+class ProductConfigurationLocation

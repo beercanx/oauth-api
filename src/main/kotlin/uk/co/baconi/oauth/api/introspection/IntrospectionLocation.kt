@@ -1,6 +1,8 @@
 package uk.co.baconi.oauth.api.introspection
 
-import io.ktor.server.locations.*
+import io.ktor.resources.*
+import kotlinx.serialization.Serializable
 
-@Location("/introspect")
-object IntrospectionLocation
+@Serializable
+@Resource("/introspect")
+class IntrospectionLocation

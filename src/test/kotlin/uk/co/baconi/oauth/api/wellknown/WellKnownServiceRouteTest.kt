@@ -7,7 +7,7 @@ import io.ktor.server.application.install
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.locations.*
+import io.ktor.server.resources.*
 import io.ktor.server.routing.*
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.testing.handleRequest
@@ -27,7 +27,7 @@ class WellKnownServiceRouteTest : WellKnownRoute {
         }
 
         // Add support for "typed" locations
-        install(Locations)
+        install(Resources)
 
         // The routes we are testing
         routing {

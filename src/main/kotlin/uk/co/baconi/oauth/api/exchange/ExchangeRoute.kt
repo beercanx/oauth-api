@@ -5,7 +5,8 @@ import io.ktor.server.auth.*
 import io.ktor.http.ContentType.Application.FormUrlEncoded
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
-import io.ktor.server.locations.post
+import io.ktor.server.application.application
+import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import uk.co.baconi.oauth.api.authorisation.AuthorisationCodeService

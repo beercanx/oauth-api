@@ -1,6 +1,8 @@
 package uk.co.baconi.oauth.api.wellknown
 
-import io.ktor.server.locations.*
+import io.ktor.resources.*
+import kotlinx.serialization.Serializable
 
-@Location("/.well-known/openid-configuration")
-object OpenIdConfigurationLocation
+@Serializable
+@Resource("/.well-known/openid-configuration")
+class OpenIdConfigurationLocation

@@ -1,7 +1,6 @@
 package uk.co.baconi.oauth.api.authentication
 
 import io.ktor.server.application.*
-import io.ktor.server.locations.*
 import io.ktor.server.request.*
 import io.ktor.server.sessions.*
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.ABORT
@@ -10,6 +9,7 @@ import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companio
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.USERNAME
 import uk.co.baconi.oauth.api.authorisation.AuthorisationLocation
 import uk.co.baconi.oauth.api.ktor.ApplicationContext
+import uk.co.baconi.oauth.api.ktor.href
 import uk.co.baconi.oauth.api.ktor.isAbsoluteURI
 
 suspend fun ApplicationContext.validateAuthenticationRequest(location: AuthenticationLocation): AuthenticationRequest {

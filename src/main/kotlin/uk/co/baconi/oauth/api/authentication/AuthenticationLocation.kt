@@ -1,6 +1,8 @@
 package uk.co.baconi.oauth.api.authentication
 
-import io.ktor.server.locations.*
+import io.ktor.resources.*
+import kotlinx.serialization.Serializable
 
-@Location("/authentication")
+@Serializable
+@Resource("/authentication")
 data class AuthenticationLocation(val redirectUri: String? = null)

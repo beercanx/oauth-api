@@ -1,6 +1,8 @@
 package uk.co.baconi.oauth.api.wellknown
 
-import io.ktor.server.locations.*
+import io.ktor.resources.*
+import kotlinx.serialization.Serializable
 
-@Location("/.well-known/jwks.json")
-object JsonWebKeySetLocation
+@Serializable
+@Resource("/.well-known/jwks.json")
+class JsonWebKeySetLocation
