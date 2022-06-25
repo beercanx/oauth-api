@@ -21,7 +21,7 @@ object TokenExchange {
 
   object Configuration {
 
-    val endpoint = "/oauth/v1/token"
+    val endpoint = "/token"
 
   }
 
