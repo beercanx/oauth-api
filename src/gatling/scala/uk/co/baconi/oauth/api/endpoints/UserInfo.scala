@@ -26,11 +26,11 @@ object UserInfo {
 
   object Checks {
 
-    def hasSubject(subject: Expression[String]): CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.sub")
+    def hasSubject(subject: Expression[String]): CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.sub")
       .ofType[String]
       .is(subject)
 
-    val hasCacheControlDisabled: CheckBuilder[HttpHeaderCheckType, Response, String] = header("cache-control")
+    val hasCacheControlDisabled: CheckBuilder[HttpHeaderCheckType, Response] = header("cache-control")
       .is("no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate")
 
   }

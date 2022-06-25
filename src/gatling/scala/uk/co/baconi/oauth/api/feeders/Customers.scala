@@ -14,7 +14,10 @@ object Customers {
 
   object Feeders {
 
-    private def customer(username: String, password: String) = Map("username" -> username, "password" -> password)
+    private def customer(username: String, password: String) = Map(
+      "username" -> username,
+      "password" -> password
+    )
 
     val customers: Array[Map[String, String]] = Array(
       customer("AARDVARK", "121212"),

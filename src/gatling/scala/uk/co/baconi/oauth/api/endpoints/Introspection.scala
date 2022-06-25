@@ -35,27 +35,27 @@ object Introspection {
 
   object Checks {
 
-    val isActive: CheckBuilder[JsonPathCheckType, JsonNode, Boolean] = jsonPath("$.active")
+    val isActive: CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.active")
       .ofType[Boolean]
       .is(true)
 
-    def hasClientId(clientId: Expression[String]): CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.client_id")
+    def hasClientId(clientId: Expression[String]): CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.client_id")
       .ofType[String]
       .is(clientId)
 
-    def hasUsername(username: Expression[String]): CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.username")
+    def hasUsername(username: Expression[String]): CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.username")
       .ofType[String]
       .is(username)
 
-    def hasSubject(subject: Expression[String]): CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.sub")
+    def hasSubject(subject: Expression[String]): CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.sub")
       .ofType[String]
       .is(subject)
 
-    def hasScope(scope: Expression[String]): CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.scope")
+    def hasScope(scope: Expression[String]): CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.scope")
       .ofType[String]
       .is(scope)
 
-    val hasCacheControlDisabled: CheckBuilder[HttpHeaderCheckType, Response, String] = header("cache-control")
+    val hasCacheControlDisabled: CheckBuilder[HttpHeaderCheckType, Response] = header("cache-control")
       .is("no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate")
   }
 

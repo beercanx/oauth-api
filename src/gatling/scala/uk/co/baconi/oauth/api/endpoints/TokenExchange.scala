@@ -33,24 +33,24 @@ object TokenExchange {
 
   object Checks {
 
-    val hasAccessTokenAndSave: CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.access_token")
+    val hasAccessTokenAndSave: CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.access_token")
       .ofType[String]
       .exists
       .saveAs(ACCESS_TOKEN)
 
-    val hasBearerTokenType: CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.token_type")
+    val hasBearerTokenType: CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.token_type")
       .ofType[String]
       .is("bearer")
 
-    val hasExpiresInTwoHours: CheckBuilder[JsonPathCheckType, JsonNode, Int] = jsonPath("$.expires_in")
+    val hasExpiresInTwoHours: CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.expires_in")
       .ofType[Int]
       .is(7200)
 
-    def hasScopes(scope: String): CheckBuilder[JsonPathCheckType, JsonNode, String] = jsonPath("$.scope")
+    def hasScopes(scope: String): CheckBuilder[JsonPathCheckType, JsonNode] = jsonPath("$.scope")
       .ofType[String]
       .is(scope)
 
-    val hasCacheControlDisabled: CheckBuilder[HttpHeaderCheckType, Response, String] = header("cache-control")
+    val hasCacheControlDisabled: CheckBuilder[HttpHeaderCheckType, Response] = header("cache-control")
       .is("no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate")
 
   }
