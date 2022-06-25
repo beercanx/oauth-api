@@ -3,7 +3,7 @@ package uk.co.baconi.oauth.api.scopes
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigException
 import com.typesafe.config.ConfigFactory
-import io.ktor.config.*
+import io.ktor.server.config.*
 import uk.co.baconi.oauth.api.client.TypesafeClientConfigurationRepository
 import uk.co.baconi.oauth.api.enums.serialise
 import uk.co.baconi.oauth.api.enums.toEnumSet

@@ -1,8 +1,8 @@
 package uk.co.baconi.oauth.api.exchange
 
-import io.ktor.application.*
+import io.ktor.server.application.*
 import io.ktor.http.*
-import io.ktor.request.*
+import io.ktor.server.request.*
 import uk.co.baconi.oauth.api.authorisation.AuthorisationCodeService
 import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.client.PublicClient
@@ -35,16 +35,28 @@ suspend fun ApplicationContext.validateExchangeRequest(
 
         null -> InvalidConfidentialExchangeRequest(UnsupportedGrantType, "unsupported: ${parameters[GRANT_TYPE]}")
         Assertion -> InvalidConfidentialExchangeRequest(UnsupportedGrantType, "unsupported: ${parameters[GRANT_TYPE]}")
-        RefreshToken -> InvalidConfidentialExchangeRequest(UnsupportedGrantType, "unsupported: ${parameters[GRANT_TYPE]}")
+        RefreshToken -> InvalidConfidentialExchangeRequest(
+            UnsupportedGrantType,
+            "unsupported: ${parameters[GRANT_TYPE]}"
+        )
 
         AuthorisationCode -> {
             val redirectUri = parameters[REDIRECT_URI]
             val code = parameters[CODE]
 
             when {
-                redirectUri == null -> InvalidConfidentialExchangeRequest(InvalidRequest, "missing parameter: redirect_uri")
-                redirectUri.isBlank() -> InvalidConfidentialExchangeRequest(InvalidRequest, "invalid parameter: redirect_uri")
-                !principal.hasRedirectUri(redirectUri) -> InvalidConfidentialExchangeRequest(InvalidRequest, "invalid parameter: redirect_uri")
+                redirectUri == null -> InvalidConfidentialExchangeRequest(
+                    InvalidRequest,
+                    "missing parameter: redirect_uri"
+                )
+                redirectUri.isBlank() -> InvalidConfidentialExchangeRequest(
+                    InvalidRequest,
+                    "invalid parameter: redirect_uri"
+                )
+                !principal.hasRedirectUri(redirectUri) -> InvalidConfidentialExchangeRequest(
+                    InvalidRequest,
+                    "invalid parameter: redirect_uri"
+                )
 
                 code == null -> InvalidConfidentialExchangeRequest(InvalidRequest, "missing parameter: code")
                 code.isBlank() -> InvalidConfidentialExchangeRequest(InvalidRequest, "invalid parameter: code")
@@ -126,7 +138,10 @@ suspend fun ApplicationContext.validatePkceExchangeRequest(
         AuthorisationCode -> when {
             redirectUri == null -> InvalidPublicExchangeRequest(InvalidRequest, "missing parameter: redirect_uri")
             redirectUri.isBlank() -> InvalidPublicExchangeRequest(InvalidRequest, "invalid parameter: redirect_uri")
-            !principal.hasRedirectUri(redirectUri) -> InvalidPublicExchangeRequest(InvalidRequest, "invalid parameter: redirect_uri")
+            !principal.hasRedirectUri(redirectUri) -> InvalidPublicExchangeRequest(
+                InvalidRequest,
+                "invalid parameter: redirect_uri"
+            )
 
             code == null -> InvalidPublicExchangeRequest(InvalidRequest, "missing parameter: code")
             code.isBlank() -> InvalidPublicExchangeRequest(InvalidRequest, "invalid parameter: code")
@@ -134,7 +149,8 @@ suspend fun ApplicationContext.validatePkceExchangeRequest(
             codeVerifier == null -> InvalidPublicExchangeRequest(InvalidRequest, "missing parameter: code_verifier")
             codeVerifier.isBlank() -> InvalidPublicExchangeRequest(InvalidRequest, "invalid parameter: code_verifier")
 
-            else -> when (val authorisationCode = authorisationCodeService.validate(principal, code, redirectUri, codeVerifier)) {
+            else -> when (val authorisationCode =
+                authorisationCodeService.validate(principal, code, redirectUri, codeVerifier)) {
                 null -> InvalidPublicExchangeRequest(InvalidGrant)
                 else -> PkceAuthorisationCodeRequest(principal, authorisationCode)
             }

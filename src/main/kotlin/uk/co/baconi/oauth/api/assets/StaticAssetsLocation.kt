@@ -1,6 +1,6 @@
 package uk.co.baconi.oauth.api.assets
 
-import io.ktor.locations.*
+import io.ktor.server.locations.*
 
 @Location("/assets")
 object StaticAssetsLocation {

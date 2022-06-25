@@ -1,9 +1,9 @@
 package uk.co.baconi.oauth.api.authentication
 
-import io.ktor.application.*
-import io.ktor.locations.*
-import io.ktor.request.*
-import io.ktor.sessions.*
+import io.ktor.server.application.*
+import io.ktor.server.locations.*
+import io.ktor.server.request.*
+import io.ktor.server.sessions.*
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.ABORT
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.CSRF_TOKEN
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.PASSWORD

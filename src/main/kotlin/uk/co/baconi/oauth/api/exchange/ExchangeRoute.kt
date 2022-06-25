@@ -1,13 +1,13 @@
 package uk.co.baconi.oauth.api.exchange
 
-import io.ktor.application.*
-import io.ktor.auth.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.http.ContentType.Application.FormUrlEncoded
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
-import io.ktor.locations.post
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.locations.post
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import uk.co.baconi.oauth.api.authorisation.AuthorisationCodeService
 import uk.co.baconi.oauth.api.client.ClientAuthenticationService
 import uk.co.baconi.oauth.api.client.ClientPrincipal
@@ -46,13 +46,17 @@ interface ExchangeRoute {
                         // Handle standard exchanges for confidential clients
                         is ConfidentialClient -> {
 
-                            val response = when (val request = validateExchangeRequest(authorisationCodeService, client)) {
-                                is InvalidConfidentialExchangeRequest -> FailedExchangeResponse(request.error, request.description)
-                                is AuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
-                                is PasswordRequest -> passwordCredentialsGrant.exchange(request)
-                                is RefreshTokenRequest -> refreshGrant.exchange(request)
-                                is AssertionRequest -> assertionRedemptionGrant.exchange(request)
-                            }
+                            val response =
+                                when (val request = validateExchangeRequest(authorisationCodeService, client)) {
+                                    is InvalidConfidentialExchangeRequest -> FailedExchangeResponse(
+                                        request.error,
+                                        request.description
+                                    )
+                                    is AuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
+                                    is PasswordRequest -> passwordCredentialsGrant.exchange(request)
+                                    is RefreshTokenRequest -> refreshGrant.exchange(request)
+                                    is AssertionRequest -> assertionRedemptionGrant.exchange(request)
+                                }
 
                             when (response) {
                                 is FailedExchangeResponse -> call.respond(BadRequest, response)
@@ -63,10 +67,14 @@ interface ExchangeRoute {
                         // Handle PKCE requests for public clients
                         is PublicClient -> {
 
-                            val response = when (val request = validatePkceExchangeRequest(authorisationCodeService, client)) {
-                                is InvalidPublicExchangeRequest -> FailedExchangeResponse(request.error, request.description)
-                                is PkceAuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
-                            }
+                            val response =
+                                when (val request = validatePkceExchangeRequest(authorisationCodeService, client)) {
+                                    is InvalidPublicExchangeRequest -> FailedExchangeResponse(
+                                        request.error,
+                                        request.description
+                                    )
+                                    is PkceAuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
+                                }
 
                             when (response) {
                                 is FailedExchangeResponse -> call.respond(BadRequest, response)

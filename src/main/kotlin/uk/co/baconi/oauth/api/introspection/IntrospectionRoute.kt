@@ -1,11 +1,11 @@
 package uk.co.baconi.oauth.api.introspection
 
-import io.ktor.application.*
+import io.ktor.server.application.*
 import io.ktor.http.ContentType.Application.FormUrlEncoded
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
-import io.ktor.locations.post
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.locations.post
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.ktor.auth.authenticate
 import uk.co.baconi.oauth.api.ktor.auth.extractClient
@@ -26,7 +26,7 @@ interface IntrospectionRoute {
                             is IntrospectionRequest.ValidWithHint -> introspectionService.introspect(request)
                         }
 
-                        when(response) {
+                        when (response) {
                             is InvalidIntrospectionResponse -> call.respond(BadRequest, response)
                             else -> call.respond(response)
                         }

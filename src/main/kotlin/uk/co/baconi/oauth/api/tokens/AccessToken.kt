@@ -1,6 +1,6 @@
 package uk.co.baconi.oauth.api.tokens
 
-import io.ktor.auth.*
+import io.ktor.server.auth.*
 import org.dizitart.no2.objects.Id
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.scopes.Scopes
