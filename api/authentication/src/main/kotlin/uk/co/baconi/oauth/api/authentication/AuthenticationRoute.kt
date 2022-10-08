@@ -42,7 +42,7 @@ interface AuthenticationRoute {
                         call.receive<CustomerAuthenticationRequest>()
                     }.onFailure { exception ->
                         application.log.debug("Bad CustomerAuthenticationRequest", exception)
-                        call.respond(BadRequest, Failure())
+                        call.respond<CustomerAuthentication>(BadRequest, Failure())
                     }.onSuccess { (username, password) ->
                         when (val result = customerAuthenticationService.authenticate(username, password)) {
                             is Failure -> call.respond<CustomerAuthentication>(Unauthorized, result)
