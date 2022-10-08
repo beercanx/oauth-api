@@ -5,7 +5,7 @@ import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.client.ClientPrincipal
 import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.client.PublicClient
-import uk.co.baconi.oauth.api.enums.enumByJson
+import uk.co.baconi.oauth.api.enums.deserialise
 import uk.co.baconi.oauth.api.openid.GrantType
 import uk.co.baconi.oauth.api.openid.GrantType.*
 import uk.co.baconi.oauth.api.openid.Scopes
@@ -83,7 +83,7 @@ private fun Parameters.toRawExchangeRequest(): RawExchangeRequest {
 
     return RawExchangeRequest(
         // All
-        grantType = get("grant_type")?.let { s -> enumByJson<GrantType>(s) },
+        grantType = get("grant_type")?.let { s -> deserialise<GrantType>(s) },
 
         // AuthorizationCodeRequest && PkceAuthorizationCodeRequest
         code = get("code"),
@@ -91,10 +91,10 @@ private fun Parameters.toRawExchangeRequest(): RawExchangeRequest {
 
         // PkceAuthorizationCodeRequest
         codeVerifier = get("code_verifier"),
-        clientId = get("client_id")?.let { s -> enumByJson<ClientId>(s) },
+        clientId = get("client_id")?.let { s -> deserialise<ClientId>(s) },
 
         // PasswordRequest && RefreshTokenRequest
-        scope = get("scope")?.split(" ")?.mapNotNull { s -> enumByJson<Scopes>(s) }?.toSet(),
+        scope = get("scope")?.split(" ")?.mapNotNull { s -> deserialise<Scopes>(s) }?.toSet(),
 
         // PasswordRequest
         username = get("username"),

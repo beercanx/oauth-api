@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.client
 
-import uk.co.baconi.oauth.api.enums.enumByJson
-import uk.co.baconi.oauth.api.enums.enumToJson
+import uk.co.baconi.oauth.api.enums.deserialise
+import uk.co.baconi.oauth.api.enums.serialise
 import uk.co.baconi.oauth.api.openid.Scopes
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigException
@@ -33,7 +33,7 @@ class TypesafeClientConfigurationRepository internal constructor(
      * @throws ConfigException.WrongType if a client config value is not convertible to required type
      */
     override fun findById(id: ClientId): ClientConfiguration? {
-        val clientIdValue = enumToJson(id)
+        val clientIdValue = serialise(id)
         return if (repository.hasPath(clientIdValue)) {
             val config = repository.getConfig(clientIdValue)
             ClientConfiguration(
@@ -52,6 +52,6 @@ class TypesafeClientConfigurationRepository internal constructor(
     }
 
     private fun List<String>?.toScopes(): Set<Scopes> {
-        return this?.mapNotNull{scope -> enumByJson<Scopes>(scope)}?.toSet() ?: emptySet()
+        return this?.mapNotNull{scope -> deserialise<Scopes>(scope)}?.toSet() ?: emptySet()
     }
 }
