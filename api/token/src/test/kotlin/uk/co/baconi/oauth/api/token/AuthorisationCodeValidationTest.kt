@@ -11,7 +11,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
+import uk.co.baconi.oauth.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCode
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.authorisation.CodeChallenge

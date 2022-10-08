@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.api.common.customer
+package uk.co.baconi.oauth.common.authentication
 
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
@@ -13,6 +13,9 @@ object CustomerStatusTable : IdTable<String>() {
     override val id: Column<EntityID<String>> = varchar("id", 50).entityId() // TODO - Standardise the username field size somewhere
     override val primaryKey = PrimaryKey(id)
 
+    /**
+     * [CustomerStatus.state]
+     */
     val state: Column<CustomerState> = enumerationByName("state", maxFieldLength<CustomerState>())
 
     private inline fun <reified E : Enum<E>> maxFieldLength(): Int {

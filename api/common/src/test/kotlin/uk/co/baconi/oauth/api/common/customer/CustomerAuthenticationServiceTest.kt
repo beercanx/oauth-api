@@ -1,6 +1,7 @@
 package uk.co.baconi.oauth.api.common.customer
 
 import io.kotest.assertions.assertSoftly
+import kotlinx.coroutines.runBlocking
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
@@ -8,9 +9,9 @@ import io.mockk.mockk
 import io.mockk.slot
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
-import uk.co.baconi.oauth.api.common.customer.CustomerAuthentication.Failure.Reason
-import uk.co.baconi.oauth.api.common.customer.CustomerState.*
+import uk.co.baconi.oauth.common.authentication.*
+import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Failure.Reason
+import uk.co.baconi.oauth.common.authentication.CustomerState.*
 
 class CustomerAuthenticationServiceTest {
 
@@ -34,7 +35,7 @@ class CustomerAuthenticationServiceTest {
     inner class Authenticate {
 
         @Test
-        fun `should return failure of missing when no customer credentials found`() {
+        fun `should return failure of missing when no customer credentials found`(): Unit = runBlocking {
 
             every { credentialRepo.findByUsername("missing") } returns null
 
@@ -45,7 +46,7 @@ class CustomerAuthenticationServiceTest {
         }
 
         @Test
-        fun `should return failure of mismatch when customer credentials fail to match`() {
+        fun `should return failure of mismatch when customer credentials fail to match`(): Unit = runBlocking {
 
             every { checkPassword.invoke("hashed", "invalid".toCharArray()) } returns false
 
@@ -56,7 +57,7 @@ class CustomerAuthenticationServiceTest {
         }
 
         @Test
-        fun `should return failure of missing when no customer status found`() {
+        fun `should return failure of missing when no customer status found`(): Unit = runBlocking {
 
             every { statusRepo.findByUsername("no-status") } returns null
 
@@ -67,7 +68,7 @@ class CustomerAuthenticationServiceTest {
         }
 
         @Test
-        fun `should return failure of closed when the customer status is closed`() {
+        fun `should return failure of closed when the customer status is closed`(): Unit = runBlocking {
 
             every { statusRepo.findByUsername("closed") } returns CustomerStatus("closed", Closed)
 
@@ -78,7 +79,7 @@ class CustomerAuthenticationServiceTest {
         }
 
         @Test
-        fun `should return failure of suspended when the customer status is suspended`() {
+        fun `should return failure of suspended when the customer status is suspended`(): Unit = runBlocking {
 
             every { statusRepo.findByUsername("suspended") } returns CustomerStatus("suspended", Suspended)
 
@@ -89,7 +90,7 @@ class CustomerAuthenticationServiceTest {
         }
 
         @Test
-        fun `should return failure of locked when the customer status is locked`() {
+        fun `should return failure of locked when the customer status is locked`(): Unit = runBlocking {
 
             every { statusRepo.findByUsername("locked") } returns CustomerStatus("locked", Locked)
 
@@ -100,7 +101,7 @@ class CustomerAuthenticationServiceTest {
         }
 
         @Test
-        fun `should return success when the customer status is active`() {
+        fun `should return success when the customer status is active`(): Unit = runBlocking {
 
             assertSoftly(underTest.authenticate("aardvark", "valid")) {
                 shouldBeInstanceOf<CustomerAuthentication.Success>()

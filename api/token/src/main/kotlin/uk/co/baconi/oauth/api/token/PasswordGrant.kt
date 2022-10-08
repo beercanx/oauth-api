@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.token
 
-import uk.co.baconi.oauth.api.common.customer.CustomerAuthentication
-import uk.co.baconi.oauth.api.common.customer.CustomerAuthenticationService
+import uk.co.baconi.oauth.common.authentication.CustomerAuthentication
+import uk.co.baconi.oauth.common.authentication.CustomerAuthenticationService
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
 import uk.co.baconi.oauth.api.token.TokenErrorType.InvalidGrant
 import java.time.temporal.ChronoUnit.SECONDS
@@ -11,7 +11,7 @@ class PasswordGrant(
     private val authenticationService: CustomerAuthenticationService,
 ) {
 
-    fun exchange(request: PasswordRequest): TokenResponse {
+    suspend fun exchange(request: PasswordRequest): TokenResponse {
 
         return when(val authentication = authenticationService.authenticate(request.username, request.password)) {
             // TODO - Reconsider the description value

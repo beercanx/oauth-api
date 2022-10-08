@@ -7,7 +7,7 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
+import uk.co.baconi.oauth.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import java.time.Instant
 import java.time.temporal.ChronoUnit

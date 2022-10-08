@@ -6,6 +6,8 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import uk.co.baconi.oauth.common.authentication.AuthenticatedUsername
+import uk.co.baconi.oauth.common.authentication.AuthenticatedUsernameSerializer
 
 class AuthenticatedUsernameSerializerTest {
 
@@ -45,35 +47,35 @@ class AuthenticatedUsernameSerializerTest {
 
         @Test
         fun `should fail to decode a null json value`() {
-            shouldThrowWithMessage<SerializationException>("Deserialize unsupported for AuthenticatedUsername") {
+            shouldThrowWithMessage<SerializationException>("Deserialize unsupported for AuthenticatedUsername in Kotlin/JVM") {
                 decode("null")
             }
         }
 
         @Test
         fun `should fail to decode a blank json value`() {
-            shouldThrowWithMessage<SerializationException>("Deserialize unsupported for AuthenticatedUsername") {
+            shouldThrowWithMessage<SerializationException>("Deserialize unsupported for AuthenticatedUsername in Kotlin/JVM") {
                 decode("\"    \"")
             }
         }
 
         @Test
         fun `should fail to decode an empty json value`() {
-            shouldThrowWithMessage<SerializationException>("Deserialize unsupported for AuthenticatedUsername") {
+            shouldThrowWithMessage<SerializationException>("Deserialize unsupported for AuthenticatedUsername in Kotlin/JVM") {
                 decode("\"\"")
             }
         }
 
         @Test
         fun `should fail to decode an invalid authenticated username`() {
-            shouldThrowWithMessage<SerializationException>("Deserialize unsupported for AuthenticatedUsername") {
+            shouldThrowWithMessage<SerializationException>("Deserialize unsupported for AuthenticatedUsername in Kotlin/JVM") {
                 decode("\"aardvark\"")
             }
         }
 
         @Test
         fun `should fail to decode a valid authenticated username`() {
-            shouldThrowWithMessage<SerializationException>("Deserialize unsupported for AuthenticatedUsername") {
+            shouldThrowWithMessage<SerializationException>("Deserialize unsupported for AuthenticatedUsername in Kotlin/JVM") {
                 decode("\"consumer-x\"")
             }
         }

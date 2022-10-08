@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.api.common.customer
+package uk.co.baconi.oauth.common.authentication
 
 enum class CustomerState {
 
@@ -13,7 +13,4 @@ enum class CustomerState {
 
     // Administration has decided too many failed authentication attempts have been made.
     Locked,
-
-    // TODO - Administration has decided customer must change their password, prior to being active again.
-    //ChangePassword,
 }

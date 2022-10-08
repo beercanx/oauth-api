@@ -12,12 +12,12 @@ import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretService
-import uk.co.baconi.oauth.api.common.customer.CustomerAuthenticationService
-import uk.co.baconi.oauth.api.common.customer.CustomerCredentialRepository
-import uk.co.baconi.oauth.api.common.customer.CustomerStatusRepository
 import uk.co.baconi.oauth.api.common.embeddedCommonServer
 import uk.co.baconi.oauth.api.common.token.AccessTokenRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
+import uk.co.baconi.oauth.common.authentication.CustomerAuthenticationService
+import uk.co.baconi.oauth.common.authentication.CustomerCredentialRepository
+import uk.co.baconi.oauth.common.authentication.CustomerStatusRepository
 
 /**
  * Start a server for just Introspection requests

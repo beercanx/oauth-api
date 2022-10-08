@@ -1,13 +1,12 @@
-package uk.co.baconi.oauth.api.common.customer
+package uk.co.baconi.oauth.common.authentication
 
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 import org.slf4j.LoggerFactory
-import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
-import uk.co.baconi.oauth.api.common.customer.CustomerAuthentication.Failure
-import uk.co.baconi.oauth.api.common.customer.CustomerAuthentication.Failure.Reason
-import uk.co.baconi.oauth.api.common.customer.CustomerAuthentication.Success
+import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Success
+import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Failure
+import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Failure.*
 
-class CustomerAuthenticationService internal constructor(
+actual class CustomerAuthenticationService /*internal*/ constructor( // TODO - Return internal
     private val customerCredentialRepository: CustomerCredentialRepository,
     private val customerStatusRepository: CustomerStatusRepository,
     private val checkPassword: (String, CharArray) -> Boolean
@@ -26,7 +25,7 @@ class CustomerAuthenticationService internal constructor(
         private val logger = LoggerFactory.getLogger(CustomerAuthenticationService::class.java)
     }
 
-    fun authenticate(username: String, password: String): CustomerAuthentication {
+    actual suspend fun authenticate(username: String, password: String): CustomerAuthentication {
 
         val credential = customerCredentialRepository.findByUsername(username)
 
@@ -47,10 +46,8 @@ class CustomerAuthenticationService internal constructor(
                 CustomerState.Closed -> Failure(Reason.Closed)
                 CustomerState.Suspended -> Failure(Reason.Suspended)
                 CustomerState.Locked -> Failure(Reason.Locked)
-                // TODO - What about change password?
                 CustomerState.Active -> Success(AuthenticatedUsername(username))
             }
         }
     }
-
 }

@@ -16,6 +16,9 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import uk.co.baconi.oauth.common.authentication.CustomerCredential
+import uk.co.baconi.oauth.common.authentication.CustomerCredentialRepository
+import uk.co.baconi.oauth.common.authentication.CustomerCredentialTable
 import java.security.SecureRandom
 
 class CustomerCredentialRepositoryIntegrationTest {

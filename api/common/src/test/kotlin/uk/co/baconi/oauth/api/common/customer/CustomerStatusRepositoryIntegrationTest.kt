@@ -15,6 +15,10 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import uk.co.baconi.oauth.common.authentication.CustomerState
+import uk.co.baconi.oauth.common.authentication.CustomerStatus
+import uk.co.baconi.oauth.common.authentication.CustomerStatusRepository
+import uk.co.baconi.oauth.common.authentication.CustomerStatusTable
 
 class CustomerStatusRepositoryIntegrationTest {
 

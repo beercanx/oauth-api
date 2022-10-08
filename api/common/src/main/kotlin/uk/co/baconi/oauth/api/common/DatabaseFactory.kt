@@ -6,9 +6,9 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeTable
-import uk.co.baconi.oauth.api.common.customer.CustomerCredentialTable
-import uk.co.baconi.oauth.api.common.customer.CustomerStatusTable
 import uk.co.baconi.oauth.api.common.token.AccessTokenTable
+import uk.co.baconi.oauth.common.authentication.CustomerCredentialTable
+import uk.co.baconi.oauth.common.authentication.CustomerStatusTable
 
 object DatabaseFactory {
 

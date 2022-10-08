@@ -14,8 +14,8 @@ plugins {
 }
 
 dependencies {
-    api(kotlin("stdlib-jdk8"))
-    api(kotlin("reflect"))
+    // Common: Authentication
+    api(project(":common:authentication"))
 
     // Logging
     api("ch.qos.logback:logback-classic:$logbackVersion")
@@ -33,21 +33,18 @@ dependencies {
     api("io.ktor:ktor-server-core:$ktorVersion")
     api("io.ktor:ktor-server-auth:$ktorVersion")
     implementation("io.ktor:ktor-server-hsts:$ktorVersion")
-    implementation("io.ktor:ktor-server-compression:$ktorVersion") // TODO - Removing this could enable a Native first server
+    implementation("io.ktor:ktor-server-compression:$ktorVersion")
     implementation("io.ktor:ktor-server-double-receive:$ktorVersion")
     implementation("io.ktor:ktor-server-caching-headers:$ktorVersion")
     implementation("io.ktor:ktor-server-data-conversion:$ktorVersion")
     implementation("io.ktor:ktor-server-auto-head-response:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
 
-    // Crypto for safe password checking - TODO - Removing this could enable a Native first server
+    // Crypto for safe password checking
     implementation("org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion")
 
-    // Database - TODO - Removing this could enable a Native first server
+    // Database
     api("com.h2database:h2:$h2DatabaseVersion")
-    api("org.jetbrains.exposed:exposed-core:$exposedVersion")
-    api("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-    api("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 
     // JUnit 5 for tests definitions and running
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
