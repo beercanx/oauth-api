@@ -13,9 +13,15 @@ include(":api:user-info")
 include(":api:well-known")
 include(":api:server")
 
-// TODO - Automation
+// User Interface
+include(":user-interface:common")
+include(":user-interface:authentication")
+include(":user-interface:confirm-details")
+include(":user-interface:registrations")
+include(":user-interface:session-management")
+//include(":user-interface:server") // TODO - Work out the best way, maybe its just a static assets server?
 
-// TODO - User Interface
+// TODO - Automation
 
 // TODO - Test Consumers
 
@@ -23,6 +29,7 @@ include(":api:server")
 pluginManagement {
     val kotlinVersion: String by settings
     plugins {
+        kotlin("js") version kotlinVersion apply false
         kotlin("jvm") version kotlinVersion apply false
         kotlin("multiplatform") version kotlinVersion apply false
         kotlin("plugin.serialization") version kotlinVersion apply false
