@@ -30,38 +30,71 @@ fun validateAuthorisationRequest(
     // Parse the scopes into the individual stages.
     val (rawMatchedParsed, parsedMatchedValid, validScopes) = location.scope.parseAsScopes(validClientConfiguration)
 
-    // TODO - Make sure we validate enough to respond https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
     return when {
 
-        location.client_id == null -> AuthorisationRequest.Invalid("invalid_request", "missing parameter: client_id")
-        validClientId == null -> AuthorisationRequest.Invalid("unauthorized_client", "unauthorized client")
-        validClientConfiguration == null -> AuthorisationRequest.Invalid("unauthorized_client", "unauthorized client")
+        location.client_id == null -> AuthorisationRequest.InvalidClient("missing")
+        validClientId == null -> AuthorisationRequest.InvalidClient("invalid")
+        validClientConfiguration == null -> AuthorisationRequest.InvalidClient("invalid")
 
-        // TODO - How do we redirect back to the consumer with no valid client_id?
-
-        location.redirect_uri == null -> AuthorisationRequest.Invalid("invalid_request", "missing parameter: redirect_uri")
-        validRedirectUri == null -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: redirect_uri")
-        !validRedirectUri.isAbsoluteURI(false) -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: redirect_uri")
-
-        // TODO - How do we redirect back to the consumer with no valid redirect_uri?
+        location.redirect_uri == null -> AuthorisationRequest.InvalidRedirect("missing")
+        validRedirectUri == null -> AuthorisationRequest.InvalidRedirect("invalid")
+        !validRedirectUri.isAbsoluteURI(false) -> AuthorisationRequest.InvalidRedirect("invalid")
 
         // Support aborting an authorisation via a users choice
-        location.abort == true -> AuthorisationRequest.Aborted(location.redirect_uri)
+        location.abort == true -> AuthorisationRequest.Invalid(
+            redirectUri = location.redirect_uri,
+            error = "access_denied",
+            description = "user aborted",
+            state = location.state
+        )
 
-        location.response_type == null -> AuthorisationRequest.Invalid("invalid_request", "missing parameter: response_type")
-        responseType == null -> AuthorisationRequest.Invalid("unsupported_response_type", "unsupported response type: ${location.response_type}")
-        validResponseType == null -> AuthorisationRequest.Invalid("unauthorized_client", "unauthorized client")
+        location.response_type == null -> AuthorisationRequest.Invalid(
+            redirectUri = validRedirectUri,
+            error = "invalid_request",
+            description = "missing parameter: response_type",
+            state = location.state
+        )
+        responseType == null -> AuthorisationRequest.Invalid(
+            redirectUri = validRedirectUri,
+            error = "unsupported_response_type",
+            description = "unsupported response type: ${location.response_type}",
+            state = location.state
+        )
+        validResponseType == null -> AuthorisationRequest.Invalid(
+            redirectUri = validRedirectUri,
+            error = "unauthorized_client",
+            description = "unauthorized client",
+            state = location.state
+        )
 
         // Enforce the use of a state parameter
-        location.state.isNullOrBlank() -> AuthorisationRequest.Invalid("invalid_request", "missing parameter: state")
+        location.state.isNullOrBlank() -> AuthorisationRequest.Invalid(
+            redirectUri = validRedirectUri,
+            error = "invalid_request",
+            description = "missing parameter: state",
+            state = location.state
+        )
 
-        // TODO - Do we reject if the scope parameter is missing?
-
+        location.scope == null -> AuthorisationRequest.Invalid(
+            redirectUri = validRedirectUri,
+            error = "invalid_request",
+            description = "missing parameter: scope",
+            state = location.state
+        )
         // The requested scope is invalid, unknown, or malformed.
-        !rawMatchedParsed -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: scope")
-
+        !rawMatchedParsed -> AuthorisationRequest.Invalid(
+            redirectUri = validRedirectUri,
+            error = "invalid_request",
+            description = "invalid parameter: scope",
+            state = location.state
+        )
         // TODO - Do we reject if the scope parsed size is different from the valid size?
-        !parsedMatchedValid -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: scope")
+        !parsedMatchedValid -> AuthorisationRequest.Invalid(
+            redirectUri = validRedirectUri,
+            error = "invalid_request",
+            description = "invalid parameter: scope",
+            state = location.state
+        )
 
         else -> AuthorisationRequest.Valid(
             responseType = validResponseType,

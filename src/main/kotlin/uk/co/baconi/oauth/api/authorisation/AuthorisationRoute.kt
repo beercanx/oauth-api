@@ -30,29 +30,22 @@ interface AuthorisationRoute {
             // TODO - How to detect user click back in the browser from the authentication screen
             return@get when (val request = validateAuthorisationRequest(location, clientConfigurationRepository)) {
 
-                // Handle authorisation request [invalid] / decision [failure]
-                is AuthorisationRequest.Invalid -> {
+                // Unsafe to redirect when either client or redirect uri is invalid.
+                is AuthorisationRequest.InvalidClient, is AuthorisationRequest.InvalidRedirect -> {
 
-                    // TODO https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
-
-                    /*
-                     * Error: {
-                     *   error: ABC,
-                     *   error_description: ABC
-                     * }
-                     */
-
-                    TODO("$request")
+                    // TODO - Render 400 Bad Request HTML page
+                    call.respond(HttpStatusCode.BadRequest)
                 }
 
-                // Handle user aborted
-                is AuthorisationRequest.Aborted -> {
+                is AuthorisationRequest.Invalid -> {
 
-                    // Return with error response
+                    // Redirect with error response
                     call.respondRedirect(
-                        URLBuilder(request.redirectUri).apply {
-                            parameters.append("error", "access_denied")
-                            parameters.append("error_description", "user aborted")
+                        URLBuilder().apply {
+                            takeFrom(request.redirectUri)
+                            parameters["error"] = request.error
+                            parameters["error_description"] = request.description
+                            if(request.state != null) parameters["state"] = request.state
                         }.buildString()
                     )
                 }

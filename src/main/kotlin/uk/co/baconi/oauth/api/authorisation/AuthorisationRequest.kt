@@ -5,10 +5,13 @@ import uk.co.baconi.oauth.api.scopes.Scopes
 
 sealed class AuthorisationRequest {
 
-    // TODO - Add failure reasons
-    data class Invalid(val error: String, val description: String) : AuthorisationRequest()
+    // TODO - Do we add types for reason and error?
 
-    data class Aborted(val redirectUri: String) : AuthorisationRequest()
+    data class InvalidClient(val reason: String) : AuthorisationRequest()
+
+    data class InvalidRedirect(val reason: String) : AuthorisationRequest()
+
+    data class Invalid(val redirectUri: String, val error: String, val description: String, val state: String?) : AuthorisationRequest()
 
     data class Valid(
         val responseType: AuthorisationResponseType,
