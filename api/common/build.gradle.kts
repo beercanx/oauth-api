@@ -7,6 +7,7 @@ val junitVersion: String by project
 val exposedVersion: String by project
 val h2DatabaseVersion: String by project
 val argon2Version: String by project
+val argon2Type: String by project
 
 plugins {
     kotlin("jvm")
@@ -41,8 +42,7 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
 
     // Crypto for safe credential checking
-    // TODO - Switch between this and no libs for container implementation("de.mkammerer:argon2-jvm:$argon2Version")
-    implementation("de.mkammerer:argon2-jvm-nolibs:$argon2Version")
+    implementation("de.mkammerer:$argon2Type:$argon2Version")
 
     // Database
     api("com.h2database:h2:$h2DatabaseVersion")
