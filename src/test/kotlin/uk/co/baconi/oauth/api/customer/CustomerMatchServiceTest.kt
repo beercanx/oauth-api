@@ -30,7 +30,7 @@ class CustomerMatchServiceTest {
         every { checkPassword.invoke("P@55w0rd", "P@55w0rd".toCharArray()) } returns true
 
         assertSoftly(underTest.match("arthur", "P@55w0rd")) {
-            it.shouldBeInstanceOf<CustomerMatchSuccess>()
+            it.shouldBeInstanceOf<CustomerMatch.Success>()
             it.username shouldBe "ARTHUR"
         }
     }
@@ -41,7 +41,7 @@ class CustomerMatchServiceTest {
         every { repository.findByUsername(any()) } returns null
 
         listOf("arthur", "Arthur", "ArThUr", "aRtHuR").forEach { username ->
-            underTest.match(username, "P@55w0rd") should beInstanceOf<CustomerMatchFailure>()
+            underTest.match(username, "P@55w0rd") should beInstanceOf<CustomerMatch.Missing>()
         }
 
         verify(exactly = 4) { repository.findByUsername("ARTHUR") }
@@ -52,7 +52,7 @@ class CustomerMatchServiceTest {
 
         every { repository.findByUsername(any()) } returns null
 
-        underTest.match("badger", "P@55w0rd") should beInstanceOf<CustomerMatchFailure>()
+        underTest.match("badger", "P@55w0rd") should beInstanceOf<CustomerMatch.Missing>()
     }
 
     @Test
@@ -65,6 +65,6 @@ class CustomerMatchServiceTest {
 
         every { checkPassword.invoke("P@55w0rd", "password".toCharArray()) } returns false
 
-        underTest.match("collin", "password") should beInstanceOf<CustomerMatchFailure>()
+        underTest.match("collin", "password") should beInstanceOf<CustomerMatch.Mismatched>()
     }
 }
