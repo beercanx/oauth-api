@@ -11,6 +11,8 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
         const val CSRF_TOKEN = "csrf_token"
         const val USERNAME = "username"
         const val PASSWORD = "password"
+        const val LOGIN = "login"
+        const val ABORT = "abort"
     }
 
     val csrfToken = Placeholder<INPUT>()
@@ -69,13 +71,25 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
                         }
                     }
 
-                    // TODO - Add an abort button
+                    div(classes = "row") {
 
-                    button(classes = "btn btn-primary w-100") {
-                        name = "login"
-                        value = "login"
-                        type = ButtonType.submit
-                        text("Login")
+                        div(classes = "col-sm") {
+                            button(classes = "btn btn-primary w-100") {
+                                name = LOGIN
+                                value = "login"
+                                type = ButtonType.submit
+                                text("Login")
+                            }
+                        }
+
+                        div(classes = "col-sm") {
+                            button(classes = "btn btn-secondary w-100") {
+                                name = ABORT
+                                value = "abort"
+                                type = ButtonType.submit
+                                text("Abort")
+                            }
+                        }
                     }
                 }
             }

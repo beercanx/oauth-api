@@ -49,6 +49,15 @@ interface AuthenticationRoute {
                     }
                 }
 
+                is AuthenticationRequest.Aborted -> {
+
+                    // Destroy pre-authenticated session.
+                    call.sessions.clear<AuthenticationSession>()
+
+                    // Go back to authorisation
+                    call.respondRedirect(href(AuthorisationLocation(resume = false)))
+                }
+
                 is AuthenticationRequest.Valid -> when (val result = authenticationService.authenticate(request)) {
 
                     is Authentication.Failure -> renderAuthenticationPage(request, Unauthorized) {
