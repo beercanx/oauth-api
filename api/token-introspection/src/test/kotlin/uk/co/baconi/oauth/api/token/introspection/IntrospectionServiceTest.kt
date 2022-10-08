@@ -9,13 +9,10 @@ import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
-import uk.co.baconi.oauth.api.common.scope.Scope
 import uk.co.baconi.oauth.api.common.scope.Scope.*
-import uk.co.baconi.oauth.api.common.token.AccessToken
 import uk.co.baconi.oauth.api.common.token.AccessTokenRepository
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionRequest.Valid
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionResponse.Inactive
-import java.time.Instant
 import java.time.Instant.now
 import java.time.temporal.ChronoUnit.DAYS
 import java.util.*

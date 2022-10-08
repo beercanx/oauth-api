@@ -5,8 +5,7 @@ import java.util.*
 
 sealed class IntrospectionRequest {
 
-    // TODO - Do we add types for reason and error?
-    data class Invalid(val error: String, val description: String) : IntrospectionRequest() {
+    data class Invalid(val error: IntrospectionErrorType, val description: String) : IntrospectionRequest() {
         fun toResponse() = IntrospectionResponse.Invalid(error, description)
     }
 

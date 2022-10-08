@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Token Server" type="JetRunConfigurationType">
+    <envs>
+      <env name="SERVER_PORT" value="8082" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="uk.co.baconi.oauth.api.token.MainKt" />
+    <module name="oauth.api.token.main" />
+    <shortenClasspath name="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

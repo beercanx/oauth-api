@@ -2,6 +2,7 @@ package uk.co.baconi.oauth.api.common.client
 
 import com.typesafe.config.ConfigFactory
 import io.ktor.server.config.*
+import uk.co.baconi.oauth.api.common.grant.GrantType
 import uk.co.baconi.oauth.api.common.scope.Scope
 
 class ClientConfigurationRepository {
@@ -48,6 +49,11 @@ class ClientConfigurationRepository {
                     allowedActions = config
                         .tryGetStringList("allowedActions")
                         ?.map(ClientAction::fromValue)
+                        ?.toSet()
+                        ?: emptySet(),
+                    allowedGrantTypes = config
+                        .tryGetStringList("allowedGrantTypes")
+                        ?.map(GrantType::fromValue)
                         ?.toSet()
                         ?: emptySet(),
                 )

@@ -1,8 +1,16 @@
 package uk.co.baconi.oauth.api.common.token
 
+import io.kotest.assertions.assertSoftly
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.types.beInstanceOf
+import io.kotest.matchers.types.shouldBeInstanceOf
+import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException
+import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -41,6 +49,23 @@ class AccessTokenRepositoryIntegrationTest {
         @Test
         fun `should insert a new access token`() {
             underTest.insert(accessToken())
+        }
+
+        @Test
+        fun `should throw exception on duplicate access token`() {
+
+            val uuid = UUID.randomUUID()
+
+            underTest.insert(accessToken(value = uuid))
+
+            val exception = shouldThrow<ExposedSQLException> {
+                underTest.insert(accessToken(value = uuid))
+            }
+
+            assertSoftly(exception.cause) {
+                shouldBeInstanceOf<JdbcSQLIntegrityConstraintViolationException>()
+                message shouldContain "Unique index or primary key violation"
+            }
         }
     }
 

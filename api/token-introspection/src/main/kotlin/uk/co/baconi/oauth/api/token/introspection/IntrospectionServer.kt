@@ -1,11 +1,9 @@
 package uk.co.baconi.oauth.api.token.introspection
 
-import io.ktor.server.cio.*
-import io.ktor.server.engine.*
 import io.ktor.server.routing.*
 import uk.co.baconi.oauth.api.common.AuthenticationModule
 import uk.co.baconi.oauth.api.common.CommonModule.common
-import uk.co.baconi.oauth.api.common.DatabaseModule.accessTokenDatabase
+import uk.co.baconi.oauth.api.common.DatabaseFactory.getAccessTokenDatabase
 import uk.co.baconi.oauth.api.common.TestDataModule
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretRepository
@@ -19,8 +17,7 @@ import uk.co.baconi.oauth.api.common.token.AccessTokenService
  */
 internal object IntrospectionServer : AuthenticationModule, IntrospectionRoute, TestDataModule {
 
-    // TODO - Configure to be an external datasource
-    private val accessTokenRepository = AccessTokenRepository(accessTokenDatabase)
+    private val accessTokenRepository = AccessTokenRepository(getAccessTokenDatabase())
     override val accessTokenService = AccessTokenService(accessTokenRepository)
 
     private val clientSecretRepository = ClientSecretRepository()
@@ -33,7 +30,6 @@ internal object IntrospectionServer : AuthenticationModule, IntrospectionRoute, 
         embeddedCommonServer {
             common()
             authentication()
-            accessTokenDatabase()
             routing {
                 introspection()
             }

@@ -1,38 +1,31 @@
 package uk.co.baconi.oauth.api.common
 
-import com.typesafe.config.ConfigFactory
 import io.ktor.server.application.*
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.transaction
-import uk.co.baconi.oauth.api.common.token.AccessTokenTable
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
+import uk.co.baconi.oauth.api.common.token.AccessTokenRepository
 
-object DatabaseModule {
+interface DatabaseModule {
 
-    private val databaseConfiguration = ConfigFactory.load().getConfig("uk.co.baconi.oauth.api.database")
+    val accessTokenRepository: AccessTokenRepository
+    val authorisationCodeRepository: AuthorisationCodeRepository
 
-    // TODO - Stop using singleton and move to injection pattern
-    val accessTokenDatabase: Database by lazy {
-        Database.connect(
-            url = databaseConfiguration.getString("access-token.url"),
-            driver = databaseConfiguration.getString("access-token.driver"),
-            user = databaseConfiguration.getString("access-token.user"),
-            password = databaseConfiguration.getString("access-token.password")
-        )
+    fun Application.databaseExpiration() {
+
+        log.info("Registering the DatabaseModule.databaseExpiration() module")
+
+        // Every second, look for and remove any expired tokens or codes - TODO - Extract delay into config.
+        doIndefinitely(1_000, accessTokenRepository::deleteExpired)
+        doIndefinitely(1_000, authorisationCodeRepository::deleteExpired)
     }
 
-    /**
-     * Intended to be used to force database initialisation at server start up but only when needed.
-     */
-    fun Application.accessTokenDatabase() {
-        log.info("Registering the DatabaseModule.accessTokenDatabase() module")
-
-        // Crude but affective way to make sure the database is configured.
-        transaction(accessTokenDatabase) {
-            SchemaUtils.create(AccessTokenTable)
+    private fun Application.doIndefinitely(timeMillis: Long, block: suspend () -> Unit) {
+        launch {
+            while (true) {
+                block()
+                delay(timeMillis)
+            }
         }
-
-        log.debug("Connected to a '${accessTokenDatabase.vendor}' with version '${accessTokenDatabase.version}' on '${accessTokenDatabase.url}'")
     }
-
 }

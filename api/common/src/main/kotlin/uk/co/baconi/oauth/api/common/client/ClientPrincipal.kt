@@ -2,12 +2,17 @@ package uk.co.baconi.oauth.api.common.client
 
 import io.ktor.server.auth.*
 import uk.co.baconi.oauth.api.common.client.ClientAction.Introspect
+import uk.co.baconi.oauth.api.common.client.ClientAction.ProofKeyForCodeExchange
+import uk.co.baconi.oauth.api.common.grant.GrantType
+import uk.co.baconi.oauth.api.common.grant.GrantType.AuthorisationCode
+import uk.co.baconi.oauth.api.common.grant.GrantType.Password
 import uk.co.baconi.oauth.api.common.scope.Scope
 
 sealed class ClientPrincipal : Principal {
     abstract val id: ClientId
     abstract val configuration: ClientConfiguration
-    val canIntrospect: Boolean by lazy { configuration.allowedActions.contains(Introspect) }
+    fun can(action: ClientAction) = configuration.allowedActions.contains(action)
+    fun can(grantType: GrantType) = configuration.allowedGrantTypes.contains(grantType)
     fun canBeIssued(scope: Scope): Boolean = configuration.allowedScopes.contains(scope)
     fun hasRedirectUri(redirectUri: String): Boolean = configuration.redirectUris.contains(redirectUri)
 }
@@ -19,6 +24,7 @@ data class ConfidentialClient(override val configuration: ClientConfiguration) :
     init {
         require(configuration.type == ClientType.Confidential) { "type cannot be [${configuration.type}]" }
     }
+
     override fun toString(): String = "ConfidentialClient(id=$id, configuration=REDACTED)"
 }
 
@@ -28,10 +34,12 @@ data class PublicClient(override val configuration: ClientConfiguration) : Clien
 
     init {
         require(configuration.type == ClientType.Public) { "type cannot be [${configuration.type}]" }
-        require(!canIntrospect) {
-            // Because they cannot use a secure authentication method to prevent token fishing.
-            "public client's allowed actions cannot contain introspect"
+        require(!can(Introspect)) { "public clients must not be allowed to introspect" }
+        require(!can(Password)) { "public clients must not use password grant" }
+        require(!(can(AuthorisationCode) && !can(ProofKeyForCodeExchange))) {
+            "public clients must not use authorisation code grant without PKCE"
         }
     }
+
     override fun toString(): String = "PublicClient(id=$id, configuration=REDACTED)"
 }

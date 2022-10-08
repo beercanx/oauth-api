@@ -14,7 +14,7 @@ class ClientSecretService internal constructor(
     ) : this(
         clientSecretRepository,
         clientConfigurationRepository,
-        OpenBSDBCrypt::checkPassword
+        OpenBSDBCrypt::checkPassword  // TODO - Look to migrate to Argon2id as per OWASP recommendations
     )
 
     /**

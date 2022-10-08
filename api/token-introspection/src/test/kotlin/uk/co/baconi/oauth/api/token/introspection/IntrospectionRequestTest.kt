@@ -26,7 +26,8 @@ class IntrospectionRequestTest {
                         type = ClientType.Confidential,
                         redirectUris = emptySet(),
                         allowedScopes = emptySet(),
-                        allowedActions = emptySet()
+                        allowedActions = emptySet(),
+                        allowedGrantTypes = emptySet(),
                     )
                 ),
                 token = UUID.randomUUID()

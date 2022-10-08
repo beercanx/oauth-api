@@ -4,13 +4,18 @@ import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.withClue
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import io.kotest.matchers.throwable.shouldHaveMessage
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import uk.co.baconi.oauth.api.common.grant.GrantType.AuthorisationCode
+import uk.co.baconi.oauth.api.common.client.ClientAction.ProofKeyForCodeExchange
 import uk.co.baconi.oauth.api.common.client.ClientType.Confidential
 import uk.co.baconi.oauth.api.common.client.ClientType.Public
+import uk.co.baconi.oauth.api.common.grant.GrantType
 import uk.co.baconi.oauth.api.common.scope.Scope
 
 class ClientPrincipalTest {
@@ -26,6 +31,7 @@ class ClientPrincipalTest {
         private val underTest = ConfidentialClient(mockk {
             every { id } returns ConsumerZ
             every { type } returns Confidential
+            every { allowedActions } returns emptySet()
             every { allowedScopes } returns setOf(Scope.OpenId)
             every { redirectUris } returns setOf("https://example.com")
         })
@@ -68,6 +74,7 @@ class ClientPrincipalTest {
             val underTest = ConfidentialClient(mockk {
                 every { id } returns ConsumerZ
                 every { type } returns Confidential
+                every { allowedActions } returns emptySet()
             })
 
             assertSoftly(underTest) {
@@ -77,7 +84,7 @@ class ClientPrincipalTest {
         }
 
         @Test
-        fun `throw exception if the configuration is not for a confidential client`() {
+        fun `should throw exception if the configuration is not for a confidential client`() {
 
             val exception = shouldThrow<IllegalArgumentException> {
                 ConfidentialClient(mockk {
@@ -87,6 +94,20 @@ class ClientPrincipalTest {
             }
 
             exception shouldHaveMessage "type cannot be [Public]"
+        }
+
+        @Test
+        fun `should not include client configuration`() {
+            assertSoftly(
+                ConfidentialClient(mockk {
+                    every { id } returns ConsumerZ
+                    every { type } returns Confidential
+                    every { allowedActions } returns emptySet()
+                }).toString()
+            ) {
+                shouldNotContain("allowedActions")
+                shouldContain("configuration=REDACTED")
+            }
         }
     }
 
@@ -100,6 +121,7 @@ class ClientPrincipalTest {
                 every { id } returns ConsumerY
                 every { type } returns Public
                 every { allowedActions } returns emptySet()
+                every { allowedGrantTypes } returns emptySet()
             })
 
             assertSoftly(underTest) {
@@ -109,7 +131,7 @@ class ClientPrincipalTest {
         }
 
         @Test
-        fun `throw exception if the configuration is not for a public client`() {
+        fun `should throw an exception if the configuration is not for a public client`() {
 
             val exception = shouldThrow<IllegalArgumentException> {
                 PublicClient(mockk {
@@ -119,6 +141,76 @@ class ClientPrincipalTest {
             }
 
             exception shouldHaveMessage "type cannot be [Confidential]"
+        }
+
+        @Test
+        fun `should allow a public client to perform pkce based authentication code grants`() {
+
+            val underTest = PublicClient(mockk {
+                every { id } returns ConsumerY
+                every { type } returns Public
+                every { allowedActions } returns setOf(ProofKeyForCodeExchange)
+                every { allowedGrantTypes } returns setOf(AuthorisationCode)
+            })
+
+            assertSoftly(underTest) {
+                can(ProofKeyForCodeExchange) shouldBe true
+                enumValues<GrantType>().filterNot(AuthorisationCode::equals).forEach { grantType ->
+                    withClue("grantType: $grantType") {
+                        can(grantType) shouldBe false
+                    }
+                }
+            }
+        }
+
+        @Test
+        fun `should throw an exception if a public client is configured to perform non pkce based actions`() {
+            assertSoftly {
+                enumValues<ClientAction>().filterNot(ProofKeyForCodeExchange::equals).forEach { action ->
+                    withClue("action: $action") {
+                        shouldThrow<IllegalArgumentException> {
+                            PublicClient(mockk {
+                                every { id } returns ConsumerY
+                                every { type } returns Public
+                                every { allowedActions } returns setOf(action)
+                            })
+                        }
+                    }
+                }
+            }
+        }
+
+        @Test
+        fun `should throw an exception if a public client is configured to perform non pkce based grants`() {
+            assertSoftly {
+                enumValues<GrantType>().forEach { grantType ->
+                    withClue("grantType: $grantType") {
+                        shouldThrow<IllegalArgumentException> {
+                            PublicClient(mockk {
+                                every { id } returns ConsumerY
+                                every { type } returns Public
+                                every { allowedActions } returns emptySet()
+                                every { allowedGrantTypes } returns setOf(grantType)
+                            })
+                        }
+                    }
+                }
+            }
+        }
+
+        @Test
+        fun `should not include client configuration`() {
+            assertSoftly(
+                PublicClient(mockk {
+                    every { id } returns ConsumerY
+                    every { type } returns Public
+                    every { allowedActions } returns emptySet()
+                    every { allowedGrantTypes } returns emptySet()
+                }).toString()
+            ) {
+                shouldNotContain("allowedActions")
+                shouldContain("configuration=REDACTED")
+            }
         }
     }
 }

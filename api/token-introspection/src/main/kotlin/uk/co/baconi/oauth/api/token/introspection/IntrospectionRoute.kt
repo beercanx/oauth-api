@@ -1,6 +1,5 @@
 package uk.co.baconi.oauth.api.token.introspection
 
-import io.ktor.http.*
 import io.ktor.http.ContentType.Application.FormUrlEncoded
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.OK

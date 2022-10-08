@@ -57,4 +57,7 @@ dependencies {
 
     // Mocking
     testImplementation("io.mockk:mockk:$mockkVersion")
+
+    // Test data generation
+    testImplementation("org.apache.commons:commons-lang3:3.12.0")
 }

@@ -86,10 +86,10 @@ sealed class IntrospectionResponse {
         }
     }
 
-    @Serializable
-    data class Invalid(val error: String, val description: String) : IntrospectionResponse() {
+    @Serializable // TODO - Verify if description or error_description is what the variable should be
+    data class Invalid(val error: IntrospectionErrorType, val description: String) : IntrospectionResponse() {
         init {
-            require(error.isNotBlank()) { "Error reason cannot be blank!" }
+            require(description.isNotBlank()) { "Error description should not be blank!" }
         }
     }
 

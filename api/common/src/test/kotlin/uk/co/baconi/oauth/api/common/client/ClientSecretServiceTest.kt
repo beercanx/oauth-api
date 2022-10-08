@@ -11,25 +11,28 @@ import org.junit.jupiter.api.Test
 
 class ClientSecretServiceTest {
 
-    private val consumerZConfiguration = mockk<ClientConfiguration> {
-        every { id } returns ClientId("consumer-z")
-        every { type } returns ClientType.Confidential
-        every { isConfidential } returns true
-        every { isPublic } returns false
-    }
+    private val consumerZConfiguration = ClientConfiguration(
+        id = ClientId("consumer-z"),
+        type = ClientType.Confidential,
+        redirectUris = emptySet(),
+        allowedScopes = emptySet(),
+        allowedActions = emptySet(),
+        allowedGrantTypes = emptySet(),
+    )
 
     private val consumerZSecret = mockk<ClientSecret> {
         every { clientId } returns ClientId("consumer-z")
         every { hashedSecret } returns "consumer-z-secret"
     }
 
-    private val consumerYConfiguration = mockk<ClientConfiguration> {
-        every { id } returns ClientId("consumer-y")
-        every { type } returns ClientType.Public
-        every { isConfidential } returns false
-        every { isPublic } returns true
-        every { allowedActions } returns emptySet()
-    }
+    private val consumerYConfiguration = ClientConfiguration(
+        id = ClientId("consumer-y"),
+        type = ClientType.Public,
+        redirectUris = emptySet(),
+        allowedScopes = emptySet(),
+        allowedActions = emptySet(),
+        allowedGrantTypes = emptySet(),
+    )
 
     private val consumerYSecret = mockk<ClientSecret> {
         every { clientId } returns ClientId("consumer-y")

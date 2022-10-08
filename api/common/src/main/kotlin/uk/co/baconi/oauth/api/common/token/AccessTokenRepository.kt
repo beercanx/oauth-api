@@ -2,15 +2,13 @@ package uk.co.baconi.oauth.api.common.token
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import uk.co.baconi.oauth.api.common.DatabaseModule
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
+import java.time.Instant
 import java.util.*
 
 class AccessTokenRepository(private val database: Database) {
-
-    // TODO - Consider automatic expiration of token records.
 
     fun insert(new: AccessToken) {
         transaction(database) {
@@ -60,6 +58,12 @@ class AccessTokenRepository(private val database: Database) {
     fun deleteByRecord(record: AccessToken) {
         transaction(database) {
             AccessTokenTable.deleteWhere { AccessTokenTable.id eq record.value }
+        }
+    }
+
+    fun deleteExpired() {
+        transaction(database) {
+            AccessTokenTable.deleteWhere { AccessTokenTable.expiresAt lessEq Instant.now() }
         }
     }
 

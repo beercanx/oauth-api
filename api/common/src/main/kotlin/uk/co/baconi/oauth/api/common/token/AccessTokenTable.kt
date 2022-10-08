@@ -15,17 +15,14 @@ object AccessTokenTable : IdTable<UUID>() {
      */
     override val id: Column<EntityID<UUID>> = uuid("id").entityId()
 
-    val username: Column<String> = varchar("username", 50)
-    val clientId: Column<String> = varchar("client_id", 25)
+    val username: Column<String> = varchar("username", 50).index()
+    val clientId: Column<String> = varchar("client_id", 25).index()
     val scopes: Column<String> = varchar("scopes", calculateMaxScopeFieldLength())
     val issuedAt: Column<Instant> = timestamp("issued_at") // TODO - Verify Instant over LocalDateTime as Instant still seems like its persisting in local time not UTC
-    val expiresAt: Column<Instant> = timestamp("expires_at")
+    val expiresAt: Column<Instant> = timestamp("expires_at").index()
     val notBefore: Column<Instant> = timestamp("not_before")
 
     override val primaryKey = PrimaryKey(id)
-
-    // TODO - Add index for clientId
-    // TODO - Add index for username
 
     /**
      * Assuming serialisation is via a space delimited string calculate the max length of the scope field.

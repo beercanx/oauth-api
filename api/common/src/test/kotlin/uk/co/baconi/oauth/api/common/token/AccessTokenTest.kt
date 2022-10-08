@@ -102,7 +102,7 @@ class AccessTokenTest {
                 ).toString()
             ) {
                 shouldNotContain(value.toString())
-                shouldContain("value=REDACTED")
+                shouldContain("value='REDACTED'")
             }
         }
     }

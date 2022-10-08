@@ -9,7 +9,6 @@ import io.mockk.mockk
 import io.mockk.slot
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.client.ConfidentialClient
-import uk.co.baconi.oauth.api.common.client.PublicClient
 
 class BasicTest {
 

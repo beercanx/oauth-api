@@ -101,6 +101,7 @@ class ClientConfigurationRepositoryIntegrationTest {
                 redirectUris = setOf("uk.co.baconi.consumer-y://callback"),
                 allowedScopes = emptySet(),
                 allowedActions = emptySet(),
+                allowedGrantTypes = emptySet(),
             )
         }
 
