@@ -7,9 +7,9 @@ import uk.co.baconi.oauth.api.tokens.Tokens
 
 class IntrospectionService(private val accessTokenRepository: AccessTokenRepository) {
 
-    fun introspect(request: IntrospectionRequest) = lookup(request.token).toIntrospectionResponse()
+    fun introspect(request: IntrospectionRequest.Valid) = lookup(request.token).toIntrospectionResponse()
 
-    fun introspect(request: IntrospectionRequestWithHint) = lookup(request.token).toIntrospectionResponse()
+    fun introspect(request: IntrospectionRequest.ValidWithHint) = lookup(request.token).toIntrospectionResponse()
 
     private fun lookup(token: String): AccessToken? = try {
         accessTokenRepository.findByValue(token)

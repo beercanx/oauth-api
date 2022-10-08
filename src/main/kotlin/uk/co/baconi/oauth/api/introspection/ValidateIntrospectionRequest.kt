@@ -2,22 +2,30 @@ package uk.co.baconi.oauth.api.introspection
 
 import io.ktor.application.*
 import io.ktor.request.*
-import uk.co.baconi.oauth.api.checkNotBlank
 import uk.co.baconi.oauth.api.client.ConfidentialClient
+import uk.co.baconi.oauth.api.enums.deserialise
 import uk.co.baconi.oauth.api.ktor.ApplicationContext
+import uk.co.baconi.oauth.api.tokens.Tokens
+
+private const val TOKEN = "token"
+private const val TOKEN_TYPE_HINT = "token_type_hint"
 
 suspend fun ApplicationContext.validateIntrospectionRequest(
     principal: ConfidentialClient
-): ValidatedIntrospectionRequest {
+): IntrospectionRequest {
 
-    val raw = call.receive<RawIntrospectionRequest>()
+    val parameters = call.receiveParameters()
 
-    val token = checkNotBlank(raw.token) { "token" }
-    val hint = raw.hint
+    val token = parameters[TOKEN]
+    val hint = parameters[TOKEN_TYPE_HINT]
+    val validHint = hint?.deserialise<Tokens>()
 
-    return if (hint == null) {
-        IntrospectionRequest(principal, token)
-    } else {
-        IntrospectionRequestWithHint(principal, token, hint)
+    return when {
+        token == null -> IntrospectionRequest.Invalid("invalid_request", "missing parameter: token")
+        token.isBlank() -> IntrospectionRequest.Invalid("invalid_request", "invalid parameter: token")
+
+        hint.isNullOrBlank() || validHint == null -> IntrospectionRequest.Valid(principal, token)
+
+        else -> IntrospectionRequest.ValidWithHint(principal, token, validHint)
     }
 }

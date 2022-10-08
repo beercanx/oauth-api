@@ -1,6 +1,8 @@
 package uk.co.baconi.oauth.api.introspection
 
 import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.locations.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -18,11 +20,15 @@ interface IntrospectionRoute {
                 extractClient<ConfidentialClient> { principal ->
 
                     val response = when (val request = validateIntrospectionRequest(principal)) {
-                        is IntrospectionRequest -> introspectionService.introspect(request)
-                        is IntrospectionRequestWithHint -> introspectionService.introspect(request)
+                        is IntrospectionRequest.Invalid -> request.toResponse()
+                        is IntrospectionRequest.Valid -> introspectionService.introspect(request)
+                        is IntrospectionRequest.ValidWithHint -> introspectionService.introspect(request)
                     }
 
-                    call.respond(response)
+                    when(response) {
+                        is InvalidIntrospectionResponse -> call.respond(BadRequest, response)
+                        else -> call.respond(response)
+                    }
                 }
             }
         }

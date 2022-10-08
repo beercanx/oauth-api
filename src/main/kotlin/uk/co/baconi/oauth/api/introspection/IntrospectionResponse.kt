@@ -84,3 +84,6 @@ data class ActiveIntrospectionResponse(
 
 @Serializable
 data class InactiveIntrospectionResponse(val active: Boolean = false) : IntrospectionResponse()
+
+@Serializable
+data class InvalidIntrospectionResponse(val error: String, val description: String) : IntrospectionResponse()
