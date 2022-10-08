@@ -1,5 +1,8 @@
+val ktorVersion: String by project
+
 plugins {
     kotlin("js")
+    kotlin("plugin.serialization")
 }
 
 kotlin {
@@ -15,5 +18,8 @@ kotlin {
 
 dependencies {
     api(project(":user-interface:common"))
-    api(project(":common:authentication"))
+    api(project(":common:authentication-client"))
+
+    api("io.ktor:ktor-client-core:$ktorVersion")
+    api("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 }

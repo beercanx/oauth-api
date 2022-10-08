@@ -1,7 +1,6 @@
 val ktorVersion: String by project
 val mockkVersion: String by project
 val junitVersion: String by project
-val exposedVersion: String by project
 
 plugins {
     kotlin("multiplatform")
@@ -21,9 +20,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
             }
         }
         val commonTest by getting {
@@ -42,7 +38,7 @@ kotlin {
 
         val jvmMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-cio:$ktorVersion")
+                // TODO?
             }
         }
         val jvmTest by getting {
@@ -54,7 +50,7 @@ kotlin {
 
         val jsMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-js:$ktorVersion")
+                // TODO?
             }
         }
         val jsTest by getting {

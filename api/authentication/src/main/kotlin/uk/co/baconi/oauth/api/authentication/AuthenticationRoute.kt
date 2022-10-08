@@ -9,11 +9,12 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
 import uk.co.baconi.oauth.common.authentication.CustomerAuthentication
 import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Failure
 import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Success
 import uk.co.baconi.oauth.common.authentication.CustomerAuthenticationRequest
-import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
+import kotlin.time.Duration.Companion.hours
 
 interface AuthenticationRoute {
 
@@ -23,6 +24,7 @@ interface AuthenticationRoute {
 
         application.log.info("Registering the AuthenticationRoute.authentication() routes")
 
+        // TODO - Update error handling to always return JSON, even on 500's
         route("/authentication") {
             contentType(Application.Json) {
                 post {
@@ -34,7 +36,17 @@ interface AuthenticationRoute {
                     }.onSuccess { request ->
                         when(val result = customerAuthenticationService.authenticate(request.username, request.password)) {
                             is Failure -> call.respond<CustomerAuthentication>(Unauthorized, result)
-                            is Success -> call.respond<CustomerAuthentication>(OK, result)
+                            is Success -> {
+                                // TODO - Replace with a JWT that we can then verify on the authorisation endpoint.
+                                call.response.cookies.append(
+                                    name = "Customer",
+                                    value = result.username.value,
+                                    maxAge = 4.hours.inWholeSeconds,
+                                    //secure = true, // TODO - Enable if behind TLS, may need https://ktor.io/docs/forward-headers.html
+                                    httpOnly = true,
+                                )
+                                call.respond<CustomerAuthentication>(OK, result)
+                            }
                         }
                     }
                 }

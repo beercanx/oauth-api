@@ -16,7 +16,7 @@ plugins {
 
 dependencies {
     // Common: Authentication
-    api(project(":common:authentication"))
+    api(project(":common:authentication-client"))
 
     // Logging
     api("ch.qos.logback:logback-classic:$logbackVersion")
@@ -33,6 +33,7 @@ dependencies {
     // Server: Common
     api("io.ktor:ktor-server-core:$ktorVersion")
     api("io.ktor:ktor-server-auth:$ktorVersion")
+    implementation("io.ktor:ktor-server-cors:$ktorVersion")
     implementation("io.ktor:ktor-server-hsts:$ktorVersion")
     implementation("io.ktor:ktor-server-compression:$ktorVersion")
     implementation("io.ktor:ktor-server-double-receive:$ktorVersion")

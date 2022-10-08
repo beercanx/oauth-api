@@ -8,6 +8,7 @@ import io.ktor.server.plugins.autohead.*
 import io.ktor.server.plugins.cachingheaders.*
 import io.ktor.server.plugins.compression.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.dataconversion.*
 import io.ktor.server.plugins.doublereceive.*
 import io.ktor.server.plugins.hsts.*
@@ -59,6 +60,13 @@ object CommonModule {
 
         // Enable `call.receive` to work twice without getting an exception
         install(DoubleReceive)
+
+        // Enable CORS to enable multiple ports - TODO - Remove once we've sorted common domain setup
+        install(CORS) {
+            allowHost("localhost:8080")
+            allowHeader(HttpHeaders.ContentType)
+            allowCredentials = true
+        }
 
         // TODO - Call ID
         // TODO - Metrics
