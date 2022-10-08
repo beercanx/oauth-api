@@ -30,7 +30,7 @@ class CustomerAuthenticationClient(private val authenticationEndpoint: String = 
             .then { result -> result.text() }
             .then { body -> JSON.parse<CustomerAuthentication>(body) }
             .then { response ->
-                response.also { checkNotNull(it.type) { "Response is missing response type marker." } }
+                response.also { checkNotNull(it.type) { "Response is missing response type marker: $response" } }
             }
     }
 
