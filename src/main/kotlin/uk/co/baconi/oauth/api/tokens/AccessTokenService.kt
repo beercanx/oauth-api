@@ -15,6 +15,7 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
     private val tokenAge = 2L
     private val tokenAgeUnit = ChronoUnit.HOURS
 
+    // TODO - Replace with some kind of Authorisation Success that includes scopes being checked as allowed.
     fun issue(authentication: Authentication.Success, clientId: ClientId, scopes: Set<Scopes>): AccessToken {
 
         val value = UUID.randomUUID().toString()
