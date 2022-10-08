@@ -1,10 +1,10 @@
 package uk.co.baconi.oauth.api.common.token
 
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
-import java.util.UUID
-import java.time.OffsetDateTime
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
+import java.time.Instant
+import java.util.*
 
 interface Token {
 
@@ -31,15 +31,15 @@ interface Token {
     /**
      * The date and time indicating when this token was originally issued.
      */
-    val issuedAt: OffsetDateTime
+    val issuedAt: Instant
 
     /**
      * The date and time indicating when this token will expire.
      */
-    val expiresAt: OffsetDateTime
+    val expiresAt: Instant
 
     /**
      * The date and time indicating when this token is not to be used before.
      */
-    val notBefore: OffsetDateTime
+    val notBefore: Instant
 }

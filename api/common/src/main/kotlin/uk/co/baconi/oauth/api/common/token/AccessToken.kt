@@ -4,22 +4,22 @@ import io.ktor.server.auth.*
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
-import java.time.OffsetDateTime
-import java.util.UUID
+import java.time.Instant
+import java.util.*
 
 data class AccessToken(
     override val value: UUID,
     override val username: AuthenticatedUsername,
     override val clientId: ClientId,
     override val scopes: Set<Scope>,
-    override val issuedAt: OffsetDateTime,
-    override val expiresAt: OffsetDateTime,
-    override val notBefore: OffsetDateTime
+    override val issuedAt: Instant,
+    override val expiresAt: Instant,
+    override val notBefore: Instant
 ) : Token, Principal {
 
     companion object
 
-    fun hasExpired(): Boolean = OffsetDateTime.now().isAfter(expiresAt)
+    fun hasExpired(): Boolean = Instant.now().isAfter(expiresAt)
 
     /**
      * Generated to exclude [value] from the toString output.

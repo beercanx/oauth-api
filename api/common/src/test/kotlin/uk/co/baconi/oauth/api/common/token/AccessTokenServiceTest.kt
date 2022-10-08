@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope.OpenId
+import java.time.LocalDateTime.ofInstant
+import java.time.ZoneOffset
 import java.util.UUID
 
 class AccessTokenServiceTest {
@@ -55,7 +57,7 @@ class AccessTokenServiceTest {
             )
 
             assertSoftly(result) {
-                issuedAt.shouldBeToday()
+                ofInstant(issuedAt, ZoneOffset.UTC).shouldBeToday()
                 expiresAt shouldBeAfter issuedAt
                 notBefore shouldBeBefore issuedAt
             }
@@ -68,7 +70,7 @@ class AccessTokenServiceTest {
         @Test
         fun `should return null if there is no matching access token in the repository`() {
 
-            every { repository.findByValue(any()) } returns null
+            every { repository.findById(any()) } returns null
 
             underTest.authenticate(UUID.randomUUID()) should beNull()
         }
@@ -76,7 +78,7 @@ class AccessTokenServiceTest {
         @Test
         fun `should return null if discovered the access token has expired`() {
 
-            every { repository.findByValue(any()) } returns mockk {
+            every { repository.findById(any()) } returns mockk {
                 every { hasExpired() } returns true
             }
 
@@ -90,7 +92,7 @@ class AccessTokenServiceTest {
                 every { hasExpired() } returns false
             }
 
-            every { repository.findByValue(any()) } returns accessToken
+            every { repository.findById(any()) } returns accessToken
 
             underTest.authenticate(UUID.randomUUID()) shouldBe accessToken
         }

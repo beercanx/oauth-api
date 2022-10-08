@@ -3,7 +3,7 @@ package uk.co.baconi.oauth.api.common.token
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
-import java.time.OffsetDateTime
+import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
 
@@ -17,7 +17,7 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
 
     fun issue(username: AuthenticatedUsername, clientId: ClientId, scopes: Set<Scope>): AccessToken {
 
-        val issuedAt = OffsetDateTime.now()
+        val issuedAt = Instant.now()
 
         // Set in the future when we should stop using this token
         val expiresAt = issuedAt.plus(tokenAge, tokenAgeUnit)
@@ -40,7 +40,7 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
 
     fun authenticate(token: UUID): AccessToken? {
 
-        val accessToken = repository.findByValue(token)
+        val accessToken = repository.findById(token)
 
         return when {
             accessToken == null -> null

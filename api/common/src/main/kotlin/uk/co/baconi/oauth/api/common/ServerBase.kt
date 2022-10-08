@@ -12,10 +12,13 @@ import io.ktor.server.plugins.hsts.HSTS
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.doublereceive.*
 import io.ktor.server.resources.Resources
+import org.jetbrains.exposed.sql.Database
 
 object ServerBase {
 
-    fun Application.module() {
+    fun Application.common() {
+
+        log.info("Registering the ServerBase.common() module")
 
         install(Resources)
         install(AutoHeadResponse)
@@ -58,5 +61,12 @@ object ServerBase {
 
         // Enable `call.receive` to work twice without getting an exception
         install(DoubleReceive)
+    }
+
+    fun Application.database() {
+
+        log.info("Registering the ServerBase.database() module")
+
+        Database.connect(url = "jdbc:h2:mem:oauth_api;DB_CLOSE_DELAY=-1;", driver = "org.h2.Driver")
     }
 }

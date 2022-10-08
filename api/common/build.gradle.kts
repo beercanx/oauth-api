@@ -5,7 +5,8 @@ val typesafeConfigVersion: String by project
 val bouncyCastleVersion: String by project
 val logbackVersion: String by project
 val junitVersion: String by project
-val commonsLangVersion: String by project
+val exposedVersion: String by project
+val h2DatabaseVersion: String by project
 
 plugins {
     kotlin("jvm")
@@ -37,6 +38,12 @@ dependencies {
 
     // Crypto for safe password checking
     implementation("org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion")
+
+    // Database
+    implementation("com.h2database:h2:$h2DatabaseVersion")
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 
     // JUnit 5 for tests definitions and running
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")

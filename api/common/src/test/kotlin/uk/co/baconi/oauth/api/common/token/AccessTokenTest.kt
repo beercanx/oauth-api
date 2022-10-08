@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
-import java.time.OffsetDateTime.now
+import java.time.Instant.now
+import java.time.temporal.ChronoUnit
 import java.util.UUID.randomUUID
 
 class AccessTokenTest {
@@ -27,7 +28,7 @@ class AccessTokenTest {
                     clientId = ClientId("consumer-z"),
                     scopes = emptySet(),
                     issuedAt = now(),
-                    expiresAt = now().minusDays(1),
+                    expiresAt = now().minus(1, ChronoUnit.DAYS),
                     notBefore = now()
                 ).hasExpired() shouldBe true
             }
@@ -42,7 +43,7 @@ class AccessTokenTest {
                     clientId = ClientId("consumer-z"),
                     scopes = emptySet(),
                     issuedAt = now(),
-                    expiresAt = now().plusDays(1),
+                    expiresAt = now().plus(1, ChronoUnit.DAYS),
                     notBefore = now()
                 ).hasExpired() shouldBe false
             }
@@ -62,7 +63,7 @@ class AccessTokenTest {
                     clientId = ClientId("consumer-z"),
                     scopes = emptySet(),
                     issuedAt = now(),
-                    expiresAt = now().minusDays(1),
+                    expiresAt = now().minus(1, ChronoUnit.DAYS),
                     notBefore = now()
                 ).toString()
             ) {
@@ -81,7 +82,7 @@ class AccessTokenTest {
             clientId = ClientId("consumer-z"),
             scopes = emptySet(),
             issuedAt = now(),
-            expiresAt = now().minusDays(1),
+            expiresAt = now().minus(1, ChronoUnit.DAYS),
             notBefore = now()
         )
 
