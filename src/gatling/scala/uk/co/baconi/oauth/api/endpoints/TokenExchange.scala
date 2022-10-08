@@ -60,8 +60,8 @@ object TokenExchange {
     /**
      * Generates an access token using a given username and password.
      */
-    val passwordFlow: ChainBuilder = exec(
-      http("Password Flow Request with Username and Password")
+    val passwordCredentialsGrant: ChainBuilder = exec(
+      http("Resource Owner Password Credentials Grant Request with Username and Password")
         .post(endpoint)
         .basicAuth(clientId, clientSecret)
         .formParam("grant_type", "password")

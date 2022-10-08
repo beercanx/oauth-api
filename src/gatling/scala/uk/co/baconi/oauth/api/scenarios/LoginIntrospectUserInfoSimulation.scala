@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.scenarios
 
 import uk.co.baconi.oauth.api.endpoints.Introspection.Operations.introspectAccessToken
-import uk.co.baconi.oauth.api.endpoints.TokenExchange.Operations.passwordFlow
+import uk.co.baconi.oauth.api.endpoints.TokenExchange.Operations.passwordCredentialsGrant
 import uk.co.baconi.oauth.api.endpoints.UserInfo.Operations.userInfoWithAccessToken
 import uk.co.baconi.oauth.api.feeders.Clients.Setup.withClient
 import uk.co.baconi.oauth.api.feeders.Customers.Feeders.customers
@@ -14,7 +14,7 @@ class LoginIntrospectUserInfoSimulation extends Simulation {
   private val scn = scenario("Login, Introspect and get User Info")
     .exec(withClient("consumer-z", "7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu")) // TODO - Extract into environmental config
     .feed(customers.circular)
-    .exec(passwordFlow)
+    .exec(passwordCredentialsGrant)
     .exitHereIfFailed
     .exec(introspectAccessToken)
     .exitHereIfFailed
