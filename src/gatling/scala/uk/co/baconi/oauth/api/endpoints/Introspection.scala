@@ -3,7 +3,6 @@ package uk.co.baconi.oauth.api.endpoints
 import com.fasterxml.jackson.databind.JsonNode
 import Introspection.Checks._
 import Introspection.Configuration.endpoint
-import Introspection.Expressions.introspectionBody
 import TokenExchange.Expressions.accessToken
 import uk.co.baconi.oauth.api.feeders.Clients.Expressions.{clientId, clientSecret}
 import uk.co.baconi.oauth.api.feeders.Customers.Expressions.username
@@ -12,7 +11,7 @@ import io.gatling.core.check.CheckBuilder
 import io.gatling.core.check.jsonpath.JsonPathCheckType
 import io.gatling.core.session.Expression
 import io.gatling.core.structure.ChainBuilder
-import io.gatling.http.HeaderNames.{Accept, ContentType}
+import io.gatling.http.HeaderNames.Accept
 import io.gatling.http.HeaderValues.ApplicationJson
 import io.gatling.http.Predef._
 import io.gatling.http.check.header.HttpHeaderCheckType
@@ -21,15 +20,7 @@ object Introspection {
 
   object Configuration {
 
-    val endpoint = "/oauth/v1/introspect"
-
-  }
-
-  object Expressions {
-
-    val introspectionBody: Expression[String] = session => for {
-      accessToken <- accessToken(session)
-    } yield s"""{ "token": "$accessToken" }"""
+    val endpoint = "/introspect"
 
   }
 
@@ -68,8 +59,8 @@ object Introspection {
       http("Introspection Request with Access Token")
         .post(endpoint)
         .basicAuth(clientId, clientSecret)
-        .body(StringBody(introspectionBody))
-        .header(ContentType, ApplicationJson)
+        .formParam("token", accessToken)
+        .asFormUrlEncoded
         .header(Accept, ApplicationJson)
         .check(status.is(200))
         .check(isActive)

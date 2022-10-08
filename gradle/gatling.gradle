@@ -11,4 +11,5 @@ gatlingRun {
 
     // Always run gatling
     outputs.upToDateWhen { false }
+
 }

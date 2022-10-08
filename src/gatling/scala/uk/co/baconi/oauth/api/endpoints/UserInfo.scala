@@ -20,7 +20,7 @@ object UserInfo {
 
   object Configuration {
 
-    val endpoint = "/oauth/v1/userinfo"
+    val endpoint = "/userinfo"
 
   }
 
