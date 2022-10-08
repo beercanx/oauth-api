@@ -10,7 +10,6 @@ plugins {
 group = "uk.co.baconi.oauth"
 
 allprojects {
-    version = "0.1"
     repositories {
         mavenCentral()
         mavenLocal()

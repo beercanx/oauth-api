@@ -36,7 +36,15 @@ RUN apk --no-cache add "argon2-libs>${ARGON2_VERSION}"
 RUN ./gradlew -Pargon2Type=argon2-jvm-nolibs build
 
 # Unzip all the distrubutions ready for copying later on
-RUN cd /project/api/server/build/distributions && unzip *.zip
+RUN cd /project/api/server/build/distributions && unzip *.zip \
+    && cd /project/api/authentication/build/distributions && unzip *.zip \
+    && cd /project/api/authorisation/build/distributions && unzip *.zip \
+    && cd /project/api/session-info/build/distributions && unzip *.zip \
+    && cd /project/api/token/build/distributions && unzip *.zip \
+    && cd /project/api/token-introspection/build/distributions && unzip *.zip \
+    && cd /project/api/token-revocation/build/distributions && unzip *.zip \
+    && cd /project/api/user-info/build/distributions && unzip *.zip \
+    && cd /project/api/well-known/build/distributions && unzip *.zip
 
 FROM amazoncorretto:${JAVA_VERSION}-alpine${ALPINE_VERSION}-jdk AS jre-build
 
@@ -62,54 +70,54 @@ COPY --from=jre-build /javaruntime ${JAVA_HOME}
 
 ## Create Server - Full
 FROM server-base as server-full
-COPY --from=code-build /project/api/server/build/distributions/server-*/ /application
+COPY --from=code-build /project/api/server/build/distributions/server/ /application
 WORKDIR /application
 CMD "./bin/server"
 
 ## Create Server - Authentication
 FROM server-base as server-authentication
-COPY --from=code-build /project/api/server/build/distributions/authentication-*/ /application
+COPY --from=code-build /project/api/authentication/build/distributions/authentication/ /application
 WORKDIR /application
 CMD "./bin/authentication"
 
 ## Create Server - Authorisation
 FROM server-base as server-authorisation
-COPY --from=code-build /project/api/server/build/distributions/authorisation-*/ /application
+COPY --from=code-build /project/api/authorisation/build/distributions/authorisation/ /application
 WORKDIR /application
 CMD "./bin/authorisation"
 
 ## Create Server - Session Info
 FROM server-base as server-session-info
-COPY --from=code-build /project/api/server/build/distributions/session-info-*/ /application
+COPY --from=code-build /project/api/session-info/build/distributions/session-info/ /application
 WORKDIR /application
 CMD "./bin/session-info"
 
 ## Create Server - Token
 FROM server-base as server-token
-COPY --from=code-build /project/api/server/build/distributions/token-*/ /application
+COPY --from=code-build /project/api/token/build/distributions/token/ /application
 WORKDIR /application
 CMD "./bin/token"
 
 ## Create Server - Token Introspection
 FROM server-base as server-token-introspection
-COPY --from=code-build /project/api/server/build/distributions/token-introspection-*/ /application
+COPY --from=code-build /project/api/token-introspection/build/distributions/token-introspection/ /application
 WORKDIR /application
 CMD "./bin/token-introspection"
 
 ## Create Server - Token Revocation
 FROM server-base as server-token-revocation
-COPY --from=code-build /project/api/server/build/distributions/token-revocation-*/ /application
+COPY --from=code-build /project/api/token-revocation/build/distributions/token-revocation/ /application
 WORKDIR /application
 CMD "./bin/token-revocation"
 
 ## Create Server - User Info
 FROM server-base as server-user-info
-COPY --from=code-build /project/api/server/build/distributions/user-info-*/ /application
+COPY --from=code-build /project/api/user-info/build/distributions/user-info/ /application
 WORKDIR /application
 CMD "./bin/user-info"
 
 ## Create Server - Well Known
 FROM server-base as server-well-known
-COPY --from=code-build /project/api/server/build/distributions/well-known-*/ /application
+COPY --from=code-build /project/api/well-known/build/distributions/well-known/ /application
 WORKDIR /application
 CMD "./bin/well-known"
