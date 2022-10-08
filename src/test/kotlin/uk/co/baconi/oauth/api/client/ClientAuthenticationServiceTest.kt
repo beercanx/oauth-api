@@ -1,9 +1,5 @@
 package uk.co.baconi.oauth.api.client
 
-import uk.co.baconi.oauth.api.client.*
-import uk.co.baconi.oauth.api.client.ClientId.*
-import uk.co.baconi.oauth.api.client.ClientType.Confidential
-import uk.co.baconi.oauth.api.client.ClientType.Public
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -11,6 +7,10 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import uk.co.baconi.oauth.api.client.ClientId.ConsumerY
+import uk.co.baconi.oauth.api.client.ClientId.ConsumerZ
+import uk.co.baconi.oauth.api.client.ClientType.Confidential
+import uk.co.baconi.oauth.api.client.ClientType.Public
 
 class ClientAuthenticationServiceTest {
 

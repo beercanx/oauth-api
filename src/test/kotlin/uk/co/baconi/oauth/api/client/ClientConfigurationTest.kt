@@ -1,12 +1,12 @@
 package uk.co.baconi.oauth.api.client
 
+import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.client.ClientId.ConsumerX
 import uk.co.baconi.oauth.api.client.ClientId.ConsumerY
 import uk.co.baconi.oauth.api.client.ClientType.Confidential
 import uk.co.baconi.oauth.api.client.ClientType.Public
-import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
 
 class ClientConfigurationTest {
 
