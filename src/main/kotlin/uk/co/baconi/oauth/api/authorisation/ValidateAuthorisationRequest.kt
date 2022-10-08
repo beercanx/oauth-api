@@ -18,7 +18,7 @@ fun validateAuthorisationRequest(
     val clientId = location.client_id?.let { s -> deserialise<ClientId>(s) }
     val clientConfiguration = clientId?.let(clientConfigurationRepository::findByClientId)
 
-    val redirectUri = clientConfiguration?.redirectUrls?.find { r -> r == location.redirect_uri }
+    val validRedirectUri = clientConfiguration?.redirectUrls?.find { r -> r == location.redirect_uri }
 
     val responseType = location.response_type?.let { s -> deserialise<AuthorisationResponseType>(s) }
     val validResponseType = clientConfiguration?.allowedResponseTypes?.find { r -> r == responseType }
@@ -39,8 +39,8 @@ fun validateAuthorisationRequest(
         // TODO - How do we redirect back to the consumer with no valid client_id?
 
         location.redirect_uri == null -> AuthorisationRequest.Invalid("invalid_request", "missing parameter: redirect_uri")
-        redirectUri == null -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: redirect_uri")
-        !redirectUri.isAbsoluteURI(false) -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: redirect_uri")
+        validRedirectUri == null -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: redirect_uri")
+        !validRedirectUri.isAbsoluteURI(false) -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: redirect_uri")
 
         // TODO - How do we redirect back to the consumer with no valid redirect_uri?
 
@@ -57,9 +57,9 @@ fun validateAuthorisationRequest(
         rawScopes?.size != scopes?.size -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: scope")
 
         else -> AuthorisationRequest.Valid(
-            responseType = responseType,
+            responseType = validResponseType,
             clientId = clientId,
-            redirectUri = redirectUri,
+            redirectUri = validRedirectUri,
             state = location.state,
             requestedScope = validScopes ?: emptySet()
         )
