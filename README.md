@@ -1,4 +1,4 @@
-# A Ktor bare bones OAuth API
+# A Ktor bare-bones OAuth API
 
 ## Using Gradle
 ```
@@ -65,7 +65,3 @@ Gatling resources:
 
 Static assets:
  * https://pixabay.com/vectors/people-character-faces-real-305836/
-
-Future resources:
- * https://github.com/JetBrains/kotlin-wrappers
- * https://tailwindcss.com/docs/installation

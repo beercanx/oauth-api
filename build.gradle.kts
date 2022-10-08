@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     base
-    kotlin("multiplatform") apply false // Here to enable allProjects configuration
+    kotlin("jvm") apply false // Here to enable allProjects configuration
 }
 
 allprojects {
