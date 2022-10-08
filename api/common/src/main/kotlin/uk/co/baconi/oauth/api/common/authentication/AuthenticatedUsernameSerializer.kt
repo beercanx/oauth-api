@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.common.authentication
+package uk.co.baconi.oauth.api.common.authentication
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind

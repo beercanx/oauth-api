@@ -9,9 +9,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.api.common.authentication.*
-import uk.co.baconi.oauth.common.authentication.*
-import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Failure.Reason
+import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Failure.Reason
 import uk.co.baconi.oauth.api.common.authentication.CustomerState.*
 
 class CustomerAuthenticationServiceTest {

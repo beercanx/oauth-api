@@ -6,7 +6,7 @@ import io.kotest.matchers.string.shouldNotContain
 import io.mockk.mockk
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.common.authentication.AuthenticatedUsername
+import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCode.Basic
 import uk.co.baconi.oauth.api.common.client.ClientId
 import java.time.Instant.now

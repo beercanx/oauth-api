@@ -4,8 +4,6 @@ import io.kotest.matchers.shouldBe
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.common.authentication.AuthenticatedUsername
-import uk.co.baconi.oauth.common.authentication.AuthenticatedUsernameSerializer
 
 class AuthenticatedUsernameSerializerTest {
 

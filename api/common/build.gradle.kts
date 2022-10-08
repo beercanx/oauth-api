@@ -15,8 +15,6 @@ plugins {
 }
 
 dependencies {
-    // Common: Authentication
-    api(project(":common:authentication-client"))
 
     // Logging
     api("ch.qos.logback:logback-classic:$logbackVersion")

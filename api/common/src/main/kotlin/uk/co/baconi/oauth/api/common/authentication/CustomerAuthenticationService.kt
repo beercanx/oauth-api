@@ -4,11 +4,9 @@ import de.mkammerer.argon2.Argon2
 import de.mkammerer.argon2.Argon2Factory
 import de.mkammerer.argon2.Argon2Factory.Argon2Types.ARGON2id
 import org.slf4j.LoggerFactory
-import uk.co.baconi.oauth.common.authentication.AuthenticatedUsername
-import uk.co.baconi.oauth.common.authentication.CustomerAuthentication
-import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Success
-import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Failure
-import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Failure.*
+import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Success
+import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Failure
+import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Failure.*
 
 class CustomerAuthenticationService internal constructor(
     private val customerCredentialRepository: CustomerCredentialRepository,

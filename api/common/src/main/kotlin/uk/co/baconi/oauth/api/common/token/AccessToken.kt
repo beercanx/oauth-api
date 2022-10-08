@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.common.token
 
 import io.ktor.server.auth.*
-import uk.co.baconi.oauth.common.authentication.AuthenticatedUsername
+import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
 import java.time.Instant

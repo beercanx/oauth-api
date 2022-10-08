@@ -12,7 +12,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.common.authentication.AuthenticatedUsername
+import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope.OpenId
 import java.time.LocalDateTime.ofInstant

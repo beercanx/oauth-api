@@ -7,7 +7,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.common.authentication.AuthenticatedUsername
+import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope.*
 import uk.co.baconi.oauth.api.common.token.AccessTokenRepository

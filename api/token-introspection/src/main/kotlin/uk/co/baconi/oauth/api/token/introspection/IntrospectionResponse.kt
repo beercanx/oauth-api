@@ -2,7 +2,7 @@ package uk.co.baconi.oauth.api.token.introspection
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import uk.co.baconi.oauth.common.authentication.AuthenticatedUsername
+import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
 import uk.co.baconi.oauth.api.common.scope.ScopesSerializer

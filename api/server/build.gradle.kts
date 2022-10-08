@@ -4,7 +4,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":common:authentication-client"))
     implementation(project(":api:common"))
     implementation(project(":api:authorisation"))
     implementation(project(":api:authentication"))

@@ -10,10 +10,10 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
-import uk.co.baconi.oauth.common.authentication.CustomerAuthentication
-import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Failure
-import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Success
-import uk.co.baconi.oauth.common.authentication.CustomerAuthenticationRequest
+import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication
+import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Failure
+import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Success
+import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationRequest
 import kotlin.time.Duration.Companion.hours
 
 interface AuthenticationRoute {
