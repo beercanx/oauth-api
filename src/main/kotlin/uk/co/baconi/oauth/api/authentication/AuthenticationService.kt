@@ -28,10 +28,10 @@ class AuthenticationService(
 
     private fun authenticate(username: String, password: String): Authentication {
 
-        return when (customerMatchService.match(username, password)) {
+        return when (val match = customerMatchService.match(username, password)) {
             is CustomerMatch.Missing -> Authentication.Failure
             is CustomerMatch.Mismatched -> Authentication.Failure
-            is CustomerMatch.Success -> when (customerStatusRepository.findByUsername(username)?.state) {
+            is CustomerMatch.Success -> when (customerStatusRepository.findByUsername(match.username)?.state) { // TODO - Consider using typed username to prevent issues with case.
                 null -> {
                     logger.error("Unable to find customer status for $username")
                     Authentication.Failure
