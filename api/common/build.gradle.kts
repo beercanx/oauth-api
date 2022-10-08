@@ -2,7 +2,6 @@ val ktorVersion: String by project
 val mockkVersion: String by project
 val kotestVersion: String by project
 val typesafeConfigVersion: String by project
-val bouncyCastleVersion: String by project
 val logbackVersion: String by project
 val junitVersion: String by project
 val exposedVersion: String by project
@@ -41,9 +40,8 @@ dependencies {
     implementation("io.ktor:ktor-server-auto-head-response:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
 
-    // Crypto for safe password checking
-    implementation("org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion") // TODO - Remove and replace with argon2?
-    api("de.mkammerer:argon2-jvm:$argon2Version")
+    // Crypto for safe credential checking
+    implementation("de.mkammerer:argon2-jvm:$argon2Version")
 
     // Database
     api("com.h2database:h2:$h2DatabaseVersion")

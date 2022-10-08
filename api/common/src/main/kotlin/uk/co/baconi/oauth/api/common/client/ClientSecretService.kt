@@ -1,6 +1,8 @@
 package uk.co.baconi.oauth.api.common.client
 
-import org.bouncycastle.crypto.generators.OpenBSDBCrypt
+import de.mkammerer.argon2.Argon2
+import de.mkammerer.argon2.Argon2Factory
+import de.mkammerer.argon2.Argon2Factory.Argon2Types.ARGON2id
 
 class ClientSecretService internal constructor(
     private val clientSecretRepository: ClientSecretRepository,
@@ -11,10 +13,26 @@ class ClientSecretService internal constructor(
     constructor(
         clientSecretRepository: ClientSecretRepository,
         clientConfigurationRepository: ClientConfigurationRepository
+    ): this(
+        clientSecretRepository,
+        clientConfigurationRepository,
+        Argon2Factory.create(ARGON2id)
+    )
+
+    internal constructor(
+        clientSecretRepository: ClientSecretRepository,
+        clientConfigurationRepository: ClientConfigurationRepository,
+        argon2: Argon2
     ) : this(
         clientSecretRepository,
         clientConfigurationRepository,
-        OpenBSDBCrypt::checkPassword  // TODO - Look to migrate to Argon2id as per OWASP recommendations
+        checkPassword = { hash, password ->
+            try {
+                argon2.verify(hash, password)
+            } finally {
+                argon2.wipeArray(password)
+            }
+        }
     )
 
     /**

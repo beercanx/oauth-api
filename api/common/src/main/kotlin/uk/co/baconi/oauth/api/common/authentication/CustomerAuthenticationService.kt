@@ -16,8 +16,17 @@ class CustomerAuthenticationService internal constructor(
 
     constructor(
         customerCredentialRepository: CustomerCredentialRepository,
+        customerStatusRepository: CustomerStatusRepository
+    ) : this(
+        customerCredentialRepository,
+        customerStatusRepository,
+        Argon2Factory.create(ARGON2id)
+    )
+
+    internal constructor(
+        customerCredentialRepository: CustomerCredentialRepository,
         customerStatusRepository: CustomerStatusRepository,
-        argon2: Argon2 = Argon2Factory.create(ARGON2id) // TODO - Setup better?
+        argon2: Argon2
     ) : this(
         customerCredentialRepository,
         customerStatusRepository,

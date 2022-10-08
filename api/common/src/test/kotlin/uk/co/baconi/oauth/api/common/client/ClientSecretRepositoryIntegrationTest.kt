@@ -20,7 +20,7 @@ class ClientSecretRepositoryIntegrationTest {
     private val consumerXClientSecret = ClientSecret(
         id = fromString("ab998101-5acb-4f9c-9a31-0136daa01ec7"),
         clientId = ClientId("consumer-x"),
-        hashedSecret = "\$2a\$06\$3hCQBc6v.oqlCqpjhuZZz.wdGuZbT/bjFK5makOayne3/dsErUMru"
+        hashedSecret = "\$argon2id\$v=19\$m=16,t=2,p=1\$S3hET3R4WUhkc1hTYjl6dA\$ZG1ww6bOXrwPOFUBiCLMnQ"
     )
 
     @Nested
@@ -32,7 +32,7 @@ class ClientSecretRepositoryIntegrationTest {
             underTest.findById(uuid) shouldBe ClientSecret(
                 id = uuid,
                 clientId = ClientId("consumer-z"),
-                hashedSecret = "\$2a\$06\$wSH/osEXHWgsviylp5PgTO4ns9oBRcbtVGf8dn/o0kNRwzj3X7nyy"
+                hashedSecret = "\$argon2id\$v=19\$m=16,t=2,p=1\$MWU1Sk9qRUxhb0lFckVrcg\$OIk99Mx7SRmKOXcGC4oGsw"
             )
         }
 

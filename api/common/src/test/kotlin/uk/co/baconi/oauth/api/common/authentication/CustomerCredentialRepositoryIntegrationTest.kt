@@ -8,7 +8,6 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.apache.commons.lang3.RandomStringUtils
-import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
@@ -16,7 +15,6 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.security.SecureRandom
 
 class CustomerCredentialRepositoryIntegrationTest {
 
@@ -84,12 +82,7 @@ class CustomerCredentialRepositoryIntegrationTest {
     ): CustomerCredential {
         return CustomerCredential(
             username = username,
-            hashedSecret = hash(secret)
+            hashedSecret = secret
         )
     }
-
-    // BCrypt support
-    private val secureRandom = SecureRandom()
-    private fun generateSalt(length: Int = 16) = ByteArray(size = length).also(secureRandom::nextBytes)
-    private fun hash(secret: String) = OpenBSDBCrypt.generate(secret.toCharArray(), generateSalt(), 10)
 }
