@@ -1,6 +1,7 @@
 rootProject.name = "oauth"
 
 // TODO - Common
+include(":common:authentication")
 
 // API
 include(":api:common")
