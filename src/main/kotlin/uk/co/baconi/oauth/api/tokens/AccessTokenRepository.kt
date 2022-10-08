@@ -12,11 +12,6 @@ interface AccessTokenRepository : Repository<AccessToken, UUID> {
     /**
      * Find an [AccessToken] based on its value.
      */
-    fun findByValue(value: UUID): AccessToken?
-
-    /**
-     * Find an [AccessToken] based on its value.
-     */
     fun findByValue(value: String): AccessToken?
 
     /**
