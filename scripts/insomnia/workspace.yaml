@@ -7,8 +7,8 @@ resources:
     parentId: fld_e2050447ebba401bb4e6c91bfe0bcdac
     modified: 1616849090757
     created: 1616844924188
-    url: http://localhost:8080/openid/v1/token
-    name: /openid/v1/token
+    url: http://localhost:8080/token
+    name: /token
     description: ""
     method: POST
     body:
@@ -72,8 +72,8 @@ resources:
     parentId: fld_8226a096e8394c65bff7700602e244c4
     modified: 1616844980069
     created: 1616237719049
-    url: http://localhost:8080/openid/v1/token
-    name: /openid/v1/token
+    url: http://localhost:8080/token
+    name: /token
     description: ""
     method: POST
     body:

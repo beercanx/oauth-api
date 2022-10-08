@@ -1,7 +1,7 @@
 ##
 # Resource Owner Password Credentials Grant as ConsumerZ
 ##
-POST http://localhost:8080/oauth/v1/token
+POST http://localhost:8080/token
 authorization: Basic Y29uc3VtZXItejo3WExseXpqUnB2SUNFa05yc2d0T3V1ajFTMzBCajlYdQ==
 Content-Type: application/x-www-form-urlencoded
 
@@ -12,7 +12,7 @@ grant_type=password&scope=openid&username=aardvark&password=121212
 ##
 # PKCE Authorization Code Grant as ConsumerY
 ##
-POST http://localhost:8080/oauth/v1/token
+POST http://localhost:8080/token
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=authorization_code&client_id=consumer-y&code=aardvark&redirect_uri=com.baconi.consumer%3A%2F%2Fcallback&code_verifier=badger

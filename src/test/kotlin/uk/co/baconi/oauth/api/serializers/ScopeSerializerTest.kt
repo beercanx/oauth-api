@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.serializers
 
-import uk.co.baconi.oauth.api.openid.Scopes
-import uk.co.baconi.oauth.api.openid.Scopes.*
+import uk.co.baconi.oauth.api.scopes.Scopes
+import uk.co.baconi.oauth.api.scopes.Scopes.*
 import io.kotest.matchers.collections.beEmpty
 import io.kotest.matchers.collections.containExactly
 import io.kotest.matchers.should

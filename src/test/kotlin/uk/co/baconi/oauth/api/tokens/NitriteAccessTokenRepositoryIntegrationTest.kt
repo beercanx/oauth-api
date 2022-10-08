@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.client.ClientId.*
-import uk.co.baconi.oauth.api.openid.Scopes.OpenId
+import uk.co.baconi.oauth.api.scopes.Scopes.OpenId
 import java.time.OffsetDateTime.now
 import java.util.UUID.randomUUID
 
