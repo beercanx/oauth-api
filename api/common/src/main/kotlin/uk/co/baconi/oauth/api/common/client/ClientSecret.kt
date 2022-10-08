@@ -1,6 +1,8 @@
 package uk.co.baconi.oauth.api.common.client
 
-data class ClientSecret(val id: Long, val clientId: ClientId, val hashedSecret: String) {
+import java.util.UUID
+
+data class ClientSecret(val id: UUID, val clientId: ClientId, internal val hashedSecret: String) {
 
     /**
      * Generated based on its database ID field [id].

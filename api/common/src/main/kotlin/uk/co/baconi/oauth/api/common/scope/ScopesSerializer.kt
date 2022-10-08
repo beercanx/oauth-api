@@ -20,8 +20,6 @@ object ScopesSerializer : KSerializer<Set<Scope>> {
     }
 
     override fun deserialize(decoder: Decoder): Set<Scope> {
-        // TODO - Ignore invalid scopes?
-        // TODO - Do we even need the serializer?
-        return decoder.decodeString().split(" ").map(Scope::fromValue).toSet()
+        return decoder.decodeString().split(" ").mapNotNull(Scope::fromValueOrNull).toSet()
     }
 }

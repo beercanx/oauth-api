@@ -20,7 +20,6 @@ include(":api:server")
 // Here, because workaround https://github.com/gradle/gradle/issues/1697#issuecomment-655682357
 pluginManagement {
     val kotlinVersion: String by settings
-    val kotestVersion: String by settings
     plugins {
         kotlin("jvm") version kotlinVersion apply false
         kotlin("multiplatform") version kotlinVersion apply false

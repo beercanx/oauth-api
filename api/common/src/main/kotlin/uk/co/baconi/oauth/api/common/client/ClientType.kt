@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class ClientType(val value: String) {
+enum class ClientType(internal val value: String) {
     @SerialName("confidential") Confidential("confidential"),
     @SerialName("public") Public("public");
     companion object {

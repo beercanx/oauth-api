@@ -4,6 +4,8 @@ val kotestVersion: String by project
 val typesafeConfigVersion: String by project
 val bouncyCastleVersion: String by project
 val logbackVersion: String by project
+val junitVersion: String by project
+val commonsLangVersion: String by project
 
 plugins {
     kotlin("jvm")
@@ -36,11 +38,12 @@ dependencies {
     // Crypto for safe password checking
     implementation("org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion")
 
-    // Testing engine
-    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    // JUnit 5 for tests definitions and running
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+
+    // Asserting stuff
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-    testImplementation("io.kotest:kotest-framework-datatest:$kotestVersion")
 
     // Mocking
-    testImplementation("io.mockk:mockk-common:$mockkVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
 }

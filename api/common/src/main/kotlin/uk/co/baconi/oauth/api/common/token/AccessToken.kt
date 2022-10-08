@@ -1,13 +1,15 @@
 package uk.co.baconi.oauth.api.common.token
 
 import io.ktor.server.auth.*
+import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
 import java.time.OffsetDateTime
+import java.util.UUID
 
 data class AccessToken(
-    override val value: String,
-    override val username: String,
+    override val value: UUID,
+    override val username: AuthenticatedUsername,
     override val clientId: ClientId,
     override val scopes: Set<Scope>,
     override val issuedAt: OffsetDateTime,

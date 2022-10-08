@@ -13,11 +13,14 @@ object ClientIdSerializer : KSerializer<ClientId> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ClientId", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: ClientId) {
-        encoder.encodeString(value.value)
+        when {
+            value.value.isBlank() -> throw SerializationException("Invalid client id [${value.value}]")
+            value.value.trim() != value.value ->  throw SerializationException("Invalid client id [${value.value}]")
+            else -> encoder.encodeString(value.value)
+        }
     }
 
     override fun deserialize(decoder: Decoder): ClientId {
-        // TODO - Do we even need to support this?
         throw SerializationException("Deserialize unsupported for ClientId")
     }
 }
