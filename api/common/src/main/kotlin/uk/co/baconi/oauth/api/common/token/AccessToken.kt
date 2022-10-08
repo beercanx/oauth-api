@@ -17,8 +17,6 @@ data class AccessToken(
     override val notBefore: Instant
 ) : Token, Principal {
 
-    companion object
-
     fun hasExpired(): Boolean = Instant.now().isAfter(expiresAt)
 
     /**
