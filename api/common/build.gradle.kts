@@ -14,17 +14,20 @@ plugins {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation(kotlin("reflect"))
+    api(kotlin("stdlib-jdk8"))
+    api(kotlin("reflect"))
 
     // Logging
-    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    api("ch.qos.logback:logback-classic:$logbackVersion")
 
     // Configuration
-    implementation("com.typesafe:config:$typesafeConfigVersion")
+    api("com.typesafe:config:$typesafeConfigVersion")
 
-    // Server
-    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    // Server: Engine - using CIO as it supports JVM, Native and GraalVM but doesn't support HTTP/2
+    api("io.ktor:ktor-server-cio:$ktorVersion")
+
+    // Server: Common
+    api("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-resources:$ktorVersion")
     implementation("io.ktor:ktor-server-data-conversion:$ktorVersion")
     implementation("io.ktor:ktor-server-auto-head-response:$ktorVersion")

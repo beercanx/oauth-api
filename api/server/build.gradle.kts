@@ -1,8 +1,6 @@
 plugins {
-    jacoco
     application
     kotlin("jvm")
-    kotlin("plugin.serialization")
 }
 
 dependencies {
@@ -16,4 +14,8 @@ dependencies {
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
+}
+
+application {
+    mainClass.set("uk.co.baconi.oauth.api.server.MainKt")
 }

@@ -1,12 +1,9 @@
 plugins {
-    jacoco
+    application
     kotlin("jvm")
     kotlin("plugin.serialization")
 }
 
 dependencies {
-    implementation(project(":api:common"))
-
-    implementation(kotlin("stdlib-jdk8"))
-    implementation(kotlin("reflect"))
+    api(project(":api:common"))
 }
