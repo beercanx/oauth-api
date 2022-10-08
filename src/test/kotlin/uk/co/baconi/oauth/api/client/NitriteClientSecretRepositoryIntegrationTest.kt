@@ -1,7 +1,5 @@
 package uk.co.baconi.oauth.api.client
 
-import uk.co.baconi.oauth.api.client.ClientId.ConsumerX
-import uk.co.baconi.oauth.api.client.ClientId.ConsumerY
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.sequences.beEmpty
@@ -14,6 +12,9 @@ import org.apache.commons.lang3.RandomStringUtils.random
 import org.dizitart.no2.exceptions.UniqueConstraintException
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import uk.co.baconi.oauth.api.client.ClientId.ConsumerX
+import uk.co.baconi.oauth.api.client.ClientId.ConsumerY
+import uk.co.baconi.oauth.api.enums.serialise
 import java.util.UUID.randomUUID
 
 class NitriteClientSecretRepositoryIntegrationTest {
@@ -154,7 +155,7 @@ class NitriteClientSecretRepositoryIntegrationTest {
             val clientSecret = ClientSecret(id = randomUUID(), clientId = ConsumerY, secret = "aardvark")
             underTest.insert(clientSecret)
 
-            assertSoftly(underTest.findAllByClientId(ConsumerY)) {
+            assertSoftly(underTest.findAllByClientId(ConsumerY.serialise())) {
                 it shouldHaveCount 1
                 it shouldContain clientSecret
             }
@@ -174,7 +175,7 @@ class NitriteClientSecretRepositoryIntegrationTest {
                 underTest.insert(clientSecret)
             }
 
-            assertSoftly(underTest.findAllByClientId(ConsumerY)) {
+            assertSoftly(underTest.findAllByClientId(ConsumerY.serialise())) {
                 it shouldHaveCount 10
                 it shouldNotContain consumerXClientSecret
             }
