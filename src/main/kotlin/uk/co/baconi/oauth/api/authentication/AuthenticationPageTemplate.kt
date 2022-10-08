@@ -1,11 +1,12 @@
 package uk.co.baconi.oauth.api.authentication
 
-import io.ktor.html.*
-import io.ktor.locations.*
+import io.ktor.server.html.*
+import io.ktor.server.locations.*
 import kotlinx.html.*
 import uk.co.baconi.oauth.api.kotlinx.html.PageTemplate
 
-class AuthenticationPageTemplate(private val locations: Locations, private val location: AuthenticationLocation) : Template<HTML> {
+class AuthenticationPageTemplate(private val locations: Locations, private val location: AuthenticationLocation) :
+    Template<HTML> {
 
     companion object {
         const val CSRF_TOKEN = "csrf_token"

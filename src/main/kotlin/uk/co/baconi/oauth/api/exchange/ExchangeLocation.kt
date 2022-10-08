@@ -1,6 +1,6 @@
 package uk.co.baconi.oauth.api.exchange
 
-import io.ktor.locations.*
+import io.ktor.server.locations.*
 
 @Location("/token")
 object ExchangeLocation

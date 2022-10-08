@@ -1,9 +1,9 @@
 package uk.co.baconi.oauth.api.wellknown
 
-import io.ktor.application.*
-import io.ktor.locations.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.locations.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
 interface WellKnownRoute {
 

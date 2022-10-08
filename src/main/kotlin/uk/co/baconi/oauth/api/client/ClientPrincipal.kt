@@ -1,6 +1,6 @@
 package uk.co.baconi.oauth.api.client
 
-import io.ktor.auth.*
+import io.ktor.server.auth.*
 import uk.co.baconi.oauth.api.scopes.Scopes
 
 sealed class ClientPrincipal : Principal {

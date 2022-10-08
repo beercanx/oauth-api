@@ -1,13 +1,13 @@
 package uk.co.baconi.oauth.api.authorisation
 
-import io.ktor.application.*
-import io.ktor.html.*
+import io.ktor.server.application.*
+import io.ktor.server.html.*
 import io.ktor.http.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
-import io.ktor.locations.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.sessions.*
+import io.ktor.server.locations.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import kotlinx.html.h1
 import kotlinx.html.p
 import uk.co.baconi.oauth.api.authentication.AuthenticatedSession
@@ -49,7 +49,7 @@ interface AuthorisationRoute {
                                 +"Invalid Request"
                             }
                             p(classes = "text-center") {
-                                + "Invalid client or redirect was used."
+                                +"Invalid client or redirect was used."
                             }
                         }
                     }
@@ -63,7 +63,7 @@ interface AuthorisationRoute {
                             takeFrom(request.redirectUri)
                             parameters["error"] = request.error
                             parameters["error_description"] = request.description
-                            if(request.state != null) parameters["state"] = request.state
+                            if (request.state != null) parameters["state"] = request.state
                         }.buildString()
                     )
                 }

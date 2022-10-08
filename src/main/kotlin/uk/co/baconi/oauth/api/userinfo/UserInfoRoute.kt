@@ -1,9 +1,9 @@
 package uk.co.baconi.oauth.api.userinfo
 
-import io.ktor.application.*
-import io.ktor.locations.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.locations.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import uk.co.baconi.oauth.api.ktor.auth.authenticate
 import uk.co.baconi.oauth.api.ktor.auth.authoriseAccessToken
 import uk.co.baconi.oauth.api.scopes.Scopes.OpenId

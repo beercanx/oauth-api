@@ -1,6 +1,6 @@
 package uk.co.baconi.oauth.api
 
-import io.ktor.application.*
+import io.ktor.server.application.*
 import java.io.Closeable
 
 /**

@@ -1,14 +1,23 @@
 package uk.co.baconi.oauth.api
 
-import io.ktor.application.*
-import io.ktor.auth.*
-import io.ktor.features.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.http.*
-import io.ktor.http.content.*
-import io.ktor.locations.*
-import io.ktor.routing.*
-import io.ktor.serialization.*
-import io.ktor.sessions.*
+import io.ktor.http.auth.HttpAuthHeader.*
+import io.ktor.http.auth.HttpAuthHeader.Parameters
+import io.ktor.server.routing.*
+import io.ktor.server.plugins.autohead.AutoHeadResponse
+import io.ktor.server.plugins.cachingheaders.CachingHeaders
+import io.ktor.server.plugins.compression.Compression
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.dataconversion.DataConversion
+import io.ktor.server.plugins.doublereceive.DoubleReceive
+import io.ktor.server.plugins.hsts.HSTS
+import io.ktor.server.resources.*
+import io.ktor.server.sessions.*
+import io.ktor.http.content.CachingOptions
+import io.ktor.server.plugins.compression.*
+import io.ktor.serialization.kotlinx.json.*
 import uk.co.baconi.oauth.api.assets.StaticAssetsRoute
 import uk.co.baconi.oauth.api.authentication.AuthenticatedSession
 import uk.co.baconi.oauth.api.authentication.AuthenticationRoute
@@ -28,7 +37,7 @@ import uk.co.baconi.oauth.api.introspection.IntrospectionRoute
 import uk.co.baconi.oauth.api.introspection.IntrospectionService
 import uk.co.baconi.oauth.api.ktor.auth.basic
 import uk.co.baconi.oauth.api.ktor.auth.bearer
-import uk.co.baconi.oauth.api.ktor.auth.body
+import uk.co.baconi.oauth.api.ktor.auth.form
 import uk.co.baconi.oauth.api.revocation.RevocationRoute
 import uk.co.baconi.oauth.api.scopes.TypesafeScopesConfigurationRepository
 import uk.co.baconi.oauth.api.swagger.SwaggerRoute
@@ -86,7 +95,7 @@ object OAuth2Server : AuthenticationRoute,
 
     fun Application.module() {
 
-        install(Locations) {}
+        install(Resources)
         install(AutoHeadResponse)
         install(DataConversion)
 
@@ -111,12 +120,11 @@ object OAuth2Server : AuthenticationRoute,
         // Disable caching via headers on all requests
         install(CachingHeaders) {
             // no-store
-            options { CachingOptions(CacheControl.NoStore(null)) }
+            options { _, _ -> CachingOptions(CacheControl.NoStore(null)) }
             // no-cache
-            options { CachingOptions(CacheControl.NoCache(null)) }
+            options { _, _ -> CachingOptions(CacheControl.NoCache(null)) }
             // must-revalidate, proxy-revalidate, max-age=0
-            options {
-                CachingOptions(
+            options { _, _ -> CachingOptions(
                     CacheControl.MaxAge(
                         maxAgeSeconds = 0,
                         mustRevalidate = true,
@@ -150,10 +158,12 @@ object OAuth2Server : AuthenticationRoute,
                     clientAuthService.confidentialClient(clientId, clientSecret)
                 }
             }
-            body<PublicClient> {
-                realm = REALM
+            form<PublicClient> {
                 userParamName = "client_id"
                 passwordParamName = "client_id"
+                challenge {
+                    UnauthorizedResponse(Parameterized("Body", mapOf(Parameters.Realm to REALM)))
+                }
                 validate { (clientId) ->
                     clientAuthService.publicClient(clientId)
                 }

@@ -1,10 +1,9 @@
 package uk.co.baconi.oauth.api.ktor.auth
 
-import io.ktor.application.*
-import io.ktor.auth.*
-import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
-import io.ktor.response.*
+import io.ktor.server.response.*
 import uk.co.baconi.oauth.api.client.ClientPrincipal
 import uk.co.baconi.oauth.api.ktor.ApplicationContext
 
@@ -14,7 +13,7 @@ import uk.co.baconi.oauth.api.ktor.ApplicationContext
  */
 suspend inline fun <reified C : ClientPrincipal> ApplicationContext.extractClient(block: ApplicationContext.(C) -> Unit) {
 
-    when(val client = call.principal<C>()) {
+    when (val client = call.principal<C>()) {
 
         // If the application is setup correctly this should not be null.
         null -> {

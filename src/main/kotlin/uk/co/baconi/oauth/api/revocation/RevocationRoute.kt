@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.revocation
 
-import io.ktor.locations.post
-import io.ktor.routing.Route
+import io.ktor.server.locations.post
+import io.ktor.server.routing.Route
 
 interface RevocationRoute {
 

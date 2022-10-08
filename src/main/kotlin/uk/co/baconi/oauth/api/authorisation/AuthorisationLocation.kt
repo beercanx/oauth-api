@@ -1,6 +1,6 @@
 package uk.co.baconi.oauth.api.authorisation
 
-import io.ktor.locations.*
+import io.ktor.server.locations.*
 
 @Location("/authorise")
 data class AuthorisationLocation(

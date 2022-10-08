@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.ktor.auth
 
-import io.ktor.auth.*
-import io.ktor.routing.*
+import io.ktor.server.auth.*
+import io.ktor.server.routing.*
 import kotlin.reflect.KClass
 import kotlin.reflect.jvm.jvmName
 

@@ -1,6 +1,6 @@
 package uk.co.baconi.oauth.api.userinfo
 
-import io.ktor.locations.*
+import io.ktor.server.locations.*
 import uk.co.baconi.oauth.api.assets.StaticAssetsLocation.ProfileImagesLocation
 import uk.co.baconi.oauth.api.scopes.ScopesConfiguration
 import uk.co.baconi.oauth.api.scopes.ScopesConfigurationRepository

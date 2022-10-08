@@ -2,14 +2,14 @@ package uk.co.baconi.oauth.api.wellknown
 
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
-import io.ktor.application.Application
-import io.ktor.application.install
-import io.ktor.features.ContentNegotiation
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import io.ktor.locations.*
-import io.ktor.routing.*
-import io.ktor.serialization.json
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.locations.*
+import io.ktor.server.routing.*
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
 import io.mockk.every
