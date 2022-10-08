@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.api.openid.exchange.flows
+package uk.co.baconi.oauth.api.openid.exchange.grants
 
 import uk.co.baconi.oauth.api.openid.exchange.ExchangeResponse
 import uk.co.baconi.oauth.api.openid.exchange.ValidatedPublicExchangeRequest

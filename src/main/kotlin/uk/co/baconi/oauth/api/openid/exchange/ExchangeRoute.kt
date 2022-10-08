@@ -6,10 +6,10 @@ import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.client.PublicClient
 import uk.co.baconi.oauth.api.ktor.auth.authenticate
 import uk.co.baconi.oauth.api.openid.exchange.ErrorType.InvalidRequest
-import uk.co.baconi.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionGrant
-import uk.co.baconi.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeGrant
-import uk.co.baconi.oauth.api.openid.exchange.flows.password.PasswordCredentialsGrant
-import uk.co.baconi.oauth.api.openid.exchange.flows.refresh.RefreshGrant
+import uk.co.baconi.oauth.api.openid.exchange.grants.assertion.AssertionRedemptionGrant
+import uk.co.baconi.oauth.api.openid.exchange.grants.authorization.AuthorizationCodeGrant
+import uk.co.baconi.oauth.api.openid.exchange.grants.password.PasswordCredentialsGrant
+import uk.co.baconi.oauth.api.openid.exchange.grants.refresh.RefreshGrant
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*

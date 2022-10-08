@@ -1,10 +1,10 @@
-package uk.co.baconi.oauth.api.openid.exchange.flows.authorization
+package uk.co.baconi.oauth.api.openid.exchange.grants.authorization
 
 import uk.co.baconi.oauth.api.openid.exchange.AuthorizationCodeRequest
 import uk.co.baconi.oauth.api.openid.exchange.ExchangeResponse
 import uk.co.baconi.oauth.api.openid.exchange.PkceAuthorizationCodeRequest
-import uk.co.baconi.oauth.api.openid.exchange.flows.ConfidentialGrant
-import uk.co.baconi.oauth.api.openid.exchange.flows.PublicGrant
+import uk.co.baconi.oauth.api.openid.exchange.grants.ConfidentialGrant
+import uk.co.baconi.oauth.api.openid.exchange.grants.PublicGrant
 
 class AuthorizationCodeGrant : ConfidentialGrant<AuthorizationCodeRequest>, PublicGrant<PkceAuthorizationCodeRequest> {
 

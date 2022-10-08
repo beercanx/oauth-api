@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.api.openid.exchange.flows.password
+package uk.co.baconi.oauth.api.openid.exchange.grants.password
 
 import uk.co.baconi.oauth.api.customer.CustomerMatchService
 import uk.co.baconi.oauth.api.customer.CustomerMatchFailure
@@ -8,7 +8,7 @@ import uk.co.baconi.oauth.api.openid.exchange.ExchangeResponse
 import uk.co.baconi.oauth.api.openid.exchange.FailedExchangeResponse
 import uk.co.baconi.oauth.api.openid.exchange.PasswordRequest
 import uk.co.baconi.oauth.api.openid.exchange.SuccessExchangeResponse
-import uk.co.baconi.oauth.api.openid.exchange.flows.ConfidentialGrant
+import uk.co.baconi.oauth.api.openid.exchange.grants.ConfidentialGrant
 import uk.co.baconi.oauth.api.tokens.AccessTokenService
 import java.time.temporal.ChronoUnit.SECONDS
 
