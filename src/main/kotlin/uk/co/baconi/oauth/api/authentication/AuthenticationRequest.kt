@@ -1,7 +1,5 @@
 package uk.co.baconi.oauth.api.authentication
 
-import io.ktor.http.*
-
 sealed class AuthenticationRequest {
 
     abstract val username: String?

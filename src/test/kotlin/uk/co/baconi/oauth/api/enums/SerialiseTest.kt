@@ -11,11 +11,11 @@ class SerialiseTest {
 
     @Test
     fun `should return string representation for a real enum`() {
-        serialise(Scopes.OpenId) shouldBe "openid"
+        Scopes.OpenId.serialise() shouldBe "openid"
     }
 
     @Test
     fun `should return null for fake enum`() {
-        serialise(mockk<Scopes>("mock-scope")) should beNull()
+        mockk<Scopes>("mock-scope").serialise() should beNull()
     }
 }
