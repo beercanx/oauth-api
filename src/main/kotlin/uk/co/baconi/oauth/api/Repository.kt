@@ -17,4 +17,14 @@ interface Repository<TYPE, ID> {
      */
     fun findById(id: ID): TYPE?
 
+    /**
+     * Provides an optional update component.
+     */
+    interface WithUpdate<TYPE> {
+
+        /**
+         * Update an existing [TYPE] record
+         */
+        fun update(record: TYPE)
+    }
 }

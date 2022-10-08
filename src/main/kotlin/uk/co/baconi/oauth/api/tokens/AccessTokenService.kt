@@ -1,5 +1,6 @@
 package uk.co.baconi.oauth.api.tokens
 
+import uk.co.baconi.oauth.api.authentication.Authentication
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.scopes.Scopes
 import java.time.OffsetDateTime
@@ -14,7 +15,7 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
     private val tokenAge = 2L
     private val tokenAgeUnit = ChronoUnit.HOURS
 
-    fun issue(username: String, clientId: ClientId, scopes: Set<Scopes>): AccessToken {
+    fun issue(authentication: Authentication.Success, clientId: ClientId, scopes: Set<Scopes>): AccessToken {
 
         val value = UUID.randomUUID().toString()
 
@@ -28,7 +29,7 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
 
         return AccessToken(
             value = value,
-            username = username,
+            username = authentication.username,
             clientId = clientId,
             scopes = scopes,
             issuedAt = issuedAt,
