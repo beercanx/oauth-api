@@ -7,7 +7,6 @@ import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 import org.apache.commons.lang3.RandomStringUtils.random
 import org.dizitart.no2.exceptions.UniqueConstraintException
@@ -17,7 +16,6 @@ import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.client.ClientId.*
 import uk.co.baconi.oauth.api.openid.Scopes.OpenId
 import java.time.OffsetDateTime.now
-import java.util.*
 import java.util.UUID.randomUUID
 
 class NitriteAccessTokenRepositoryIntegrationTest {
@@ -25,12 +23,10 @@ class NitriteAccessTokenRepositoryIntegrationTest {
     private val underTest = NitriteAccessTokenRepository()
 
     private fun AccessToken.Companion.new(
-        id: UUID = randomUUID(),
-        value: UUID = randomUUID(),
+        value: String = randomUUID().toString(),
         username: String = random(8),
         clientId: ClientId = ConsumerZ
     ) = AccessToken(
-        id = id,
         value = value,
         username = username,
         clientId = clientId,
@@ -51,11 +47,11 @@ class NitriteAccessTokenRepositoryIntegrationTest {
 
             assertSoftly {
 
-                underTest.findById(accessToken1.id) shouldBe accessToken1
-                underTest.findById(accessToken1.id) shouldNotBeSameInstanceAs accessToken1
+                underTest.findById(accessToken1.value) shouldBe accessToken1
+                underTest.findById(accessToken1.value) shouldNotBeSameInstanceAs accessToken1
 
-                underTest.findById(accessToken2.id) shouldBe accessToken2
-                underTest.findById(accessToken2.id) shouldNotBeSameInstanceAs accessToken2
+                underTest.findById(accessToken2.value) shouldBe accessToken2
+                underTest.findById(accessToken2.value) shouldNotBeSameInstanceAs accessToken2
             }
         }
 
@@ -66,32 +62,20 @@ class NitriteAccessTokenRepositoryIntegrationTest {
             val accessToken2 = AccessToken.new(username = "aardvark").also(underTest::insert)
 
             assertSoftly {
-                underTest.findById(accessToken1.id) shouldBe accessToken1
-                underTest.findById(accessToken2.id) shouldBe accessToken2
-            }
-        }
-
-        @Test
-        fun `should throw exception on inserting record with same token id`() {
-
-            val uuid = randomUUID()
-
-            AccessToken.new(id = uuid).also(underTest::insert)
-
-            shouldThrow<UniqueConstraintException> {
-                AccessToken.new(id = uuid).also(underTest::insert)
+                underTest.findById(accessToken1.value) shouldBe accessToken1
+                underTest.findById(accessToken2.value) shouldBe accessToken2
             }
         }
 
         @Test
         fun `should throw exception on inserting record with same token value`() {
 
-            val uuid = randomUUID()
+            val value = randomUUID().toString()
 
-            AccessToken.new(value = uuid).also(underTest::insert)
+            AccessToken.new(value = value).also(underTest::insert)
 
             shouldThrow<UniqueConstraintException> {
-                AccessToken.new(value = uuid).also(underTest::insert)
+                AccessToken.new(value = value).also(underTest::insert)
             }
         }
     }
@@ -104,14 +88,14 @@ class NitriteAccessTokenRepositoryIntegrationTest {
 
             val accessToken = AccessToken.new()
             underTest.insert(accessToken)
-            underTest.findById(accessToken.id) shouldBe accessToken
-            underTest.delete(accessToken.id)
-            underTest.findById(accessToken.id) shouldBe null
+            underTest.findById(accessToken.value) shouldBe accessToken
+            underTest.delete(accessToken.value)
+            underTest.findById(accessToken.value) shouldBe null
         }
 
         @Test
         fun `should not throw exceptions when no record exists`() {
-            underTest.delete(randomUUID())
+            underTest.delete(randomUUID().toString())
         }
     }
 
@@ -122,18 +106,18 @@ class NitriteAccessTokenRepositoryIntegrationTest {
         fun `should allow finding by uuid`() {
 
             (1..10).map {
-                randomUUID()
-            }.map { uuid ->
-                AccessToken.new(id = uuid)
+                randomUUID().toString()
+            }.map { value ->
+                AccessToken.new(value = value)
             }.forEach { accessToken ->
                 underTest.insert(accessToken)
-                underTest.findById(accessToken.id) shouldBe accessToken
+                underTest.findById(accessToken.value) shouldBe accessToken
             }
         }
 
         @Test
         fun `should return null when no record exists`() {
-            underTest.findById(randomUUID()) shouldBe null
+            underTest.findById(randomUUID().toString()) shouldBe null
         }
     }
 
@@ -144,12 +128,12 @@ class NitriteAccessTokenRepositoryIntegrationTest {
         fun `should allow finding by uuid value`() {
 
             (1..10).map {
-                randomUUID()
-            }.map { uuid ->
-                uuid to AccessToken.new(value = uuid)
+                randomUUID().toString()
+            }.map { value ->
+                value to AccessToken.new(value = value)
             }.forEach { (uuid, accessToken) ->
                 underTest.insert(accessToken)
-                underTest.findByValue(uuid.toString()) shouldBe accessToken
+                underTest.findByValue(uuid) shouldBe accessToken
             }
         }
 

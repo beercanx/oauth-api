@@ -1,16 +1,11 @@
-@file:UseSerializers(UUIDSerializer::class)
-
 package uk.co.baconi.oauth.api.openid.exchange
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import uk.co.baconi.oauth.api.openid.Scopes
 import uk.co.baconi.oauth.api.serializers.ScopeSerializer
 import uk.co.baconi.oauth.api.tokens.TokenType
 import uk.co.baconi.oauth.api.tokens.TokenType.Bearer
-import uk.co.baconi.oauth.api.serializers.UUIDSerializer
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.UseSerializers
-import java.util.*
 
 sealed class ExchangeResponse
 
@@ -22,7 +17,7 @@ data class SuccessExchangeResponse(
     /**
      * The access token issued by the authorization server.
      */
-    @SerialName("access_token") val accessToken: UUID,
+    @SerialName("access_token") val accessToken: String,
 
     /**
      * The type of the token issued as described in https://tools.ietf.org/html/rfc6749#section-7.1

@@ -1,9 +1,10 @@
 package uk.co.baconi.oauth.api.tokens
 
 import io.kotest.assertions.assertSoftly
-import io.kotest.matchers.date.*
+import io.kotest.matchers.date.shouldBeAfter
+import io.kotest.matchers.date.shouldBeBefore
+import io.kotest.matchers.date.shouldBeToday
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -42,13 +43,5 @@ class AccessTokenServiceTest {
             expiresAt shouldBeAfter issuedAt
             notBefore shouldBeBefore issuedAt
         }
-    }
-
-    @Test
-    fun `should issue the access token with an id that's different to the value`() {
-
-        val result = underTest.issue("aardvark", ConsumerZ, emptySet())
-
-        result.id shouldNotBe result.value
     }
 }

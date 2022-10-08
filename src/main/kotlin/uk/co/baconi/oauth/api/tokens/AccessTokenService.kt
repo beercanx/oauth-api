@@ -16,8 +16,7 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
 
     fun issue(username: String, clientId: ClientId, scopes: Set<Scopes>): AccessToken {
 
-        val id = UUID.randomUUID()
-        val value = UUID.randomUUID()
+        val value = UUID.randomUUID().toString()
 
         val issuedAt = OffsetDateTime.now()
 
@@ -28,7 +27,6 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
         val notBefore = issuedAt.minus(notBeforeShift, notBeforeShiftUnit)
 
         return AccessToken(
-            id = id,
             value = value,
             username = username,
             clientId = clientId,
