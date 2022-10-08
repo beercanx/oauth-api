@@ -7,8 +7,8 @@ import uk.co.baconi.oauth.api.authorisation.AuthorisationCodeService
 import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.client.PublicClient
 import uk.co.baconi.oauth.api.enums.deserialise
-import uk.co.baconi.oauth.api.exchange.GrantType.AuthorisationCode
-import uk.co.baconi.oauth.api.exchange.GrantType.Password
+import uk.co.baconi.oauth.api.exchange.ErrorType.*
+import uk.co.baconi.oauth.api.exchange.GrantType.*
 import uk.co.baconi.oauth.api.ktor.ApplicationContext
 import uk.co.baconi.oauth.api.scopes.parseAsScopes
 
@@ -29,62 +29,63 @@ suspend fun ApplicationContext.validateExchangeRequest(
 
     val parameters = call.receiveParameters()
 
+    // TODO - parse GantType similar to scopes, raw vs parsed vs authorised, based on configuration.
+
     return when (parameters[GRANT_TYPE]?.deserialise<GrantType>()) {
+
+        null -> InvalidConfidentialExchangeRequest(UnsupportedGrantType, "unsupported: ${parameters[GRANT_TYPE]}")
+        Assertion -> InvalidConfidentialExchangeRequest(UnsupportedGrantType, "unsupported: ${parameters[GRANT_TYPE]}")
+        RefreshToken -> InvalidConfidentialExchangeRequest(UnsupportedGrantType, "unsupported: ${parameters[GRANT_TYPE]}")
 
         AuthorisationCode -> {
             val redirectUri = parameters[REDIRECT_URI]
             val code = parameters[CODE]
 
             when {
-                redirectUri == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: redirect_uri
-                redirectUri.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: redirect_uri
-                !principal.hasRedirectUri(redirectUri) -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: redirect_uri
+                redirectUri == null -> InvalidConfidentialExchangeRequest(InvalidRequest, "missing parameter: redirect_uri")
+                redirectUri.isBlank() -> InvalidConfidentialExchangeRequest(InvalidRequest, "invalid parameter: redirect_uri")
+                !principal.hasRedirectUri(redirectUri) -> InvalidConfidentialExchangeRequest(InvalidRequest, "invalid parameter: redirect_uri")
 
-                code == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: code
-                code.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: code
+                code == null -> InvalidConfidentialExchangeRequest(InvalidRequest, "missing parameter: code")
+                code.isBlank() -> InvalidConfidentialExchangeRequest(InvalidRequest, "invalid parameter: code")
 
                 else -> when (val authorisationCode = authorisationCodeService.validate(principal, code, redirectUri)) {
-                    null -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: code or redirectUri
+                    null -> InvalidConfidentialExchangeRequest(InvalidGrant)
                     else -> AuthorisationCodeRequest(principal, authorisationCode)
                 }
             }
         }
 
+        // TODO - Restrict to only certain clients.
         Password -> {
             val username = parameters[USERNAME]
             val password = parameters[PASSWORD]
             val validScopes = parameters[SCOPE].parseAsScopes(principal)
 
             when {
-                username == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: username
-                username.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: username
+                username == null -> InvalidConfidentialExchangeRequest(InvalidRequest, "missing parameter: username")
+                username.isBlank() -> InvalidConfidentialExchangeRequest(InvalidRequest, "invalid parameter: username")
 
-                password == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: password
-                password.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: password
+                password == null -> InvalidConfidentialExchangeRequest(InvalidRequest, "missing parameter: password")
+                password.isBlank() -> InvalidConfidentialExchangeRequest(InvalidRequest, "invalid parameter: password")
 
                 // The requested scope is invalid, unknown, or malformed.
-                validScopes == null -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: scope
+                validScopes == null -> InvalidConfidentialExchangeRequest(InvalidScope, "invalid parameter: scope")
 
                 else -> PasswordRequest(principal, validScopes, username, password)
             }
         }
 
-        // TODO - Work out why refresh token grant can request scopes, but only less than what's issued?
 //        RefreshToken -> {
 //            val refreshToken = parameters[REFRESH_TOKEN]
-//            val (rawScopes, parsedScopes, validScopes) = parameters[SCOPE].parseAsScopes(principal)
+//            val validScopes = parameters[SCOPE].parseAsScopes(principal)
 //
 //            when {
-//                refreshToken == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: refresh_token
-//                refreshToken.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: refresh_token
-//
-//                // TODO - Do we reject if the scope parameter is missing?
+//                refreshToken == null -> InvalidConfidentialExchangeRequest(InvalidRequest, "missing parameter: refresh_token")
+//                refreshToken.isBlank() -> InvalidConfidentialExchangeRequest(InvalidRequest, "invalid parameter: refresh_token")
 //
 //                // The requested scope is invalid, unknown, or malformed.
-//                !rawMatchedParsed -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: scope
-//
-//                // TODO - Do we reject if the scope parsed size is different from the valid size?
-//                !parsedMatchedValid -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: scope
+//                validScopes == null -> InvalidConfidentialExchangeRequest("invalid_scope", "invalid parameter: scope")
 //
 //                else -> RefreshTokenRequest(principal, validScopes, refreshToken)
 //            }
@@ -94,14 +95,12 @@ suspend fun ApplicationContext.validateExchangeRequest(
 //            val assertion = parameters[ASSERTION]
 //
 //            when {
-//                assertion == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: assertion
-//                assertion.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: assertion
+//                assertion == null -> InvalidConfidentialExchangeRequest(InvalidRequest, "missing parameter: assertion")
+//                assertion.isBlank() -> InvalidConfidentialExchangeRequest(InvalidRequest, "invalid parameter: assertion")
 //
 //                else -> AssertionRequest(principal, assertion)
 //            }
 //        }
-
-        else -> InvalidConfidentialExchangeRequest // TODO - 'unsupported_grant_type'
     }
 }
 
@@ -118,23 +117,27 @@ suspend fun ApplicationContext.validatePkceExchangeRequest(
     val codeVerifier = parameters[CODE_VERIFIER]
 
     return when (grantType) {
+
+        null -> InvalidPublicExchangeRequest(UnsupportedGrantType, "unsupported: ${parameters[GRANT_TYPE]}")
+        Assertion -> InvalidPublicExchangeRequest(UnauthorizedClient, "unsupported: $grantType")
+        Password -> InvalidPublicExchangeRequest(UnauthorizedClient, "unsupported: $grantType")
+        RefreshToken -> InvalidPublicExchangeRequest(UnauthorizedClient, "unsupported: $grantType")
+
         AuthorisationCode -> when {
-            redirectUri == null -> InvalidPublicExchangeRequest // TODO - Missing Parameter: redirect_uri
-            redirectUri.isBlank() -> InvalidPublicExchangeRequest // TODO - Invalid Parameter: redirect_uri
-            !principal.hasRedirectUri(redirectUri) -> InvalidPublicExchangeRequest // TODO - Invalid Parameter: redirect_uri
+            redirectUri == null -> InvalidPublicExchangeRequest(InvalidRequest, "missing parameter: redirect_uri")
+            redirectUri.isBlank() -> InvalidPublicExchangeRequest(InvalidRequest, "invalid parameter: redirect_uri")
+            !principal.hasRedirectUri(redirectUri) -> InvalidPublicExchangeRequest(InvalidRequest, "invalid parameter: redirect_uri")
 
-            code == null -> InvalidPublicExchangeRequest // TODO - Missing Parameter: code
-            code.isBlank() -> InvalidPublicExchangeRequest // TODO - Invalid Parameter: code
+            code == null -> InvalidPublicExchangeRequest(InvalidRequest, "missing parameter: code")
+            code.isBlank() -> InvalidPublicExchangeRequest(InvalidRequest, "invalid parameter: code")
 
-            codeVerifier == null -> InvalidPublicExchangeRequest // TODO - Missing Parameter: code_verifier
-            codeVerifier.isBlank() -> InvalidPublicExchangeRequest // TODO - Invalid Parameter: code_verifier
+            codeVerifier == null -> InvalidPublicExchangeRequest(InvalidRequest, "missing parameter: code_verifier")
+            codeVerifier.isBlank() -> InvalidPublicExchangeRequest(InvalidRequest, "invalid parameter: code_verifier")
 
             else -> when (val authorisationCode = authorisationCodeService.validate(principal, code, redirectUri, codeVerifier)) {
-                null -> InvalidPublicExchangeRequest // TODO - Invalid Parameter: code or codeVerifier or redirectUri
+                null -> InvalidPublicExchangeRequest(InvalidGrant)
                 else -> PkceAuthorisationCodeRequest(principal, authorisationCode)
             }
         }
-
-        else -> InvalidPublicExchangeRequest // TODO - 'unsupported_grant_type'
     }
 }

@@ -5,6 +5,7 @@ import uk.co.baconi.oauth.api.tokens.Tokens
 
 sealed class IntrospectionRequest {
 
+    // TODO - Do we add types for reason and error?
     data class Invalid(val error: String, val description: String) : IntrospectionRequest() {
         fun toResponse() = InvalidIntrospectionResponse(error, description)
     }
