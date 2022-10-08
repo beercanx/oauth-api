@@ -18,7 +18,7 @@ allprojects {
     tasks.withType<KotlinCompile>().configureEach {
         kotlinOptions {
             verbose = true
-            jvmTarget = "17"
+            jvmTarget = "11" // mockk doesn't work on source generated for 17 https://github.com/mockk/mockk/issues/832
             apiVersion = "1.7"
             languageVersion = "1.7"
         }
