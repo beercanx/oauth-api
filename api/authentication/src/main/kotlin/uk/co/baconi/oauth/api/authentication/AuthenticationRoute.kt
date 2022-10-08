@@ -10,7 +10,7 @@ import io.ktor.server.html.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import uk.co.baconi.oauth.api.authentication.ReactPageTemplate.reactPageTemplate
+import uk.co.baconi.oauth.api.common.html.ReactTemplate.reactPage
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Failure
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Success
@@ -63,7 +63,7 @@ interface AuthenticationRoute {
             }
             get {
                 call.respondHtml(OK) {
-                    reactPageTemplate(
+                    reactPage(
                         title = "Login Page",
                         reactSource = "http://localhost:8080/static/js/bundle.js" // TODO - Extract into configuration
                     )

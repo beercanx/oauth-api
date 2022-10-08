@@ -6,7 +6,7 @@ import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.authorisation.CodeChallengeMethod.S256
 import uk.co.baconi.oauth.api.common.client.ClientAction.ProofKeyForCodeExchange
 import uk.co.baconi.oauth.api.common.client.ClientPrincipal
-import uk.co.baconi.oauth.api.common.ktor.UUIDSerializer
+import uk.co.baconi.oauth.api.common.uuid.UUIDSerializer
 import uk.co.baconi.oauth.api.token.TokenErrorType.InvalidGrant
 import uk.co.baconi.oauth.api.token.TokenErrorType.InvalidRequest
 import uk.co.baconi.oauth.api.token.TokenRequest.Invalid

@@ -8,8 +8,6 @@ plugins {
 
 dependencies {
     api(project(":api:common"))
-
-    api("io.ktor:ktor-server-html-builder:$ktorVersion")
 }
 
 application {

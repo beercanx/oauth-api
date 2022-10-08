@@ -4,10 +4,9 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import uk.co.baconi.oauth.api.common.client.ClientAction.Introspect
 import uk.co.baconi.oauth.api.common.client.ConfidentialClient
-import uk.co.baconi.oauth.api.common.ktor.UUIDSerializer
+import uk.co.baconi.oauth.api.common.uuid.UUIDSerializer
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionErrorType.InvalidRequest
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionErrorType.UnauthorizedClient
-import java.util.*
 
 object IntrospectionRequestValidation {
 

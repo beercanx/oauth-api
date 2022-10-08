@@ -5,7 +5,7 @@ package uk.co.baconi.oauth.api.token
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import uk.co.baconi.oauth.api.common.ktor.UUIDSerializer
+import uk.co.baconi.oauth.api.common.uuid.UUIDSerializer
 import uk.co.baconi.oauth.api.common.scope.Scope
 import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
 import uk.co.baconi.oauth.api.common.token.TokenType

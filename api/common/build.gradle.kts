@@ -31,6 +31,7 @@ dependencies {
     // Server: Common
     api("io.ktor:ktor-server-core:$ktorVersion")
     api("io.ktor:ktor-server-auth:$ktorVersion")
+    api("io.ktor:ktor-server-html-builder:$ktorVersion")
     implementation("io.ktor:ktor-server-cors:$ktorVersion")
     implementation("io.ktor:ktor-server-hsts:$ktorVersion")
     implementation("io.ktor:ktor-server-compression:$ktorVersion")

@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.api.common.ktor
+package uk.co.baconi.oauth.api.common.uuid
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
