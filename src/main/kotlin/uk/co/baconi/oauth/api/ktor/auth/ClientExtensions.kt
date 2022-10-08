@@ -1,11 +1,9 @@
 package uk.co.baconi.oauth.api.ktor.auth
 
-import uk.co.baconi.oauth.api.client.ClientPrincipal
-import uk.co.baconi.oauth.api.ktor.ApplicationContext
 import io.ktor.application.*
 import io.ktor.auth.*
-import io.ktor.http.*
-import io.ktor.response.*
+import uk.co.baconi.oauth.api.client.ClientPrincipal
+import uk.co.baconi.oauth.api.ktor.ApplicationContext
 
 /**
  * Extracts a client of type [C] before the inner block is called.
