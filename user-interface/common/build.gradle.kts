@@ -22,5 +22,3 @@ dependencies {
     api(kotlinWrapper("react"))
     api(kotlinWrapper("react-dom"))
 }
-
-fun kotlinWrapper(target: String): String = "org.jetbrains.kotlin-wrappers:kotlin-$target"
