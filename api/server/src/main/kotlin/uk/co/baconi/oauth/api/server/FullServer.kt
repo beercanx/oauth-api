@@ -7,7 +7,7 @@ import uk.co.baconi.oauth.api.common.DatabaseFactory.getAccessTokenDatabase
 import uk.co.baconi.oauth.api.common.DatabaseFactory.getAuthorisationCodeDatabase
 import uk.co.baconi.oauth.api.common.DatabaseFactory.getCustomerCredentialDatabase
 import uk.co.baconi.oauth.api.common.DatabaseFactory.getCustomerStatusDatabase
-import uk.co.baconi.oauth.api.common.TestDataModule
+import uk.co.baconi.oauth.api.common.TestAccessTokenModule
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretRepository
@@ -24,7 +24,7 @@ import uk.co.baconi.oauth.api.token.TokenRoute
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionRoute
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionService
 
-object FullServer : AuthenticationModule, TokenRoute, IntrospectionRoute, TestDataModule {
+object FullServer : AuthenticationModule, TokenRoute, IntrospectionRoute, TestAccessTokenModule {
 
     private val accessTokenRepository = AccessTokenRepository(getAccessTokenDatabase())
     override val accessTokenService = AccessTokenService(accessTokenRepository)

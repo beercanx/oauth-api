@@ -6,6 +6,7 @@ include(":common:authentication")
 // API
 include(":api:common")
 include(":api:authorisation")
+include(":api:authentication")
 include(":api:session-info")
 include(":api:token")
 include(":api:token-introspection")

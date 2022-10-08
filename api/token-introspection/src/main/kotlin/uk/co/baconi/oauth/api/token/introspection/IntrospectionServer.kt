@@ -4,7 +4,7 @@ import io.ktor.server.routing.*
 import uk.co.baconi.oauth.api.common.AuthenticationModule
 import uk.co.baconi.oauth.api.common.CommonModule.common
 import uk.co.baconi.oauth.api.common.DatabaseFactory.getAccessTokenDatabase
-import uk.co.baconi.oauth.api.common.TestDataModule
+import uk.co.baconi.oauth.api.common.TestAccessTokenModule
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretService
@@ -15,7 +15,7 @@ import uk.co.baconi.oauth.api.common.token.AccessTokenService
 /**
  * Start a server for just Introspection requests
  */
-internal object IntrospectionServer : AuthenticationModule, IntrospectionRoute, TestDataModule {
+internal object IntrospectionServer : AuthenticationModule, IntrospectionRoute, TestAccessTokenModule {
 
     private val accessTokenRepository = AccessTokenRepository(getAccessTokenDatabase())
     override val accessTokenService = AccessTokenService(accessTokenRepository)
@@ -33,7 +33,7 @@ internal object IntrospectionServer : AuthenticationModule, IntrospectionRoute, 
             routing {
                 introspection()
             }
-            generateTestData() // TODO - Remove
+            generateTestAccessTokens()
         }.start(true)
     }
 }

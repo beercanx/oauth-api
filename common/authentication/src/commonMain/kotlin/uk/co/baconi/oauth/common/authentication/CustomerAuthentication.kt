@@ -1,5 +1,6 @@
 package uk.co.baconi.oauth.common.authentication
 
+import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

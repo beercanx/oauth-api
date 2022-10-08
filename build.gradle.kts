@@ -33,6 +33,13 @@ allprojects {
     }
 }
 
+// Fix for duplicated module names https://github.com/gradle/gradle/issues/847#issuecomment-1159365667
+group = "uk.co.baconi"
+subprojects {
+    val subGroup = path.replace(':', '.').replace('-', '_')
+    group = "${rootProject.group}$subGroup"
+}
+
 tasks.withType<Wrapper>().configureEach {
     distributionType = Wrapper.DistributionType.ALL
 }
