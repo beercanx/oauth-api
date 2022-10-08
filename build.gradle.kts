@@ -7,7 +7,7 @@ plugins {
     application
     kotlin("jvm") version "1.7.0"
     kotlin("plugin.serialization") version "1.7.0"
-    id("io.gatling.gradle") version "3.5.1"
+    id("io.gatling.gradle") version "3.7.6.3"
 }
 
 repositories {
