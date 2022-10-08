@@ -12,7 +12,6 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.throwable.shouldHaveMessage
-import io.ktor.http.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
@@ -84,7 +83,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
 
             assertSoftly(underTest.findById(ConsumerZ)) {
                 shouldNotBeNull()
-                redirectUrls should beEmpty()
+                redirectUris should beEmpty()
             }
         }
 
@@ -100,7 +99,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
 
             assertSoftly(underTest.findById(ConsumerZ)) {
                 shouldNotBeNull()
-                redirectUrls should beEmpty()
+                redirectUris should beEmpty()
             }
         }
 
@@ -116,12 +115,12 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
 
             assertSoftly(underTest.findById(ConsumerZ)) {
                 shouldNotBeNull()
-                redirectUrls should beEmpty()
+                redirectUris should beEmpty()
             }
         }
 
         @Test
-        fun `should be able to handle valid url entry`() {
+        fun `should be able to handle valid uri entry`() {
 
             every { repository.getConfig(serialise(ConsumerZ)) } returns ConfigFactory.parseString(
                 """
@@ -132,7 +131,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
 
             assertSoftly(underTest.findById(ConsumerZ)) {
                 shouldNotBeNull()
-                redirectUrls shouldContain "uk.co.consumer-z://callback"
+                redirectUris shouldContain "uk.co.consumer-z://callback"
             }
         }
     }
@@ -233,7 +232,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
             underTest.findById(ConsumerY) shouldBe ClientConfiguration(
                 id = ConsumerY,
                 type = Public,
-                redirectUrls = setOf("uk.co.baconi.consumer-y://callback"),
+                redirectUris = setOf("uk.co.baconi.consumer-y://callback"),
                 allowedScopes = emptySet(),
                 allowedResponseTypes = emptySet(),
             )

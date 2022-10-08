@@ -15,26 +15,30 @@ fun validateAuthorisationRequest(
     clientConfigurationRepository: ClientConfigurationRepository
 ): AuthorisationRequest {
 
-    val clientId = location.client_id?.let { s -> deserialise<ClientId>(s) }
-    val clientConfiguration = clientId?.let(clientConfigurationRepository::findByClientId)
+    val validClientId = location.client_id?.let { s -> deserialise<ClientId>(s) }
+    val validClientConfiguration = validClientId?.let(clientConfigurationRepository::findByClientId)
 
-    val validRedirectUri = clientConfiguration?.redirectUrls?.find { r -> r == location.redirect_uri }
+    // Check if the direct uri is defined in the clients configuration
+    val validRedirectUri = validClientConfiguration?.redirectUris?.find { r -> r == location.redirect_uri }
 
+    // Check if the response type is a supported response type
     val responseType = location.response_type?.let { s -> deserialise<AuthorisationResponseType>(s) }
-    val validResponseType = clientConfiguration?.allowedResponseTypes?.find { r -> r == responseType }
+
+    // Check if the response type is allowed for the client
+    val validResponseType = validClientConfiguration?.allowedResponseTypes?.find { r -> r == responseType }
 
     val rawScopes = location.scope?.split(" ")?.filter(String::isNotBlank)
-    val scopes = rawScopes?.mapNotNull { s -> deserialise<Scopes>(s) }
-    val validScopes = clientConfiguration?.allowedScopes?.let { allowedScopes ->
-        scopes?.filter { s -> allowedScopes.contains(s) }?.toSet()
+    val parsedScopes = rawScopes?.mapNotNull { s -> deserialise<Scopes>(s) }
+    val validScopes = validClientConfiguration?.allowedScopes?.let { allowedScopes ->
+        parsedScopes?.filter { s -> allowedScopes.contains(s) }?.toSet()
     }
 
     // TODO - Make sure we validate enough to respond https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
     return when {
 
         location.client_id == null -> AuthorisationRequest.Invalid("invalid_request", "missing parameter: redirect_uri")
-        clientId == null -> AuthorisationRequest.Invalid("unauthorized_client", "unauthorized client")
-        clientConfiguration == null -> AuthorisationRequest.Invalid("unauthorized_client", "unauthorized client")
+        validClientId == null -> AuthorisationRequest.Invalid("unauthorized_client", "unauthorized client")
+        validClientConfiguration == null -> AuthorisationRequest.Invalid("unauthorized_client", "unauthorized client")
 
         // TODO - How do we redirect back to the consumer with no valid client_id?
 
@@ -51,14 +55,15 @@ fun validateAuthorisationRequest(
         responseType == null -> AuthorisationRequest.Invalid("unsupported_response_type", "unsupported response type: ${location.response_type}")
         validResponseType == null -> AuthorisationRequest.Invalid("unauthorized_client", "unauthorized client")
 
+        // Enforce the use of a state parameter
         location.state.isNullOrBlank() -> AuthorisationRequest.Invalid("invalid_request", "missing parameter: state")
 
         // The requested scope is invalid, unknown, or malformed.
-        rawScopes?.size != scopes?.size -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: scope")
+        rawScopes?.size != parsedScopes?.size -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: scope")
 
         else -> AuthorisationRequest.Valid(
             responseType = validResponseType,
-            clientId = clientId,
+            clientId = validClientId,
             redirectUri = validRedirectUri,
             state = location.state,
             requestedScope = validScopes ?: emptySet()

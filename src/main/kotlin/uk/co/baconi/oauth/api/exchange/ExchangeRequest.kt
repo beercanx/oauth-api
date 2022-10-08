@@ -79,7 +79,7 @@ sealed class ValidatedPublicExchangeRequest : PublicExchangeRequest() {
 data class AuthorisationCodeRequest(
     override val principal: ConfidentialClient,
     val code: String,
-    val redirectUri: Url
+    val redirectUri: String
 ) : ValidatedConfidentialExchangeRequest() {
     override fun toString(): String {
         return "AuthorisationCodeRequest(principal=$principal, code=REDACTED, redirectUri=$redirectUri)"
@@ -89,7 +89,7 @@ data class AuthorisationCodeRequest(
 data class PkceAuthorisationCodeRequest(
     override val principal: PublicClient,
     val code: String,
-    val redirectUri: Url,
+    val redirectUri: String,
     val codeVerifier: String
 ) : ValidatedPublicExchangeRequest() {
     override fun toString(): String {

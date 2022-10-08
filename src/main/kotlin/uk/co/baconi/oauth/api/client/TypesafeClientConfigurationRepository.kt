@@ -4,10 +4,8 @@ import com.typesafe.config.Config
 import com.typesafe.config.ConfigException
 import com.typesafe.config.ConfigFactory
 import io.ktor.config.*
-import uk.co.baconi.oauth.api.authorisation.AuthorisationResponseType
 import uk.co.baconi.oauth.api.enums.deserialise
 import uk.co.baconi.oauth.api.enums.serialise
-import uk.co.baconi.oauth.api.scopes.Scopes
 
 /**
  * A static Typesafe Config implementation of the [ClientConfigurationRepository].
@@ -39,7 +37,7 @@ class TypesafeClientConfigurationRepository internal constructor(
             ClientConfiguration(
                 id = id,
                 type = config.getEnum(ClientType::class.java, "type"),
-                redirectUrls = config.tryGetStringList("redirectUrls")?.toSet() ?: emptySet(),
+                redirectUris = config.tryGetStringList("redirectUrls")?.toSet() ?: emptySet(),
                 allowedScopes = config.tryGetStringList("allowedScopes").toEnumSet(),
                 allowedResponseTypes = config.tryGetStringList("allowedResponseTypes").toEnumSet(),
             )
