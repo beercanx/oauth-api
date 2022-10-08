@@ -8,21 +8,42 @@ import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.client.PublicClient
 import uk.co.baconi.oauth.api.enums.deserialise
 
-// TODO - Depending on validation message requirements, this might collapse down to just a Set<Scopes>?
-fun String?.parseAsScopes(configuration: ClientConfiguration?): Triple<Boolean, Boolean, Set<Scopes>> {
+/**
+ * Parses [String] as [Scopes] for a given [ClientPrincipal].
+ *
+ * @returns null when provided with a null [ClientConfiguration] or
+ *          defined with scopes that either don't exist or are invalid for the principal.
+ */
+fun String?.parseAsScopes(configuration: ClientConfiguration?): Set<Scopes>? {
     return when (configuration?.type) {
-        null -> Triple(first = true, second = true, third = emptySet())
+        null -> null
         Confidential -> parseAsScopes(ConfidentialClient(configuration))
         Public -> parseAsScopes(PublicClient(configuration))
     }
 }
 
-// TODO - Depending on validation message requirements, this might collapse down to just a Set<Scopes>?
-fun String?.parseAsScopes(principal: ClientPrincipal): Triple<Boolean, Boolean, Set<Scopes>> {
-    val raw = this?.rawScopes()
-    val parsed = raw?.parseScopes()
-    val valid = parsed?.validateScopes(principal)
-    return Triple(raw?.size == parsed?.size, parsed?.size == valid?.size, valid ?: emptySet())
+/**
+ * Parses [String] as [Scopes] for a given [ClientPrincipal].
+ *
+ * @returns null when defined with scopes that either don't exist or are invalid for the principal.
+ */
+fun String?.parseAsScopes(principal: ClientPrincipal): Set<Scopes>? {
+
+    // Enable the parameter to be optional, so we return the clients full allowed set.
+    if (this.isNullOrBlank()) {
+        return principal.configuration.allowedScopes
+    }
+
+    val raw = this.rawScopes()
+    val parsed = raw.parseScopes()
+    val valid = parsed.validateScopes(principal)
+
+    // unknown scopes || invalid scopes
+    return if (raw.size != parsed.size || parsed.size != valid.size) {
+        null
+    } else {
+        valid
+    }
 }
 
 private fun String.rawScopes(): List<String> {

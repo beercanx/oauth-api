@@ -28,7 +28,7 @@ fun validateAuthorisationRequest(
     val validResponseType = validClientConfiguration?.allowedResponseTypes?.find { r -> r == responseType }
 
     // Parse the scopes into the individual stages.
-    val (rawMatchedParsed, parsedMatchedValid, validScopes) = location.scope.parseAsScopes(validClientConfiguration)
+    val validScopes = location.scope.parseAsScopes(validClientConfiguration)
 
     return when {
 
@@ -75,21 +75,8 @@ fun validateAuthorisationRequest(
             state = location.state
         )
 
-        location.scope == null -> AuthorisationRequest.Invalid(
-            redirectUri = validRedirectUri,
-            error = "invalid_request",
-            description = "missing parameter: scope",
-            state = location.state
-        )
         // The requested scope is invalid, unknown, or malformed.
-        !rawMatchedParsed -> AuthorisationRequest.Invalid(
-            redirectUri = validRedirectUri,
-            error = "invalid_request",
-            description = "invalid parameter: scope",
-            state = location.state
-        )
-        // TODO - Do we reject if the scope parsed size is different from the valid size?
-        !parsedMatchedValid -> AuthorisationRequest.Invalid(
+        validScopes == null -> AuthorisationRequest.Invalid(
             redirectUri = validRedirectUri,
             error = "invalid_request",
             description = "invalid parameter: scope",
