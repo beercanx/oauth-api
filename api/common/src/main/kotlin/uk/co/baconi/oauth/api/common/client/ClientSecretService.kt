@@ -1,7 +1,6 @@
 package uk.co.baconi.oauth.api.common.client
 
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt
-import kotlin.text.toCharArray
 
 class ClientSecretService internal constructor(
     private val clientSecretRepository: ClientSecretRepository,

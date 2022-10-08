@@ -2,32 +2,20 @@ package uk.co.baconi.oauth.api.common.client
 
 import com.typesafe.config.ConfigFactory
 import io.ktor.server.config.*
-import uk.co.baconi.oauth.api.common.Repository
 import uk.co.baconi.oauth.api.common.scope.Scope
 
-class ClientConfigurationRepository private constructor(
-    private val clientConfiguration: Map<ClientId, ClientConfiguration>
-) : Repository<ClientConfiguration, ClientId> {
+class ClientConfigurationRepository {
 
-    constructor() : this(loadClientConfiguration())
+    private val clientConfiguration: Map<ClientId, ClientConfiguration> = loadClientConfiguration()
 
-    /**
-     * Find the [ClientConfiguration] for the given [ClientId].
-     */
-    override fun findById(id: ClientId): ClientConfiguration? {
+    fun findById(id: ClientId): ClientConfiguration? {
         return clientConfiguration[id]
     }
 
-    /**
-     * Find the [ClientConfiguration] for the given [clientId].
-     */
     fun findByClientId(clientId: String): ClientConfiguration? {
         return clientConfiguration[ClientId(clientId)]
     }
 
-    /**
-     * Find all the [ClientId]s.
-     */
     fun findAllClientIds(): Sequence<ClientId> {
         return clientConfiguration.keys.asSequence()
     }

@@ -16,9 +16,9 @@ object AccessTokenTable : IdTable<UUID>() {
     override val id: Column<EntityID<UUID>> = uuid("id").entityId()
 
     val username: Column<String> = varchar("username", 50)
-    val clientId: Column<String> = varchar("clientId", 25)
+    val clientId: Column<String> = varchar("client_id", 25)
     val scopes: Column<String> = varchar("scopes", calculateMaxScopeFieldLength())
-    val issuedAt: Column<Instant> = timestamp("issued_at")
+    val issuedAt: Column<Instant> = timestamp("issued_at") // TODO - Verify Instant over LocalDateTime as Instant still seems like its persisting in local time not UTC
     val expiresAt: Column<Instant> = timestamp("expires_at")
     val notBefore: Column<Instant> = timestamp("not_before")
 
@@ -36,6 +36,6 @@ object AccessTokenTable : IdTable<UUID>() {
         val scopeSize = scopes.fold(0) { size, scope ->
             size + scope.value.length
         }
-        return gapSize + scopeSize;
+        return gapSize + scopeSize
     }
 }

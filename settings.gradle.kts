@@ -6,6 +6,7 @@ rootProject.name = "oauth"
 include(":api:common")
 include(":api:authorisation")
 include(":api:token")
+include(":api:token-introspection")
 include(":api:token-revocation")
 include(":api:user-info")
 include(":api:well-known")

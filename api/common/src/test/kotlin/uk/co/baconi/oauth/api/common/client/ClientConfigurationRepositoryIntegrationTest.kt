@@ -4,12 +4,12 @@ import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.collections.beEmpty
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.sequences.shouldContain
 import io.kotest.matchers.sequences.shouldHaveSize
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.scope.Scope
@@ -105,7 +105,7 @@ class ClientConfigurationRepositoryIntegrationTest {
 
         @Test
         fun `should return null if the configuration does not exist`() {
-            underTest.findById(ClientId("aardvark")) shouldBe null
+            underTest.findById(ClientId("aardvark")).shouldBeNull()
         }
     }
 
@@ -114,12 +114,12 @@ class ClientConfigurationRepositoryIntegrationTest {
 
         @Test
         fun `should call findById`() {
-            underTest.findByClientId("consumer-y") shouldNotBe null
+            underTest.findByClientId("consumer-y").shouldNotBeNull()
         }
 
         @Test
         fun `should return null if client does not exist`() {
-            underTest.findByClientId("aardvark") shouldBe null
+            underTest.findByClientId("aardvark").shouldBeNull()
         }
     }
 

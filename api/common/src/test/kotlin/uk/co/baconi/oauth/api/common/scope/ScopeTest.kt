@@ -1,6 +1,7 @@
 package uk.co.baconi.oauth.api.common.scope
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -13,7 +14,7 @@ class ScopeTest {
 
     @Test
     fun `should return null on invalid type from value or null`() {
-        Scope.fromValueOrNull("aardvark") shouldBe null
+        Scope.fromValueOrNull("aardvark").shouldBeNull()
     }
 
     @Test

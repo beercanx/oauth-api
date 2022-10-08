@@ -4,21 +4,20 @@ import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
-import io.ktor.server.plugins.autohead.AutoHeadResponse
-import io.ktor.server.plugins.cachingheaders.CachingHeaders
+import io.ktor.server.plugins.autohead.*
+import io.ktor.server.plugins.cachingheaders.*
 import io.ktor.server.plugins.compression.*
-import io.ktor.server.plugins.dataconversion.DataConversion
-import io.ktor.server.plugins.hsts.HSTS
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.dataconversion.*
 import io.ktor.server.plugins.doublereceive.*
-import io.ktor.server.resources.Resources
-import org.jetbrains.exposed.sql.Database
+import io.ktor.server.plugins.hsts.*
+import io.ktor.server.resources.*
 
-object ServerBase {
+object CommonModule {
 
     fun Application.common() {
 
-        log.info("Registering the ServerBase.common() module")
+        log.info("Registering the CommonModule.common() module")
 
         install(Resources)
         install(AutoHeadResponse)
@@ -61,12 +60,5 @@ object ServerBase {
 
         // Enable `call.receive` to work twice without getting an exception
         install(DoubleReceive)
-    }
-
-    fun Application.database() {
-
-        log.info("Registering the ServerBase.database() module")
-
-        Database.connect(url = "jdbc:h2:mem:oauth_api;DB_CLOSE_DELAY=-1;", driver = "org.h2.Driver")
     }
 }

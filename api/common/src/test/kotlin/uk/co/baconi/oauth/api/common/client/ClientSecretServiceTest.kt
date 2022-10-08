@@ -1,6 +1,7 @@
 package uk.co.baconi.oauth.api.common.client
 
 import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -75,7 +76,7 @@ class ClientSecretServiceTest {
         @Test
         fun `return null when client secret does not exist`() {
 
-            underTest.authenticate("consumer-z", "consumer-z-secret") shouldBe null
+            underTest.authenticate("consumer-z", "consumer-z-secret").shouldBeNull()
         }
 
         @Test
@@ -84,7 +85,7 @@ class ClientSecretServiceTest {
             every { clientSecretRepository.findAllByClientId(any<ClientId>()) } returns sequenceOf(consumerZSecret)
             every { checkPassword.invoke(any(), any()) } returns false
 
-            underTest.authenticate("consumer-z", "consumer-y-secret") shouldBe null
+            underTest.authenticate("consumer-z", "consumer-y-secret").shouldBeNull()
         }
 
         @Test
@@ -93,7 +94,7 @@ class ClientSecretServiceTest {
             every { clientSecretRepository.findAllByClientId(any<ClientId>()) } returns sequenceOf(consumerZSecret)
             every { checkPassword.invoke(any(), any()) } returns true
 
-            underTest.authenticate("consumer-z", "consumer-z-secret") shouldBe null
+            underTest.authenticate("consumer-z", "consumer-z-secret").shouldBeNull()
         }
 
         @Test
@@ -103,7 +104,7 @@ class ClientSecretServiceTest {
             every { checkPassword.invoke(any(), any()) } returns true
             every { clientConfigurationRepository.findById(any()) } returns consumerYConfiguration
 
-            underTest.authenticate("consumer-y", "consumer-y-secret") shouldBe null
+            underTest.authenticate("consumer-y", "consumer-y-secret").shouldBeNull()
         }
     }
 
@@ -128,7 +129,7 @@ class ClientSecretServiceTest {
         @Test
         fun `return null when client configuration does not exist`() {
 
-            underTest.authenticate("consumer-x") shouldBe null
+            underTest.authenticate("consumer-x").shouldBeNull()
         }
 
         @Test
@@ -136,13 +137,13 @@ class ClientSecretServiceTest {
 
             every { clientConfigurationRepository.findByClientId(any<String>()) } returns consumerZConfiguration
 
-            underTest.authenticate("consumer-z") shouldBe null
+            underTest.authenticate("consumer-z").shouldBeNull()
         }
 
         @Test
         fun `return null when client id is null`() {
 
-            underTest.authenticate(null) shouldBe null
+            underTest.authenticate(null).shouldBeNull()
         }
     }
 }

@@ -1,6 +1,7 @@
 package uk.co.baconi.oauth.api.common.client
 
 import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.sequences.beEmpty
 import io.kotest.matchers.sequences.shouldContain
 import io.kotest.matchers.sequences.shouldHaveCount
@@ -37,7 +38,7 @@ class ClientSecretRepositoryIntegrationTest {
 
         @Test
         fun `should return null when no record exists`() {
-            underTest.findById(randomUUID()) shouldBe null
+            underTest.findById(randomUUID()).shouldBeNull()
         }
     }
 
