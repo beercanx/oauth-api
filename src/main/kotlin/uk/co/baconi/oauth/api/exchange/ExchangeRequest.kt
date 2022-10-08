@@ -83,14 +83,8 @@ data class AuthorisationCodeRequest(
 
 data class PkceAuthorisationCodeRequest(
     override val principal: PublicClient,
-    val code: String,
-    val redirectUri: String,
-    val codeVerifier: String
-) : ValidatedPublicExchangeRequest() {
-    override fun toString(): String {
-        return "PkceAuthorisationCodeRequest(principal=$principal, code=REDACTED, redirectUri=$redirectUri, codeVerifier=REDACTED)"
-    }
-}
+    val code: AuthorisationCode
+) : ValidatedPublicExchangeRequest()
 
 data class PasswordRequest(
     override val principal: ConfidentialClient,

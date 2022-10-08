@@ -13,6 +13,8 @@ sealed class AuthorisationRequest {
 
     data class Invalid(val redirectUri: String, val error: String, val description: String, val state: String?) : AuthorisationRequest()
 
+    // TODO - Add PKCE support?
+
     data class Valid(
         val responseType: AuthorisationResponseType,
         val clientId: ClientId,

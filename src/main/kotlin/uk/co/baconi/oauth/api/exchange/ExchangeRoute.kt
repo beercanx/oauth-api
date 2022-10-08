@@ -8,6 +8,7 @@ import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.locations.post
 import io.ktor.response.*
 import io.ktor.routing.*
+import uk.co.baconi.oauth.api.authorisation.AuthorisationCodeService
 import uk.co.baconi.oauth.api.client.ClientAuthenticationService
 import uk.co.baconi.oauth.api.client.ClientPrincipal
 import uk.co.baconi.oauth.api.client.ConfidentialClient
@@ -25,6 +26,8 @@ interface ExchangeRoute {
     val refreshGrant: RefreshGrant
     val authorisationCodeGrant: AuthorisationCodeGrant
     val assertionRedemptionGrant: AssertionRedemptionGrant
+
+    val authorisationCodeService: AuthorisationCodeService
     val clientAuthService: ClientAuthenticationService
 
     fun Route.exchange() {
@@ -44,7 +47,7 @@ interface ExchangeRoute {
                         // Handle standard exchanges for confidential clients
                         is ConfidentialClient -> {
 
-                            val response = when (val request = validateExchangeRequest(client)) {
+                            val response = when (val request = validateExchangeRequest(authorisationCodeService, client)) {
                                 // TODO - Extend to include more detail?
                                 is InvalidConfidentialExchangeRequest -> FailedExchangeResponse(InvalidRequest)
                                 is AuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
@@ -63,7 +66,7 @@ interface ExchangeRoute {
                         // Handle PKCE requests for public clients
                         is PublicClient -> {
 
-                            val response = when (val result = validatePkceExchangeRequest(client)) {
+                            val response = when (val result = validatePkceExchangeRequest(authorisationCodeService, client)) {
                                 // TODO - Extend to include more detail?
                                 is InvalidPublicExchangeRequest -> FailedExchangeResponse(InvalidRequest)
                                 is PkceAuthorisationCodeRequest -> authorisationCodeGrant.exchange(result)
