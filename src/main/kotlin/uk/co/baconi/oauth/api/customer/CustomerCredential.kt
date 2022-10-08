@@ -9,6 +9,6 @@ data class CustomerCredential(
     val locked: Boolean = false
 ) {
     override fun toString(): String {
-        return "CustomerCredential(username='$username', temporary=$temporary, locked=$locked)"
+        return "CustomerCredential(username='$username', secret='REDACTED', temporary=$temporary, locked=$locked)"
     }
 }
