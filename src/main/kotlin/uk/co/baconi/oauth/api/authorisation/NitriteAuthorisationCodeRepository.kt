@@ -18,10 +18,6 @@ class NitriteAuthorisationCodeRepository(database: Nitrite) : AuthorisationCodeR
 
     private val expirationManager = NitriteExpirationManager<String>()
 
-    // TODO - Consider place into configuration
-    private val ageAmount = 1L
-    private val ageUnit = MINUTES
-
     /**
      * Create a new instance of [NitriteAuthorisationCodeRepository] with an in-memory instance of [Nitrite]
      */
@@ -33,7 +29,7 @@ class NitriteAuthorisationCodeRepository(database: Nitrite) : AuthorisationCodeR
 
     override fun insert(new: AuthorisationCode) {
         repository.insert(new)
-        expirationManager.expireAfter(new.value, new.issuedAt.plus(ageAmount, ageUnit), ::delete)
+        expirationManager.expireAfter(new.value, new.expiresAt, ::delete)
     }
 
     override fun delete(id: String) {

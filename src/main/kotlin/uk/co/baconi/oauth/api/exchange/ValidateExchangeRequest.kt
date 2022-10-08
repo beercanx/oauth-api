@@ -3,6 +3,7 @@ package uk.co.baconi.oauth.api.exchange
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
+import uk.co.baconi.oauth.api.authorisation.AuthorisationCodeService
 import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.client.PublicClient
 import uk.co.baconi.oauth.api.enums.deserialise
@@ -21,7 +22,10 @@ private const val PASSWORD = "password"
 private const val REFRESH_TOKEN = "refresh_token"
 private const val ASSERTION = "assertion"
 
-suspend fun ApplicationContext.validateExchangeRequest(principal: ConfidentialClient): ConfidentialExchangeRequest {
+suspend fun ApplicationContext.validateExchangeRequest(
+    principal: ConfidentialClient,
+    authorisationCodeService: AuthorisationCodeService
+): ConfidentialExchangeRequest {
 
     val parameters = call.receiveParameters()
 
@@ -39,12 +43,10 @@ suspend fun ApplicationContext.validateExchangeRequest(principal: ConfidentialCl
                 code == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: code
                 code.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: code
 
-                // TODO - Validate the [code] is a valid code via a repository
-                // TODO - Validate the [redirect_uri] is the same as what was used to generate the [code]
-                // TODO - Validate the [client_id] is the same as what was used to generate the [code]
-                // TODO - Replace code with AuthorisationCode object
-
-                else -> AuthorisationCodeRequest(principal, code, redirectUri)
+                else -> when (val authorisationCode = authorisationCodeService.validate(principal, code, redirectUri)) {
+                    null -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: code
+                    else -> AuthorisationCodeRequest(principal, authorisationCode)
+                }
             }
         }
 
