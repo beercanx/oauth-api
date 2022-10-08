@@ -5,9 +5,8 @@ import io.ktor.html.*
 import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.routing.*
-import kotlinx.html.*
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.csrfToken
-import uk.co.baconi.oauth.api.kotlinx.html.PageTemplate
+import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.prefill
 import java.util.*
 
 
@@ -51,23 +50,9 @@ interface AuthenticationRoute {
             // TODO - Create full session.
             // TODO - Destroy pre-authenticated session.
 
-            call.respondHtmlTemplate(PageTemplate()) {
-
-                pageTitle {
-                    +"Authentication - Posted"
-                }
-
-                pageContent {
-                    p {
-                        +"csrf_token: ${parameters["csrf_token"]}"
-                    }
-                    p {
-                        +"username: ${parameters["username"]}"
-                    }
-                    p {
-                        +"password: <REDACTED>"
-                    }
-                }
+            call.respondHtmlTemplate(AuthenticationPageTemplate(locations)) {
+                csrfToken(UUID.randomUUID()) // TODO - Update session value
+                prefill(parameters) // TODO - Decide if this is the right thing to do security and UX wise
             }
         }
     }
