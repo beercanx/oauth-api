@@ -6,11 +6,7 @@ plugins {
 
 kotlin {
     js {
-        browser {
-            commonWebpackConfig { // TODO - Do we need webpack in a pure library?
-                cssSupport.enabled = true
-            }
-        }
+        browser()
     }
 }
 

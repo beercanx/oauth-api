@@ -1,4 +1,5 @@
 val ktorVersion: String by project
+val coroutinesVersion: String by project
 
 plugins {
     kotlin("js")
@@ -7,19 +8,10 @@ plugins {
 
 kotlin {
     js {
-        browser {
-            commonWebpackConfig {
-                cssSupport.enabled = true
-            }
-        }
-        binaries.executable() // TODO - Remove as its probably all going into the ':user-interface:server' module.
+        browser()
     }
 }
 
 dependencies {
     api(project(":user-interface:common"))
-    api(project(":common:authentication-client"))
-
-    api("io.ktor:ktor-client-core:$ktorVersion")
-    api("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 }

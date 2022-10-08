@@ -4,12 +4,7 @@ plugins {
 
 kotlin {
     js {
-        browser {
-            commonWebpackConfig {
-                cssSupport.enabled = true
-            }
-        }
-        binaries.executable() // TODO - Remove as its probably all going into the ':user-interface:server' module.
+        browser()
     }
 }
 

@@ -1,12 +1,12 @@
 package uk.co.baconi.oauth.common.authentication
 
 import csstype.ClassName
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
+import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLFormElement
 import react.FC
 import react.Props
 import react.dom.events.FormEventHandler
+import react.dom.events.MouseEventHandler
 import react.dom.html.AutoComplete
 import react.dom.html.ButtonType
 import react.dom.html.InputType
@@ -23,8 +23,6 @@ external interface LoginFormProps : Props {
     var csrfToken: String // TODO - Do with need CSRF?
 }
 
-val mainScope = MainScope()
-
 // TODO - Look at ES6 Class Components...
 val LoginForm = FC<LoginFormProps> { props ->
 
@@ -36,14 +34,19 @@ val LoginForm = FC<LoginFormProps> { props ->
 
     val handleSubmit: FormEventHandler<HTMLFormElement> = { event ->
         event.preventDefault()
-        // TODO - Handle abort
         // TODO - Handle redirect on success
         // TODO - Prevent multiple submissions
-        mainScope.launch {
-            console.log("Submitted!")
-            val result = authenticationClient.authenticate(username, password.toCharArray())
-            console.log("Deserialized:", result)
-        }
+        console.log("Authentication Submitted!")
+        authenticationClient
+            .authenticate(username, password)
+            .then { result ->  console.log("Authentication Deserialized:", result) }
+            .catch { exception -> console.error("Authentication Error:", exception) }
+    }
+
+    val handleAbort: MouseEventHandler<HTMLButtonElement> = { event ->
+        event.preventDefault()
+        console.log("Authentication Aborted!")
+        // TODO - Handle abort
     }
 
     h1 {
@@ -128,7 +131,8 @@ val LoginForm = FC<LoginFormProps> { props ->
                     className = ClassName("btn btn-secondary w-100")
                     name = "abort"
                     value = "abort"
-                    type = ButtonType.submit
+                    type = ButtonType.button
+                    onClick = handleAbort
                     +"Abort"
                 }
             }
