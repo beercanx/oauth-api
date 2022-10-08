@@ -1,47 +1,21 @@
 _type: export
 __export_format: 4
-__export_date: 2021-03-27T12:45:46.389Z
-__export_source: insomnia.desktop.app:v2021.1.1
+__export_date: 2021-05-22T12:58:54.175Z
+__export_source: insomnia.desktop.app:v2021.3.0
 resources:
-  - _id: req_e72641101a1c45b7aada7c832f04b880
-    parentId: fld_e2050447ebba401bb4e6c91bfe0bcdac
-    modified: 1616849090757
-    created: 1616844924188
-    url: http://localhost:8080/token
-    name: /token
+  - _id: req_61dcdd1370fa4f848e54c9b28a72f8e6
+    parentId: fld_6610f17c28db475993bd706d74f0f259
+    modified: 1621686687093
+    created: 1621686680242
+    url: http://localhost:8080/authentication
+    name: /authentication
     description: ""
-    method: POST
-    body:
-      mimeType: application/x-www-form-urlencoded
-      params:
-        - name: grant_type
-          value: authorization_code
-          id: pair_3bd571ff8f554a7ba7e30e30a47669b5
-          disabled: false
-        - name: client_id
-          value: consumer-y
-          description: ""
-          id: pair_344d06a23b034ce794ecb382e20cdc63
-          disabled: false
-        - name: code
-          value: aardvark
-          description: ""
-          id: pair_8dc818c15adf46f3a90ac5cfc605dd3d
-        - name: redirect_uri
-          value: com.baconi.consumer://callback
-          description: ""
-          id: pair_53b3596057f04dbe844ac7b5b0749976
-        - name: code_verifier
-          value: badger
-          description: ""
-          id: pair_103a583d5c92467f86b1cff6eae46cbf
+    method: GET
+    body: {}
     parameters: []
-    headers:
-      - name: Content-Type
-        value: application/x-www-form-urlencoded
-        id: pair_42fad963ffac472288630c8d5033f205
+    headers: []
     authentication: {}
-    metaSortKey: -1616844943889
+    metaSortKey: -1621686680284
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -50,15 +24,15 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: fld_e2050447ebba401bb4e6c91bfe0bcdac
+  - _id: fld_6610f17c28db475993bd706d74f0f259
     parentId: wrk_71fbafa341234279b3257859ca52c1e5
-    modified: 1616844947404
-    created: 1616844947404
-    name: PKCE Flow
+    modified: 1621688299973
+    created: 1621686662337
+    name: Authentication Page
     description: ""
     environment: {}
     environmentPropertyOrder: null
-    metaSortKey: -1616844947404
+    metaSortKey: -1620474494776.5
     _type: request_group
   - _id: wrk_71fbafa341234279b3257859ca52c1e5
     parentId: null
@@ -68,9 +42,49 @@ resources:
     description: ""
     scope: collection
     _type: workspace
+  - _id: req_14fee52a49d84a4892e7950cc63189df
+    parentId: fld_6610f17c28db475993bd706d74f0f259
+    modified: 1621688279808
+    created: 1621686727697
+    url: http://localhost:8080/authentication
+    name: /authentication
+    description: ""
+    method: POST
+    body:
+      mimeType: application/x-www-form-urlencoded
+      params:
+        - name: csrf_token
+          value: "{% response 'body', 'req_61dcdd1370fa4f848e54c9b28a72f8e6',
+            'b64::Ly9pbnB1dFtAbmFtZT0iY3NyZl90b2tlbiJdL0B2YWx1ZQ==::46b',
+            'always', 60 %}"
+          description: ""
+          id: pair_adbd878849eb4ddba37757ee26255870
+        - name: username
+          value: aardvark
+          description: ""
+          id: pair_3096dc9ba9cb44e0813b9f86f0512a34
+        - name: password
+          value: "121212"
+          description: ""
+          id: pair_d79ca80a98f14e0e93b60f06d87af9fb
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/x-www-form-urlencoded
+        id: pair_8c6afdc049d04e52a3d77db450afa39e
+    authentication: {}
+    metaSortKey: -1621685525994.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: req_a9ab37147ef6483caa98ce9716998a8a
-    parentId: fld_8226a096e8394c65bff7700602e244c4
-    modified: 1616844980069
+    parentId: fld_41b5b23827534e5fb9a0dfbcb9219858
+    modified: 1621683062260
     created: 1616237719049
     url: http://localhost:8080/token
     name: /token
@@ -97,6 +111,10 @@ resources:
       - name: Content-Type
         value: application/x-www-form-urlencoded
         id: pair_42fad963ffac472288630c8d5033f205
+      - name: Accept
+        value: application/json
+        description: ""
+        id: pair_211daa94658e4387872bc742d333ca1f
     authentication:
       type: basic
       useISO88591: false
@@ -112,15 +130,323 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
+  - _id: fld_41b5b23827534e5fb9a0dfbcb9219858
+    parentId: fld_8226a096e8394c65bff7700602e244c4
+    modified: 1621683588194
+    created: 1621682912319
+    name: AARDVARK (Active)
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1621682912319
+    _type: request_group
   - _id: fld_8226a096e8394c65bff7700602e244c4
     parentId: wrk_71fbafa341234279b3257859ca52c1e5
-    modified: 1616844940374
+    modified: 1621688303030
     created: 1616844940374
     name: Password Flow
     description: ""
     environment: {}
     environmentPropertyOrder: null
-    metaSortKey: -1616844940374
+    metaSortKey: -1620474494751.5
+    _type: request_group
+  - _id: req_b8393aec184d436a8ba95403793eed30
+    parentId: fld_41b5b23827534e5fb9a0dfbcb9219858
+    modified: 1621682969529
+    created: 1617535696788
+    url: http://localhost:8080/introspect
+    name: /introspect
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: >-
+        {
+        	"token": "{% response 'body', 'req_a9ab37147ef6483caa98ce9716998a8a', 'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 3600 %}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_42fad963ffac472288630c8d5033f205
+      - name: Accept
+        value: application/json
+        description: ""
+        id: pair_3348036cf2c249b2a627f4a1b518c95d
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: consumer-z
+      password: 7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu
+    metaSortKey: -1616237718999
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_61b61315495e4324bb88e480edce2564
+    parentId: fld_41b5b23827534e5fb9a0dfbcb9219858
+    modified: 1621682975671
+    created: 1619253677457
+    url: http://localhost:8080/userinfo
+    name: /userinfo
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: Accept
+        value: application/json
+        description: ""
+        id: pair_3348036cf2c249b2a627f4a1b518c95d
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_a9ab37147ef6483caa98ce9716998a8a',
+        'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 3600 %}"
+    metaSortKey: -1616237718949
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_535fec7d6acb460d8235308984a6c805
+    parentId: fld_e89672a31d594137af8193f34641141a
+    modified: 1621683554624
+    created: 1621682932062
+    url: http://localhost:8080/token
+    name: /token
+    description: ""
+    method: POST
+    body:
+      mimeType: application/x-www-form-urlencoded
+      params:
+        - name: grant_type
+          value: password
+          id: pair_3bd571ff8f554a7ba7e30e30a47669b5
+          disabled: false
+        - name: username
+          value: badger
+          id: pair_abc7e208a93947a582c9982780288123
+        - name: password
+          value: "212121"
+          id: pair_aef97154cd864084b40c0fe0f7184988
+        - name: scope
+          value: openid
+          id: pair_b18290f764ec400dad44941a187e381a
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/x-www-form-urlencoded
+        id: pair_42fad963ffac472288630c8d5033f205
+      - name: Accept
+        value: application/json
+        description: ""
+        id: pair_211daa94658e4387872bc742d333ca1f
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: consumer-z
+      password: 7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu
+    metaSortKey: -1616237719049
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_e89672a31d594137af8193f34641141a
+    parentId: fld_8226a096e8394c65bff7700602e244c4
+    modified: 1621683578906
+    created: 1621682932057
+    name: BADGER (Suspended)
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1619263929861.5
+    _type: request_group
+  - _id: req_4d7c6b16306747088177fe3cc3dad5be
+    parentId: fld_6fcc33df56914c06bf5b5753b6bd9a25
+    modified: 1621683642578
+    created: 1621683604229
+    url: http://localhost:8080/token
+    name: /token
+    description: ""
+    method: POST
+    body:
+      mimeType: application/x-www-form-urlencoded
+      params:
+        - name: grant_type
+          value: password
+          id: pair_3bd571ff8f554a7ba7e30e30a47669b5
+          disabled: false
+        - name: username
+          value: cicada
+          id: pair_abc7e208a93947a582c9982780288123
+        - name: password
+          value: "121212"
+          id: pair_aef97154cd864084b40c0fe0f7184988
+        - name: scope
+          value: openid
+          id: pair_b18290f764ec400dad44941a187e381a
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/x-www-form-urlencoded
+        id: pair_42fad963ffac472288630c8d5033f205
+      - name: Accept
+        value: application/json
+        description: ""
+        id: pair_211daa94658e4387872bc742d333ca1f
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: consumer-z
+      password: 7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu
+    metaSortKey: -1616237719049
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_6fcc33df56914c06bf5b5753b6bd9a25
+    parentId: fld_8226a096e8394c65bff7700602e244c4
+    modified: 1621683604225
+    created: 1621683604225
+    name: CICADA (Closed)
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1618054438632.75
+    _type: request_group
+  - _id: req_6be7ae9b85574ff3847508cfa008510c
+    parentId: fld_1c284f34c5984ed1843f28f29499e0c7
+    modified: 1621684082100
+    created: 1621683619389
+    url: http://localhost:8080/token
+    name: /token
+    description: ""
+    method: POST
+    body:
+      mimeType: application/x-www-form-urlencoded
+      params:
+        - name: grant_type
+          value: password
+          id: pair_3bd571ff8f554a7ba7e30e30a47669b5
+          disabled: false
+        - name: username
+          value: elephant
+          id: pair_abc7e208a93947a582c9982780288123
+        - name: password
+          value: "122112"
+          id: pair_aef97154cd864084b40c0fe0f7184988
+        - name: scope
+          value: openid
+          id: pair_b18290f764ec400dad44941a187e381a
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/x-www-form-urlencoded
+        id: pair_42fad963ffac472288630c8d5033f205
+      - name: Accept
+        value: application/json
+        description: ""
+        id: pair_211daa94658e4387872bc742d333ca1f
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: consumer-z
+      password: 7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu
+    metaSortKey: -1616237719049
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_1c284f34c5984ed1843f28f29499e0c7
+    parentId: fld_8226a096e8394c65bff7700602e244c4
+    modified: 1621683626512
+    created: 1621683619386
+    name: ELEPHANT (Change Password)
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1617449693018.375
+    _type: request_group
+  - _id: req_e72641101a1c45b7aada7c832f04b880
+    parentId: fld_e2050447ebba401bb4e6c91bfe0bcdac
+    modified: 1621682954657
+    created: 1616844924188
+    url: http://localhost:8080/token
+    name: /token
+    description: ""
+    method: POST
+    body:
+      mimeType: application/x-www-form-urlencoded
+      params:
+        - name: grant_type
+          value: authorization_code
+          id: pair_3bd571ff8f554a7ba7e30e30a47669b5
+          disabled: false
+        - name: client_id
+          value: consumer-y
+          description: ""
+          id: pair_344d06a23b034ce794ecb382e20cdc63
+          disabled: false
+        - name: code
+          value: aardvark
+          description: ""
+          id: pair_8dc818c15adf46f3a90ac5cfc605dd3d
+        - name: redirect_uri
+          value: uk.co.baconi.consumer-y://callback
+          description: ""
+          id: pair_53b3596057f04dbe844ac7b5b0749976
+          disabled: false
+        - name: code_verifier
+          value: badger
+          description: ""
+          id: pair_103a583d5c92467f86b1cff6eae46cbf
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/x-www-form-urlencoded
+        id: pair_42fad963ffac472288630c8d5033f205
+    authentication: {}
+    metaSortKey: -1616844943889
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_e2050447ebba401bb4e6c91bfe0bcdac
+    parentId: wrk_71fbafa341234279b3257859ca52c1e5
+    modified: 1621686671233
+    created: 1616844947404
+    name: PKCE Flow
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1620474494726.5
     _type: request_group
   - _id: env_27ab0b3c2d6379736f035eb2b420079dc7da3130
     parentId: wrk_71fbafa341234279b3257859ca52c1e5
@@ -135,10 +461,41 @@ resources:
     _type: environment
   - _id: jar_27ab0b3c2d6379736f035eb2b420079dc7da3130
     parentId: wrk_71fbafa341234279b3257859ca52c1e5
-    modified: 1616237705475
+    modified: 1621688280733
     created: 1616237705475
     name: Default Jar
-    cookies: []
+    cookies:
+      - key: sbgCEedgeauth01
+        expires: 2021-05-22T11:58:49.000Z
+        domain: auth.skybetservices.com
+        path: /openid/v1
+        hostOnly: true
+        pathIsDefault: true
+        creation: 2021-05-22T11:53:47.749Z
+        lastAccessed: 2021-05-22T11:53:47.749Z
+        id: "057433069781675394"
+      - key: akacd_core_CF_MM_01
+        value: 1624276513~rv=53~id=e3ccf5af9f494cdf85050a9e9821379e
+        expires: 2021-06-21T11:55:13.000Z
+        domain: auth.skybetservices.com
+        path: /
+        secure: true
+        extensions:
+          - SameSite=None
+        hostOnly: true
+        creation: 2021-05-22T11:53:47.749Z
+        lastAccessed: 2021-05-22T11:55:11.976Z
+        id: "757290256797901"
+      - key: AuthenticationSession
+        expires: 1970-01-01T00:00:00.000Z
+        domain: localhost
+        path: /
+        extensions:
+          - $x-enc=URI_ENCODING
+        hostOnly: true
+        creation: 2021-05-22T12:31:29.240Z
+        lastAccessed: 2021-05-22T12:58:00.733Z
+        id: "11485407596294595"
     _type: cookie_jar
   - _id: spc_82a3666d06bd4ba5bcadbf4ce868b787
     parentId: wrk_71fbafa341234279b3257859ca52c1e5
