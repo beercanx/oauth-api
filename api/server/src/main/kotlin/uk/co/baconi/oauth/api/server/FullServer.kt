@@ -17,6 +17,7 @@ import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationServic
 import uk.co.baconi.oauth.api.common.authentication.CustomerCredentialRepository
 import uk.co.baconi.oauth.api.common.authentication.CustomerStatusRepository
 import uk.co.baconi.oauth.api.common.embeddedCommonServer
+import uk.co.baconi.oauth.api.common.scope.ScopeConfigurationRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
 import uk.co.baconi.oauth.api.token.AuthorisationCodeGrant
@@ -24,8 +25,10 @@ import uk.co.baconi.oauth.api.token.PasswordGrant
 import uk.co.baconi.oauth.api.token.TokenRoute
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionRoute
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionService
+import uk.co.baconi.oauth.api.user.info.UserInfoRoute
+import uk.co.baconi.oauth.api.user.info.UserInfoService
 
-object FullServer : AuthenticationModule, TokenRoute, IntrospectionRoute, TestAccessTokenModule, TestUserModule {
+object FullServer : AuthenticationModule, TokenRoute, IntrospectionRoute, UserInfoRoute, TestAccessTokenModule, TestUserModule {
 
     private val accessTokenRepository = AccessTokenRepository(getAccessTokenDatabase())
     override val accessTokenService = AccessTokenService(accessTokenRepository)
@@ -45,6 +48,9 @@ object FullServer : AuthenticationModule, TokenRoute, IntrospectionRoute, TestAc
 
     override val introspectionService = IntrospectionService(accessTokenRepository)
 
+    private val scopeConfigurationRepository = ScopeConfigurationRepository()
+    override val userInfoService = UserInfoService(scopeConfigurationRepository)
+
     fun start() {
         embeddedCommonServer {
             common()
@@ -52,6 +58,7 @@ object FullServer : AuthenticationModule, TokenRoute, IntrospectionRoute, TestAc
             routing {
                 token()
                 introspection()
+                userInfo()
             }
             generateTestAccessTokens()
             generateTestUsers()

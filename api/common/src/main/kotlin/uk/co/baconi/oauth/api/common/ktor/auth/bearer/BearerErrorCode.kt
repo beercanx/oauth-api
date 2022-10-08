@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.api.ktor.auth.bearer
+package uk.co.baconi.oauth.api.common.ktor.auth.bearer
 
 /**
  * https://www.rfc-editor.org/rfc/rfc6750#section-3.1

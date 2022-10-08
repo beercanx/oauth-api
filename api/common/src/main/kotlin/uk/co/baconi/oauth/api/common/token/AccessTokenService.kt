@@ -3,6 +3,7 @@ package uk.co.baconi.oauth.api.common.token
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
+import uk.co.baconi.oauth.api.common.uuid.UUIDSerializer
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -36,6 +37,13 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
         ).also(
             repository::insert
         )
+    }
+
+    fun authenticate(token: String): AccessToken? {
+        return when (val uuid = UUIDSerializer.fromValueOrNull(token)) {
+            null -> null
+            else -> authenticate(uuid)
+        }
     }
 
     fun authenticate(token: UUID): AccessToken? {

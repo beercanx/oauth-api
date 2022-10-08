@@ -1,7 +1,7 @@
 /*
 * Copyright 2014-2021 JetBrains s.r.o and contributors. Use of this source code is governed by the Apache 2.0 license.
 */
-package uk.co.baconi.oauth.api.ktor.auth.bearer
+package uk.co.baconi.oauth.api.common.ktor.auth.bearer
 
 import io.ktor.http.auth.*
 import io.ktor.http.auth.HttpAuthHeader.*
@@ -9,10 +9,10 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
-import uk.co.baconi.oauth.api.ktor.auth.OAuth21ResponseParameters
-import uk.co.baconi.oauth.api.ktor.auth.bearer.BearerAuthenticationProvider.Config
-import uk.co.baconi.oauth.api.scopes.ScopeSerializer
-import uk.co.baconi.oauth.api.scopes.Scopes
+import uk.co.baconi.oauth.api.common.ktor.auth.OAuth21ResponseParameters
+import uk.co.baconi.oauth.api.common.ktor.auth.bearer.BearerAuthenticationProvider.Config
+import uk.co.baconi.oauth.api.common.scope.Scope
+import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
 
 /**
  * A `bearer` [Authentication] provider.
@@ -106,14 +106,12 @@ private fun ApplicationRequest.bearerAuthenticationCredentials(): BearerCredenti
 
             return BearerCredential(authHeader.blob)
         }
+
         else -> return null
     }
 }
 
 private val bearerAuthenticationChallengeKey: Any = "BearerAuth"
-
-private val scopeSerializer: ScopeSerializer
-    get() = ScopeSerializer()
 
 /**
  * Generates a Bearer challenge as a [HttpAuthHeader].
@@ -122,7 +120,7 @@ fun bearerAuthChallenge(
     realm: String,
     error: BearerErrorCode? = null,
     errorDescription: String? = null,
-    scopes: Set<Scopes>? = null
+    scopes: Set<Scope>? = null
 ) = Parameterized(
     AuthScheme.Bearer,
     buildMap {
@@ -135,7 +133,7 @@ fun bearerAuthChallenge(
         }
         if (scopes != null) {
             // https://www.ietf.org/archive/id/draft-parecki-oauth-v2-1-01.html#name-the-www-authenticate-respon
-            put(OAuth21ResponseParameters.Scope, scopeSerializer.serialize(scopes))
+            put(OAuth21ResponseParameters.Scope, ScopesSerializer.serialize(scopes))
         }
     }
 )

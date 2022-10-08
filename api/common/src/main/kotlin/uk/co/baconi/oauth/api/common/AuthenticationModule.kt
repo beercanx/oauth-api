@@ -7,7 +7,9 @@ import uk.co.baconi.oauth.api.common.client.ClientSecretService
 import uk.co.baconi.oauth.api.common.client.ConfidentialClient
 import uk.co.baconi.oauth.api.common.client.PublicClient
 import uk.co.baconi.oauth.api.common.ktor.auth.basic
+import uk.co.baconi.oauth.api.common.ktor.auth.bearer
 import uk.co.baconi.oauth.api.common.ktor.auth.form
+import uk.co.baconi.oauth.api.common.token.AccessToken
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
 
 interface AuthenticationModule {
@@ -43,13 +45,12 @@ interface AuthenticationModule {
                     clientSecretService.authenticate(clientId)
                 }
             }
-            // TODO - Bearer for User Info endpoint
-//            bearer<AccessToken> {
-//                realm = REALM
-//                validate { (token) ->
-//                    accessTokenService.authenticate(token)
-//                }
-//            }
+            bearer<AccessToken> {
+                this.realm = realm
+                validate { (token) ->
+                    accessTokenService.authenticate(token)
+                }
+            }
         }
     }
 }
