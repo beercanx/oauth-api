@@ -132,7 +132,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
 
             assertSoftly(underTest.findById(ConsumerZ)) {
                 shouldNotBeNull()
-                redirectUrls shouldContain Url("uk.co.consumer-z://callback")
+                redirectUrls shouldContain "uk.co.consumer-z://callback"
             }
         }
     }
@@ -233,8 +233,9 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
             underTest.findById(ConsumerY) shouldBe ClientConfiguration(
                 id = ConsumerY,
                 type = Public,
-                redirectUrls = setOf(Url("uk.co.baconi.consumer-y://callback")),
+                redirectUrls = setOf("uk.co.baconi.consumer-y://callback"),
                 allowedScopes = emptySet(),
+                allowedResponseTypes = emptySet(),
             )
         }
 

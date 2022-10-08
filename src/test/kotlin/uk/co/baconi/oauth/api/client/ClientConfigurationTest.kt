@@ -15,6 +15,7 @@ class ClientConfigurationTest {
         type = Confidential,
         redirectUrls = emptySet(),
         allowedScopes = emptySet(),
+        allowedResponseTypes = emptySet(),
     )
 
     private val consumerY = ClientConfiguration(
@@ -22,6 +23,7 @@ class ClientConfigurationTest {
         type = Public,
         redirectUrls = emptySet(),
         allowedScopes = emptySet(),
+        allowedResponseTypes = emptySet(),
     )
 
     @Nested
