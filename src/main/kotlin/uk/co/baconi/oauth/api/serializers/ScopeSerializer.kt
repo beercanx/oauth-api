@@ -1,14 +1,13 @@
 package uk.co.baconi.oauth.api.serializers
 
-import uk.co.baconi.oauth.api.enums.deserialise
-import uk.co.baconi.oauth.api.enums.serialise
-import uk.co.baconi.oauth.api.openid.Scopes
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import uk.co.baconi.oauth.api.enums.EnumSerialisation.Companion.INSTANCE
+import uk.co.baconi.oauth.api.openid.Scopes
 
 /**
  * Custom scope field serializer because OAuth spec requires it to be a space separated string field.
@@ -33,11 +32,11 @@ class ScopeSerializer(private val scopesSerializer: KSerializer<Scopes>) : KSeri
     }
 
     fun serialize(data: Set<Scopes>): String = data.joinToString(separator = " ") { scope ->
-        serialise(scopesSerializer, scope) ?: EMPTY
+        INSTANCE.serialise(scopesSerializer, scope) ?: EMPTY
     }
 
     fun deserialize(data: String): Set<Scopes> = data.split(" ").mapNotNull { scope ->
-        deserialise(scopesSerializer, scope)
+        INSTANCE.deserialise(scopesSerializer, scope)
     }.toSet()
 
 }
