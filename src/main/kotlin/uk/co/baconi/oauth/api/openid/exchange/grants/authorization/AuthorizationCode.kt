@@ -16,4 +16,33 @@ data class AuthorizationCode(
 
     // Added because we need to validate on exchange its the same url as stated in https://tools.ietf.org/html/rfc6749#section-4.1.3
     val redirectUrl: Url
-)
+) {
+
+    /**
+     * Generated to exclude [value] from the toString output.
+     */
+    override fun toString(): String {
+        return "AuthorizationCode(value='REDACTED', issuedAt=$issuedAt, redirectUrl=$redirectUrl)"
+    }
+
+    /**
+     * Generated based on its database ID field [value].
+     */
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as AuthorizationCode
+
+        if (value != other.value) return false
+
+        return true
+    }
+
+    /**
+     * Generated based on its database ID field [value].
+     */
+    override fun hashCode(): Int {
+        return value.hashCode()
+    }
+}
