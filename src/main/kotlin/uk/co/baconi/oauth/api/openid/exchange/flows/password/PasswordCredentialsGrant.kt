@@ -8,14 +8,14 @@ import uk.co.baconi.oauth.api.openid.exchange.ExchangeResponse
 import uk.co.baconi.oauth.api.openid.exchange.FailedExchangeResponse
 import uk.co.baconi.oauth.api.openid.exchange.PasswordRequest
 import uk.co.baconi.oauth.api.openid.exchange.SuccessExchangeResponse
-import uk.co.baconi.oauth.api.openid.exchange.flows.ConfidentialFlow
+import uk.co.baconi.oauth.api.openid.exchange.flows.ConfidentialGrant
 import uk.co.baconi.oauth.api.tokens.AccessTokenService
 import java.time.temporal.ChronoUnit.SECONDS
 
-class PasswordFlow(
+class PasswordCredentialsGrant(
     private val matchService: CustomerMatchService,
     private val accessTokenService: AccessTokenService
-) : ConfidentialFlow<PasswordRequest> {
+) : ConfidentialGrant<PasswordRequest> {
 
     override suspend fun exchange(request: PasswordRequest): ExchangeResponse {
 

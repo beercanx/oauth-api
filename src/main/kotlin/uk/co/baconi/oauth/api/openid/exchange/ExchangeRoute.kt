@@ -6,28 +6,26 @@ import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.client.PublicClient
 import uk.co.baconi.oauth.api.ktor.auth.authenticate
 import uk.co.baconi.oauth.api.openid.exchange.ErrorType.InvalidRequest
-import uk.co.baconi.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionFlow
-import uk.co.baconi.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeFlow
-import uk.co.baconi.oauth.api.openid.exchange.flows.password.PasswordFlow
-import uk.co.baconi.oauth.api.openid.exchange.flows.refresh.RefreshFlow
+import uk.co.baconi.oauth.api.openid.exchange.flows.assertion.AssertionRedemptionGrant
+import uk.co.baconi.oauth.api.openid.exchange.flows.authorization.AuthorizationCodeGrant
+import uk.co.baconi.oauth.api.openid.exchange.flows.password.PasswordCredentialsGrant
+import uk.co.baconi.oauth.api.openid.exchange.flows.refresh.RefreshGrant
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
-import io.ktor.http.auth.*
 import io.ktor.http.auth.HttpAuthHeader.Companion.basicAuthChallenge
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import io.ktor.util.pipeline.*
 import kotlin.text.Charsets.UTF_8
 
 interface ExchangeRoute {
 
-    val passwordFlow: PasswordFlow
-    val refreshFlow: RefreshFlow
-    val authorizationCodeFlow: AuthorizationCodeFlow
-    val assertionRedemptionFlow: AssertionRedemptionFlow
+    val passwordCredentialsGrant: PasswordCredentialsGrant
+    val refreshGrant: RefreshGrant
+    val authorizationCodeGrant: AuthorizationCodeGrant
+    val assertionRedemptionGrant: AssertionRedemptionGrant
     val clientAuthService: ClientAuthenticationService
 
     fun Route.exchangeRoute() {
@@ -42,10 +40,10 @@ interface ExchangeRoute {
                         val parameters = call.receive<Parameters>()
 
                         val response = when (val request = validateExchangeRequest(client, parameters)) {
-                            is AuthorizationCodeRequest -> authorizationCodeFlow.exchange(request)
-                            is PasswordRequest -> passwordFlow.exchange(request)
-                            is RefreshTokenRequest -> refreshFlow.exchange(request)
-                            is AssertionRequest -> assertionRedemptionFlow.exchange(request)
+                            is AuthorizationCodeRequest -> authorizationCodeGrant.exchange(request)
+                            is PasswordRequest -> passwordCredentialsGrant.exchange(request)
+                            is RefreshTokenRequest -> refreshGrant.exchange(request)
+                            is AssertionRequest -> assertionRedemptionGrant.exchange(request)
                             is InvalidConfidentialExchangeRequest -> FailedExchangeResponse(InvalidRequest) // TODO - Extend to include more detail?
                         }
 
@@ -62,7 +60,7 @@ interface ExchangeRoute {
                         is PublicClient -> {
 
                             val response = when (val result = validatePkceExchangeRequest(client, parameters)) {
-                                is PkceAuthorizationCodeRequest -> authorizationCodeFlow.exchange(result)
+                                is PkceAuthorizationCodeRequest -> authorizationCodeGrant.exchange(result)
                                 is InvalidPublicExchangeRequest -> FailedExchangeResponse(InvalidRequest) // TODO - Extend to include more detail?
                             }
 
