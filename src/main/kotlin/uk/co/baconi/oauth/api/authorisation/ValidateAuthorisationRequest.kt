@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.api.authorization
+package uk.co.baconi.oauth.api.authorisation
 
 import io.ktor.application.*
 import io.ktor.sessions.*
@@ -12,9 +12,9 @@ import java.net.URI
  * Validate request based on https://tools.ietf.org/html/rfc6749#section-4.1.1,
  * mixed with some custom logic to support gaining an authentication decision.
  */
-fun ApplicationContext.validateAuthorizationRequest(location: AuthorizationLocation): AuthorizationRequest {
+fun ApplicationContext.validateAuthorisationRequest(location: AuthorisationLocation): AuthorisationRequest {
 
-    val session = call.sessions.get<AuthorizationSession>()
+    val session = call.sessions.get<AuthorisationSession>()
 
     val responseType = location.response_type?.let { s -> deserialise<ResponseType>(s) }
 
@@ -32,12 +32,12 @@ fun ApplicationContext.validateAuthorizationRequest(location: AuthorizationLocat
         session != null && location.resume == true -> session.request
 
         // Validation Checks - TODO - Add failure reasons
-        responseType == null -> AuthorizationRequest.Invalid
-        clientId == null -> AuthorizationRequest.Invalid
-        redirectUri == null -> AuthorizationRequest.Invalid
-        location.state == null -> AuthorizationRequest.Invalid
+        responseType == null -> AuthorisationRequest.Invalid
+        clientId == null -> AuthorisationRequest.Invalid
+        redirectUri == null -> AuthorisationRequest.Invalid
+        location.state == null -> AuthorisationRequest.Invalid
 
-        else -> AuthorizationRequest.Valid(
+        else -> AuthorisationRequest.Valid(
             responseType = responseType,
             clientId = clientId,
             redirectUri = redirectUri,

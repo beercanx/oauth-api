@@ -19,14 +19,14 @@ fun validateExchangeRequest(
     val raw = parameters.toRawExchangeRequest()
 
     when (raw.grantType) {
-        AuthorizationCode -> {
+        AuthorisationCode -> {
             val code = checkNotBlank(raw.code) { "code" }
             val redirectUri = raw.validateRedirectUri(principal)
 
             // TODO - Validate the [code] is a valid code via a repository
             // TODO - Validate the [redirect_uri] is the same as what was used to generate the [code]
 
-            AuthorizationCodeRequest(principal, code, redirectUri)
+            AuthorisationCodeRequest(principal, code, redirectUri)
         }
         Password -> {
             val scopes = raw.validateScopes(principal)
@@ -58,13 +58,13 @@ fun validatePkceExchangeRequest(
     // Receive the posted form, unless we implement ContentNegotiation that supports URL encoded forms.
     val raw = parameters.toRawExchangeRequest()
 
-    if (raw.grantType == AuthorizationCode) {
+    if (raw.grantType == AuthorisationCode) {
 
         val code = checkNotBlank(raw.code) { "code" }
         val redirectUri = raw.validateRedirectUri(principal)
         val codeVerifier = checkNotBlank(raw.codeVerifier) { "codeVerifier" }
 
-        PkceAuthorizationCodeRequest(principal, code, redirectUri, codeVerifier)
+        PkceAuthorisationCodeRequest(principal, code, redirectUri, codeVerifier)
     } else {
         InvalidPublicExchangeRequest // TODO - Invalid Grant or Request?
     }
@@ -84,11 +84,11 @@ private fun Parameters.toRawExchangeRequest(): RawExchangeRequest {
         // All
         grantType = get("grant_type")?.let { s -> deserialise<GrantType>(s) },
 
-        // AuthorizationCodeRequest && PkceAuthorizationCodeRequest
+        // AuthorisationCodeRequest && PkceAuthorisationCodeRequest
         code = get("code"),
         redirectUri = get("redirect_uri"),
 
-        // PkceAuthorizationCodeRequest
+        // PkceAuthorisationCodeRequest
         codeVerifier = get("code_verifier"),
         clientId = get("client_id")?.let { s -> deserialise<ClientId>(s) },
 

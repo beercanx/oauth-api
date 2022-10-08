@@ -1,12 +1,12 @@
-package uk.co.baconi.oauth.api.authorization
+package uk.co.baconi.oauth.api.authorisation
 
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.scopes.Scopes
 import java.net.URI
 
-sealed class AuthorizationRequest {
+sealed class AuthorisationRequest {
 
-    object Invalid : AuthorizationRequest()
+    object Invalid : AuthorisationRequest()
 
     data class Valid(
         val responseType: ResponseType,
@@ -14,7 +14,7 @@ sealed class AuthorizationRequest {
         val redirectUri: URI,
         val state: String,
         val requestedScope: Set<Scopes>
-    ) : AuthorizationRequest() {
+    ) : AuthorisationRequest() {
 
         /**
          * Generated to exclude [state] from the toString output.

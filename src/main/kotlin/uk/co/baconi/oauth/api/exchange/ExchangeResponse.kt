@@ -85,7 +85,7 @@ enum class ErrorType {
     @SerialName("invalid_grant") InvalidGrant,
 
     /**
-     * The authenticated client is not authorized to use this authorization grant type.
+     * The authenticated client is not authorised to use this authorization grant type.
      */
     @SerialName("unauthorized_client") UnauthorizedClient,
 

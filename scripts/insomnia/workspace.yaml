@@ -1,6 +1,6 @@
 _type: export
 __export_format: 4
-__export_date: 2021-05-22T12:58:54.175Z
+__export_date: 2021-05-23T14:22:51.439Z
 __export_source: insomnia.desktop.app:v2021.3.0
 resources:
   - _id: req_61dcdd1370fa4f848e54c9b28a72f8e6
@@ -44,7 +44,7 @@ resources:
     _type: workspace
   - _id: req_14fee52a49d84a4892e7950cc63189df
     parentId: fld_6610f17c28db475993bd706d74f0f259
-    modified: 1621688279808
+    modified: 1621768893062
     created: 1621686727697
     url: http://localhost:8080/authentication
     name: /authentication
@@ -82,9 +82,61 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
+  - _id: req_497de559dd2f439998f1da68565814a7
+    parentId: fld_f77945da59e6438782578a88f91dfc58
+    modified: 1621779557290
+    created: 1621772651216
+    url: http://localhost:8080/authorise
+    name: /authorise
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - name: response_type
+        value: code
+        description: ""
+        id: pair_6eddd32eccdd43119296f52600b7a11b
+      - name: client_id
+        value: consumer-zs
+        description: ""
+        id: pair_c186db7c72d84d11b21c3afd0b7037e3
+      - name: redirect_uri
+        value: http://localhost:8080/callback
+        description: ""
+        id: pair_996a0244dda34a4cbfbd72769efe45a6
+      - name: state
+        value: "{% uuid 'v4' %}"
+        description: ""
+        id: pair_93d7ae61fb44418d8837ab613f702b41
+      - name: scope
+        value: ""
+        description: ""
+        id: pair_1524741550374c82ad816cf4c364d072
+        disabled: false
+    headers: []
+    authentication: {}
+    metaSortKey: -1621772651216
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_f77945da59e6438782578a88f91dfc58
+    parentId: wrk_71fbafa341234279b3257859ca52c1e5
+    modified: 1621772631945
+    created: 1621772547310
+    name: Authorization Code Grant
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1620474494764
+    _type: request_group
   - _id: req_a9ab37147ef6483caa98ce9716998a8a
     parentId: fld_41b5b23827534e5fb9a0dfbcb9219858
-    modified: 1621683062260
+    modified: 1621769047790
     created: 1616237719049
     url: http://localhost:8080/token
     name: /token
@@ -142,9 +194,9 @@ resources:
     _type: request_group
   - _id: fld_8226a096e8394c65bff7700602e244c4
     parentId: wrk_71fbafa341234279b3257859ca52c1e5
-    modified: 1621688303030
+    modified: 1621772572988
     created: 1616844940374
-    name: Password Flow
+    name: Resource Owner Password Credentials Grant
     description: ""
     environment: {}
     environmentPropertyOrder: null
@@ -392,7 +444,7 @@ resources:
     _type: request_group
   - _id: req_e72641101a1c45b7aada7c832f04b880
     parentId: fld_e2050447ebba401bb4e6c91bfe0bcdac
-    modified: 1621682954657
+    modified: 1621703439530
     created: 1616844924188
     url: http://localhost:8080/token
     name: /token
@@ -414,6 +466,7 @@ resources:
           value: aardvark
           description: ""
           id: pair_8dc818c15adf46f3a90ac5cfc605dd3d
+          disabled: false
         - name: redirect_uri
           value: uk.co.baconi.consumer-y://callback
           description: ""
@@ -461,41 +514,10 @@ resources:
     _type: environment
   - _id: jar_27ab0b3c2d6379736f035eb2b420079dc7da3130
     parentId: wrk_71fbafa341234279b3257859ca52c1e5
-    modified: 1621688280733
+    modified: 1621769069284
     created: 1616237705475
     name: Default Jar
-    cookies:
-      - key: sbgCEedgeauth01
-        expires: 2021-05-22T11:58:49.000Z
-        domain: auth.skybetservices.com
-        path: /openid/v1
-        hostOnly: true
-        pathIsDefault: true
-        creation: 2021-05-22T11:53:47.749Z
-        lastAccessed: 2021-05-22T11:53:47.749Z
-        id: "057433069781675394"
-      - key: akacd_core_CF_MM_01
-        value: 1624276513~rv=53~id=e3ccf5af9f494cdf85050a9e9821379e
-        expires: 2021-06-21T11:55:13.000Z
-        domain: auth.skybetservices.com
-        path: /
-        secure: true
-        extensions:
-          - SameSite=None
-        hostOnly: true
-        creation: 2021-05-22T11:53:47.749Z
-        lastAccessed: 2021-05-22T11:55:11.976Z
-        id: "757290256797901"
-      - key: AuthenticationSession
-        expires: 1970-01-01T00:00:00.000Z
-        domain: localhost
-        path: /
-        extensions:
-          - $x-enc=URI_ENCODING
-        hostOnly: true
-        creation: 2021-05-22T12:31:29.240Z
-        lastAccessed: 2021-05-22T12:58:00.733Z
-        id: "11485407596294595"
+    cookies: []
     _type: cookie_jar
   - _id: spc_82a3666d06bd4ba5bcadbf4ce868b787
     parentId: wrk_71fbafa341234279b3257859ca52c1e5

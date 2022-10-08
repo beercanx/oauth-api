@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.api.authorization
+package uk.co.baconi.oauth.api.authorisation
 
 import io.ktor.application.*
 import io.ktor.http.*
@@ -8,26 +8,26 @@ import io.ktor.routing.*
 import io.ktor.sessions.*
 import uk.co.baconi.oauth.api.authentication.AuthenticatedSession
 import uk.co.baconi.oauth.api.authentication.AuthenticationLocation
-import uk.co.baconi.oauth.api.authorization.ResponseType.Code
+import uk.co.baconi.oauth.api.authorisation.ResponseType.Code
 import java.util.*
 
-interface AuthorizationRoute {
+interface AuthorisationRoute {
 
-    fun Route.authorization() {
+    fun Route.authorisation() {
 
         // TODO - Verify assumptions, not sure this has been done correctly
         // TODO - What about those who navigate back?
         // TODO - What about those who wish to cancel?
         // TODO - What about those logging into a new account when one already was?
 
-        // TODO - Should we just render the AuthenticationPage on the authorization endpoint but have an isolated endpoint?
+        // TODO - Should we just render the AuthenticationPage on the authorisation endpoint but have an isolated endpoint?
 
-        get<AuthorizationLocation> { location ->
+        get<AuthorisationLocation> { location ->
 
-            return@get when (val request = validateAuthorizationRequest(location)) {
+            return@get when (val request = validateAuthorisationRequest(location)) {
 
-                // Handle authorization request [invalid] / decision [failure]
-                is AuthorizationRequest.Invalid -> {
+                // Handle authorisation request [invalid] / decision [failure]
+                is AuthorisationRequest.Invalid -> {
 
                     // TODO https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
 
@@ -38,15 +38,15 @@ interface AuthorizationRoute {
                      * }
                      */
 
-                    // Remove any stashed AuthorizationSession
-                    call.sessions.clear<AuthorizationSession>()
+                    // Remove any stashed AuthorisationSession
+                    call.sessions.clear<AuthorisationSession>()
 
                     TODO("Invalid $request")
                 }
 
                 // Handle cancelled / aborted
                 /*
-                is AuthorizationRequest.Aborted -> {
+                is AuthorisationRequest.Aborted -> {
 
                     // Return with error response
                     call.respondRedirect {
@@ -55,43 +55,43 @@ interface AuthorizationRoute {
                         parameters.append("error_description", "User opted to not login")
                     }
 
-                    // Remove any stashed AuthorizationSession
-                    call.sessions.clear<AuthorizationSession>()
+                    // Remove any stashed AuthorisationSession
+                    call.sessions.clear<AuthorisationSession>()
                 }
                  */
 
-                // Handle authorization request [valid]
-                is AuthorizationRequest.Valid -> when(request.responseType) {
+                // Handle authorisation request [valid]
+                is AuthorisationRequest.Valid -> when(request.responseType) {
                     Code -> when(val authenticated = call.sessions.get<AuthenticatedSession>()) {
 
-                        // Seek authorization decision
+                        // Seek authorisation decision
                         null -> {
 
-                            // Stash the AuthorizationSession
-                            call.sessions.set(AuthorizationSession(request))
+                            // Stash the AuthorisationSession
+                            call.sessions.set(AuthorisationSession(request))
 
                             // Redirect to our "login" page
                             call.respondRedirect(href(AuthenticationLocation))
                         }
 
-                        // Handle authorization decision [success]
+                        // Handle authorisation decision [success]
                         else -> {
 
-                            // TODO - Issue Authorization Code
-                            val authorizationCode = UUID.randomUUID().toString()
+                            // TODO - Issue Authorisation Code
+                            val authorisationCode = UUID.randomUUID().toString()
 
                             /*
-                            val authorizationCode = authorizationCodeService.issue(authenticated)
+                            val authorisationCode = authorisationCodeService.issue(authenticated)
                              */
 
                             call.respondRedirect {
                                 takeFrom(request.redirectUri)
-                                parameters.append("code", authorizationCode)
+                                parameters.append("code", authorisationCode)
                                 parameters.append("state", request.state)
                             }
 
-                            // Remove any stashed AuthorizationSession
-                            call.sessions.clear<AuthorizationSession>()
+                            // Remove any stashed AuthorisationSession
+                            call.sessions.clear<AuthorisationSession>()
                         }
                     }
                 }

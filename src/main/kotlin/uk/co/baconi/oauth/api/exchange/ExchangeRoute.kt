@@ -15,7 +15,7 @@ import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.client.PublicClient
 import uk.co.baconi.oauth.api.exchange.ErrorType.InvalidRequest
 import uk.co.baconi.oauth.api.exchange.grants.assertion.AssertionRedemptionGrant
-import uk.co.baconi.oauth.api.exchange.grants.authorization.AuthorizationCodeGrant
+import uk.co.baconi.oauth.api.exchange.grants.authorisation.AuthorisationCodeGrant
 import uk.co.baconi.oauth.api.exchange.grants.password.PasswordCredentialsGrant
 import uk.co.baconi.oauth.api.exchange.grants.refresh.RefreshGrant
 import uk.co.baconi.oauth.api.ktor.auth.authenticate
@@ -25,7 +25,7 @@ interface ExchangeRoute {
 
     val passwordCredentialsGrant: PasswordCredentialsGrant
     val refreshGrant: RefreshGrant
-    val authorizationCodeGrant: AuthorizationCodeGrant
+    val authorisationCodeGrant: AuthorisationCodeGrant
     val assertionRedemptionGrant: AssertionRedemptionGrant
     val clientAuthService: ClientAuthenticationService
 
@@ -42,7 +42,7 @@ interface ExchangeRoute {
                         val parameters = call.receive<Parameters>()
 
                         val response = when (val request = validateExchangeRequest(client, parameters)) {
-                            is AuthorizationCodeRequest -> authorizationCodeGrant.exchange(request)
+                            is AuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
                             is PasswordRequest -> passwordCredentialsGrant.exchange(request)
                             is RefreshTokenRequest -> refreshGrant.exchange(request)
                             is AssertionRequest -> assertionRedemptionGrant.exchange(request)
@@ -63,7 +63,7 @@ interface ExchangeRoute {
                         val parameters = call.receive<Parameters>()
 
                         val response = when (val result = validatePkceExchangeRequest(client, parameters)) {
-                            is PkceAuthorizationCodeRequest -> authorizationCodeGrant.exchange(result)
+                            is PkceAuthorisationCodeRequest -> authorisationCodeGrant.exchange(result)
                             is InvalidPublicExchangeRequest -> FailedExchangeResponse(InvalidRequest) // TODO - Extend to include more detail?
                         }
 

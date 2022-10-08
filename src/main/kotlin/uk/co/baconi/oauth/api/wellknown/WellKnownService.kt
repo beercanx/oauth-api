@@ -9,7 +9,7 @@ class WellKnownService {
         // TODO - Something like load from config?
         return OpenIdConfiguration(
             issuer = "https://auth.localhost.me",
-            authorization_endpoint = "https://auth.localhost.me/oauth/v1/authorize"
+            authorization_endpoint = "https://auth.localhost.me/oauth/v1/authorise"
         )
     }
 
