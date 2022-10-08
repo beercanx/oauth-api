@@ -1,3 +1,3 @@
 package uk.co.baconi.oauth.api.authentication
 
-data class AuthenticatedSession(val username: String)
+data class AuthenticatedSession(val username: AuthenticatedUsername)

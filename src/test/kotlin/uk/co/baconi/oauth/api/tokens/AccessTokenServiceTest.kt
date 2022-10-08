@@ -9,7 +9,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.api.authentication.Authentication
+import uk.co.baconi.oauth.api.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.client.ClientId.ConsumerZ
 import uk.co.baconi.oauth.api.scopes.Scopes.OpenId
 
@@ -26,7 +26,7 @@ class AccessTokenServiceTest {
     fun `should insert the issued access token into the repository`() {
 
         val result = underTest.issue(
-            authentication = Authentication.Success("aardvark"),
+            username = AuthenticatedUsername("aardvark"),
             clientId = ConsumerZ,
             scopes = setOf(OpenId)
         )
@@ -38,7 +38,7 @@ class AccessTokenServiceTest {
     fun `should issue the access token with sensible date values`() {
 
         val result = underTest.issue(
-            authentication = Authentication.Success("aardvark"),
+            username = AuthenticatedUsername("aardvark"),
             clientId = ConsumerZ,
             scopes = emptySet()
         )

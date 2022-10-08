@@ -7,6 +7,7 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import uk.co.baconi.oauth.api.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.client.ClientId.ConsumerZ
 import java.time.OffsetDateTime.now
 import java.util.UUID.randomUUID
@@ -21,7 +22,7 @@ class AccessTokenTest {
             withClue("hasExpired") {
                 AccessToken(
                     value = randomUUID().toString(),
-                    username = "aardvark",
+                    username = AuthenticatedUsername("aardvark"),
                     clientId = ConsumerZ,
                     scopes = emptySet(),
                     issuedAt = now(),
@@ -36,7 +37,7 @@ class AccessTokenTest {
             withClue("hasExpired") {
                 AccessToken(
                     value = randomUUID().toString(),
-                    username = "aardvark",
+                    username = AuthenticatedUsername("aardvark"),
                     clientId = ConsumerZ,
                     scopes = emptySet(),
                     issuedAt = now(),
@@ -56,7 +57,7 @@ class AccessTokenTest {
             assertSoftly(
                 AccessToken(
                     value = value,
-                    username = "aardvark",
+                    username = AuthenticatedUsername("aardvark"),
                     clientId = ConsumerZ,
                     scopes = emptySet(),
                     issuedAt = now(),

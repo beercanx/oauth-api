@@ -6,6 +6,7 @@ import org.dizitart.kno2.nitrite
 import org.dizitart.no2.IndexOptions.indexOptions
 import org.dizitart.no2.IndexType.NonUnique
 import org.dizitart.no2.Nitrite
+import uk.co.baconi.oauth.api.NitriteExpirationManager
 import uk.co.baconi.oauth.api.client.ClientId
 import java.io.Closeable
 
@@ -17,7 +18,7 @@ import java.io.Closeable
  */
 class NitriteAccessTokenRepository(database: Nitrite) : AccessTokenRepository, Closeable by database {
 
-    private val expirationManager = NitriteAccessTokenExpirationManager()
+    private val expirationManager = NitriteExpirationManager<String>()
 
     /**
      * Create a new instance of [NitriteAccessTokenRepository] with an in-memory instance of [Nitrite]

@@ -1,6 +1,7 @@
 package uk.co.baconi.oauth.api.tokens
 
 import uk.co.baconi.oauth.api.client.ClientId
+import uk.co.baconi.oauth.api.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.scopes.Scopes
 import java.time.OffsetDateTime
 
@@ -14,7 +15,7 @@ interface Token {
     /**
      * The human readable identifier, for the subject of this token.
      */
-    val username: String
+    val username: AuthenticatedUsername
 
     /**
      * The if of the oauth client this token was issued to.

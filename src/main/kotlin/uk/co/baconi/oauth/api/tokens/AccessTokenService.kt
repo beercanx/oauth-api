@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.tokens
 
-import uk.co.baconi.oauth.api.authentication.Authentication
 import uk.co.baconi.oauth.api.client.ClientId
+import uk.co.baconi.oauth.api.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.scopes.Scopes
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
@@ -15,8 +15,7 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
     private val tokenAge = 2L
     private val tokenAgeUnit = ChronoUnit.HOURS
 
-    // TODO - Replace with some kind of Authorisation Success that includes scopes being checked as allowed.
-    fun issue(authentication: Authentication.Success, clientId: ClientId, scopes: Set<Scopes>): AccessToken {
+    fun issue(username: AuthenticatedUsername, clientId: ClientId, scopes: Set<Scopes>): AccessToken {
 
         val value = UUID.randomUUID().toString()
 
@@ -30,7 +29,7 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
 
         return AccessToken(
             value = value,
-            username = authentication.username,
+            username = username,
             clientId = clientId,
             scopes = scopes,
             issuedAt = issuedAt,

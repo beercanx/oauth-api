@@ -3,13 +3,14 @@ package uk.co.baconi.oauth.api.tokens
 import io.ktor.auth.*
 import org.dizitart.no2.objects.Id
 import uk.co.baconi.oauth.api.client.ClientId
+import uk.co.baconi.oauth.api.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.scopes.Scopes
 import java.time.OffsetDateTime
 import java.time.OffsetDateTime.now
 
 data class AccessToken(
     @Id override val value: String,
-    override val username: String,
+    override val username: AuthenticatedUsername,
     override val clientId: ClientId,
     override val scopes: Set<Scopes>,
     override val issuedAt: OffsetDateTime,

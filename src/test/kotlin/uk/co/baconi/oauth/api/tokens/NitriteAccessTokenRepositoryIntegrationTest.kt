@@ -12,6 +12,7 @@ import org.apache.commons.lang3.RandomStringUtils.random
 import org.dizitart.no2.exceptions.UniqueConstraintException
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import uk.co.baconi.oauth.api.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.client.ClientId.*
 import uk.co.baconi.oauth.api.scopes.Scopes.OpenId
@@ -28,7 +29,7 @@ class NitriteAccessTokenRepositoryIntegrationTest {
         clientId: ClientId = ConsumerZ
     ) = AccessToken(
         value = value,
-        username = username,
+        username = AuthenticatedUsername(username),
         clientId = clientId,
         scopes = setOf(OpenId),
         issuedAt = now(),
@@ -193,7 +194,7 @@ class NitriteAccessTokenRepositoryIntegrationTest {
             val accessToken = AccessToken.new()
             underTest.insert(accessToken)
 
-            assertSoftly(underTest.findAllByUsername(accessToken.username)) {
+            assertSoftly(underTest.findAllByUsername(accessToken.username.value)) {
                 it shouldHaveSize 1
                 it shouldContain accessToken
             }
