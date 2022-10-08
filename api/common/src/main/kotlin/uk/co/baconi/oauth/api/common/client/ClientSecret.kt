@@ -1,6 +1,6 @@
 package uk.co.baconi.oauth.api.common.client
 
-data class ClientSecret(val id: Long, val clientId: ClientId, val secret: String) {
+data class ClientSecret(val id: Long, val clientId: ClientId, val hashedSecret: String) {
 
     /**
      * Generated based on its database ID field [id].
@@ -24,9 +24,9 @@ data class ClientSecret(val id: Long, val clientId: ClientId, val secret: String
     }
 
     /**
-     * Generated to exclude [secret] from the toString output.
+     * Generated to exclude [hashedSecret] from the toString output.
      */
     override fun toString(): String {
-        return "ClientSecret(id=$id, clientId=$clientId, secret='REDACTED')"
+        return "ClientSecret(id=$id, clientId=$clientId, hashedSecret='REDACTED')"
     }
 }

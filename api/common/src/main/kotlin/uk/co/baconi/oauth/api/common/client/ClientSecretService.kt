@@ -3,7 +3,7 @@ package uk.co.baconi.oauth.api.common.client
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 import kotlin.text.toCharArray
 
-class ClientAuthenticationService internal constructor(
+class ClientSecretService internal constructor(
     private val clientSecretRepository: ClientSecretRepository,
     private val clientConfigurationRepository: ClientConfigurationRepository,
     private val checkPassword: (hash: String, password: CharArray) -> Boolean
@@ -18,18 +18,24 @@ class ClientAuthenticationService internal constructor(
         OpenBSDBCrypt::checkPassword
     )
 
-    fun confidentialClient(clientId: String, clientSecret: String): ConfidentialClient? {
+    /**
+     * Authenticate a [ConfidentialClient].
+     */
+    fun authenticate(clientId: String, clientSecret: String): ConfidentialClient? {
         return clientSecretRepository
             .findAllByClientId(clientId)
-            .filter { secret -> checkPassword(secret.secret, clientSecret.toCharArray()) }
+            .filter { secret -> checkPassword(secret.hashedSecret, clientSecret.toCharArray()) }
             .map(ClientSecret::clientId)
-            .mapNotNull(clientConfigurationRepository::findByClientId)
+            .mapNotNull(clientConfigurationRepository::findById)
             .filter(ClientConfiguration::isConfidential)
             .map(::ConfidentialClient)
             .firstOrNull()
     }
 
-    fun publicClient(clientId: String?): PublicClient? {
+    /**
+     * Authenticate a [PublicClient].
+     */
+    fun authenticate(clientId: String?): PublicClient? {
         return clientId
             ?.let(clientConfigurationRepository::findByClientId)
             ?.takeIf(ClientConfiguration::isPublic)

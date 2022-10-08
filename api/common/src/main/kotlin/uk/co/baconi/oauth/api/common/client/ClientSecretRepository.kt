@@ -7,7 +7,7 @@ import uk.co.baconi.oauth.api.common.Repository
  */
 interface ClientSecretRepository : Repository<ClientSecret, Long> {
 
-    val clientIdRepository: ClientIdRepository
+    // TODO - Implement with TypesafeConfig or a database
 
     /**
      * Find all the [ClientSecret]'s issued to a given [ClientId].
@@ -18,12 +18,6 @@ interface ClientSecretRepository : Repository<ClientSecret, Long> {
      * Find all the [ClientSecret]'s issued to a given [ClientId],
      * but takes a [String] and looks up the [ClientId] first.
      */
-    fun findAllByClientId(clientId: String): Sequence<ClientSecret> {
-        val clientIdentifier = clientIdRepository.findById(clientId)
-        return if (clientIdentifier == null) {
-            emptySequence()
-        } else {
-            findAllByClientId(clientIdentifier)
-        }
-    }
+    fun findAllByClientId(clientId: String): Sequence<ClientSecret>
+
 }

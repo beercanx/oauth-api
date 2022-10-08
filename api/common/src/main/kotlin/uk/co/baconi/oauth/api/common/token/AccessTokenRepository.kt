@@ -9,6 +9,8 @@ import uk.co.baconi.oauth.api.common.client.ClientId
  */
 interface AccessTokenRepository : Repository<AccessToken, String>, WithInsert<AccessToken>, WithDelete<AccessToken, String> {
 
+    // TODO - Implement a in a database
+
     /**
      * Find an [AccessToken] based on its value.
      */
