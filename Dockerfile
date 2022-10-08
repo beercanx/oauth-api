@@ -1,4 +1,9 @@
-FROM amazoncorretto:17-alpine3.15-jdk AS code-build
+ARG JAVA_VERSION=17
+ARG ALPINE_VERSION=3.15
+ARG APPLICATION_VERSION=0.1
+ARG ARGON2_VERSION=20190702
+
+FROM amazoncorretto:${JAVA_VERSION}-alpine${ALPINE_VERSION}-jdk AS code-build
 
 WORKDIR /project
 
@@ -25,10 +30,9 @@ RUN ./gradlew dependencies
 COPY api /project/api
 RUN ./gradlew build
 
-ENV APPLICATION_VERSION=0.1
 RUN cd /project/api/server/build/distributions && unzip server-${APPLICATION_VERSION}.zip
 
-FROM amazoncorretto:17-alpine3.15-jdk AS jre-build
+FROM amazoncorretto:${JAVA_VERSION}-alpine${ALPINE_VERSION}-jdk AS jre-build
 
 # Fix Alpine -- missing objcopy
 RUN apk add --no-cache binutils
@@ -43,11 +47,11 @@ RUN $JAVA_HOME/bin/jlink \
   --compress=2 \
   --output /javaruntime
 
-FROM alpine:3.15 AS server-base
+FROM alpine:${ALPINE_VERSION} AS server-base
 
 # Make sure there's no out standing OS updates to install
 RUN apk --no-cache upgrade && \
-    apk --no-cache add java-common argon2-libs
+    apk --no-cache add java-common "argon2-libs>${ARGON2_VERSION}"
 
 # Setup the JRE
 ENV JAVA_HOME=/jre
@@ -58,7 +62,6 @@ COPY --from=jre-build /javaruntime $JAVA_HOME
 FROM server-base as server-full
 
 ## Copy over the full server code
-ENV APPLICATION_VERSION=0.1
 COPY --from=code-build /project/api/server/build/distributions/server-${APPLICATION_VERSION}/ /application
 
 WORKDIR /application
