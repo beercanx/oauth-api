@@ -18,12 +18,12 @@ class AuthenticationService(
 
     fun authenticate(request: AuthenticationRequest.Valid): Authentication = authenticate(
         username = request.username,
-        password = request.username
+        password = request.password
     )
 
     fun authenticate(request: PasswordRequest): Authentication = authenticate(
         username = request.username,
-        password = request.username
+        password = request.password
     )
 
     private fun authenticate(username: String, password: String): Authentication {
