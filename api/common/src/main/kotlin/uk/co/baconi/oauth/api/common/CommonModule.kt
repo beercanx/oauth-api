@@ -20,8 +20,9 @@ object CommonModule {
         log.info("Registering the CommonModule.common() module")
 
         install(AutoHeadResponse)
-        install(DataConversion)
+        install(DataConversion) // TODO - Do we even need this?
 
+        // TODO - Include HTTPS redirect - enabled via config - local setup to off.
         install(HSTS) {
             includeSubDomains = true
         }
@@ -63,7 +64,10 @@ object CommonModule {
 
         // Enable CORS to enable multiple ports - TODO - Remove once we've sorted common domain setup
         install(CORS) {
-            allowHost("localhost:8080")
+            (0..8).forEach {
+                this@common.log.info("CORS allowHost localhost:808${it}")
+                allowHost("localhost:808${it}")
+            }
             allowHeader(HttpHeaders.ContentType)
             allowCredentials = true
         }

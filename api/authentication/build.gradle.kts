@@ -1,3 +1,5 @@
+val ktorVersion: String by project
+
 plugins {
     application
     kotlin("jvm")
@@ -6,6 +8,8 @@ plugins {
 
 dependencies {
     api(project(":api:common"))
+
+    api("io.ktor:ktor-server-html-builder:$ktorVersion")
 }
 
 application {
