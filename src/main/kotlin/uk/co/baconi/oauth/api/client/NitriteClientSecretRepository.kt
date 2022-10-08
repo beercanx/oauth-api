@@ -1,7 +1,5 @@
 package uk.co.baconi.oauth.api.client
 
-import uk.co.baconi.oauth.api.client.ClientId.ConsumerX
-import uk.co.baconi.oauth.api.client.ClientId.ConsumerZ
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 import org.dizitart.kno2.filters.eq
 import org.dizitart.kno2.getRepository
@@ -10,6 +8,8 @@ import org.dizitart.no2.IndexOptions.indexOptions
 import org.dizitart.no2.IndexType.NonUnique
 import org.dizitart.no2.IndexType.Unique
 import org.dizitart.no2.Nitrite
+import uk.co.baconi.oauth.api.client.ClientId.ConsumerX
+import uk.co.baconi.oauth.api.client.ClientId.ConsumerZ
 import java.io.Closeable
 import java.security.SecureRandom
 import java.util.*

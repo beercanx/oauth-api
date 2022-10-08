@@ -3,7 +3,6 @@ package uk.co.baconi.oauth.api.authorisation
 import uk.co.baconi.oauth.api.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.enums.deserialise
-import uk.co.baconi.oauth.api.exchange.InvalidConfidentialExchangeRequest
 import uk.co.baconi.oauth.api.ktor.isAbsoluteURI
 import uk.co.baconi.oauth.api.scopes.parseAsScopes
 

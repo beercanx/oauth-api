@@ -1,8 +1,6 @@
 package uk.co.baconi.oauth.api.authorisation
 
 import io.ktor.locations.*
-import uk.co.baconi.oauth.api.client.ClientId
-import java.net.URI
 
 @Location("/authorise")
 data class AuthorisationLocation(

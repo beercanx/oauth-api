@@ -1,9 +1,9 @@
 package uk.co.baconi.oauth.api.introspection
 
-import uk.co.baconi.oauth.api.client.ConfidentialClient
-import uk.co.baconi.oauth.api.tokens.Tokens
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import uk.co.baconi.oauth.api.client.ConfidentialClient
+import uk.co.baconi.oauth.api.tokens.Tokens
 
 @Serializable
 data class RawIntrospectionRequest(

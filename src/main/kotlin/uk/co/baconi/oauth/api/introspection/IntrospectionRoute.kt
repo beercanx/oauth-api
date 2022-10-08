@@ -1,12 +1,12 @@
 package uk.co.baconi.oauth.api.introspection
 
-import uk.co.baconi.oauth.api.client.ConfidentialClient
-import uk.co.baconi.oauth.api.ktor.auth.authenticate
-import uk.co.baconi.oauth.api.ktor.auth.extractClient
 import io.ktor.application.*
 import io.ktor.locations.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import uk.co.baconi.oauth.api.client.ConfidentialClient
+import uk.co.baconi.oauth.api.ktor.auth.authenticate
+import uk.co.baconi.oauth.api.ktor.auth.extractClient
 
 interface IntrospectionRoute {
 

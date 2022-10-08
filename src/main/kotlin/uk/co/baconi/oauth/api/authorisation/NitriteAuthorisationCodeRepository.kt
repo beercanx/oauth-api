@@ -3,14 +3,10 @@ package uk.co.baconi.oauth.api.authorisation
 import org.dizitart.kno2.filters.eq
 import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite
-import org.dizitart.no2.IndexOptions.indexOptions
-import org.dizitart.no2.IndexType.NonUnique
 import org.dizitart.no2.Nitrite
 import uk.co.baconi.oauth.api.NitriteExpirationManager
-import uk.co.baconi.oauth.api.client.ClientId
 import java.io.Closeable
-import java.time.temporal.ChronoUnit
-import java.time.temporal.ChronoUnit.*
+import java.time.temporal.ChronoUnit.MINUTES
 
 /**
  * A Nitrite implementation of the [AuthorisationCodeRepository].
