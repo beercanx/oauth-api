@@ -19,10 +19,18 @@ sealed class ValidatedIntrospectionRequest {
 data class IntrospectionRequest(
     override val principal: ConfidentialClient,
     override val token: String
-) : ValidatedIntrospectionRequest()
+) : ValidatedIntrospectionRequest() {
+    override fun toString(): String {
+        return "IntrospectionRequest(principal=$principal, token='REDACTED')"
+    }
+}
 
 data class IntrospectionRequestWithHint(
     override val principal: ConfidentialClient,
     override val token: String,
     val hint: Tokens
-) : ValidatedIntrospectionRequest()
+) : ValidatedIntrospectionRequest() {
+    override fun toString(): String {
+        return "IntrospectionRequestWithHint(principal=$principal, token='REDACTED', hint=$hint)"
+    }
+}
