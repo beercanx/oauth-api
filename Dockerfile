@@ -1,4 +1,4 @@
-FROM amazoncorretto:11-alpine3.15-jdk AS code-build
+FROM amazoncorretto:17-alpine3.15-jdk AS code-build
 
 WORKDIR /project
 
@@ -28,7 +28,7 @@ RUN ./gradlew build
 ENV APPLICATION_VERSION=0.1
 RUN cd /project/api/server/build/distributions && unzip server-${APPLICATION_VERSION}.zip
 
-FROM amazoncorretto:11-alpine3.15-jdk AS jre-build
+FROM amazoncorretto:17-alpine3.15-jdk AS jre-build
 
 # Fix Alpine -- missing objcopy
 RUN apk add --no-cache binutils
