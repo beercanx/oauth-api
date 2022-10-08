@@ -134,9 +134,7 @@ enum class Claim(internal val value: String) {
     ;
 
     companion object {
-        fun fromValue(value: String): Claim = checkNotNull(Claim.fromValueOrNull(value)) {
-            "No such Claim with value [$value]"
-        }
+        fun fromValue(value: String): Claim = checkNotNull(fromValueOrNull(value)) { "No such Claim [$value]" }
         fun fromValueOrNull(value: String): Claim? = values().firstOrNull { claim -> claim.value == value }
     }
 }

@@ -8,8 +8,7 @@ enum class ClientType(internal val value: String) {
     @SerialName("confidential") Confidential("confidential"),
     @SerialName("public") Public("public");
     companion object {
-        fun fromValue(value: String): ClientType = checkNotNull(values().firstOrNull { type -> type.value == value }) {
-            "No such ClientType with value [$value]"
-        }
+        fun fromValue(value: String): ClientType = checkNotNull(fromValueOrNull(value)) { "No such ClientType [$value]" }
+        fun fromValueOrNull(value: String): ClientType? = values().firstOrNull { type -> type.value == value }
     }
 }
