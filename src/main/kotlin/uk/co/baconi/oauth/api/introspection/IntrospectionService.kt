@@ -2,6 +2,8 @@ package uk.co.baconi.oauth.api.introspection
 
 import uk.co.baconi.oauth.api.tokens.AccessToken
 import uk.co.baconi.oauth.api.tokens.AccessTokenRepository
+import uk.co.baconi.oauth.api.tokens.TokenType
+import uk.co.baconi.oauth.api.tokens.Tokens
 
 class IntrospectionService(private val accessTokenRepository: AccessTokenRepository) {
 
@@ -23,10 +25,12 @@ class IntrospectionService(private val accessTokenRepository: AccessTokenReposit
                 scope = scopes,
                 clientId = clientId,
                 username = username,
-                subject = username,
+                purpose = Tokens.AccessToken, // TODO - Update when we have more types
+                tokenType = TokenType.Bearer,
                 expirationTime = expiresAt.toEpochSecond(),
                 issuedAt = issuedAt.toEpochSecond(),
-                notBefore = notBefore.toEpochSecond()
+                notBefore = notBefore.toEpochSecond(),
+                subject = username,
             )
         }
     }
