@@ -34,7 +34,7 @@ import io.ktor.serialization.*
 
 @Suppress("unused") // Inform the IDE that we are actually using this
 @KtorExperimentalLocationsAPI
-object OAuth2Server : WellKnownRoutes, OAuthRoutes, SwaggerRoutes {
+object OAuth2Server : WellKnownRoutes, OAuthRoutes, SwaggerRoutes, StaticAssetRoutes {
 
     const val REALM = "oauth-api"
 
@@ -64,7 +64,7 @@ object OAuth2Server : WellKnownRoutes, OAuthRoutes, SwaggerRoutes {
 
     fun Application.module() {
 
-        install(Locations)
+        install(Locations) {}
         install(AutoHeadResponse)
         install(DataConversion)
 
@@ -146,9 +146,7 @@ object OAuth2Server : WellKnownRoutes, OAuthRoutes, SwaggerRoutes {
             //
             // Setup some generic static assets
             //
-            static("assets") {
-                resources("assets")
-            }
+            staticAssets()
         }
     }
 }

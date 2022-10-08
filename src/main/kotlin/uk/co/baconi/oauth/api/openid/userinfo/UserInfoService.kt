@@ -1,5 +1,7 @@
 package uk.co.baconi.oauth.api.openid.userinfo
 
+import io.ktor.locations.*
+import uk.co.baconi.oauth.api.Assets
 import uk.co.baconi.oauth.api.openid.Claims
 import uk.co.baconi.oauth.api.openid.ScopesConfiguration
 import uk.co.baconi.oauth.api.openid.ScopesConfigurationRepository
@@ -8,22 +10,24 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 
-class UserInfoService(private val scopesConfigurationRepository: ScopesConfigurationRepository) {
+class UserInfoService(
+    private val scopesConfigurationRepository: ScopesConfigurationRepository,
+) {
 
     // https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
-    fun getUserInfo(accessToken: AccessToken): UserInfoResponse {
+    fun getUserInfo(accessToken: AccessToken, locations: Locations): UserInfoResponse {
         // TODO - Improve this is crude assuming individual sources of data, also only supports username.
         return accessToken
             .scopes
             .asSequence()
             .mapNotNull(scopesConfigurationRepository::findById)
             .flatMap(ScopesConfiguration::claims)
-            .map { claim -> getClaim(accessToken, claim) }
+            .map { claim -> getClaim(accessToken, claim, locations) }
             .toMap()
     }
 
     // TODO - Replace with a data class, might help with custom serialisers?
-    private fun getClaim(accessToken: AccessToken, claim: Claims): Pair<Claims, Any?> = claim to when (claim) {
+    private fun getClaim(accessToken: AccessToken, claim: Claims, locations: Locations): Pair<Claims, Any?> = claim to when (claim) {
         Claims.Subject -> accessToken.username
         Claims.Name -> TODO()
         Claims.GivenName -> TODO()
@@ -32,7 +36,7 @@ class UserInfoService(private val scopesConfigurationRepository: ScopesConfigura
         Claims.Nickname -> TODO()
         Claims.PreferredUserName -> TODO()
         Claims.ProfileUrl -> TODO()
-        Claims.PictureUrl -> "/assets/profile-images/${profileImages.random()}"
+        Claims.PictureUrl ->  locations.href(Assets.ProfileImages(profileImages.random()))
         Claims.Email -> TODO()
         Claims.EmailVerified -> TODO()
         Claims.Birthdate -> TODO()
