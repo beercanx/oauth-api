@@ -6,7 +6,7 @@ import io.ktor.routing.*
 
 interface WellKnownRoutes {
 
-    private val wellKnown: WellKnown
+    val wellKnown: WellKnown
         get() = WellKnown()
 
     fun Route.wellKnownRoutes() {
