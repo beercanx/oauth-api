@@ -33,7 +33,7 @@ fun validateAuthorisationRequest(
     // TODO - Make sure we validate enough to respond https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
     return when {
 
-        location.client_id == null -> AuthorisationRequest.Invalid("invalid_request", "missing parameter: redirect_uri")
+        location.client_id == null -> AuthorisationRequest.Invalid("invalid_request", "missing parameter: client_id")
         validClientId == null -> AuthorisationRequest.Invalid("unauthorized_client", "unauthorized client")
         validClientConfiguration == null -> AuthorisationRequest.Invalid("unauthorized_client", "unauthorized client")
 
