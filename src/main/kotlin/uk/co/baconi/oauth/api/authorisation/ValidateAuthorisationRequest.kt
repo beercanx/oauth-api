@@ -1,21 +1,14 @@
 package uk.co.baconi.oauth.api.authorisation
 
-import io.ktor.application.*
-import io.ktor.sessions.*
-import io.ktor.util.*
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.enums.deserialise
-import uk.co.baconi.oauth.api.ktor.ApplicationContext
 import uk.co.baconi.oauth.api.scopes.Scopes
-import java.net.URI
 
 /**
  * Validate request based on https://tools.ietf.org/html/rfc6749#section-4.1.1,
  * mixed with some custom logic to support gaining an authentication decision.
  */
-fun ApplicationContext.validateAuthorisationRequest(location: AuthorisationLocation): AuthorisationRequest {
-
-    val session = call.sessions.get<AuthorisationSession>()
+fun validateAuthorisationRequest(location: AuthorisationLocation): AuthorisationRequest {
 
     val responseType = location.response_type?.let { s -> deserialise<ResponseType>(s) }
 
@@ -28,12 +21,6 @@ fun ApplicationContext.validateAuthorisationRequest(location: AuthorisationLocat
     // TODO - Make sure we validate enough to respond https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
 
     return when {
-
-        // Support resuming from gaining an authentication decision
-        session != null && location.resume == true -> session.request
-
-        // Support aborting an authorisation via a users choice
-        session != null && location.resume == false -> AuthorisationRequest.Aborted(session.request.redirectUri)
 
         //
         // Validation Checks - TODO - Add failure reasons
@@ -50,6 +37,9 @@ fun ApplicationContext.validateAuthorisationRequest(location: AuthorisationLocat
 
         // TODO - Validate location.redirect_uri for the given clientId
         //AuthorisationRequest.Invalid(invalid_request, "Invalid parameter: redirect_uri")
+
+        // Support aborting an authorisation via a users choice
+        location.resume == false -> AuthorisationRequest.Aborted(location.redirect_uri)
 
         responseType == null -> AuthorisationRequest.Invalid//(unsupported_response_type, "Unsupported response type: ${location.response_type}")
         location.state == null -> AuthorisationRequest.Invalid//(invalid_request, "Missing parameter: state")
