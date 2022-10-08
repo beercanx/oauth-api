@@ -5,6 +5,7 @@ val ktorVersion: String by project
 
 plugins {
     idea
+    jacoco
     application
     kotlin("jvm") version "1.4.32"
     kotlin("plugin.serialization") version "1.4.32"
@@ -87,6 +88,21 @@ application {
 
 apply {
     from("gradle/gatling.gradle")
+}
+
+tasks.test {
+    // Make sure the JaCoCo report is always generated after tests run.
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    // Make sure the tests are always run before generating the report.
+    dependsOn(tasks.test)
+    reports {
+        xml.isEnabled = true
+        csv.isEnabled = false
+        html.isEnabled = true
+    }
 }
 
 tasks.withType<KotlinCompile> {
