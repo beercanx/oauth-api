@@ -79,7 +79,6 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
                             name = USERNAME
                             placeholder = "Enter username"
                             autoComplete = true
-                            required = true
                             insert(username)
                         }
                         div("invalid-feedback") {
@@ -96,7 +95,6 @@ class AuthenticationPageTemplate(private val locations: Locations) : Template<HT
                             name = PASSWORD
                             placeholder = "Password"
                             autoComplete = true
-                            required = true
                             insert(password)
                         }
                         div("invalid-feedback") {
