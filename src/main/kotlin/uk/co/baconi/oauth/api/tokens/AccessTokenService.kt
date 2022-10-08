@@ -29,7 +29,7 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
 
         return AccessToken(
             value = value,
-            username = username,
+            username = username.value,
             clientId = clientId,
             scopes = scopes,
             issuedAt = issuedAt,
