@@ -29,6 +29,7 @@ import io.ktor.locations.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
 import uk.co.baconi.oauth.api.assets.StaticAssetsRoute
+import uk.co.baconi.oauth.api.authentication.AuthenticationRoute
 import uk.co.baconi.oauth.api.authorization.AuthorizationRoute
 import uk.co.baconi.oauth.api.exchange.ExchangeRoute
 import uk.co.baconi.oauth.api.introspection.IntrospectionRoute
@@ -37,7 +38,8 @@ import uk.co.baconi.oauth.api.swagger.SwaggerRoute
 import uk.co.baconi.oauth.api.userinfo.UserInfoRoute
 import uk.co.baconi.oauth.api.wellknown.WellKnownRoute
 
-object OAuth2Server : AuthorizationRoute,
+object OAuth2Server : AuthenticationRoute,
+    AuthorizationRoute,
     ExchangeRoute,
     IntrospectionRoute,
     RevocationRoute,
@@ -139,6 +141,11 @@ object OAuth2Server : AuthorizationRoute,
         }
 
         routing {
+            //
+            // Setup UI
+            //
+            authentication()
+
             //
             // Setup the OAuth / OIDC routes
             //
