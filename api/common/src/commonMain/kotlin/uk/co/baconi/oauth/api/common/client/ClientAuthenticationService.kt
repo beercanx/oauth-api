@@ -1,9 +1,13 @@
 package uk.co.baconi.oauth.api.common.client
 
+import uk.co.baconi.oauth.api.common.crypto.CheckHashedPassword
+import uk.co.baconi.oauth.api.common.crypto.CheckPassword
+import kotlin.text.toCharArray
+
 class ClientAuthenticationService internal constructor(
     private val clientSecretRepository: ClientSecretRepository,
     private val clientConfigurationRepository: ClientConfigurationRepository,
-    private val checkPassword: (ByteArray, String) -> Boolean
+    private val checkPassword: CheckHashedPassword
 ) {
 
     constructor(
@@ -12,13 +16,13 @@ class ClientAuthenticationService internal constructor(
     ) : this(
         clientSecretRepository,
         clientConfigurationRepository,
-        { _, _ -> false } // TODO - OpenBSDBCrypt::checkPassword
+        CheckPassword.checkHashedPassword
     )
 
     fun confidentialClient(clientId: String, clientSecret: String): ConfidentialClient? {
         return clientSecretRepository
             .findAllByClientId(clientId)
-            .filter { secret -> checkPassword(secret.secret, clientSecret) }
+            .filter { secret -> checkPassword(secret.secret, clientSecret.toCharArray()) }
             .map(ClientSecret::clientId)
             .mapNotNull(clientConfigurationRepository::findByClientId)
             .filter(ClientConfiguration::isConfidential)

@@ -1,6 +1,6 @@
 package uk.co.baconi.oauth.api.common.client
 
-data class ClientSecret(val id: Long, val clientId: ClientId, val secret: ByteArray) {
+data class ClientSecret(val id: Long, val clientId: ClientId, val secret: String) {
 
     /**
      * Generated based on its database ID field [id].

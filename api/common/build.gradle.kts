@@ -6,7 +6,6 @@ val datetimeVersion: String by project
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    id("io.kotest.multiplatform")
 }
 
 kotlin {
@@ -35,7 +34,7 @@ kotlin {
                 implementation("io.ktor:ktor-server-hsts:$ktorVersion")
                 implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-                //implementation("io.ktor:ktor-server-compression:$ktorVersion")
+                //implementation("io.ktor:ktor-server-compression:$ktorVersion") // TODO Only supported on JVM?
                 implementation("io.ktor:ktor-server-caching-headers:$ktorVersion")
                 implementation("io.ktor:ktor-server-double-receive:$ktorVersion")
                 implementation("io.ktor:ktor-server-auth:$ktorVersion")
@@ -49,9 +48,9 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
 
-                implementation("io.kotest:kotest-assertions-core:$kotestVersion")
-                implementation("io.kotest:kotest-framework-engine:$kotestVersion")
-                implementation("io.kotest:kotest-framework-datatest:$kotestVersion")
+                // TODO - Replace with Kotlin.Test assertions?
+                //implementation("io.kotest:kotest-assertions-core:$kotestVersion")
+
                 implementation("io.mockk:mockk-common:$mockkVersion")
             }
         }
@@ -59,13 +58,19 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
+
+                // Crypto for safe password checking
+                implementation("org.bouncycastle:bcprov-jdk15on:1.70")
             }
         }
         val jvmTest by getting {
             dependencies {
-                implementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+                // TODO - Replace with kotlin.test runner?
+                //implementation("io.kotest:kotest-runner-junit5:$kotestVersion")
             }
         }
+
+        val linuxX64Main by getting {}
     }
 }
 
