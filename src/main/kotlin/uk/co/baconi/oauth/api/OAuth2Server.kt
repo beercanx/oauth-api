@@ -31,6 +31,7 @@ import io.ktor.serialization.*
 import io.ktor.sessions.*
 import uk.co.baconi.oauth.api.assets.StaticAssetsRoute
 import uk.co.baconi.oauth.api.authentication.AuthenticationRoute
+import uk.co.baconi.oauth.api.authentication.AuthenticationService
 import uk.co.baconi.oauth.api.authentication.AuthenticationSession
 import uk.co.baconi.oauth.api.authorization.AuthorizationRoute
 import uk.co.baconi.oauth.api.exchange.ExchangeRoute
@@ -71,8 +72,10 @@ object OAuth2Server : AuthenticationRoute,
     private val customerMatchService = CustomerMatchService(customerCredentialRepository)
     override val userInfoService = UserInfoService(scopesConfigurationRepository)
 
+    override val authenticationService = AuthenticationService(customerMatchService, customerStatusRepository)
+
     // OAuth Grants
-    override val passwordCredentialsGrant = PasswordCredentialsGrant(customerMatchService, accessTokenService)
+    override val passwordCredentialsGrant = PasswordCredentialsGrant(authenticationService, accessTokenService)
     override val refreshGrant = RefreshGrant()
     override val authorizationCodeGrant = AuthorizationCodeGrant()
     override val assertionRedemptionGrant = AssertionRedemptionGrant()
