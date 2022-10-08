@@ -44,7 +44,10 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
 
         return when {
             accessToken == null -> null
-            accessToken.hasExpired() -> null // Unlikely but possible
+            accessToken.hasExpired() -> {
+                repository.deleteByRecord(accessToken)
+                null // Unlikely but possible
+            }
             else -> accessToken
         }
     }

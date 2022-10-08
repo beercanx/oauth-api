@@ -10,6 +10,8 @@ import java.util.*
 
 class AccessTokenRepository(private val database: Database) {
 
+    // TODO - Consider automatic expiration of token records.
+
     constructor() : this(DatabaseModule.accessTokenDatabase)
 
     fun insert(new: AccessToken) {
