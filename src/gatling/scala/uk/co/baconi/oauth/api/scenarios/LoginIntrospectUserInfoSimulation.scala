@@ -25,5 +25,5 @@ class LoginIntrospectUserInfoSimulation extends Simulation {
     .baseUrl("http://localhost:8080") // TODO - Extract into environmental config
     .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0") // TODO - Use various types
 
-  setUp(scn.inject(constantUsersPerSec(200).during(1.minutes)).protocols(httpProtocol))
+  setUp(scn.inject(atOnceUsers(1)).protocols(httpProtocol))
 }
