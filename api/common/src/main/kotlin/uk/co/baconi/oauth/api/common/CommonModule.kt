@@ -31,6 +31,7 @@ object CommonModule {
             json()
         }
 
+        // Removing this could enable a Native first server (a long side replacing the DB)
         install(Compression) {
             gzip {
                 priority = 1.0

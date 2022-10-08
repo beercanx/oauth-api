@@ -10,7 +10,7 @@ import java.util.*
 
 class AccessTokenRepository(private val database: Database) {
 
-    constructor() : this(DatabaseModule.accessTokenDB)
+    constructor() : this(DatabaseModule.accessTokenDatabase)
 
     fun insert(new: AccessToken) {
         transaction(database) {

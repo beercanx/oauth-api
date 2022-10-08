@@ -34,7 +34,7 @@ dependencies {
     implementation("io.ktor:ktor-server-hsts:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-    implementation("io.ktor:ktor-server-compression:$ktorVersion")
+    implementation("io.ktor:ktor-server-compression:$ktorVersion") // TODO - Removing this could enable a Native first server
     implementation("io.ktor:ktor-server-caching-headers:$ktorVersion")
     implementation("io.ktor:ktor-server-double-receive:$ktorVersion")
     implementation("io.ktor:ktor-server-auth:$ktorVersion")
@@ -42,7 +42,7 @@ dependencies {
     // Crypto for safe password checking
     implementation("org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion")
 
-    // Database
+    // Database - TODO - Removing this could enable a Native first server
     implementation("com.h2database:h2:$h2DatabaseVersion")
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
