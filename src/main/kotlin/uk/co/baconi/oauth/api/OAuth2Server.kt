@@ -124,7 +124,7 @@ object OAuth2Server : AuthenticationRoute,
             cookie<AuthenticationSession>("AuthenticationSession", storage = SessionStorageMemory())
         }
 
-        // Enable `call.recieve` to work twice without getting an exception
+        // Enable `call.receive` to work twice without getting an exception
         install(DoubleReceive)
 
         // Graceful Shutdown
