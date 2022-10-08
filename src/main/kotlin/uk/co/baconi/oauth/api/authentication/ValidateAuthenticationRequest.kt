@@ -9,8 +9,8 @@ import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companio
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.PASSWORD
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.USERNAME
 import uk.co.baconi.oauth.api.authorisation.AuthorisationLocation
+import uk.co.baconi.oauth.api.ktor.isAbsoluteURI
 import uk.co.baconi.oauth.api.ktor.ApplicationContext
-import java.net.URI
 
 suspend fun ApplicationContext.validateAuthenticationRequest(location: AuthenticationLocation): AuthenticationRequest {
 
@@ -46,13 +46,4 @@ suspend fun ApplicationContext.validateAuthenticationRequest(location: Authentic
         // Good enough to attempt an authentication
         else -> AuthenticationRequest.Valid(username, password, redirect)
     }
-}
-
-/**
- * Does this [String] contain an absolute [URI]
- */
-private fun String.isAbsoluteURI(): Boolean = try {
-    URI.create(this).isAbsolute
-} catch (exception: Exception) {
-    false
 }

@@ -1,13 +1,13 @@
 package uk.co.baconi.oauth.api.client
 
-import uk.co.baconi.oauth.api.enums.deserialise
-import uk.co.baconi.oauth.api.enums.serialise
-import uk.co.baconi.oauth.api.scopes.Scopes
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigException
 import com.typesafe.config.ConfigFactory
 import io.ktor.config.*
-import io.ktor.http.*
+import uk.co.baconi.oauth.api.authorisation.AuthorisationResponseType
+import uk.co.baconi.oauth.api.enums.deserialise
+import uk.co.baconi.oauth.api.enums.serialise
+import uk.co.baconi.oauth.api.scopes.Scopes
 
 /**
  * A static Typesafe Config implementation of the [ClientConfigurationRepository].
@@ -39,19 +39,16 @@ class TypesafeClientConfigurationRepository internal constructor(
             ClientConfiguration(
                 id = id,
                 type = config.getEnum(ClientType::class.java, "type"),
-                redirectUrls = config.tryGetStringList("redirectUrls").toUrls(),
-                allowedScopes = config.tryGetStringList("allowedScopes").toScopes(),
+                redirectUrls = config.tryGetStringList("redirectUrls")?.toSet() ?: emptySet(),
+                allowedScopes = config.tryGetStringList("allowedScopes").toEnumSet(),
+                allowedResponseTypes = config.tryGetStringList("allowedResponseTypes").toEnumSet(),
             )
         } else {
             null
         }
     }
 
-    private fun List<String>?.toUrls(): Set<Url> {
-        return this?.map(::Url)?.toSet() ?: emptySet()
-    }
-
-    private fun List<String>?.toScopes(): Set<Scopes> {
-        return this?.mapNotNull{scope -> deserialise<Scopes>(scope)}?.toSet() ?: emptySet()
+    private inline fun <reified T : Enum<T>> List<String>?.toEnumSet(): Set<T> {
+        return this?.mapNotNull { e -> deserialise<T>(e) }?.toSet() ?: emptySet()
     }
 }

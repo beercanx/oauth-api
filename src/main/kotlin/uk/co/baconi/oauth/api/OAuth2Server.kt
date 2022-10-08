@@ -54,7 +54,7 @@ object OAuth2Server : AuthenticationRoute,
 
     // Clients
     private val clientSecretRepository = NitriteClientSecretRepository()
-    private val clientConfigurationRepository = TypesafeClientConfigurationRepository()
+    override val clientConfigurationRepository = TypesafeClientConfigurationRepository()
     override val clientAuthService = ClientAuthenticationService(clientSecretRepository, clientConfigurationRepository)
 
     // Tokens

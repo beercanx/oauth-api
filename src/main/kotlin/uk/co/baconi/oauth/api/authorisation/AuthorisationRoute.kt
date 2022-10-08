@@ -8,11 +8,13 @@ import io.ktor.routing.*
 import io.ktor.sessions.*
 import uk.co.baconi.oauth.api.authentication.AuthenticatedSession
 import uk.co.baconi.oauth.api.authentication.AuthenticationLocation
-import uk.co.baconi.oauth.api.authorisation.ResponseType.Code
+import uk.co.baconi.oauth.api.authorisation.AuthorisationResponseType.Code
+import uk.co.baconi.oauth.api.client.ClientConfigurationRepository
 
 interface AuthorisationRoute {
 
     val authorisationCodeService: AuthorisationCodeService
+    val clientConfigurationRepository: ClientConfigurationRepository
 
     fun Route.authorisation() {
 
@@ -26,7 +28,7 @@ interface AuthorisationRoute {
         get<AuthorisationLocation> { location ->
 
             // TODO - How to detect user click back in the browser from the authentication screen
-            return@get when (val request = validateAuthorisationRequest(location)) {
+            return@get when (val request = validateAuthorisationRequest(location, clientConfigurationRepository)) {
 
                 // Handle authorisation request [invalid] / decision [failure]
                 is AuthorisationRequest.Invalid -> {
@@ -50,7 +52,7 @@ interface AuthorisationRoute {
                     call.respondRedirect(
                         URLBuilder(request.redirectUri).apply {
                             parameters.append("error", "access_denied")
-                            parameters.append("error_description", "User aborted")
+                            parameters.append("error_description", "user aborted")
                         }.buildString()
                     )
                 }

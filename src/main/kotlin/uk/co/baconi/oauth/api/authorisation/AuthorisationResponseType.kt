@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class ResponseType {
+enum class AuthorisationResponseType {
     @SerialName("code") Code
 }

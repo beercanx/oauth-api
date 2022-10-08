@@ -1,14 +1,15 @@
 package uk.co.baconi.oauth.api.client
 
-import io.ktor.http.*
 import org.dizitart.no2.objects.Id
+import uk.co.baconi.oauth.api.authorisation.AuthorisationResponseType
 import uk.co.baconi.oauth.api.scopes.Scopes
 
 data class ClientConfiguration(
     @Id val id: ClientId,
     val type: ClientType,
-    val redirectUrls: Set<Url>,
-    val allowedScopes: Set<Scopes>
+    val redirectUrls: Set<String>,
+    val allowedScopes: Set<Scopes>,
+    val allowedResponseTypes: Set<AuthorisationResponseType>
 ) {
 
     val isConfidential = type == ClientType.Confidential
