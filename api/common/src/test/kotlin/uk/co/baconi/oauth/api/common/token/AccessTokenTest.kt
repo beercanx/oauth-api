@@ -106,46 +106,4 @@ class AccessTokenTest {
             }
         }
     }
-
-    @Nested
-    inner class EqualsAndHashCode {
-
-        private val accessToken = AccessToken(
-            value = randomUUID(),
-            username = AuthenticatedUsername("aardvark"),
-            clientId = ClientId("consumer-z"),
-            scopes = emptySet(),
-            issuedAt = now(),
-            expiresAt = now().minus(1, ChronoUnit.DAYS),
-            notBefore = now()
-        )
-
-        @Test
-        fun `should be equal if the access token values are identical`() {
-            withClue("equalTo") {
-                accessToken shouldBe accessToken.copy(username = AuthenticatedUsername("badger"))
-            }
-        }
-
-        @Test
-        fun `should not be equal if the access token values are not identical`() {
-            withClue("equalTo") {
-                accessToken shouldNotBe accessToken.copy(value = randomUUID())
-            }
-        }
-
-        @Test
-        fun `should have the same hash code if the access token values are identical`() {
-            withClue("hashCode") {
-                accessToken.hashCode() shouldBe accessToken.copy(username = AuthenticatedUsername("badger")).hashCode()
-            }
-        }
-
-        @Test
-        fun `should not have the same hash code if the access token values are not identical`() {
-            withClue("hashCode") {
-                accessToken.hashCode() shouldNotBe accessToken.copy(value = randomUUID()).hashCode()
-            }
-        }
-    }
 }

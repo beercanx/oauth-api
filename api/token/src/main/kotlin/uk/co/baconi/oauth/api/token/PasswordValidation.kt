@@ -3,8 +3,8 @@ package uk.co.baconi.oauth.api.token
 import io.ktor.http.*
 import uk.co.baconi.oauth.api.common.client.ClientPrincipal
 import uk.co.baconi.oauth.api.common.client.ConfidentialClient
-import uk.co.baconi.oauth.api.common.scope.Scope
 import uk.co.baconi.oauth.api.common.grant.GrantType.Password
+import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
 import uk.co.baconi.oauth.api.token.TokenErrorType.*
 import uk.co.baconi.oauth.api.token.TokenRequest.Invalid
 
@@ -18,7 +18,7 @@ interface PasswordValidation {
 
         val username = parameters[USERNAME]
         val password = parameters[PASSWORD]?.toCharArray()
-        val scopes = parameters[SCOPE]?.split(" ")?.mapNotNull(Scope::fromValueOrNull)?.toSet() ?: emptySet()
+        val scopes = parameters[SCOPE]?.let(ScopesSerializer::deserialize) ?: emptySet()
 
         return when {
             client !is ConfidentialClient -> Invalid(UnauthorizedClient, "not authorized to: ${Password.value}")

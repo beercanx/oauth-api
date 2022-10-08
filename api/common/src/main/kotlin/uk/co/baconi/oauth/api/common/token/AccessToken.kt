@@ -27,25 +27,4 @@ data class AccessToken(
     override fun toString(): String {
         return "AccessToken(value='REDACTED', username='$username', clientId=$clientId, scopes=$scopes, issuedAt=$issuedAt, expiresAt=$expiresAt, notBefore=$notBefore)"
     }
-
-    /**
-     * Generated based on its database ID field [value].
-     */
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as AccessToken
-
-        if (value != other.value) return false
-
-        return true
-    }
-
-    /**
-     * Generated based on its database ID field [value].
-     */
-    override fun hashCode(): Int {
-        return value.hashCode()
-    }
 }

@@ -14,6 +14,6 @@ kotlin {
 }
 
 dependencies {
-    api(project(":common:authentication"))
     api(project(":user-interface:common"))
+    api(project(":common:authentication"))
 }

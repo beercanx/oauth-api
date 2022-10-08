@@ -12,6 +12,7 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import uk.co.baconi.oauth.api.common.grant.GrantType
 import uk.co.baconi.oauth.api.common.scope.Scope
 
 class ClientConfigurationRepositoryIntegrationTest {
@@ -99,9 +100,9 @@ class ClientConfigurationRepositoryIntegrationTest {
                 id = ClientId("consumer-y"),
                 type = ClientType.Public,
                 redirectUris = setOf("uk.co.baconi.consumer-y://callback"),
-                allowedScopes = emptySet(),
-                allowedActions = emptySet(),
-                allowedGrantTypes = emptySet(),
+                allowedScopes = setOf(Scope.OpenId),
+                allowedActions = setOf(ClientAction.ProofKeyForCodeExchange),
+                allowedGrantTypes = setOf(GrantType.AuthorisationCode),
             )
         }
 

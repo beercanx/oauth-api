@@ -21,28 +21,30 @@ interface TokenRoute : TokenRequestValidation {
 
         application.log.info("Registering the TokenRoute.token() routes")
 
-        authenticate(ConfidentialClient::class, PublicClient::class) {
-            contentType(FormUrlEncoded) {
-                post("/token") {
+        route("/token") {
+            authenticate(ConfidentialClient::class, PublicClient::class) {
+                contentType(FormUrlEncoded) {
+                    post {
 
-                    val principal = call.extractClient<ClientPrincipal>()
+                        val principal = call.extractClient<ClientPrincipal>()
 
-                    val response = when(val request = call.validateTokenRequest(principal)) {
-                        is TokenRequest.Invalid -> request.toResponse()
-                        is PasswordRequest -> passwordGrant.exchange(request)
-                        is AuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
-                        //is RefreshTokenRequest -> refreshTokenGrant.exchange(request)
-                        //is AssertionRequest -> assertionGrant.exchange(request)
-                    }
+                        val response = when (val request = call.validateTokenRequest(principal)) {
+                            is TokenRequest.Invalid -> request.toResponse()
+                            is PasswordRequest -> passwordGrant.exchange(request)
+                            is AuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
+                            //is RefreshTokenRequest -> refreshTokenGrant.exchange(request)
+                            //is AssertionRequest -> assertionGrant.exchange(request)
+                        }
 
-                    when (response) {
-                        is TokenResponse.Failed -> call.respond(BadRequest, response)
-                        is TokenResponse.Success -> call.respond(response)
+                        when (response) {
+                            is TokenResponse.Failed -> call.respond(BadRequest, response)
+                            is TokenResponse.Success -> call.respond(response)
+                        }
                     }
                 }
-            }
-            post("/token") {
-                call.response.status(UnsupportedMediaType)
+                post {
+                    call.response.status(UnsupportedMediaType)
+                }
             }
         }
     }

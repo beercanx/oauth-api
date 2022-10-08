@@ -11,28 +11,6 @@ data class ClientConfiguration(
     val allowedActions: Set<ClientAction>,
     val allowedGrantTypes: Set<GrantType>
 ) {
-
     val isConfidential = type == ClientType.Confidential
     val isPublic = type == ClientType.Public
-
-    /**
-     * Generated based on its database ID field [id].
-     */
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as ClientConfiguration
-
-        if (id != other.id) return false
-
-        return true
-    }
-
-    /**
-     * Generated based on its database ID field [id].
-     */
-    override fun hashCode(): Int {
-        return id.hashCode()
-    }
 }

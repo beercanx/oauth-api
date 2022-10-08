@@ -1,6 +1,5 @@
 package uk.co.baconi.oauth.api.token
 
-import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import uk.co.baconi.oauth.api.common.client.ClientPrincipal
@@ -16,7 +15,7 @@ interface TokenRequestValidation : AuthorisationCodeValidation, PasswordValidati
 
     suspend fun ApplicationCall.validateTokenRequest(client: ClientPrincipal): TokenRequest {
 
-        val parameters = receiveParameters() ///receive<Parameters>()
+        val parameters = receiveParameters()
 
         val grantType = parameters[GRANT_TYPE]?.let(GrantType::fromValueOrNull)
 

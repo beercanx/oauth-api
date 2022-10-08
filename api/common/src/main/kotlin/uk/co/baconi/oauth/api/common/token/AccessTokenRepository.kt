@@ -2,9 +2,9 @@ package uk.co.baconi.oauth.api.common.token
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import uk.co.baconi.oauth.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
-import uk.co.baconi.oauth.api.common.scope.Scope
+import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
+import uk.co.baconi.oauth.common.authentication.AuthenticatedUsername
 import java.time.Instant
 import java.util.*
 
@@ -16,7 +16,7 @@ class AccessTokenRepository(private val database: Database) {
                 it[id] = new.value
                 it[username] = new.username.value
                 it[clientId] = new.clientId.value
-                it[scopes] = new.scopes.joinToString(separator = " ", transform = Scope::value)
+                it[scopes] = new.scopes.let(ScopesSerializer::serialize)
                 it[issuedAt] = new.issuedAt
                 it[expiresAt] = new.expiresAt
                 it[notBefore] = new.notBefore
@@ -72,7 +72,7 @@ class AccessTokenRepository(private val database: Database) {
             value = it[AccessTokenTable.id].value,
             username = it[AccessTokenTable.username].let(::AuthenticatedUsername),
             clientId = it[AccessTokenTable.clientId].let(::ClientId),
-            scopes = it[AccessTokenTable.scopes].split(" ").map(Scope::fromValue).toSet(),
+            scopes = it[AccessTokenTable.scopes].let(ScopesSerializer::deserialize),
             issuedAt = it[AccessTokenTable.issuedAt],
             expiresAt = it[AccessTokenTable.expiresAt],
             notBefore = it[AccessTokenTable.notBefore],

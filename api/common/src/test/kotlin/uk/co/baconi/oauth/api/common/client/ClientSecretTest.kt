@@ -29,42 +29,4 @@ class ClientSecretTest {
             }
         }
     }
-
-    @Nested
-    inner class EqualsAndHashCode {
-
-        private val clientSecret = ClientSecret(
-            id = UUID.randomUUID(),
-            clientId = ClientId("aardvark"),
-            hashedSecret = "HASH"
-        )
-
-        @Test
-        fun `should be equal if the client configuration ids are identical`() {
-            withClue("equalTo") {
-                clientSecret shouldBe clientSecret.copy(hashedSecret = "ANOTHER HASH")
-            }
-        }
-
-        @Test
-        fun `should not be equal if the client configuration ids are not identical`() {
-            withClue("equalTo") {
-                clientSecret shouldNotBe clientSecret.copy(id = UUID.randomUUID())
-            }
-        }
-
-        @Test
-        fun `should have the same hash code if the client configuration ids are identical`() {
-            withClue("hashCode") {
-                clientSecret.hashCode() shouldBe clientSecret.copy(hashedSecret = "ANOTHER HASH").hashCode()
-            }
-        }
-
-        @Test
-        fun `should not have the same hash code if the client configuration ids are not identical`() {
-            withClue("hashCode") {
-                clientSecret.hashCode() shouldNotBe clientSecret.copy(id = UUID.randomUUID()).hashCode()
-            }
-        }
-    }
 }
