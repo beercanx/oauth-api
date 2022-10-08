@@ -18,6 +18,7 @@ data class AccessToken(
 ) : Token, Principal {
 
     fun hasExpired(): Boolean = Instant.now().isAfter(expiresAt)
+    fun isBefore(): Boolean = Instant.now().isBefore(notBefore)
 
     /**
      * Generated to exclude [value] from the toString output.

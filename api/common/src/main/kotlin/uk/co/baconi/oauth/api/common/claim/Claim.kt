@@ -2,7 +2,6 @@ package uk.co.baconi.oauth.api.common.claim
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import uk.co.baconi.oauth.api.common.scope.Scope
 
 /**
  * https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims

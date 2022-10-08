@@ -99,6 +99,7 @@ class ClientPrincipalTest {
             val underTest = PublicClient(mockk {
                 every { id } returns ConsumerY
                 every { type } returns Public
+                every { allowedActions } returns emptySet()
             })
 
             assertSoftly(underTest) {

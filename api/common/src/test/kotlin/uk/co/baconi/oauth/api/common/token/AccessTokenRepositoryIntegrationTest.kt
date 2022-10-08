@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.common.token
 
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils

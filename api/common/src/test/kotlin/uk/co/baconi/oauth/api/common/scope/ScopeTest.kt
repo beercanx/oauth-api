@@ -7,7 +7,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.api.common.claim.Claim
 
 class ScopeTest {
 

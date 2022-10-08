@@ -7,6 +7,7 @@ data class ClientConfiguration(
     val type: ClientType,
     val redirectUris: Set<String>,
     val allowedScopes: Set<Scope>,
+    val allowedActions: Set<ClientAction>
 ) {
 
     val isConfidential = type == ClientType.Confidential

@@ -11,7 +11,6 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.dataconversion.*
 import io.ktor.server.plugins.doublereceive.*
 import io.ktor.server.plugins.hsts.*
-import io.ktor.server.resources.*
 
 object CommonModule {
 
@@ -19,7 +18,6 @@ object CommonModule {
 
         log.info("Registering the CommonModule.common() module")
 
-        install(Resources)
         install(AutoHeadResponse)
         install(DataConversion)
 
@@ -61,5 +59,8 @@ object CommonModule {
 
         // Enable `call.receive` to work twice without getting an exception
         install(DoubleReceive)
+
+        // TODO - Call ID
+        // TODO - Metrics
     }
 }

@@ -28,6 +28,7 @@ class ClientSecretServiceTest {
         every { type } returns ClientType.Public
         every { isConfidential } returns false
         every { isPublic } returns true
+        every { allowedActions } returns emptySet()
     }
 
     private val consumerYSecret = mockk<ClientSecret> {

@@ -100,6 +100,7 @@ class ClientConfigurationRepositoryIntegrationTest {
                 type = ClientType.Public,
                 redirectUris = setOf("uk.co.baconi.consumer-y://callback"),
                 allowedScopes = emptySet(),
+                allowedActions = emptySet(),
             )
         }
 

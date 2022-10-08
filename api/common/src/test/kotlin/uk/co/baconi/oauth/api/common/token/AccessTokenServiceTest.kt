@@ -17,7 +17,7 @@ import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope.OpenId
 import java.time.LocalDateTime.ofInstant
 import java.time.ZoneOffset
-import java.util.UUID
+import java.util.*
 
 class AccessTokenServiceTest {
 
@@ -80,7 +80,10 @@ class AccessTokenServiceTest {
 
             every { repository.findById(any()) } returns mockk {
                 every { hasExpired() } returns true
+                every { isBefore() } returns false
             }
+
+            every { repository.deleteByRecord(any()) } returns Unit
 
             underTest.authenticate(UUID.randomUUID()) should beNull()
         }
@@ -90,6 +93,7 @@ class AccessTokenServiceTest {
 
             val accessToken = mockk<AccessToken>("aardvark") {
                 every { hasExpired() } returns false
+                every { isBefore() } returns false
             }
 
             every { repository.findById(any()) } returns accessToken

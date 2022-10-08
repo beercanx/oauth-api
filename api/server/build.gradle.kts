@@ -11,9 +11,6 @@ dependencies {
     implementation(project(":api:token-revocation"))
     implementation(project(":api:user-info"))
     implementation(project(":api:well-known"))
-
-    implementation(kotlin("stdlib-jdk8"))
-    implementation(kotlin("reflect"))
 }
 
 application {

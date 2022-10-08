@@ -44,7 +44,12 @@ class ClientConfigurationRepository {
                         .tryGetStringList("allowedScopes")
                         ?.map(Scope::fromValue)
                         ?.toSet()
-                        ?: emptySet()
+                        ?: emptySet(),
+                    allowedActions = config
+                        .tryGetStringList("allowedActions")
+                        ?.map(ClientAction::fromValue)
+                        ?.toSet()
+                        ?: emptySet(),
                 )
             }
         }

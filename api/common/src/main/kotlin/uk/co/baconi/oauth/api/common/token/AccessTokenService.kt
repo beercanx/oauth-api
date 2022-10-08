@@ -44,10 +44,11 @@ class AccessTokenService(private val repository: AccessTokenRepository) {
 
         return when {
             accessToken == null -> null
-            accessToken.hasExpired() -> {
+            accessToken.hasExpired() -> { // Is being used after its valid.
                 repository.deleteByRecord(accessToken)
                 null // Unlikely but possible
             }
+            accessToken.isBefore() -> null // Is being used before its valid.
             else -> accessToken
         }
     }
