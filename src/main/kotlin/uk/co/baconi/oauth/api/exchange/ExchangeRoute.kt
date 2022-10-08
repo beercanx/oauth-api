@@ -40,7 +40,7 @@ interface ExchangeRoute {
 
                         // This shouldn't be possible, as the `authenticate` should have returned a 401
                         null -> {
-                            application.log.error("Exchange request's principal was null, this shouldn't be possible!")
+                            application.log.error("Exchange request's principal was null, there must be a coding mistake somewhere.")
                             call.respond(InternalServerError)
                         }
 
