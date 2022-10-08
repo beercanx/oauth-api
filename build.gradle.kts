@@ -7,8 +7,8 @@ plugins {
     idea
     jacoco
     application
-    kotlin("jvm") version "1.4.32"
-    kotlin("plugin.serialization") version "1.4.32"
+    kotlin("jvm") version "1.5.20"
+    kotlin("plugin.serialization") version "1.5.20"
     id("io.gatling.gradle") version "3.5.1"
 }
 
@@ -48,11 +48,11 @@ dependencies {
     implementation("io.ktor:ktor-client-serialization:$ktorVersion")
 
     // Kotlinx Serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
 
     // Kotlinx Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3-native-mt")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.3-native-mt")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-native-mt")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.0-native-mt")
 
     // Configuration
     implementation("com.typesafe:config:1.4.1")
@@ -62,16 +62,16 @@ dependencies {
     implementation("org.dizitart:potassium-nitrite:3.4.3") // https://www.dizitart.org/potassium-nitrite.html
 
     // Bouncy Castle - bcrypt provider for the JVM
-    implementation("org.bouncycastle:bcprov-jdk15on:1.68")
+    implementation("org.bouncycastle:bcprov-jdk15on:1.69")
 
     // JUnit 5 for tests definitions and running
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
 
     // Kotest for assertions and matchers
-    testImplementation("io.kotest:kotest-assertions-core:4.3.1")
+    testImplementation("io.kotest:kotest-assertions-core:4.6.0")
 
     // Mocking
-    testImplementation("io.mockk:mockk:1.9.3")
+    testImplementation("io.mockk:mockk:1.11.0")
 
     // Ktor server test kit
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
