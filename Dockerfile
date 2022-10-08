@@ -35,15 +35,13 @@ RUN apk --no-cache add "argon2-libs>${ARGON2_VERSION}"
 # Build the project
 RUN ./gradlew -Pargon2Type=argon2-jvm-nolibs build
 
-RUN cd /project/api/server/build/distributions && unzip server-*.zip
+# Unzip all the distrubutions ready for copying later on
+RUN cd /project/api/server/build/distributions && unzip *.zip
 
 FROM amazoncorretto:${JAVA_VERSION}-alpine${ALPINE_VERSION}-jdk AS jre-build
 
-# Fix Alpine -- missing objcopy
 RUN apk add --no-cache binutils
-
-# Create the smallest JRE that we need
-RUN $JAVA_HOME/bin/jlink \
+RUN ${JAVA_HOME}/bin/jlink \
   --verbose \
   --add-modules java.base,java.xml,java.naming,java.sql \
   --strip-debug \
@@ -53,34 +51,65 @@ RUN $JAVA_HOME/bin/jlink \
   --output /javaruntime
 
 FROM alpine:${ALPINE_VERSION} AS server-base
-
-# Make sure there's no out standing OS updates to install
 ARG ARGON2_VERSION
+
 RUN apk --no-cache upgrade && \
     apk --no-cache add java-common "argon2-libs>${ARGON2_VERSION}"
 
-# Setup the JRE
 ENV JAVA_HOME=/jre
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
-COPY --from=jre-build /javaruntime $JAVA_HOME
+COPY --from=jre-build /javaruntime ${JAVA_HOME}
 
 ## Create Server - Full
 FROM server-base as server-full
-
-## Copy over the full server code
 COPY --from=code-build /project/api/server/build/distributions/server-*/ /application
-
 WORKDIR /application
-
 CMD "./bin/server"
 
-## TODO - Create Server - Authentication
-## TODO - Create Server - Authorisation
-## TODO - Create Server - Common
-## TODO - Create Server - Server
-## TODO - Create Server - Session Info
-## TODO - Create Server - Token
-## TODO - Create Server - Token Introspection
-## TODO - Create Server - Token Revocation
-## TODO - Create Server - User Info
-## TODO - Create Server - Well Known
+## Create Server - Authentication
+FROM server-base as server-authentication
+COPY --from=code-build /project/api/server/build/distributions/authentication-*/ /application
+WORKDIR /application
+CMD "./bin/authentication"
+
+## Create Server - Authorisation
+FROM server-base as server-authorisation
+COPY --from=code-build /project/api/server/build/distributions/authorisation-*/ /application
+WORKDIR /application
+CMD "./bin/authorisation"
+
+## Create Server - Session Info
+FROM server-base as server-session-info
+COPY --from=code-build /project/api/server/build/distributions/session-info-*/ /application
+WORKDIR /application
+CMD "./bin/session-info"
+
+## Create Server - Token
+FROM server-base as server-token
+COPY --from=code-build /project/api/server/build/distributions/token-*/ /application
+WORKDIR /application
+CMD "./bin/token"
+
+## Create Server - Token Introspection
+FROM server-base as server-token-introspection
+COPY --from=code-build /project/api/server/build/distributions/token-introspection-*/ /application
+WORKDIR /application
+CMD "./bin/token-introspection"
+
+## Create Server - Token Revocation
+FROM server-base as server-token-revocation
+COPY --from=code-build /project/api/server/build/distributions/token-revocation-*/ /application
+WORKDIR /application
+CMD "./bin/token-revocation"
+
+## Create Server - User Info
+FROM server-base as server-user-info
+COPY --from=code-build /project/api/server/build/distributions/user-info-*/ /application
+WORKDIR /application
+CMD "./bin/user-info"
+
+## Create Server - Well Known
+FROM server-base as server-well-known
+COPY --from=code-build /project/api/server/build/distributions/well-known-*/ /application
+WORKDIR /application
+CMD "./bin/well-known"
