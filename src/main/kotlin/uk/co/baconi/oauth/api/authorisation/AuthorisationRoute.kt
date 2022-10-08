@@ -24,6 +24,7 @@ interface AuthorisationRoute {
 
         get<AuthorisationLocation> { location ->
 
+            // TODO - How to detect user click back in the browser from the authentication screen
             return@get when (val request = validateAuthorisationRequest(location)) {
 
                 // Handle authorisation request [invalid] / decision [failure]
@@ -44,21 +45,19 @@ interface AuthorisationRoute {
                     TODO("Invalid $request")
                 }
 
-                // Handle cancelled / aborted
-                /*
+                // Handle user aborted
                 is AuthorisationRequest.Aborted -> {
 
                     // Return with error response
                     call.respondRedirect {
                         takeFrom(request.redirectUri)
                         parameters.append("error", "access_denied")
-                        parameters.append("error_description", "User opted to not login")
+                        parameters.append("error_description", "User aborted")
                     }
 
                     // Remove any stashed AuthorisationSession
                     call.sessions.clear<AuthorisationSession>()
                 }
-                 */
 
                 // Handle authorisation request [valid]
                 is AuthorisationRequest.Valid -> when(request.responseType) {

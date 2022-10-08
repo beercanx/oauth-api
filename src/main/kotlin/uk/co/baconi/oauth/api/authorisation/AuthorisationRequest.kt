@@ -8,6 +8,8 @@ sealed class AuthorisationRequest {
 
     object Invalid : AuthorisationRequest()
 
+    data class Aborted(val redirectUri: URI) : AuthorisationRequest()
+
     data class Valid(
         val responseType: ResponseType,
         val clientId: ClientId,
