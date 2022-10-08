@@ -39,7 +39,7 @@ fun validateAuthorisationRequest(location: AuthorisationLocation): Authorisation
         //AuthorisationRequest.Invalid(invalid_request, "Invalid parameter: redirect_uri")
 
         // Support aborting an authorisation via a users choice
-        location.resume == false -> AuthorisationRequest.Aborted(location.redirect_uri)
+        location.abort == true -> AuthorisationRequest.Aborted(location.redirect_uri)
 
         responseType == null -> AuthorisationRequest.Invalid//(unsupported_response_type, "Unsupported response type: ${location.response_type}")
         location.state == null -> AuthorisationRequest.Invalid//(invalid_request, "Missing parameter: state")

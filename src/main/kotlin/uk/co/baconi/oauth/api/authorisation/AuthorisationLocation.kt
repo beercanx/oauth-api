@@ -11,5 +11,5 @@ data class AuthorisationLocation(
     val redirect_uri: String? = null,
     val state: String? = null,
     val scope: String? = null,
-    val resume: Boolean? = null
+    val abort: Boolean? = null
 )
