@@ -1,21 +1,34 @@
 import React, {ChangeEvent, FormEvent, MouseEvent} from "react";
 
-export interface Props {
-    authenticationEndpoint: string
-    csrfToken: string
+declare namespace LoginForm {
+
+    interface Props {
+        authenticationEndpoint: string
+        // TODO - Move into state?
+        csrfToken: string
+    }
+
+    interface State {
+        username: string
+        password: string
+    }
 }
 
-export interface State {
-    username: string
-    password: string
-}
+export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State> {
 
-export class LoginForm extends React.Component<Props, State> {
+    static defaultProps = {
+        authenticationEndpoint: "/authentication",
+        // TODO - Load from templated page or fetch on construction
+        csrfToken: crypto.randomUUID()
+    }
 
-    constructor(props: Props) {
+    constructor(props: LoginForm.Props) {
         super(props);
 
-        this.state = {username: "", password: ""};
+        this.state = {
+            username: "",
+            password: ""
+        };
 
         this.handleChangeUsername = this.handleChangeUsername.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
@@ -54,49 +67,43 @@ export class LoginForm extends React.Component<Props, State> {
                     password: this.state.password.split("")
                 })
             })
-            .then(response => response.text())
-            .then(body => JSON.parse(body))
+            .then(response => response.json())
             .then(result => console.log("Authentication Deserialized:", result))
             .catch(exception => console.error("Authentication Error:", exception));
     }
 
     render() {
-        return (
-            <>
-                <h1 className="text-center">Authentication</h1>
+        return <>
+            <h1 className="text-center">Authentication</h1>
 
-                <form id="login-form" onSubmit={this.handleSubmit}>
+            <form id="login-form" onSubmit={this.handleSubmit}>
 
-                    <input type="hidden" name="csrf_token" value={this.props.csrfToken}/>
+                <input type="hidden" name="csrf_token" value={this.props.csrfToken}/>
 
-                    <div className="mb-3">
-                        <label className="form-label" htmlFor="username">Username</label>
-                        <input className="form-control" type="text" name="username" placeholder="Enter username"
-                               autoComplete="on" value={this.state.username} onChange={this.handleChangeUsername}/>
+                <div className="mb-3">
+                    <label className="form-label" htmlFor="username">Username</label>
+                    <input className="form-control" type="text" name="username" placeholder="Enter username"
+                           autoComplete="on" value={this.state.username} onChange={this.handleChangeUsername}/>
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label" htmlFor="password">Password</label>
+                    <input className="form-control" type="password" name="password" placeholder="Password"
+                           autoComplete="on" value={this.state.password} onChange={this.handleChangePassword}/>
+                </div>
+
+                <div className="row">
+
+                    <div className="col-sm">
+                        <button className="btn btn-primary w-100" name="login" value="login" type="submit">Login</button>
                     </div>
 
-                    <div className="mb-3">
-                        <label className="form-label" htmlFor="password">Password</label>
-                        <input className="form-control" type="password" name="password" placeholder="Password"
-                               autoComplete="on" value={this.state.password} onChange={this.handleChangePassword}/>
+                    <div className="col-sm">
+                        <button className="btn btn-primary w-100" name="abort" value="abort" type="button" onClick={this.handleAbort}>Abort</button>
                     </div>
-
-                    <div className="row">
-
-                        <div className="col-sm">
-                            <button className="btn btn-primary w-100" name="login" value="login" type="submit">Login
-                            </button>
-                        </div>
-
-                        <div className="col-sm">
-                            <button className="btn btn-primary w-100" name="abort" value="abort" type="button"
-                                    onClick={this.handleAbort}>Abort
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </>
-        );
+                </div>
+            </form>
+        </>;
     }
 }
 

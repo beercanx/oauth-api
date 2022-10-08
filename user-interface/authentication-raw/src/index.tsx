@@ -8,10 +8,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
     <React.StrictMode>
-        <LoginForm
-            authenticationEndpoint="http://localhost:8083/authentication"
-            csrfToken="random-value-from-server"
-        />
+        <LoginForm />
     </React.StrictMode>
 );
 
