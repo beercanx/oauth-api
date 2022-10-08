@@ -1,0 +1,150 @@
+_type: export
+__export_format: 4
+__export_date: 2021-03-27T12:45:46.389Z
+__export_source: insomnia.desktop.app:v2021.1.1
+resources:
+  - _id: req_e72641101a1c45b7aada7c832f04b880
+    parentId: fld_e2050447ebba401bb4e6c91bfe0bcdac
+    modified: 1616849090757
+    created: 1616844924188
+    url: http://localhost:8080/openid/v1/token
+    name: /openid/v1/token
+    description: ""
+    method: POST
+    body:
+      mimeType: application/x-www-form-urlencoded
+      params:
+        - name: grant_type
+          value: authorization_code
+          id: pair_3bd571ff8f554a7ba7e30e30a47669b5
+          disabled: false
+        - name: client_id
+          value: consumer-y
+          description: ""
+          id: pair_344d06a23b034ce794ecb382e20cdc63
+          disabled: false
+        - name: code
+          value: aardvark
+          description: ""
+          id: pair_8dc818c15adf46f3a90ac5cfc605dd3d
+        - name: redirect_uri
+          value: com.baconi.consumer://callback
+          description: ""
+          id: pair_53b3596057f04dbe844ac7b5b0749976
+        - name: code_verifier
+          value: badger
+          description: ""
+          id: pair_103a583d5c92467f86b1cff6eae46cbf
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/x-www-form-urlencoded
+        id: pair_42fad963ffac472288630c8d5033f205
+    authentication: {}
+    metaSortKey: -1616844943889
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_e2050447ebba401bb4e6c91bfe0bcdac
+    parentId: wrk_71fbafa341234279b3257859ca52c1e5
+    modified: 1616844947404
+    created: 1616844947404
+    name: PKCE Flow
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1616844947404
+    _type: request_group
+  - _id: wrk_71fbafa341234279b3257859ca52c1e5
+    parentId: null
+    modified: 1616237705348
+    created: 1616237705348
+    name: OAuth API
+    description: ""
+    scope: collection
+    _type: workspace
+  - _id: req_a9ab37147ef6483caa98ce9716998a8a
+    parentId: fld_8226a096e8394c65bff7700602e244c4
+    modified: 1616844980069
+    created: 1616237719049
+    url: http://localhost:8080/openid/v1/token
+    name: /openid/v1/token
+    description: ""
+    method: POST
+    body:
+      mimeType: application/x-www-form-urlencoded
+      params:
+        - name: grant_type
+          value: password
+          id: pair_3bd571ff8f554a7ba7e30e30a47669b5
+          disabled: false
+        - name: username
+          value: aardvark
+          id: pair_abc7e208a93947a582c9982780288123
+        - name: password
+          value: "121212"
+          id: pair_aef97154cd864084b40c0fe0f7184988
+        - name: scope
+          value: openid
+          id: pair_b18290f764ec400dad44941a187e381a
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/x-www-form-urlencoded
+        id: pair_42fad963ffac472288630c8d5033f205
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: consumer-z
+      password: 7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu
+    metaSortKey: -1616237719049
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_8226a096e8394c65bff7700602e244c4
+    parentId: wrk_71fbafa341234279b3257859ca52c1e5
+    modified: 1616844940374
+    created: 1616844940374
+    name: Password Flow
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1616844940374
+    _type: request_group
+  - _id: env_27ab0b3c2d6379736f035eb2b420079dc7da3130
+    parentId: wrk_71fbafa341234279b3257859ca52c1e5
+    modified: 1616237705448
+    created: 1616237705448
+    name: Base Environment
+    data: {}
+    dataPropertyOrder: null
+    color: null
+    isPrivate: false
+    metaSortKey: 1616237705448
+    _type: environment
+  - _id: jar_27ab0b3c2d6379736f035eb2b420079dc7da3130
+    parentId: wrk_71fbafa341234279b3257859ca52c1e5
+    modified: 1616237705475
+    created: 1616237705475
+    name: Default Jar
+    cookies: []
+    _type: cookie_jar
+  - _id: spc_82a3666d06bd4ba5bcadbf4ce868b787
+    parentId: wrk_71fbafa341234279b3257859ca52c1e5
+    modified: 1616237705354
+    created: 1616237705354
+    fileName: OAuth API
+    contents: ""
+    contentType: yaml
+    _type: api_spec

@@ -1,0 +1,171 @@
+openapi: 3.0.0
+
+info:
+  title: OAuth API
+  description: An OAuth API
+  version: 0.0.1
+
+paths:
+  /openid/v1/token:
+    post:
+      tags:
+        - OAuth
+      summary: Token Exchange
+      description: Handles all the token exchanges
+
+      requestBody:
+        description: Description
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/token-exchange-request-password-flow'
+
+      responses:
+        200:
+          description: Everything worked out
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/token-exchange-response-success'
+        400:
+          description: You did something wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/token-exchange-response-error'
+        401:
+          description: We don't know who you are
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/token-exchange-response-error'
+        500:
+          $ref: '#/components/responses/internal-server-error'
+        503:
+          $ref: '#/components/responses/service-unavailable-error'
+
+      security:
+        - clientCredentials: []
+
+components:
+  securitySchemes:
+    clientCredentials:
+      description: Client credentials of a confidential client.
+      type: http
+      scheme: basic
+
+  schemas:
+    token-exchange-request-password-flow:
+      description: Request parameters for completing a Token Exchange using the Password flow.
+      type: object
+      properties:
+        grant_type:
+          required: true
+          type: string
+          example: password
+        username:
+          required: true
+          type: string
+          example: aardvark
+          description: The username of the user to token exchange for (aka login as).
+        password:
+          required: true
+          type: string
+          example: 121212
+          description: The password of the user to token exchange for (aka login as).
+        scope:
+          required: false
+          type: string
+          example: openid
+          description: The requested scopes to be assigned to the token once exchanged.
+
+    token-exchange-response-success:
+      description: The success response returned when completing a Token Exchange.
+      type: object
+      properties:
+        access_token:
+          type: string
+          required: true
+          description:
+            The access token issued by the authorization server.
+        token_type:
+          type: string
+          required: true
+          description:
+            The type of the token issued as described in
+            [RFC6749 Section 7.1](https://tools.ietf.org/html/rfc6749#section-7.1)
+          enum:
+            - bearer
+        expires_in:
+          type: integer
+          required: true
+          description:
+            The lifetime in seconds of the access token. For example,
+            the value "3600" denotes that the access token will expire in one hour
+            from the time the response was generated.
+        refresh_token:
+          type: string
+          required: false
+          description:
+            OPTIONAL. The refresh token, which can be used to obtain new
+            access tokens using the same authorization grant as described
+            in [RFC6749 Section 6](https://tools.ietf.org/html/rfc6749#section-6)
+        scope:
+          type: string
+          required: false
+          description:
+            OPTIONAL. The scope of the access token as described by
+            [RFC6749 Section 3.3](https://tools.ietf.org/html/rfc6749#section-3.3).
+
+    token-exchange-response-error:
+      description:
+        The authorization server responds with an HTTP 400 (Bad Request) status
+        code (unless specified otherwise)
+      type: object
+      properties:
+        error:
+          type: string
+          required: true
+          description: A single ASCII error code.
+          enum:
+            - invalid_request
+            - invalid_client
+            - invalid_grant
+            - unauthorized_client
+            - unsupported_grant_type
+            - invalid_scope
+        error_description:
+          type: string
+          required: false
+          description:
+            Human-readable ASCII text providing additional information, used to
+            assist the client developer in understanding the error that occurred.
+
+    error:
+      type: object
+      properties:
+        error:
+          type: string
+          required: true
+
+  responses:
+    internal-server-error:
+      description: Error returned when we've had a problem internally like a timeout.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            error: internal_server_error
+
+    service-unavailable-error:
+      description: Error returned when we've circuit broken or no application instance was up.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            error: service_unavailable_error
