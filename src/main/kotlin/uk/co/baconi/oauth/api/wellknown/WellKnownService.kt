@@ -7,6 +7,8 @@ class WellKnownService {
 
     fun getOpenIdConfiguration(): OpenIdConfiguration {
 
+        // TODO - https://developer.okta.com/docs/reference/api/oidc/#well-known-openid-configuration
+
         // TODO - Something like load from config?
         return OpenIdConfiguration(
             issuer = "https://auth.localhost.me",

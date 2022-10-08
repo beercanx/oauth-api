@@ -8,6 +8,8 @@ import io.ktor.routing.*
 @Location("/.well-known")
 object WellKnown {
 
+    // TODO https://developer.okta.com/docs/reference/api/oidc/#well-known-oauth-authorization-server
+
     @Location("/openid-configuration")
     data class OpenIdConfiguration(val wellKnown: WellKnown) {
         constructor() : this(WellKnown)
