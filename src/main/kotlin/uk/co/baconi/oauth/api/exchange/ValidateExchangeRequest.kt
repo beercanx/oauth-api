@@ -51,7 +51,7 @@ suspend fun ApplicationContext.validateExchangeRequest(principal: ConfidentialCl
         Password -> {
             val username = parameters[USERNAME]
             val password = parameters[PASSWORD]
-            val (rawScopes, parsedScopes, validScopes) = parameters[SCOPE].parseAsScopes(principal)
+            val (rawMatchedParsed, parsedMatchedValid, validScopes) = parameters[SCOPE].parseAsScopes(principal)
 
             when {
                 username == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: username
@@ -60,15 +60,19 @@ suspend fun ApplicationContext.validateExchangeRequest(principal: ConfidentialCl
                 password == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: password
                 password.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: password
 
+                // TODO - Do we reject if the scope parameter is missing?
+
                 // The requested scope is invalid, unknown, or malformed.
-                rawScopes?.size != parsedScopes?.size -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: scope
+                !rawMatchedParsed -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: scope
 
                 // TODO - Do we reject if the scope parsed size is different from the valid size?
+                !parsedMatchedValid -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: scope
 
                 else -> PasswordRequest(principal, validScopes, username, password)
             }
         }
 
+        // TODO - Work out why refresh token grant can request scopes, but only less than what's issued?
 //        RefreshToken -> {
 //            val refreshToken = parameters[REFRESH_TOKEN]
 //            val (rawScopes, parsedScopes, validScopes) = parameters[SCOPE].parseAsScopes(principal)
@@ -77,10 +81,13 @@ suspend fun ApplicationContext.validateExchangeRequest(principal: ConfidentialCl
 //                refreshToken == null -> InvalidConfidentialExchangeRequest // TODO - Missing Parameter: refresh_token
 //                refreshToken.isBlank() -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: refresh_token
 //
+//                // TODO - Do we reject if the scope parameter is missing?
+//
 //                // The requested scope is invalid, unknown, or malformed.
-//                rawScopes?.size != parsedScopes?.size -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: scope
+//                !rawMatchedParsed -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: scope
 //
 //                // TODO - Do we reject if the scope parsed size is different from the valid size?
+//                !parsedMatchedValid -> InvalidConfidentialExchangeRequest // TODO - Invalid Parameter: scope
 //
 //                else -> RefreshTokenRequest(principal, validScopes, refreshToken)
 //            }

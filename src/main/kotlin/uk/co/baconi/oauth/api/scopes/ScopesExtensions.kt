@@ -8,19 +8,21 @@ import uk.co.baconi.oauth.api.client.ConfidentialClient
 import uk.co.baconi.oauth.api.client.PublicClient
 import uk.co.baconi.oauth.api.enums.deserialise
 
-fun String?.parseAsScopes(configuration: ClientConfiguration?): Triple<List<String>?, List<Scopes>?, Set<Scopes>> {
+// TODO - Depending on validation message requirements, this might collapse down to just a Set<Scopes>?
+fun String?.parseAsScopes(configuration: ClientConfiguration?): Triple<Boolean, Boolean, Set<Scopes>> {
     return when (configuration?.type) {
-        null -> Triple(null, null, emptySet())
+        null -> Triple(first = true, second = true, third = emptySet())
         Confidential -> parseAsScopes(ConfidentialClient(configuration))
         Public -> parseAsScopes(PublicClient(configuration))
     }
 }
 
-fun String?.parseAsScopes(principal: ClientPrincipal): Triple<List<String>?, List<Scopes>?, Set<Scopes>> {
-    val rawScopes = this?.rawScopes()
-    val parsedScopes = rawScopes?.parseScopes()
-    val validScopes = parsedScopes?.validateScopes(principal) ?: emptySet()
-    return Triple(rawScopes, parsedScopes, validScopes)
+// TODO - Depending on validation message requirements, this might collapse down to just a Set<Scopes>?
+fun String?.parseAsScopes(principal: ClientPrincipal): Triple<Boolean, Boolean, Set<Scopes>> {
+    val raw = this?.rawScopes()
+    val parsed = raw?.parseScopes()
+    val valid = parsed?.validateScopes(principal)
+    return Triple(raw?.size == parsed?.size, parsed?.size == valid?.size, valid ?: emptySet())
 }
 
 private fun String.rawScopes(): List<String> {

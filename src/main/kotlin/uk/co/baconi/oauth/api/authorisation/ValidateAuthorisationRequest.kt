@@ -3,6 +3,7 @@ package uk.co.baconi.oauth.api.authorisation
 import uk.co.baconi.oauth.api.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.client.ClientId
 import uk.co.baconi.oauth.api.enums.deserialise
+import uk.co.baconi.oauth.api.exchange.InvalidConfidentialExchangeRequest
 import uk.co.baconi.oauth.api.ktor.isAbsoluteURI
 import uk.co.baconi.oauth.api.scopes.parseAsScopes
 
@@ -28,7 +29,7 @@ fun validateAuthorisationRequest(
     val validResponseType = validClientConfiguration?.allowedResponseTypes?.find { r -> r == responseType }
 
     // Parse the scopes into the individual stages.
-    val (rawScopes, parsedScopes, validScopes) = location.scope.parseAsScopes(validClientConfiguration)
+    val (rawMatchedParsed, parsedMatchedValid, validScopes) = location.scope.parseAsScopes(validClientConfiguration)
 
     // TODO - Make sure we validate enough to respond https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
     return when {
@@ -55,10 +56,13 @@ fun validateAuthorisationRequest(
         // Enforce the use of a state parameter
         location.state.isNullOrBlank() -> AuthorisationRequest.Invalid("invalid_request", "missing parameter: state")
 
+        // TODO - Do we reject if the scope parameter is missing?
+
         // The requested scope is invalid, unknown, or malformed.
-        rawScopes?.size != parsedScopes?.size -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: scope")
+        !rawMatchedParsed -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: scope")
 
         // TODO - Do we reject if the scope parsed size is different from the valid size?
+        !parsedMatchedValid -> AuthorisationRequest.Invalid("invalid_request", "invalid parameter: scope")
 
         else -> AuthorisationRequest.Valid(
             responseType = validResponseType,
