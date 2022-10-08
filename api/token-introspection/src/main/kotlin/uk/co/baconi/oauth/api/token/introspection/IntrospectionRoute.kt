@@ -20,26 +20,28 @@ interface IntrospectionRoute {
 
         application.log.info("Registering the IntrospectionRoute.introspection() routes")
 
-        authenticate(ConfidentialClient::class) {
-            contentType(FormUrlEncoded) {
-                post("/introspect") {
+        route("/introspect") {
+            authenticate(ConfidentialClient::class) {
+                contentType(FormUrlEncoded) {
+                    post {
 
-                    val principal = call.extractClient<ConfidentialClient>()
+                        val principal = call.extractClient<ConfidentialClient>()
 
-                    val response = when(val request = call.validateIntrospectionRequest(principal)) {
-                        is IntrospectionRequest.Invalid -> request.toResponse()
-                        is IntrospectionRequest.Valid -> introspectionService.introspect(request)
-                    }
+                        val response = when (val request = call.validateIntrospectionRequest(principal)) {
+                            is IntrospectionRequest.Invalid -> request.toResponse()
+                            is IntrospectionRequest.Valid -> introspectionService.introspect(request)
+                        }
 
-                    when (response) {
-                        is IntrospectionResponse.Invalid -> call.respond(BadRequest, response)
-                        is IntrospectionResponse.Inactive -> call.respond(OK, response)
-                        is IntrospectionResponse.Active -> call.respond(OK, response)
+                        when (response) {
+                            is IntrospectionResponse.Invalid -> call.respond(BadRequest, response)
+                            is IntrospectionResponse.Inactive -> call.respond(OK, response)
+                            is IntrospectionResponse.Active -> call.respond(OK, response)
+                        }
                     }
                 }
-            }
-            post("/introspect") {
-                call.response.status(UnsupportedMediaType)
+                post {
+                    call.response.status(UnsupportedMediaType)
+                }
             }
         }
     }

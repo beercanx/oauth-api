@@ -19,7 +19,7 @@ include(":api:server")
 include(":user-interface:common")
 include(":user-interface:authentication")
 include(":user-interface:confirm-details")
-include(":user-interface:registrations")
+include(":user-interface:registration")
 include(":user-interface:session-management")
 //include(":user-interface:server") // TODO - Work out the best way, maybe its just a static assets server?
 

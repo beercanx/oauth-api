@@ -7,6 +7,7 @@ val logbackVersion: String by project
 val junitVersion: String by project
 val exposedVersion: String by project
 val h2DatabaseVersion: String by project
+val argon2Version: String by project
 
 plugins {
     kotlin("jvm")
@@ -41,10 +42,14 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
 
     // Crypto for safe password checking
-    implementation("org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion")
+    implementation("org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion") // TODO - Remove and replace with argon2?
+    api("de.mkammerer:argon2-jvm:$argon2Version")
 
     // Database
     api("com.h2database:h2:$h2DatabaseVersion")
+    api("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    api("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    api("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 
     // JUnit 5 for tests definitions and running
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")

@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.common.authentication
+package uk.co.baconi.oauth.api.common.authentication
 
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable

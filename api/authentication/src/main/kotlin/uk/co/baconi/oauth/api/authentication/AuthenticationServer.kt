@@ -6,9 +6,9 @@ import uk.co.baconi.oauth.api.common.DatabaseFactory.getCustomerCredentialDataba
 import uk.co.baconi.oauth.api.common.DatabaseFactory.getCustomerStatusDatabase
 import uk.co.baconi.oauth.api.common.TestUserModule
 import uk.co.baconi.oauth.api.common.embeddedCommonServer
-import uk.co.baconi.oauth.common.authentication.CustomerAuthenticationService
-import uk.co.baconi.oauth.common.authentication.CustomerCredentialRepository
-import uk.co.baconi.oauth.common.authentication.CustomerStatusRepository
+import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
+import uk.co.baconi.oauth.api.common.authentication.CustomerCredentialRepository
+import uk.co.baconi.oauth.api.common.authentication.CustomerStatusRepository
 
 /**
  * Start a server for just Introspection requests

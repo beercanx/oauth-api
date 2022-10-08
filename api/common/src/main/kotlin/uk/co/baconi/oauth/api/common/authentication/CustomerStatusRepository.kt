@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.common.authentication
+package uk.co.baconi.oauth.api.common.authentication
 
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ResultRow

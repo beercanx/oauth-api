@@ -1,14 +1,16 @@
-package uk.co.baconi.oauth.common.authentication
+package uk.co.baconi.oauth.api.common.authentication
 
 import de.mkammerer.argon2.Argon2
 import de.mkammerer.argon2.Argon2Factory
 import de.mkammerer.argon2.Argon2Factory.Argon2Types.ARGON2id
 import org.slf4j.LoggerFactory
+import uk.co.baconi.oauth.common.authentication.AuthenticatedUsername
+import uk.co.baconi.oauth.common.authentication.CustomerAuthentication
 import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Success
 import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Failure
 import uk.co.baconi.oauth.common.authentication.CustomerAuthentication.Failure.*
 
-actual class CustomerAuthenticationService /*internal*/ constructor( // TODO - Return internal
+class CustomerAuthenticationService internal constructor(
     private val customerCredentialRepository: CustomerCredentialRepository,
     private val customerStatusRepository: CustomerStatusRepository,
     private val checkPassword: (String, CharArray) -> Boolean
@@ -34,7 +36,7 @@ actual class CustomerAuthenticationService /*internal*/ constructor( // TODO - R
         private val logger = LoggerFactory.getLogger(CustomerAuthenticationService::class.java)
     }
 
-    actual suspend fun authenticate(username: String, password: CharArray): CustomerAuthentication {
+    fun authenticate(username: String, password: CharArray): CustomerAuthentication {
 
         val credential = customerCredentialRepository.findByUsername(username)
 

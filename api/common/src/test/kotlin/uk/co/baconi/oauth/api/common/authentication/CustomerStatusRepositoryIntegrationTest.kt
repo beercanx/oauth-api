@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.api.common.customer
+package uk.co.baconi.oauth.api.common.authentication
 
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
@@ -8,7 +8,6 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.apache.commons.lang3.RandomStringUtils
-import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
@@ -16,44 +15,40 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.common.authentication.CustomerCredential
-import uk.co.baconi.oauth.common.authentication.CustomerCredentialRepository
-import uk.co.baconi.oauth.common.authentication.CustomerCredentialTable
-import java.security.SecureRandom
 
-class CustomerCredentialRepositoryIntegrationTest {
+class CustomerStatusRepositoryIntegrationTest {
 
     companion object {
 
         private val database = Database.connect(
-            url = "jdbc:h2:mem:CustomerCredentialRepositoryIntegrationTest;DB_CLOSE_DELAY=30;",
+            url = "jdbc:h2:mem:CustomerStatusRepositoryIntegrationTest;DB_CLOSE_DELAY=30;",
             driver = "org.h2.Driver"
         )
 
         init {
             transaction(database) {
-                SchemaUtils.create(CustomerCredentialTable)
+                SchemaUtils.create(CustomerStatusTable)
             }
         }
     }
 
-    private val underTest = CustomerCredentialRepository(database)
+    private val underTest = CustomerStatusRepository(database)
 
     @Nested
     inner class Insert {
 
         @Test
-        fun `should insert a new customer credential`() {
-            underTest.insert(customerCredential())
+        fun `should insert a new customer status`() {
+            underTest.insert(customerStatus())
         }
 
         @Test
-        fun `should throw exception on duplicate customer credential`() {
+        fun `should throw exception on duplicate customer status`() {
 
-            underTest.insert(customerCredential(username = "aardvark"))
+            underTest.insert(customerStatus(username = "aardvark"))
 
             val exception = shouldThrow<ExposedSQLException> {
-                underTest.insert(customerCredential(username = "aardvark"))
+                underTest.insert(customerStatus(username = "aardvark"))
             }
 
             assertSoftly(exception.cause) {
@@ -67,11 +62,12 @@ class CustomerCredentialRepositoryIntegrationTest {
     inner class FindByUsername {
 
         @Test
-        fun `should return a customer credential by its username`() {
-            underTest.insert(customerCredential(username = "badger"))
+        fun `should return a customer status by its username`() {
+            underTest.insert(customerStatus(username = "badger"))
             assertSoftly(underTest.findByUsername("badger")) {
                 shouldNotBeNull()
                 username shouldBe "badger"
+                state shouldBe CustomerState.Active
             }
         }
 
@@ -81,18 +77,13 @@ class CustomerCredentialRepositoryIntegrationTest {
         }
     }
 
-    private fun customerCredential(
+    private fun customerStatus(
         username: String = RandomStringUtils.randomAlphanumeric(8),
-        secret: String = "password"
-    ): CustomerCredential {
-        return CustomerCredential(
+        state: CustomerState = CustomerState.Active
+    ): CustomerStatus {
+        return CustomerStatus(
             username = username,
-            hashedSecret = hash(secret)
+            state = state
         )
     }
-
-    // BCrypt support
-    private val secureRandom = SecureRandom()
-    private fun generateSalt(length: Int = 16) = ByteArray(size = length).also(secureRandom::nextBytes)
-    private fun hash(secret: String) = OpenBSDBCrypt.generate(secret.toCharArray(), generateSalt(), 10)
 }

@@ -8,13 +8,14 @@ import uk.co.baconi.oauth.api.common.DatabaseFactory.getAuthorisationCodeDatabas
 import uk.co.baconi.oauth.api.common.DatabaseFactory.getCustomerCredentialDatabase
 import uk.co.baconi.oauth.api.common.DatabaseFactory.getCustomerStatusDatabase
 import uk.co.baconi.oauth.api.common.TestAccessTokenModule
+import uk.co.baconi.oauth.api.common.TestUserModule
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretService
-import uk.co.baconi.oauth.common.authentication.CustomerAuthenticationService
-import uk.co.baconi.oauth.common.authentication.CustomerCredentialRepository
-import uk.co.baconi.oauth.common.authentication.CustomerStatusRepository
+import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
+import uk.co.baconi.oauth.api.common.authentication.CustomerCredentialRepository
+import uk.co.baconi.oauth.api.common.authentication.CustomerStatusRepository
 import uk.co.baconi.oauth.api.common.embeddedCommonServer
 import uk.co.baconi.oauth.api.common.token.AccessTokenRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
@@ -24,7 +25,7 @@ import uk.co.baconi.oauth.api.token.TokenRoute
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionRoute
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionService
 
-object FullServer : AuthenticationModule, TokenRoute, IntrospectionRoute, TestAccessTokenModule {
+object FullServer : AuthenticationModule, TokenRoute, IntrospectionRoute, TestAccessTokenModule, TestUserModule {
 
     private val accessTokenRepository = AccessTokenRepository(getAccessTokenDatabase())
     override val accessTokenService = AccessTokenService(accessTokenRepository)
@@ -36,8 +37,8 @@ object FullServer : AuthenticationModule, TokenRoute, IntrospectionRoute, TestAc
     override val authorisationCodeGrant = AuthorisationCodeGrant(accessTokenService)
     override val authorisationCodeRepository = AuthorisationCodeRepository(getAuthorisationCodeDatabase())
 
-    private val customerStatusRepository = CustomerStatusRepository(getCustomerStatusDatabase())
-    private val customerCredentialRepository = CustomerCredentialRepository(getCustomerCredentialDatabase())
+    override val customerStatusRepository = CustomerStatusRepository(getCustomerStatusDatabase())
+    override val customerCredentialRepository = CustomerCredentialRepository(getCustomerCredentialDatabase())
     private val customerAuthenticationService = CustomerAuthenticationService(customerCredentialRepository, customerStatusRepository)
 
     override val passwordGrant = PasswordGrant(accessTokenService, customerAuthenticationService)
@@ -52,7 +53,8 @@ object FullServer : AuthenticationModule, TokenRoute, IntrospectionRoute, TestAc
                 token()
                 introspection()
             }
-            generateTestData() // TODO - Remove
+            generateTestAccessTokens()
+            generateTestUsers()
         }.start(true)
     }
 }

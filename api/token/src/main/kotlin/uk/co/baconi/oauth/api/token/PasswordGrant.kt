@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.token
 
 import uk.co.baconi.oauth.common.authentication.CustomerAuthentication
-import uk.co.baconi.oauth.common.authentication.CustomerAuthenticationService
+import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
 import uk.co.baconi.oauth.api.token.TokenErrorType.InvalidGrant
 import java.time.temporal.ChronoUnit.SECONDS
