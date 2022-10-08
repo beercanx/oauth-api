@@ -11,8 +11,6 @@ import io.ktor.routing.*
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.CSRF_TOKEN
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.PASSWORD
 import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.USERNAME
-import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.csrfToken
-import uk.co.baconi.oauth.api.authentication.AuthenticationPageTemplate.Companion.prefill
 import uk.co.baconi.oauth.api.authorization.AuthorizationLocation
 import java.util.*
 
@@ -40,6 +38,32 @@ interface AuthenticationRoute {
             val parameters = call.receiveParameters()
 
             application.log.trace("${call.request.local.uri} with: $parameters")
+
+            /*
+
+            when(val loginRequest = validateLogin(parameters)) {
+                is InvalidCsrfToken -> call.respondHtmlTemplate(AuthenticationPageTemplate(locations), BadRequest) {
+                    csrfToken(UUID.randomUUID()) // TODO - Update session value, extract into a session based generator.
+                    // TODO - Display error message(s)
+                }
+                is InvalidLoginRequest -> call.respondHtmlTemplate(AuthenticationPageTemplate(locations), BadRequest) {
+                    csrfToken(UUID.randomUUID()) // TODO - Update session value, extract into a session based generator.
+                    prefill(parameters) // TODO - Decide if this is the right thing to do security and UX wise
+                }
+                is ValidLoginRequest -> when(val loginResult = authenticationService.login(loginRequest)) {
+                    is FailedLogin -> call.respondHtmlTemplate(AuthenticationPageTemplate(locations), BadRequest) {
+                        csrfToken(UUID.randomUUID()) // TODO - Update session value, extract into a session based generator.
+                        // TODO - Display failure message, aka the generic one if they don't exist, wrong credentials or we've crapped out talking to our DB
+                    }
+                    is SuccessfulLogin -> {
+                        // TODO - Create full session.
+                        // TODO - Destroy pre-authenticated session.
+                        call.respondRedirect(href(AuthorizationLocation))
+                    }
+                }
+            }
+
+             */
 
             // Force return so we don't accidentally place code after this block
             return@post when {
