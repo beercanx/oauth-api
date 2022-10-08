@@ -8,6 +8,7 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
+import uk.co.baconi.oauth.api.scopes.ScopeSerializer
 
 class ScopeSerializerTest {
 

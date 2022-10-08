@@ -10,7 +10,7 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.utils.io.charsets.*
 import uk.co.baconi.oauth.api.scopes.Scopes
-import uk.co.baconi.oauth.api.serializers.ScopeSerializer
+import uk.co.baconi.oauth.api.scopes.ScopeSerializer
 import kotlin.text.Charsets
 
 /**
