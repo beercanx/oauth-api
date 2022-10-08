@@ -1,9 +1,9 @@
 package uk.co.baconi.oauth.api.introspection
 
 import io.ktor.application.*
-import io.ktor.http.*
+import io.ktor.http.ContentType.Application.FormUrlEncoded
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
-import io.ktor.locations.*
+import io.ktor.locations.post
 import io.ktor.response.*
 import io.ktor.routing.*
 import uk.co.baconi.oauth.api.client.ConfidentialClient
@@ -16,18 +16,20 @@ interface IntrospectionRoute {
 
     fun Route.introspection() {
         authenticate(ConfidentialClient::class) {
-            post<IntrospectionLocation> {
-                extractClient<ConfidentialClient> { principal ->
+            contentType(FormUrlEncoded) {
+                post<IntrospectionLocation> {
+                    extractClient<ConfidentialClient> { principal ->
 
-                    val response = when (val request = validateIntrospectionRequest(principal)) {
-                        is IntrospectionRequest.Invalid -> request.toResponse()
-                        is IntrospectionRequest.Valid -> introspectionService.introspect(request)
-                        is IntrospectionRequest.ValidWithHint -> introspectionService.introspect(request)
-                    }
+                        val response = when (val request = validateIntrospectionRequest(principal)) {
+                            is IntrospectionRequest.Invalid -> request.toResponse()
+                            is IntrospectionRequest.Valid -> introspectionService.introspect(request)
+                            is IntrospectionRequest.ValidWithHint -> introspectionService.introspect(request)
+                        }
 
-                    when(response) {
-                        is InvalidIntrospectionResponse -> call.respond(BadRequest, response)
-                        else -> call.respond(response)
+                        when(response) {
+                            is InvalidIntrospectionResponse -> call.respond(BadRequest, response)
+                            else -> call.respond(response)
+                        }
                     }
                 }
             }

@@ -3,10 +3,12 @@ package uk.co.baconi.oauth.api.authentication
 import io.ktor.application.*
 import io.ktor.html.*
 import io.ktor.http.*
+import io.ktor.http.ContentType.Application.FormUrlEncoded
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.locations.*
+import io.ktor.locations.post
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
@@ -31,49 +33,24 @@ interface AuthenticationRoute {
             renderAuthenticationPage(location)
         }
 
-        post<AuthenticationLocation> { location ->
+        contentType(FormUrlEncoded) {
+            post<AuthenticationLocation> { location ->
 
-            return@post when (val request = validateAuthenticationRequest(location)) {
+                return@post when (val request = validateAuthenticationRequest(location)) {
 
-                is AuthenticationRequest.InvalidCsrf -> {
-                    renderAuthenticationPage(location, request, Forbidden) {
-                        +"Please check and try again, we received an invalid CSRF token."
-                    }
-                }
-
-                is AuthenticationRequest.InvalidFields -> {
-                    renderAuthenticationPage(location, request, BadRequest) {
-                        +"Please fill out and retry, we need both your username and password to log you in."
-                    }
-                }
-
-                is AuthenticationRequest.Aborted -> {
-
-                    // Destroy pre-authenticated session.
-                    call.sessions.clear<AuthenticationSession>()
-
-                    // Go to redirect uri
-                    call.respondRedirect {
-                        parameters.clear()
-                        takeFrom(request.redirect)
-                        parameters["abort"] = "true"
-                    }
-                }
-
-                is AuthenticationRequest.Valid -> when (val result = authenticationService.authenticate(request)) {
-
-                    is Authentication.Failure -> renderAuthenticationPage(location, request, Unauthorized) {
-                        +"Please check and try again or if you have forgotten your details, recover them "
-                        a(
-                            href = "/recovery",
-                            classes = "alert-link"
-                        ) { +"here" } // TODO - Implement recovery mechanism?
-                        +"."
+                    is AuthenticationRequest.InvalidCsrf -> {
+                        renderAuthenticationPage(location, request, Forbidden) {
+                            +"Please check and try again, we received an invalid CSRF token."
+                        }
                     }
 
-                    is Authentication.Success -> {
-                        // Setup the authenticated session.
-                        call.sessions.set(AuthenticatedSession(result.username))
+                    is AuthenticationRequest.InvalidFields -> {
+                        renderAuthenticationPage(location, request, BadRequest) {
+                            +"Please fill out and retry, we need both your username and password to log you in."
+                        }
+                    }
+
+                    is AuthenticationRequest.Aborted -> {
 
                         // Destroy pre-authenticated session.
                         call.sessions.clear<AuthenticationSession>()
@@ -82,6 +59,33 @@ interface AuthenticationRoute {
                         call.respondRedirect {
                             parameters.clear()
                             takeFrom(request.redirect)
+                            parameters["abort"] = "true"
+                        }
+                    }
+
+                    is AuthenticationRequest.Valid -> when (val result = authenticationService.authenticate(request)) {
+
+                        is Authentication.Failure -> renderAuthenticationPage(location, request, Unauthorized) {
+                            +"Please check and try again or if you have forgotten your details, recover them "
+                            a(
+                                href = "/recovery",
+                                classes = "alert-link"
+                            ) { +"here" } // TODO - Implement recovery mechanism?
+                            +"."
+                        }
+
+                        is Authentication.Success -> {
+                            // Setup the authenticated session.
+                            call.sessions.set(AuthenticatedSession(result.username))
+
+                            // Destroy pre-authenticated session.
+                            call.sessions.clear<AuthenticationSession>()
+
+                            // Go to redirect uri
+                            call.respondRedirect {
+                                parameters.clear()
+                                takeFrom(request.redirect)
+                            }
                         }
                     }
                 }
