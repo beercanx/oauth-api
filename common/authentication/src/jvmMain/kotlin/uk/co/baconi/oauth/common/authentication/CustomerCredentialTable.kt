@@ -15,5 +15,5 @@ object CustomerCredentialTable : IdTable<String>() {
     /**
      * [CustomerCredential.hashedSecret]
      */
-    val hashedSecret: Column<String> = varchar("hashed_secret", 60)
+    val hashedSecret: Column<String> = varchar("hashed_secret", 60) // TODO - Update for argon2id lengths + salt + config
 }

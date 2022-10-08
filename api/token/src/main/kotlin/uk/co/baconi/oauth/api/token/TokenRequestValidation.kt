@@ -16,7 +16,7 @@ interface TokenRequestValidation : AuthorisationCodeValidation, PasswordValidati
 
     suspend fun ApplicationCall.validateTokenRequest(client: ClientPrincipal): TokenRequest {
 
-        val parameters = receive<Parameters>()
+        val parameters = receiveParameters() ///receive<Parameters>()
 
         val grantType = parameters[GRANT_TYPE]?.let(GrantType::fromValueOrNull)
 

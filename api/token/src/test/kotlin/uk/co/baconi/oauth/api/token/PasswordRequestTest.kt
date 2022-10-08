@@ -19,7 +19,7 @@ class PasswordRequestTest {
                     principal = mockk(),
                     scopes = emptySet(),
                     username = "aardvark",
-                    password = "badger",
+                    password = "badger".toCharArray(),
                 ).toString()
             ) {
                 shouldNotContain("badger")

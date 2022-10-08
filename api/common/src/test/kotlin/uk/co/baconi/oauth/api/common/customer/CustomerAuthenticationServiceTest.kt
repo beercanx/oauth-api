@@ -35,13 +35,14 @@ class CustomerAuthenticationServiceTest {
     inner class Authenticate {
 
         @Test
-        fun `should return failure of missing when no customer credentials found`(): Unit = runBlocking {
+        fun `should return failure of mismatch when no customer credentials found`(): Unit = runBlocking {
 
             every { credentialRepo.findByUsername("missing") } returns null
+            every { checkPassword.invoke("", "valid".toCharArray()) } returns false
 
-            assertSoftly(underTest.authenticate("missing", "valid")) {
+            assertSoftly(underTest.authenticate("missing", "valid".toCharArray())) {
                 shouldBeInstanceOf<CustomerAuthentication.Failure>()
-                reason shouldBe Reason.Missing
+                reason shouldBe Reason.Mismatched
             }
         }
 
@@ -50,7 +51,7 @@ class CustomerAuthenticationServiceTest {
 
             every { checkPassword.invoke("hashed", "invalid".toCharArray()) } returns false
 
-            assertSoftly(underTest.authenticate("mismatch", "invalid")) {
+            assertSoftly(underTest.authenticate("mismatch", "invalid".toCharArray())) {
                 shouldBeInstanceOf<CustomerAuthentication.Failure>()
                 reason shouldBe Reason.Mismatched
             }
@@ -61,7 +62,7 @@ class CustomerAuthenticationServiceTest {
 
             every { statusRepo.findByUsername("no-status") } returns null
 
-            assertSoftly(underTest.authenticate("no-status", "valid")) {
+            assertSoftly(underTest.authenticate("no-status", "valid".toCharArray())) {
                 shouldBeInstanceOf<CustomerAuthentication.Failure>()
                 reason shouldBe Reason.Missing
             }
@@ -72,7 +73,7 @@ class CustomerAuthenticationServiceTest {
 
             every { statusRepo.findByUsername("closed") } returns CustomerStatus("closed", Closed)
 
-            assertSoftly(underTest.authenticate("closed", "valid")) {
+            assertSoftly(underTest.authenticate("closed", "valid".toCharArray())) {
                 shouldBeInstanceOf<CustomerAuthentication.Failure>()
                 reason shouldBe Reason.Closed
             }
@@ -83,7 +84,7 @@ class CustomerAuthenticationServiceTest {
 
             every { statusRepo.findByUsername("suspended") } returns CustomerStatus("suspended", Suspended)
 
-            assertSoftly(underTest.authenticate("suspended", "valid")) {
+            assertSoftly(underTest.authenticate("suspended", "valid".toCharArray())) {
                 shouldBeInstanceOf<CustomerAuthentication.Failure>()
                 reason shouldBe Reason.Suspended
             }
@@ -94,7 +95,7 @@ class CustomerAuthenticationServiceTest {
 
             every { statusRepo.findByUsername("locked") } returns CustomerStatus("locked", Locked)
 
-            assertSoftly(underTest.authenticate("locked", "valid")) {
+            assertSoftly(underTest.authenticate("locked", "valid".toCharArray())) {
                 shouldBeInstanceOf<CustomerAuthentication.Failure>()
                 reason shouldBe Reason.Locked
             }
@@ -103,7 +104,7 @@ class CustomerAuthenticationServiceTest {
         @Test
         fun `should return success when the customer status is active`(): Unit = runBlocking {
 
-            assertSoftly(underTest.authenticate("aardvark", "valid")) {
+            assertSoftly(underTest.authenticate("aardvark", "valid".toCharArray())) {
                 shouldBeInstanceOf<CustomerAuthentication.Success>()
                 username shouldBe AuthenticatedUsername("aardvark")
             }

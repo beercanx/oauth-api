@@ -17,7 +17,7 @@ interface PasswordValidation {
     fun validatePasswordRequest(parameters: Parameters, client: ClientPrincipal): TokenRequest {
 
         val username = parameters[USERNAME]
-        val password = parameters[PASSWORD]
+        val password = parameters[PASSWORD]?.toCharArray()
         val scopes = parameters[SCOPE]?.split(" ")?.mapNotNull(Scope::fromValueOrNull)?.toSet() ?: emptySet()
 
         return when {
@@ -28,7 +28,7 @@ interface PasswordValidation {
             username.isBlank() -> Invalid(InvalidRequest, "invalid parameter: $USERNAME")
 
             password == null -> Invalid(InvalidRequest, "missing parameter: $PASSWORD")
-            password.isBlank() -> Invalid(InvalidRequest, "invalid parameter: $PASSWORD")
+            // As long as the password field is present we should not restrict what it contains.
 
             // The requested scope is invalid, unknown, or malformed.
             parameters[SCOPE] != null && scopes.isEmpty() -> Invalid(InvalidScope, "invalid parameter: $SCOPE")

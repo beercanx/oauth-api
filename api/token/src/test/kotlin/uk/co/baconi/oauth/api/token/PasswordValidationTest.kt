@@ -92,17 +92,6 @@ class PasswordValidationTest : PasswordValidation {
         }
     }
 
-    @Test fun `should return invalid request on blank password`() {
-
-        every { parameters["password"] } returns ""
-
-        assertSoftly(validatePasswordRequest(parameters, client)) {
-            shouldBeInstanceOf<TokenRequest.Invalid>()
-            error shouldBe InvalidRequest
-            description shouldBe "invalid parameter: password"
-        }
-    }
-
     @Test fun `should return invalid request on invalid scope`() {
 
         every { parameters["scope"] } returns "Cicada"
@@ -137,7 +126,7 @@ class PasswordValidationTest : PasswordValidation {
             shouldBeInstanceOf<PasswordRequest>()
             principal shouldBe client
             username shouldBe "aardvark"
-            password shouldBe "badger"
+            password shouldBe "badger".toCharArray()
             scopes shouldBe emptySet()
         }
     }
@@ -148,7 +137,7 @@ class PasswordValidationTest : PasswordValidation {
             shouldBeInstanceOf<PasswordRequest>()
             principal shouldBe client
             username shouldBe "aardvark"
-            password shouldBe "badger"
+            password shouldBe "badger".toCharArray()
             scopes shouldContainExactly setOf(OpenId)
         }
     }

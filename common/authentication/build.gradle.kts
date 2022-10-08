@@ -2,6 +2,7 @@ val ktorVersion: String by project
 val mockkVersion: String by project
 val junitVersion: String by project
 val exposedVersion: String by project
+val argon2Version: String by project
 
 plugins {
     kotlin("multiplatform")
@@ -42,7 +43,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 // Crypto for safe password checking
-                implementation("org.bouncycastle:bcprov-jdk15on:1.70")
+                api("de.mkammerer:argon2-jvm:$argon2Version")
 
                 api("org.jetbrains.exposed:exposed-core:$exposedVersion")
                 api("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
@@ -60,8 +61,9 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 // HTTP Client
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-js:$ktorVersion")
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
             }
         }
         val jsTest by getting {

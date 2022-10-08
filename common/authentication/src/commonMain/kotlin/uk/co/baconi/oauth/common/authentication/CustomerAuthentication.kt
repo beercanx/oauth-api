@@ -2,6 +2,7 @@ package uk.co.baconi.oauth.common.authentication
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 sealed class CustomerAuthentication {
@@ -12,9 +13,8 @@ sealed class CustomerAuthentication {
 
     @Serializable
     @SerialName("failure")
-    data class Failure(val reason: Reason) : CustomerAuthentication() {
+    data class Failure(@Transient val reason: Reason = Reason.Missing) : CustomerAuthentication() {
 
-        @Serializable
         enum class Reason {
             Missing,
             Mismatched,
