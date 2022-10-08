@@ -1,6 +1,8 @@
 package uk.co.baconi.oauth.api.userinfo
 
-import io.ktor.server.locations.*
+import io.ktor.resources.*
+import kotlinx.serialization.Serializable
 
-@Location("/userinfo")
-object UserInfoLocation
+@Serializable
+@Resource("/userinfo")
+class UserInfoLocation

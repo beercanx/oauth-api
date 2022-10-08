@@ -1,11 +1,12 @@
 package uk.co.baconi.oauth.api.userinfo
 
 import io.ktor.server.application.*
-import io.ktor.server.locations.*
 import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.server.resources.*
+import io.ktor.server.routing.Route
 import uk.co.baconi.oauth.api.ktor.auth.authenticate
 import uk.co.baconi.oauth.api.ktor.auth.authoriseAccessToken
+import uk.co.baconi.oauth.api.ktor.resourcesFormat
 import uk.co.baconi.oauth.api.scopes.Scopes.OpenId
 import uk.co.baconi.oauth.api.tokens.AccessToken
 
@@ -17,7 +18,7 @@ interface UserInfoRoute {
         authenticate(AccessToken::class) {
             get<UserInfoLocation> {
                 authoriseAccessToken(OpenId) { accessToken ->
-                    call.respond(userInfoService.getUserInfo(accessToken, application.locations))
+                    call.respond(userInfoService.getUserInfo(accessToken, application.resourcesFormat))
                 }
             }
         }

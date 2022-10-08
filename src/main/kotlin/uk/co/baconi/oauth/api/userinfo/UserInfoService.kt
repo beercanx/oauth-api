@@ -1,7 +1,9 @@
 package uk.co.baconi.oauth.api.userinfo
 
-import io.ktor.server.locations.*
+import io.ktor.resources.*
+import io.ktor.resources.serialization.*
 import uk.co.baconi.oauth.api.assets.StaticAssetsLocation.ProfileImagesLocation
+import uk.co.baconi.oauth.api.ktor.href
 import uk.co.baconi.oauth.api.scopes.ScopesConfiguration
 import uk.co.baconi.oauth.api.scopes.ScopesConfigurationRepository
 import uk.co.baconi.oauth.api.tokens.AccessToken
@@ -14,19 +16,19 @@ class UserInfoService(
 ) {
 
     // https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
-    fun getUserInfo(accessToken: AccessToken, locations: Locations): UserInfoResponse {
+    fun getUserInfo(accessToken: AccessToken, resourcesFormat: ResourcesFormat): UserInfoResponse {
         // TODO - Improve this is crude assuming individual sources of data, also only supports username.
         return accessToken
             .scopes
             .asSequence()
             .mapNotNull(scopesConfigurationRepository::findById)
             .flatMap(ScopesConfiguration::claims)
-            .map { claim -> getClaim(accessToken, claim, locations) }
+            .map { claim -> getClaim(accessToken, claim, resourcesFormat) }
             .toMap()
     }
 
     // TODO - Replace with a data class, might help with custom serialisers?
-    private fun getClaim(accessToken: AccessToken, claim: Claims, locations: Locations): Pair<Claims, Any?> =
+    private fun getClaim(accessToken: AccessToken, claim: Claims, resourcesFormat: ResourcesFormat): Pair<Claims, Any?> =
         claim to when (claim) {
             Claims.Subject -> accessToken.username
             Claims.Name -> TODO()
@@ -36,7 +38,7 @@ class UserInfoService(
             Claims.Nickname -> TODO()
             Claims.PreferredUserName -> TODO()
             Claims.ProfileUrl -> TODO()
-            Claims.PictureUrl -> locations.href(ProfileImagesLocation(profileImages.random()))
+            Claims.PictureUrl -> resourcesFormat.href(ProfileImagesLocation(profileImages.random()))
             Claims.Email -> TODO()
             Claims.EmailVerified -> TODO()
             Claims.Birthdate -> TODO()

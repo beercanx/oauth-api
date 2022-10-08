@@ -3,7 +3,7 @@ package uk.co.baconi.oauth.api.introspection
 import io.ktor.server.application.*
 import io.ktor.http.ContentType.Application.FormUrlEncoded
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
-import io.ktor.server.locations.post
+import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import uk.co.baconi.oauth.api.client.ConfidentialClient

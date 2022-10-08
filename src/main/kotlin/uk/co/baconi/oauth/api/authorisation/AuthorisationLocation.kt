@@ -1,8 +1,10 @@
 package uk.co.baconi.oauth.api.authorisation
 
-import io.ktor.server.locations.*
+import io.ktor.resources.*
+import kotlinx.serialization.Serializable
 
-@Location("/authorise")
+@Serializable
+@Resource("/authorise")
 data class AuthorisationLocation(
     val response_type: String? = null,
     val client_id: String? = null,

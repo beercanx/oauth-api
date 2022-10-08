@@ -1,11 +1,12 @@
 package uk.co.baconi.oauth.api.authentication
 
+import io.ktor.resources.serialization.*
 import io.ktor.server.html.*
-import io.ktor.server.locations.*
 import kotlinx.html.*
 import uk.co.baconi.oauth.api.kotlinx.html.PageTemplate
+import uk.co.baconi.oauth.api.ktor.href
 
-class AuthenticationPageTemplate(private val locations: Locations, private val location: AuthenticationLocation) :
+class AuthenticationPageTemplate(private val resourcesFormat: ResourcesFormat, private val location: AuthenticationLocation) :
     Template<HTML> {
 
     companion object {
@@ -37,7 +38,7 @@ class AuthenticationPageTemplate(private val locations: Locations, private val l
 
                 postForm {
                     id = "login-form"
-                    action = locations.href(location)
+                    action = resourcesFormat.href(location)
 
                     hiddenInput {
                         name = CSRF_TOKEN

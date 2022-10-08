@@ -1,6 +1,8 @@
 package uk.co.baconi.oauth.api.revocation
 
-import io.ktor.server.locations.*
+import io.ktor.resources.*
+import kotlinx.serialization.Serializable
 
-@Location("/revoke")
+@Serializable
+@Resource("/revoke")
 object RevocationLocation

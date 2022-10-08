@@ -1,6 +1,8 @@
 package uk.co.baconi.oauth.api.exchange
 
-import io.ktor.server.locations.*
+import io.ktor.resources.*
+import kotlinx.serialization.Serializable
 
-@Location("/token")
-object ExchangeLocation
+@Serializable
+@Resource("/token")
+class ExchangeLocation
