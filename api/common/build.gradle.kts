@@ -41,7 +41,8 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
 
     // Crypto for safe credential checking
-    implementation("de.mkammerer:argon2-jvm:$argon2Version")
+    // TODO - Switch between this and no libs for container implementation("de.mkammerer:argon2-jvm:$argon2Version")
+    implementation("de.mkammerer:argon2-jvm-nolibs:$argon2Version")
 
     // Database
     api("com.h2database:h2:$h2DatabaseVersion")

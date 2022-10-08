@@ -15,15 +15,6 @@
 ./gradlew run
 ```
 
-## Use Docker Compose
-```
-# Build the image
-docker-compose build
-
-# Start the basic application in Docker
-docker-compose up
-```
-
 ## Sources
 OAuth and related RFCs
  * https://tools.ietf.org/html/rfc6749 - The OAuth 2.0 Authorization Framework

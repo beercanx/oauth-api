@@ -35,18 +35,19 @@ RUN apk add --no-cache binutils
 
 # Create the smallest JRE that we need
 RUN $JAVA_HOME/bin/jlink \
-         --add-modules java.base,java.xml,java.naming,java.sql \
-         --strip-debug \
-         --no-man-pages \
-         --no-header-files \
-         --compress=2 \
-         --output /javaruntime
+  --verbose \
+  --add-modules java.base,java.xml,java.naming,java.sql \
+  --strip-debug \
+  --no-man-pages \
+  --no-header-files \
+  --compress=2 \
+  --output /javaruntime
 
 FROM alpine:3.15 AS server-base
 
 # Make sure there's no out standing OS updates to install
 RUN apk --no-cache upgrade && \
-    apk add --no-cache java-common
+    apk --no-cache add java-common argon2-libs
 
 # Setup the JRE
 ENV JAVA_HOME=/jre
