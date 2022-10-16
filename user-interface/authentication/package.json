@@ -25,7 +25,7 @@
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "cross-env PORT=8080 BROWSER=none react-scripts start",
-    "build": "react-scripts build",
+    "build": "cross-env GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test"
   },
   "proxy": "http://localhost:8083",
