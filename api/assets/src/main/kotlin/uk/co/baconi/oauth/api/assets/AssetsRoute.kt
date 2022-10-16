@@ -1,6 +1,7 @@
 package uk.co.baconi.oauth.api.assets
 
 import io.ktor.server.application.*
+import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
 
 interface AssetsRoute {
@@ -9,8 +10,10 @@ interface AssetsRoute {
 
         application.log.info("Registering the AssetsRoute.assets() routes")
 
-        route("/assets") {
-            // TODO
+        static("/assets") {
+            static("/js") {
+                resources("static.js")
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package uk.co.baconi.oauth.api.authentication
 
+import io.ktor.http.*
 import io.ktor.http.ContentType.Application
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.OK
@@ -10,12 +11,14 @@ import io.ktor.server.html.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.util.*
 import uk.co.baconi.oauth.api.common.html.ReactTemplate.reactPage
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Failure
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Success
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationRequest
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
+import uk.co.baconi.oauth.api.common.location.Location
 import java.util.*
 import kotlin.time.Duration.Companion.hours
 
@@ -26,6 +29,13 @@ interface AuthenticationRoute {
     fun Route.authentication() {
 
         application.log.info("Registering the AuthenticationRoute.authentication() routes")
+
+        val bundleLocation = url {
+            takeFrom(Location.Assets.baseUrl)
+            path("/assets/js/authentication.js") // TODO - Extract into configuration
+        }
+
+        application.log.debug("Authentication location: $bundleLocation")
 
         // TODO - Update error handling to always return JSON, even on 500's
         route("/authentication") {
@@ -63,10 +73,7 @@ interface AuthenticationRoute {
             }
             get {
                 call.respondHtml(OK) {
-                    reactPage(
-                        title = "Login Page",
-                        reactSource = "http://localhost:8080/static/js/bundle.js" // TODO - Extract into configuration
-                    )
+                    reactPage(title = "Login Page", reactSource = bundleLocation)
                 }
             }
             post {
