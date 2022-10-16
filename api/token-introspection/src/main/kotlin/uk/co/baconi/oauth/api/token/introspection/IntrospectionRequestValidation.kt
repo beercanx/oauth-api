@@ -7,6 +7,8 @@ import uk.co.baconi.oauth.api.common.client.ConfidentialClient
 import uk.co.baconi.oauth.api.common.uuid.UUIDSerializer
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionErrorType.InvalidRequest
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionErrorType.UnauthorizedClient
+import uk.co.baconi.oauth.api.token.introspection.IntrospectionRequest.Invalid
+import uk.co.baconi.oauth.api.token.introspection.IntrospectionRequest.Valid
 
 object IntrospectionRequestValidation {
 
@@ -23,14 +25,14 @@ object IntrospectionRequestValidation {
 
         return when {
             // TODO - 403?
-            !principal.can(Introspect) -> IntrospectionRequest.Invalid(UnauthorizedClient, "client is not allowed to introspect")
+            !principal.can(Introspect) -> Invalid(UnauthorizedClient, "client is not allowed to introspect")
 
-            token == null -> IntrospectionRequest.Invalid(InvalidRequest, "missing parameter: token")
-            token.isBlank() -> IntrospectionRequest.Invalid(InvalidRequest, "invalid parameter: token")
+            token == null -> Invalid(InvalidRequest, "missing parameter: token")
+            token.isBlank() -> Invalid(InvalidRequest, "invalid parameter: token")
 
-            else -> when(val uuid = tokenUuid){
-                null -> IntrospectionRequest.Invalid(InvalidRequest, "invalid parameter: token")
-                else -> IntrospectionRequest.Valid(principal, uuid)
+            else -> when (val uuid = tokenUuid) {
+                null -> Invalid(InvalidRequest, "invalid parameter: token")
+                else -> Valid(principal, uuid)
             }
         }
     }

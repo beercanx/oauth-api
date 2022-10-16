@@ -48,7 +48,12 @@ interface AuthorisationCodeValidation {
     }
 
     // TODO - Add trace logging to assist in debugging consumer integrations?
-    fun validateAuthorisationCode(client: ClientPrincipal, code: UUID, redirectUri: String, codeVerifier: String? = null): AuthorisationCode? {
+    fun validateAuthorisationCode(
+        client: ClientPrincipal,
+        code: UUID,
+        redirectUri: String,
+        codeVerifier: String? = null
+    ): AuthorisationCode? {
 
         val authorisationCode = authorisationCodeRepository.findById(code)
 
@@ -92,11 +97,11 @@ interface AuthorisationCodeValidation {
      */
     fun validateCodeVerifier(authorisationCode: AuthorisationCode.Pkce, codeVerifier: String): Boolean {
 
-        fun ascii(string: String) : ByteArray = string.toByteArray(Charsets.US_ASCII)
+        fun ascii(string: String): ByteArray = string.toByteArray(Charsets.US_ASCII)
         fun sha256(bytes: ByteArray): ByteArray = MessageDigest.getInstance("SHA-256").digest(bytes)
         fun base64UrlEncode(bytes: ByteArray): String = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes)
 
-        return when(authorisationCode.codeChallengeMethod) {
+        return when (authorisationCode.codeChallengeMethod) {
             S256 -> base64UrlEncode(sha256(ascii(codeVerifier))) == authorisationCode.codeChallenge.value
         }
     }

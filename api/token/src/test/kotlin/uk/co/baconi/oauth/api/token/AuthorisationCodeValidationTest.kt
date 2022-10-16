@@ -323,9 +323,10 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
                 codeChallengeMethod = CodeChallengeMethod.S256
             )
 
-            val verifier = "hbH.giMPKpzbxY7GbLeEjcom1T9h41bt6Oe8e~Nvs~NwcR6q9JqnysWOoseI2~l4kL5Jl.RTiPU8HzFDz4LaAM5oZQgV6-44OuFZDObal_DJqRFG7QpBuF_yw5FsPleS"
-
-            validateCodeVerifier(code, verifier) shouldBe true
+            validateCodeVerifier(
+                code,
+                "hbH.giMPKpzbxY7GbLeEjcom1T9h41bt6Oe8e~Nvs~NwcR6q9JqnysWOoseI2~l4kL5Jl.RTiPU8HzFDz4LaAM5oZQgV6-44OuFZDObal_DJqRFG7QpBuF_yw5FsPleS"
+            ) shouldBe true
         }
     }
 }

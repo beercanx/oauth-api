@@ -48,15 +48,8 @@ object CommonModule {
             options { _, _ -> CachingOptions(CacheControl.NoStore(null)) }
             // no-cache
             options { _, _ -> CachingOptions(CacheControl.NoCache(null)) }
-            // must-revalidate, proxy-revalidate, max-age=0
-            options { _, _ -> CachingOptions(
-                CacheControl.MaxAge(
-                    maxAgeSeconds = 0,
-                    mustRevalidate = true,
-                    proxyRevalidate = true
-                )
-            )
-            }
+            // max-age=0, must-revalidate, proxy-revalidate
+            options { _, _ -> CachingOptions(CacheControl.MaxAge(0, mustRevalidate = true, proxyRevalidate = true)) }
         }
 
         // Enable `call.receive` to work twice without getting an exception

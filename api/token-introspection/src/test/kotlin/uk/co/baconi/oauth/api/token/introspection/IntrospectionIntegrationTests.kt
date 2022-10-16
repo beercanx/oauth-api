@@ -7,7 +7,7 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.beBlank
 import io.ktor.client.*
-import io.ktor.client.call.*
+import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -163,22 +163,23 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         }
 
         @Test
-        fun `should return 'unauthorised' response when a confidential clients without the allowed action is used`() = setupApplication { client ->
+        fun `should return 'unauthorised' response when a confidential clients without the allowed action is used`() =
+            setupApplication { client ->
 
-            val response = client.request(introspectionEndpoint) {
-                introspectionRequest {
-                    basicAuth("no-introspection", "9VylF3DbEeJbtdbih3lqpNXBw@Non#bi")
+                val response = client.request(introspectionEndpoint) {
+                    introspectionRequest {
+                        basicAuth("no-introspection", "9VylF3DbEeJbtdbih3lqpNXBw@Non#bi")
+                    }
+                }
+
+                assertSoftly(response) {
+                    status shouldBe BadRequest // TODO - Review based on whether this is really a 400 or 403
+                    assertSoftly(body<Map<String, String>>()) {
+                        shouldContain("error" to "unauthorized_client")
+                        shouldContain("description" to "client is not allowed to introspect")
+                    }
                 }
             }
-
-            assertSoftly(response) {
-                status shouldBe BadRequest // TODO - Review based on whether this is really a 400 or 403
-                assertSoftly(body<Map<String, String>>()) {
-                    shouldContain("error" to "unauthorized_client")
-                    shouldContain("description" to "client is not allowed to introspect")
-                }
-            }
-        }
     }
 
     @Nested
@@ -260,19 +261,20 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         }
 
         @Test
-        fun `should return an inactive response for an access token that does not exist`() = setupApplication { client ->
+        fun `should return an inactive response for an access token that does not exist`() =
+            setupApplication { client ->
 
-            val response = client.request(introspectionEndpoint) {
-                introspectionRequest(body = "token=${missingToken.value}")
-            }
+                val response = client.request(introspectionEndpoint) {
+                    introspectionRequest(body = "token=${missingToken.value}")
+                }
 
-            assertSoftly(response) {
-                status shouldBe OK
-                assertSoftly(body<Map<String, String>>()) {
-                    shouldContain("active" to "false")
+                assertSoftly(response) {
+                    status shouldBe OK
+                    assertSoftly(body<Map<String, String>>()) {
+                        shouldContain("active" to "false")
+                    }
                 }
             }
-        }
 
         @Test
         fun `should return an inactive response for an access token that has expired`() = setupApplication { client ->
@@ -290,18 +292,19 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         }
 
         @Test
-        fun `should return an inactive response for an access token that is in the future`() = setupApplication { client ->
+        fun `should return an inactive response for an access token that is in the future`() =
+            setupApplication { client ->
 
-            val response = client.request(introspectionEndpoint) {
-                introspectionRequest(body = "token=${futureToken.value}")
-            }
+                val response = client.request(introspectionEndpoint) {
+                    introspectionRequest(body = "token=${futureToken.value}")
+                }
 
-            assertSoftly(response) {
-                status shouldBe OK
-                assertSoftly(body<Map<String, String>>()) {
-                    shouldContain("active" to "false")
+                assertSoftly(response) {
+                    status shouldBe OK
+                    assertSoftly(body<Map<String, String>>()) {
+                        shouldContain("active" to "false")
+                    }
                 }
             }
-        }
     }
 }

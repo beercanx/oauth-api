@@ -59,7 +59,8 @@ class PasswordValidationTest : PasswordValidation {
         verify { client.can(Password) }
     }
 
-    @Test fun `should return invalid request on missing username`() {
+    @Test
+    fun `should return invalid request on missing username`() {
 
         every { parameters["username"] } returns null
 
@@ -70,7 +71,8 @@ class PasswordValidationTest : PasswordValidation {
         }
     }
 
-    @Test fun `should return invalid request on blank username`() {
+    @Test
+    fun `should return invalid request on blank username`() {
 
         every { parameters["username"] } returns ""
 
@@ -81,7 +83,8 @@ class PasswordValidationTest : PasswordValidation {
         }
     }
 
-    @Test fun `should return invalid request on missing password`() {
+    @Test
+    fun `should return invalid request on missing password`() {
 
         every { parameters["password"] } returns null
 
@@ -92,7 +95,8 @@ class PasswordValidationTest : PasswordValidation {
         }
     }
 
-    @Test fun `should return invalid request on invalid scope`() {
+    @Test
+    fun `should return invalid request on invalid scope`() {
 
         every { parameters["scope"] } returns "Cicada"
 
@@ -105,7 +109,8 @@ class PasswordValidationTest : PasswordValidation {
         verify(exactly = 0) { client.canBeIssued(any()) }
     }
 
-    @Test fun `should return invalid request on unauthorised scopes`() {
+    @Test
+    fun `should return invalid request on unauthorised scopes`() {
 
         every { client.canBeIssued(any()) } returns false
 
@@ -118,7 +123,8 @@ class PasswordValidationTest : PasswordValidation {
         verify { client.canBeIssued(any()) }
     }
 
-    @Test fun `should return a valid request if scope is not provided`() {
+    @Test
+    fun `should return a valid request if scope is not provided`() {
 
         every { parameters["scope"] } returns null
 
@@ -131,7 +137,8 @@ class PasswordValidationTest : PasswordValidation {
         }
     }
 
-    @Test fun `should return a valid request`() {
+    @Test
+    fun `should return a valid request`() {
 
         assertSoftly(validatePasswordRequest(parameters, client)) {
             shouldBeInstanceOf<PasswordRequest>()
