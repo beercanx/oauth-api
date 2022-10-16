@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     implementation(project(":api:common"))
+    implementation(project(":api:assets"))
     implementation(project(":api:authorisation"))
     implementation(project(":api:authentication"))
     implementation(project(":api:session-info"))

@@ -1,6 +1,8 @@
 package uk.co.baconi.oauth.api.server
 
 import io.ktor.server.routing.*
+import uk.co.baconi.oauth.api.assets.AssetsRoute
+import uk.co.baconi.oauth.api.authentication.AuthenticationRoute
 import uk.co.baconi.oauth.api.common.AuthenticationModule
 import uk.co.baconi.oauth.api.common.CommonModule.common
 import uk.co.baconi.oauth.api.common.DatabaseFactory.getAccessTokenDatabase
@@ -28,7 +30,7 @@ import uk.co.baconi.oauth.api.token.introspection.IntrospectionService
 import uk.co.baconi.oauth.api.user.info.UserInfoRoute
 import uk.co.baconi.oauth.api.user.info.UserInfoService
 
-object FullServer : AuthenticationModule, TokenRoute, IntrospectionRoute, UserInfoRoute, TestAccessTokenModule, TestUserModule {
+object FullServer : AuthenticationModule, AssetsRoute, AuthenticationRoute, TokenRoute, IntrospectionRoute, UserInfoRoute, TestAccessTokenModule, TestUserModule {
 
     private val accessTokenRepository = AccessTokenRepository(getAccessTokenDatabase())
     override val accessTokenService = AccessTokenService(accessTokenRepository)
@@ -42,7 +44,7 @@ object FullServer : AuthenticationModule, TokenRoute, IntrospectionRoute, UserIn
 
     override val customerStatusRepository = CustomerStatusRepository(getCustomerStatusDatabase())
     override val customerCredentialRepository = CustomerCredentialRepository(getCustomerCredentialDatabase())
-    private val customerAuthenticationService = CustomerAuthenticationService(customerCredentialRepository, customerStatusRepository)
+    override val customerAuthenticationService = CustomerAuthenticationService(customerCredentialRepository, customerStatusRepository)
 
     override val passwordGrant = PasswordGrant(accessTokenService, customerAuthenticationService)
 
@@ -56,6 +58,8 @@ object FullServer : AuthenticationModule, TokenRoute, IntrospectionRoute, UserIn
             common()
             authentication()
             routing {
+                assets()
+                authentication()
                 token()
                 introspection()
                 userInfo()
