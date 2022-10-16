@@ -3,6 +3,8 @@ package uk.co.baconi.oauth.api.common.location
 import com.typesafe.config.ConfigFactory
 import io.ktor.http.*
 
+private val config = ConfigFactory.load().getConfig("uk.co.baconi.oauth.api.locations")
+
 /**
  * Locations of each major base endpoint.
  */
@@ -21,8 +23,4 @@ enum class Location(val baseUrl: Url) {
     constructor(name: String) : this(
         Url(config.getString(name)),
     )
-
-    companion object {
-        private val config = ConfigFactory.load().getConfig("uk.co.baconi.oauth.api.locations")
-    }
 }
