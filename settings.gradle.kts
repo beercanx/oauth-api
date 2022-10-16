@@ -2,6 +2,7 @@ rootProject.name = "oauth"
 
 // API
 include(":api:common")
+include(":api:assets")
 include(":api:authorisation")
 include(":api:authentication")
 include(":api:session-info")

@@ -16,6 +16,7 @@ RUN --mount=type=cache,target=/root/.gradle \
 
 # Add build files to enable dependency resolution caching.
 COPY build.gradle.kts settings.gradle.kts gradle.properties /project/
+COPY api/assets/build.gradle.kts  /project/api/assets/
 COPY api/authentication/build.gradle.kts  /project/api/authentication/
 COPY api/authorisation/build.gradle.kts  /project/api/authorisation/
 COPY api/common/build.gradle.kts  /project/api/common/
@@ -40,6 +41,7 @@ RUN apk --no-cache add "argon2-libs>${ARGON2_VERSION}"
 # Build the project
 RUN --mount=type=cache,target=/root/.gradle \
     --mount=type=cache,target=/project/.gradle \
+    --mount=type=cache,target=/project/api/assets/build \
     --mount=type=cache,target=/project/api/authentication/build \
     --mount=type=cache,target=/project/api/authorisation/build \
     --mount=type=cache,target=/project/api/common/build \
@@ -83,6 +85,12 @@ FROM server-base as server-full
 COPY --from=code-build /project/distributions/server/ /application
 WORKDIR /application
 CMD "./bin/server"
+
+## Create Server - Assets
+FROM server-base as server-assets
+COPY --from=code-build /project/distributions/assets/ /application
+WORKDIR /application
+CMD "./bin/assets"
 
 ## Create Server - Authentication
 FROM server-base as server-authentication

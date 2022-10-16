@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Assets Server" type="JetRunConfigurationType">
+    <envs>
+      <env name="SERVER_PORT" value="8085" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="uk.co.baconi.oauth.api.assets.MainKt" />
+    <module name="oauth.api.assets.main" />
+    <shortenClasspath name="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
