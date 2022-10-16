@@ -1,8 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="UserInfo Server" type="JetRunConfigurationType">
-    <envs>
-      <env name="SERVER_PORT" value="8084" />
-    </envs>
+  <configuration default="false" name="User Info Server" type="JetRunConfigurationType">
     <option name="MAIN_CLASS_NAME" value="uk.co.baconi.oauth.api.user.info.MainKt" />
     <module name="oauth.api.user-info.main" />
     <shortenClasspath name="NONE" />

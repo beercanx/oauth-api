@@ -57,7 +57,7 @@ object CommonModule {
 
         // Enable CORS to enable multiple ports - TODO - Remove once we've sorted common domain setup
         install(CORS) {
-            (0..8).forEach {
+            (0..9).forEach {
                 this@common.log.info("CORS allowHost localhost:808${it}")
                 allowHost("localhost:808${it}")
             }

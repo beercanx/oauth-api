@@ -1,8 +1,5 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Authentication Server" type="JetRunConfigurationType">
-    <envs>
-      <env name="SERVER_PORT" value="8083" />
-    </envs>
     <option name="MAIN_CLASS_NAME" value="uk.co.baconi.oauth.api.authentication.MainKt" />
     <module name="oauth.api.authentication.main" />
     <shortenClasspath name="NONE" />
