@@ -30,21 +30,6 @@ suspend fun ApplicationContext.validateExchangeRequest(
     val parameters = call.receiveParameters()
 
     return when (parameters[GRANT_TYPE]?.deserialise<GrantType>()) {
-//        RefreshToken -> {
-//            val refreshToken = parameters[REFRESH_TOKEN]
-//            val validScopes = parameters[SCOPE].parseAsScopes(principal)
-//
-//            when {
-//                refreshToken == null -> InvalidConfidentialExchangeRequest(InvalidRequest, "missing parameter: refresh_token")
-//                refreshToken.isBlank() -> InvalidConfidentialExchangeRequest(InvalidRequest, "invalid parameter: refresh_token")
-//
-//                // The requested scope is invalid, unknown, or malformed.
-//                validScopes == null -> InvalidConfidentialExchangeRequest("invalid_scope", "invalid parameter: scope")
-//
-//                else -> RefreshTokenRequest(principal, validScopes, refreshToken)
-//            }
-//        }
-//
 //        Assertion -> {
 //            val assertion = parameters[ASSERTION]
 //

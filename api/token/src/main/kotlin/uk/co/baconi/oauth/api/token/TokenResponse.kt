@@ -37,6 +37,12 @@ sealed interface TokenResponse {
         @SerialName("expires_in") val expiresIn: Long,
 
         /**
+         * OPTIONAL. The refresh token, which can be used to obtain new access tokens using the same authorization
+         * grant as described in https://www.rfc-editor.org/rfc/rfc6749#section-6
+         */
+        @SerialName("refresh_token") val refreshToken: UUID,
+
+        /**
          * OPTIONAL if identical to the scope requested by the client; otherwise, REQUIRED.
          * The scope of the access token as described by https://tools.ietf.org/html/rfc6749#section-3.3
          */

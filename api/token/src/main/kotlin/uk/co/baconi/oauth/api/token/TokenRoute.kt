@@ -16,6 +16,7 @@ interface TokenRoute : TokenRequestValidation {
 
     val passwordGrant: PasswordGrant
     val authorisationCodeGrant: AuthorisationCodeGrant
+    val refreshTokenGrant: RefreshTokenGrant
 
     fun Route.token() {
 
@@ -32,8 +33,8 @@ interface TokenRoute : TokenRequestValidation {
                             is TokenRequest.Invalid -> request.toResponse()
                             is PasswordRequest -> passwordGrant.exchange(request)
                             is AuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
-                            //is RefreshTokenRequest -> refreshTokenGrant.exchange(request)
-                            //is AssertionRequest -> assertionGrant.exchange(request)
+                            is RefreshTokenRequest -> refreshTokenGrant.exchange(request)
+                            // TODO - is AssertionRequest -> assertionGrant.exchange(request)
                         }
 
                         when (response) {

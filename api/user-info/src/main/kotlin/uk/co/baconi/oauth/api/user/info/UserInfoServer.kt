@@ -3,7 +3,7 @@ package uk.co.baconi.oauth.api.user.info
 import io.ktor.server.routing.*
 import uk.co.baconi.oauth.api.common.AuthenticationModule
 import uk.co.baconi.oauth.api.common.CommonModule.common
-import uk.co.baconi.oauth.api.common.DatabaseFactory.getAccessTokenDatabase
+import uk.co.baconi.oauth.api.common.DatabaseFactory.accessTokenDatabase
 import uk.co.baconi.oauth.api.common.TestAccessTokenModule
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretRepository
@@ -18,7 +18,7 @@ import uk.co.baconi.oauth.api.common.token.AccessTokenService
  */
 internal object UserInfoServer : AuthenticationModule, UserInfoRoute, TestAccessTokenModule {
 
-    private val accessTokenRepository = AccessTokenRepository(getAccessTokenDatabase())
+    private val accessTokenRepository = AccessTokenRepository(accessTokenDatabase)
     override val accessTokenService = AccessTokenService(accessTokenRepository)
 
     private val clientSecretRepository = ClientSecretRepository()

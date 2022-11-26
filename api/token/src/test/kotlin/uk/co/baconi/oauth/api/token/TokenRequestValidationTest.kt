@@ -19,6 +19,7 @@ import uk.co.baconi.oauth.api.common.client.ClientAction
 import uk.co.baconi.oauth.api.common.client.ClientPrincipal
 import uk.co.baconi.oauth.api.common.grant.GrantType
 import uk.co.baconi.oauth.api.common.grant.GrantType.Password
+import uk.co.baconi.oauth.api.common.token.RefreshTokenService
 import uk.co.baconi.oauth.api.token.TokenErrorType.*
 
 class TokenRequestValidationTest : TokenRequestValidation {
@@ -40,11 +41,17 @@ class TokenRequestValidationTest : TokenRequestValidation {
 
     private val tokenRequest = mockk<TokenRequest>()
     override val authorisationCodeRepository = mockk<AuthorisationCodeRepository>()
+    override val refreshTokenService = mockk<RefreshTokenService>()
+
     override fun validateAuthorisationCodeRequest(parameters: Parameters, client: ClientPrincipal): TokenRequest {
         return tokenRequest
     }
 
     override fun validatePasswordRequest(parameters: Parameters, client: ClientPrincipal): TokenRequest {
+        return tokenRequest
+    }
+
+    override fun validateRefreshTokenRequest(parameters: Parameters, client: ClientPrincipal): TokenRequest {
         return tokenRequest
     }
 

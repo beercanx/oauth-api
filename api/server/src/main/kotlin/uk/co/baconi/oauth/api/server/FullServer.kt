@@ -5,10 +5,11 @@ import uk.co.baconi.oauth.api.assets.AssetsRoute
 import uk.co.baconi.oauth.api.authentication.AuthenticationRoute
 import uk.co.baconi.oauth.api.common.AuthenticationModule
 import uk.co.baconi.oauth.api.common.CommonModule.common
-import uk.co.baconi.oauth.api.common.DatabaseFactory.getAccessTokenDatabase
-import uk.co.baconi.oauth.api.common.DatabaseFactory.getAuthorisationCodeDatabase
-import uk.co.baconi.oauth.api.common.DatabaseFactory.getCustomerCredentialDatabase
-import uk.co.baconi.oauth.api.common.DatabaseFactory.getCustomerStatusDatabase
+import uk.co.baconi.oauth.api.common.DatabaseFactory.accessTokenDatabase
+import uk.co.baconi.oauth.api.common.DatabaseFactory.authorisationCodeDatabase
+import uk.co.baconi.oauth.api.common.DatabaseFactory.customerCredentialDatabase
+import uk.co.baconi.oauth.api.common.DatabaseFactory.customerStatusDatabase
+import uk.co.baconi.oauth.api.common.DatabaseFactory.refreshTokenDatabase
 import uk.co.baconi.oauth.api.common.TestAccessTokenModule
 import uk.co.baconi.oauth.api.common.TestUserModule
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
@@ -22,8 +23,11 @@ import uk.co.baconi.oauth.api.common.embeddedCommonServer
 import uk.co.baconi.oauth.api.common.scope.ScopeConfigurationRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
+import uk.co.baconi.oauth.api.common.token.RefreshTokenRepository
+import uk.co.baconi.oauth.api.common.token.RefreshTokenService
 import uk.co.baconi.oauth.api.token.AuthorisationCodeGrant
 import uk.co.baconi.oauth.api.token.PasswordGrant
+import uk.co.baconi.oauth.api.token.RefreshTokenGrant
 import uk.co.baconi.oauth.api.token.TokenRoute
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionRoute
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionService
@@ -32,21 +36,25 @@ import uk.co.baconi.oauth.api.user.info.UserInfoService
 
 object FullServer : AuthenticationModule, AssetsRoute, AuthenticationRoute, TokenRoute, IntrospectionRoute, UserInfoRoute, TestAccessTokenModule, TestUserModule {
 
-    private val accessTokenRepository = AccessTokenRepository(getAccessTokenDatabase())
+    private val accessTokenRepository = AccessTokenRepository(accessTokenDatabase)
     override val accessTokenService = AccessTokenService(accessTokenRepository)
+
+    private val refreshTokenRepository = RefreshTokenRepository(refreshTokenDatabase)
+    override val refreshTokenService = RefreshTokenService(refreshTokenRepository)
+    override val refreshTokenGrant = RefreshTokenGrant(accessTokenService, refreshTokenService)
 
     private val clientSecretRepository = ClientSecretRepository()
     private val clientConfigurationRepository = ClientConfigurationRepository()
     override val clientSecretService = ClientSecretService(clientSecretRepository, clientConfigurationRepository)
 
-    override val authorisationCodeGrant = AuthorisationCodeGrant(accessTokenService)
-    override val authorisationCodeRepository = AuthorisationCodeRepository(getAuthorisationCodeDatabase())
+    override val authorisationCodeGrant = AuthorisationCodeGrant(accessTokenService, refreshTokenService)
+    override val authorisationCodeRepository = AuthorisationCodeRepository(authorisationCodeDatabase)
 
-    override val customerStatusRepository = CustomerStatusRepository(getCustomerStatusDatabase())
-    override val customerCredentialRepository = CustomerCredentialRepository(getCustomerCredentialDatabase())
+    override val customerStatusRepository = CustomerStatusRepository(customerStatusDatabase)
+    override val customerCredentialRepository = CustomerCredentialRepository(customerCredentialDatabase)
     override val customerAuthenticationService = CustomerAuthenticationService(customerCredentialRepository, customerStatusRepository)
 
-    override val passwordGrant = PasswordGrant(accessTokenService, customerAuthenticationService)
+    override val passwordGrant = PasswordGrant(accessTokenService, refreshTokenService, customerAuthenticationService)
 
     override val introspectionService = IntrospectionService(accessTokenRepository)
 

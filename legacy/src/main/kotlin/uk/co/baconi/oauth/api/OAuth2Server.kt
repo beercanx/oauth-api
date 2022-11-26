@@ -49,90 +49,9 @@ import uk.co.baconi.oauth.api.userinfo.UserInfoRoute
 import uk.co.baconi.oauth.api.userinfo.UserInfoService
 import uk.co.baconi.oauth.api.wellknown.WellKnownRoute
 
-object OAuth2Server : AuthenticationRoute,
-    AuthorisationRoute,
-    ExchangeRoute,
-    IntrospectionRoute,
-    RevocationRoute,
-    StaticAssetsRoute,
-    SwaggerRoute,
-    UserInfoRoute,
-    WellKnownRoute {
-
-    const val REALM = "oauth-api"
-
-    // Clients
-    private val clientSecretRepository = NitriteClientSecretRepository()
-    override val clientConfigurationRepository = TypesafeClientConfigurationRepository()
-    override val clientAuthService = ClientAuthenticationService(clientSecretRepository, clientConfigurationRepository)
-
-    // Tokens
-    private val accessTokenRepository = NitriteAccessTokenRepository()
-    private val accessTokenService = AccessTokenService(accessTokenRepository)
-    override val introspectionService = IntrospectionService(accessTokenRepository)
-    private val tokenAuthenticationService = TokenAuthenticationService(accessTokenRepository)
-    private val scopesConfigurationRepository = TypesafeScopesConfigurationRepository()
-
-    // Customer
-    private val customerCredentialRepository = NitriteCustomerCredentialRepository()
-    private val customerStatusRepository = NitriteCustomerStatusRepository()
-    private val customerMatchService = CustomerMatchService(customerCredentialRepository)
-    override val userInfoService = UserInfoService(scopesConfigurationRepository)
-
-    // Authentication
-    override val authenticationService = AuthenticationService(customerMatchService, customerStatusRepository)
-
-    // Authorisation
-    private val authorisationCodeRepository = NitriteAuthorisationCodeRepository()
-    override val authorisationCodeService = AuthorisationCodeService(authorisationCodeRepository)
-    private val authorisationService = AuthorisationService(authorisationCodeRepository, accessTokenService)
-
-    // OAuth Grants
-    override val passwordCredentialsGrant = PasswordCredentialsGrant(authenticationService, authorisationService)
-    override val refreshGrant = RefreshGrant()
-    override val authorisationCodeGrant = AuthorisationCodeGrant(authorisationCodeRepository, authorisationService)
-    override val assertionRedemptionGrant = AssertionRedemptionGrant()
+object OAuth2Server {
 
     fun Application.module() {
-
-        install(Resources)
-        install(AutoHeadResponse)
-        install(DataConversion)
-
-        install(HSTS) {
-            includeSubDomains = true
-        }
-
-        install(ContentNegotiation) {
-            json()
-        }
-
-        install(Compression) {
-            gzip {
-                priority = 1.0
-            }
-            deflate {
-                priority = 10.0
-                minimumSize(1024) // condition
-            }
-        }
-
-        // Disable caching via headers on all requests
-        install(CachingHeaders) {
-            // no-store
-            options { _, _ -> CachingOptions(CacheControl.NoStore(null)) }
-            // no-cache
-            options { _, _ -> CachingOptions(CacheControl.NoCache(null)) }
-            // must-revalidate, proxy-revalidate, max-age=0
-            options { _, _ -> CachingOptions(
-                    CacheControl.MaxAge(
-                        maxAgeSeconds = 0,
-                        mustRevalidate = true,
-                        proxyRevalidate = true
-                    )
-                )
-            }
-        }
 
         // Create some session types
         install(Sessions) {
@@ -140,67 +59,12 @@ object OAuth2Server : AuthenticationRoute,
             cookie<AuthenticatedSession>("AuthenticatedSession", storage = SessionStorageMemory())
         }
 
-        // Enable `call.receive` to work twice without getting an exception
-        install(DoubleReceive)
-
         // Graceful Shutdown
         environment.monitor.subscribe(ApplicationStopped) {
             closeAndLog(clientSecretRepository)
             closeAndLog(accessTokenRepository)
             closeAndLog(customerCredentialRepository)
             closeAndLog(customerStatusRepository)
-        }
-
-        install(Authentication) {
-            basic<ConfidentialClient> {
-                realm = REALM
-                validate { (clientId, clientSecret) ->
-                    clientAuthService.confidentialClient(clientId, clientSecret)
-                }
-            }
-            form<PublicClient> {
-                userParamName = "client_id"
-                passwordParamName = "client_id"
-                challenge {
-                    UnauthorizedResponse(Parameterized("Body", mapOf(Parameters.Realm to REALM)))
-                }
-                validate { (clientId) ->
-                    clientAuthService.publicClient(clientId)
-                }
-            }
-            bearer<AccessToken> {
-                realm = REALM
-                validate { (token) ->
-                    tokenAuthenticationService.accessToken(token)
-                }
-            }
-        }
-
-        routing {
-            //
-            // Setup UI
-            //
-            authentication()
-
-            //
-            // Setup the OAuth / OIDC routes
-            //
-            authorisation()
-            exchange()
-            introspection()
-            revocation()
-            userInfo()
-            wellKnown()
-
-            //
-            // Swagger UI and spec
-            //
-            swagger()
-
-            //
-            // Setup some generic static assets
-            //
-            staticAssets()
         }
     }
 }
