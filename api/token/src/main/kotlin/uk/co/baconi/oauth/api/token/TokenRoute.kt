@@ -14,8 +14,9 @@ import uk.co.baconi.oauth.api.common.ktor.auth.extractClient
 
 interface TokenRoute : TokenRequestValidation {
 
-    val passwordGrant: PasswordGrant
+    val assertionGrant: AssertionGrant
     val authorisationCodeGrant: AuthorisationCodeGrant
+    val passwordGrant: PasswordGrant
     val refreshTokenGrant: RefreshTokenGrant
 
     fun Route.token() {
@@ -34,7 +35,7 @@ interface TokenRoute : TokenRequestValidation {
                             is PasswordRequest -> passwordGrant.exchange(request)
                             is AuthorisationCodeRequest -> authorisationCodeGrant.exchange(request)
                             is RefreshTokenRequest -> refreshTokenGrant.exchange(request)
-                            // TODO - is AssertionRequest -> assertionGrant.exchange(request)
+                            is AssertionRequest -> assertionGrant.exchange(request)
                         }
 
                         when (response) {

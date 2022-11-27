@@ -5,10 +5,21 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class ClientType(internal val value: String) {
-    @SerialName("confidential") Confidential("confidential"),
-    @SerialName("public") Public("public");
+
+    @SerialName("confidential")
+    Confidential("confidential"),
+
+    @SerialName("public")
+    Public("public");
+
     companion object {
-        fun fromValue(value: String): ClientType = checkNotNull(fromValueOrNull(value)) { "No such ClientType [$value]" }
-        fun fromValueOrNull(value: String): ClientType? = values().firstOrNull { type -> type.value == value }
+
+        fun fromValue(value: String): ClientType = checkNotNull(fromValueOrNull(value)) {
+            "No such ClientType [$value]"
+        }
+
+        fun fromValueOrNull(value: String): ClientType? = values().firstOrNull { type ->
+            type.value == value
+        }
     }
 }

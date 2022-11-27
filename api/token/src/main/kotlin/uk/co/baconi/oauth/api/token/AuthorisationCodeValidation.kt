@@ -24,7 +24,7 @@ interface AuthorisationCodeValidation {
     fun validateAuthorisationCodeRequest(parameters: Parameters, client: ClientPrincipal): TokenRequest {
 
         val redirectUri = parameters[REDIRECT_URI]
-        val uuid = UUIDSerializer.fromValueOrNull(parameters[CODE])
+        val uuid = parameters[CODE]?.let(UUIDSerializer::fromValueOrNull)
         val codeVerifier = parameters[CODE_VERIFIER]
         val mustUsePkce = client.can(ProofKeyForCodeExchange)
 
@@ -34,14 +34,14 @@ interface AuthorisationCodeValidation {
             !client.hasRedirectUri(redirectUri) -> Invalid(InvalidRequest, "invalid parameter: $REDIRECT_URI")
 
             parameters[CODE] == null -> Invalid(InvalidRequest, "missing parameter: $CODE")
-            uuid == null -> Invalid(InvalidRequest, "invalid parameter: $CODE")
+            uuid == null -> Invalid(InvalidGrant, "invalid parameter: $CODE")
 
             mustUsePkce && codeVerifier == null -> Invalid(InvalidRequest, "missing parameter: $CODE_VERIFIER")
             mustUsePkce && codeVerifier.isNullOrBlank() -> Invalid(InvalidRequest, "invalid parameter: $CODE_VERIFIER")
 
             else -> when (val code = validateAuthorisationCode(client, uuid, redirectUri, codeVerifier)) {
                 // TODO - Verify this is the most helpful we can be without compromising security
-                null -> Invalid(InvalidGrant, "invalid: authorisation code")
+                null -> Invalid(InvalidGrant, "invalid parameter: $CODE")
                 else -> AuthorisationCodeRequest(client, code)
             }
         }

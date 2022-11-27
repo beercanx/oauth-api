@@ -10,7 +10,7 @@ import uk.co.baconi.oauth.api.token.TokenRequest.Invalid
 
 private const val GRANT_TYPE = "grant_type"
 
-interface TokenRequestValidation : AuthorisationCodeValidation, PasswordValidation, RefreshTokenValidation {
+interface TokenRequestValidation : AssertionValidation, AuthorisationCodeValidation, PasswordValidation, RefreshTokenValidation {
 
     suspend fun ApplicationCall.validateTokenRequest(client: ClientPrincipal): TokenRequest {
 
@@ -25,10 +25,10 @@ interface TokenRequestValidation : AuthorisationCodeValidation, PasswordValidati
             !client.can(grantType) -> Invalid(UnauthorizedClient, "not authorized to: ${parameters[GRANT_TYPE]}")
 
             else -> when (grantType) {
+                Assertion -> validateAssertionRequest(parameters, client)
                 AuthorisationCode -> validateAuthorisationCodeRequest(parameters, client)
                 Password -> validatePasswordRequest(parameters, client)
                 RefreshToken -> validateRefreshTokenRequest(parameters, client)
-                //Assertion -> validateAssertionRequest(parameters, client)
             }
         }
     }
