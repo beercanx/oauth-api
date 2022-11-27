@@ -1,6 +1,7 @@
 package uk.co.baconi.oauth.api.common.client
 
 import io.ktor.server.auth.*
+import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType
 import uk.co.baconi.oauth.api.common.client.ClientAction.Introspect
 import uk.co.baconi.oauth.api.common.client.ClientAction.ProofKeyForCodeExchange
 import uk.co.baconi.oauth.api.common.grant.GrantType
@@ -11,10 +12,20 @@ import uk.co.baconi.oauth.api.common.scope.Scope
 sealed class ClientPrincipal : Principal {
     abstract val id: ClientId
     abstract val configuration: ClientConfiguration
-    fun can(action: ClientAction) = configuration.allowedActions.contains(action)
-    fun can(grantType: GrantType) = configuration.allowedGrantTypes.contains(grantType)
+    fun can(action: ClientAction): Boolean = configuration.allowedActions.contains(action)
+    fun can(grantType: GrantType): Boolean = configuration.allowedGrantTypes.contains(grantType)
+    fun canHave(responseType: AuthorisationResponseType): Boolean {
+        return configuration.allowedAuthorisationResponseTypes.contains(responseType)
+    }
     fun canBeIssued(scope: Scope): Boolean = configuration.allowedScopes.contains(scope)
     fun hasRedirectUri(redirectUri: String): Boolean = configuration.redirectUris.contains(redirectUri)
+
+    companion object {
+        fun fromConfiguration(configuration: ClientConfiguration) = when(configuration.type) {
+            ClientType.Public -> PublicClient(configuration)
+            ClientType.Confidential -> ConfidentialClient(configuration)
+        }
+    }
 }
 
 data class ConfidentialClient(override val configuration: ClientConfiguration) : ClientPrincipal() {

@@ -1,6 +1,7 @@
 package uk.co.baconi.oauth.api.common.client
 
 enum class ClientAction(internal val value: String) {
+    Authorise("authorise"),
     Introspect("introspect"),
     ProofKeyForCodeExchange("pkce"),
     ;

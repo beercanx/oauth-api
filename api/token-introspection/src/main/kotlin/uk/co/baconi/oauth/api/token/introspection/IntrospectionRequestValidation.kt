@@ -19,9 +19,7 @@ object IntrospectionRequestValidation {
         val parameters = receiveParameters()
 
         val token = parameters[TOKEN]
-        val tokenUuid by lazy {
-            UUIDSerializer.fromValueOrNull(token)
-        }
+        val tokenUuid = token?.let(UUIDSerializer::fromValueOrNull)
 
         return when {
             // TODO - 403?
@@ -29,11 +27,9 @@ object IntrospectionRequestValidation {
 
             token == null -> Invalid(InvalidRequest, "missing parameter: token")
             token.isBlank() -> Invalid(InvalidRequest, "invalid parameter: token")
+            tokenUuid == null -> Invalid(InvalidRequest, "invalid parameter: token")
 
-            else -> when (val uuid = tokenUuid) {
-                null -> Invalid(InvalidRequest, "invalid parameter: token")
-                else -> Valid(principal, uuid)
-            }
+            else -> Valid(principal, tokenUuid)
         }
     }
 }

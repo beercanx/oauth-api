@@ -3,6 +3,7 @@ package uk.co.baconi.oauth.api.server
 import io.ktor.server.routing.*
 import uk.co.baconi.oauth.api.assets.AssetsRoute
 import uk.co.baconi.oauth.api.authentication.AuthenticationRoute
+import uk.co.baconi.oauth.api.authorisation.AuthorisationRoute
 import uk.co.baconi.oauth.api.common.AuthenticationModule
 import uk.co.baconi.oauth.api.common.CommonModule.common
 import uk.co.baconi.oauth.api.common.DatabaseFactory.accessTokenDatabase
@@ -31,7 +32,7 @@ import uk.co.baconi.oauth.api.token.introspection.IntrospectionService
 import uk.co.baconi.oauth.api.user.info.UserInfoRoute
 import uk.co.baconi.oauth.api.user.info.UserInfoService
 
-object FullServer : AuthenticationModule, AssetsRoute, AuthenticationRoute, TokenRoute, IntrospectionRoute, UserInfoRoute, TestAccessTokenModule, TestUserModule {
+object FullServer : AuthenticationModule, AssetsRoute, AuthenticationRoute, AuthorisationRoute, TokenRoute, IntrospectionRoute, UserInfoRoute, TestAccessTokenModule, TestUserModule {
 
     private val accessTokenRepository = AccessTokenRepository(accessTokenDatabase)
     override val accessTokenService = AccessTokenService(accessTokenRepository)
@@ -68,7 +69,7 @@ object FullServer : AuthenticationModule, AssetsRoute, AuthenticationRoute, Toke
             routing {
                 assets()
                 authentication()
-                // TODO - authorisation()
+                authorisation()
                 // TODO - sessionInfo()
                 token()
                 introspection()

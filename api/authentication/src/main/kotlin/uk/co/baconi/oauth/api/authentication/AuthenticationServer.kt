@@ -11,7 +11,7 @@ import uk.co.baconi.oauth.api.common.authentication.CustomerStatusRepository
 import uk.co.baconi.oauth.api.common.embeddedCommonServer
 
 /**
- * Start a server for just Introspection requests
+ * Start a server for just Authentication requests
  */
 internal object AuthenticationServer : AuthenticationRoute, TestUserModule {
 
