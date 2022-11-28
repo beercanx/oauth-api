@@ -3,14 +3,13 @@ import React, {ChangeEvent, FormEvent, MouseEvent} from "react";
 declare namespace LoginForm {
 
     interface Props {
-        authenticationEndpoint: string
-        // TODO - Move into state?
-        csrfToken: string
+        authenticationEndpoint: string // TODO - Work out if this would change, if not move into a static const setup.
     }
 
     interface State {
         username: string
         password: string
+        csrfToken: string
     }
 }
 
@@ -18,8 +17,6 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
 
     static defaultProps = {
         authenticationEndpoint: "/authentication",
-        // TODO - Load from templated page or fetch on construction
-        csrfToken: crypto.randomUUID()
     }
 
     constructor(props: LoginForm.Props) {
@@ -27,13 +24,35 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
 
         this.state = {
             username: "",
-            password: ""
+            password: "",
+            csrfToken: ""
         };
 
         this.handleChangeUsername = this.handleChangeUsername.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
         this.handleAbort = this.handleAbort.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    async componentDidMount() {
+        await this.getCsrfToken();
+    }
+
+    async getCsrfToken() {
+        console.log("Handling the CSRF token");
+        // Alternative would be to tie this to the hosting service, and it has to provide a CSRF token in the page.
+        await window
+            .fetch(this.props.authenticationEndpoint, {
+                method: "GET",
+                headers: {'accept': 'application/json'},
+                credentials: "include"
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log("CSRF Deserialized:", result)
+                this.setState({csrfToken: result.csrfToken})
+            })
+            .catch(exception => console.error("CSRF Error:", exception));
     }
 
     handleChangeUsername(event: ChangeEvent<HTMLInputElement>) {
@@ -58,19 +77,25 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
         await window
             .fetch(this.props.authenticationEndpoint, {
                 method: "POST",
-                headers: {
-                    'content-type': 'application/json',
-                },
+                headers: {'content-type': 'application/json'},
                 credentials: "include",
                 body: JSON.stringify({
                     username: this.state.username,
-                    password: this.state.password.split("")
+                    password: this.state.password.split(""),
+                    csrfToken: this.state.csrfToken
                 })
             })
             .then(response => response.json())
             .then(result => console.log("Authentication Deserialized:", result))
             .catch(exception => console.error("Authentication Error:", exception));
+
+        // TODO - Handle invalid CSRF token by getting a new one
+        // TODO - Handle error responses in the UI
+        // TODO - Handle success responses with a redirect
     }
+
+    // TODO - Detect another tab / window completing the authentication and redirect back to /authorise if this happens.
+    //        Aka the "Google" method when your asked to sign into multiple products when your authentication session expired.
 
     render() {
         return <>
@@ -78,7 +103,7 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
 
             <form id="login-form" onSubmit={this.handleSubmit}>
 
-                <input type="hidden" name="csrf_token" value={this.props.csrfToken}/>
+                <input type="hidden" name="csrf_token" value={this.state.csrfToken}/>
 
                 <div className="mb-3">
                     <label className="form-label" htmlFor="username">Username</label>

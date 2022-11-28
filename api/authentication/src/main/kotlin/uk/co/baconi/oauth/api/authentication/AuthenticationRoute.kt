@@ -21,6 +21,10 @@ import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationServic
 import uk.co.baconi.oauth.api.common.location.Location
 import java.util.*
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+
+private const val COOKIE_CSRF = "Authenticate-CSRF"
+private const val COOKIE_CUSTOMER = "Authenticated-Customer"
 
 interface AuthenticationRoute {
 
@@ -41,15 +45,30 @@ interface AuthenticationRoute {
         route("/authentication") {
             contentType(Application.Json) {
                 get {
-                    // TODO - Setup return CSRF token and store it in say a pre authenticated session.
-                    call.respondText(contentType = Application.Json) {
-                        """{"csrfToken":"${UUID.randomUUID()}"}""" // TODO - Convert to an object and use serialisation
-                    }
+
+                    val csrfToken = UUID.randomUUID()
+
+                    // TODO - Convert to signed client session or switch to passed JWT.
+                    call.response.cookies.append(
+                        name = COOKIE_CSRF,
+                        value = csrfToken.toString(),
+                        maxAge = 30.minutes.inWholeSeconds,
+                        //secure = true, // TODO - Enable if behind TLS, may need https://ktor.io/docs/forward-headers.html
+                        httpOnly = true,
+                    )
+
+                    call.respond(OK, CsrfToken(csrfToken)) // TODO - Verify this is JSON shaped
                 }
                 post {
                     // TODO - Expect CSRF token
                     runCatching {
-                        call.receive<CustomerAuthenticationRequest>()
+                        val request = call.receive<CustomerAuthenticationRequest>()
+                        val expectedCsrfToken = call.request.cookies[COOKIE_CSRF] // TODO - Verify HTTP only?
+                        when {
+                            expectedCsrfToken == null -> throw Exception("Invalid CSRF Token!")
+                            request.csrfToken != expectedCsrfToken -> throw Exception("Invalid CSRF Token!")
+                            else -> request
+                        }
                     }.onFailure { exception ->
                         application.log.debug("Bad CustomerAuthenticationRequest", exception)
                         call.respond<CustomerAuthentication>(BadRequest, Failure())
@@ -57,14 +76,16 @@ interface AuthenticationRoute {
                         when (val result = customerAuthenticationService.authenticate(username, password)) {
                             is Failure -> call.respond<CustomerAuthentication>(Unauthorized, result)
                             is Success -> {
-                                // TODO - Replace with a JWT that we can then verify on the authorisation endpoint.
+
+                                // TODO - Convert to signed client session or switch to passed JWT.
                                 call.response.cookies.append(
-                                    name = "Customer",
+                                    name = COOKIE_CUSTOMER,
                                     value = result.username.value,
-                                    maxAge = 4.hours.inWholeSeconds,
+                                    maxAge = 24.hours.inWholeSeconds,
                                     //secure = true, // TODO - Enable if behind TLS, may need https://ktor.io/docs/forward-headers.html
                                     httpOnly = true,
                                 )
+
                                 call.respond<CustomerAuthentication>(OK, result)
                             }
                         }
@@ -72,6 +93,8 @@ interface AuthenticationRoute {
                 }
             }
             get {
+                // TODO - Create CSRF Token here and save into session, possibly use a short lived cached value?
+                // TODO - Handle already being logged in, do we redirect, pop out a new UI or assume you're logging in as someone new?
                 call.respondHtml(OK) {
                     reactPage(title = "Login Page", reactSource = bundleLocation)
                 }
