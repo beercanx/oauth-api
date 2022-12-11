@@ -68,7 +68,7 @@ class AuthorisationCodeRepositoryIntegrationTest {
         }
 
         @Nested
-        inner class Pkce {
+        inner class PKCE {
 
             @Test
             fun `should insert a new access token`() {
@@ -156,6 +156,7 @@ class AuthorisationCodeRepositoryIntegrationTest {
         redirectUri = redirectUri,
         issuedAt = now,
         expiresAt = now.plusSeconds(60),
+        state = null,
     )
 
     private fun authorisationCodePkce(
@@ -166,7 +167,7 @@ class AuthorisationCodeRepositoryIntegrationTest {
         scopes: Set<Scope> = setOf(Scope.OpenId, Scope.ProfileRead, Scope.ProfileWrite),
         now: Instant = Instant.now(),
         codeChallenge: String = "code-challenge",
-    ) = AuthorisationCode.Pkce(
+    ) = AuthorisationCode.PKCE(
         value = value,
         username = AuthenticatedUsername(username),
         clientId = ClientId(clientId),
@@ -174,6 +175,7 @@ class AuthorisationCodeRepositoryIntegrationTest {
         redirectUri = redirectUri,
         issuedAt = now,
         expiresAt = now.plusSeconds(60),
+        state = null,
         codeChallenge = CodeChallenge(codeChallenge),
         codeChallengeMethod = CodeChallengeMethod.S256
     )

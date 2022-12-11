@@ -18,7 +18,7 @@ sealed class AuthorisationRequest {
         val responseType: AuthorisationResponseType,
         val clientId: ClientId,
         val redirectUri: String,
-        val state: String,
+        val state: String?,
         val scopes: Set<Scope>
     ) : AuthorisationRequest() {
 

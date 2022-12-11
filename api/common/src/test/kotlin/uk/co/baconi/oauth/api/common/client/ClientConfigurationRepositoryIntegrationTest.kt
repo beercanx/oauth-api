@@ -103,6 +103,7 @@ class ClientConfigurationRepositoryIntegrationTest {
                 allowedScopes = setOf(Scope.OpenId),
                 allowedActions = setOf(ClientAction.ProofKeyForCodeExchange),
                 allowedGrantTypes = setOf(GrantType.AuthorisationCode),
+                allowedAuthorisationResponseTypes = emptySet(),
             )
         }
 

@@ -17,6 +17,7 @@ class ClientConfigurationTest {
         allowedScopes = emptySet(),
         allowedActions = emptySet(),
         allowedGrantTypes = emptySet(),
+        allowedAuthorisationResponseTypes = emptySet(),
     )
 
     private val consumerY = ClientConfiguration(
@@ -26,6 +27,7 @@ class ClientConfigurationTest {
         allowedScopes = emptySet(),
         allowedActions = emptySet(),
         allowedGrantTypes = emptySet(),
+        allowedAuthorisationResponseTypes = emptySet(),
     )
 
     @Nested

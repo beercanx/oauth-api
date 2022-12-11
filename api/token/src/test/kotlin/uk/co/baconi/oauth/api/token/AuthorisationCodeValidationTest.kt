@@ -159,6 +159,7 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
                 username = AuthenticatedUsername("aardvark"),
                 redirectUri = "uk.co.baconi.valid://callback",
                 scopes = emptySet(),
+                state = null
             )
 
             assertSoftly(validateAuthorisationCodeRequest(parameters, client)) {
@@ -214,7 +215,7 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
         @Test
         fun `should return null when code verifier was not provided but authorisation code is PKCE issued`() {
 
-            every { authorisationCodeRepository.findById(uuid) } returns mockk<AuthorisationCode.Pkce> {
+            every { authorisationCodeRepository.findById(uuid) } returns mockk<AuthorisationCode.PKCE> {
                 every { clientId } returns ClientId("consumer-x")
                 every { redirectUri } returns "uk.co.baconi.valid://callback"
                 every { hasExpired() } returns false
@@ -227,7 +228,7 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
         @Test
         fun `should return null when code verifier does not match the challenge in the authorisation code`() {
 
-            every { authorisationCodeRepository.findById(uuid) } returns mockk<AuthorisationCode.Pkce> {
+            every { authorisationCodeRepository.findById(uuid) } returns mockk<AuthorisationCode.PKCE> {
                 every { clientId } returns ClientId("consumer-x")
                 every { redirectUri } returns "uk.co.baconi.valid://callback"
                 every { hasExpired() } returns false
@@ -241,7 +242,7 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
         @Test
         fun `should return pkce authorisation code if the code verifier matches`() {
 
-            every { authorisationCodeRepository.findById(uuid) } returns mockk<AuthorisationCode.Pkce> {
+            every { authorisationCodeRepository.findById(uuid) } returns mockk<AuthorisationCode.PKCE> {
                 every { value } returns uuid
                 every { clientId } returns ClientId("consumer-x")
                 every { redirectUri } returns "uk.co.baconi.valid://callback"
@@ -291,7 +292,7 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
         @Test
         fun `should return false if the verifier fails to match the challenge`() {
 
-            val code = AuthorisationCode.Pkce(
+            val code = AuthorisationCode.PKCE(
                 value = UUID.randomUUID(),
                 issuedAt = now(),
                 expiresAt = now().plus(1, DAYS),
@@ -310,7 +311,7 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
         @Test
         fun `should return true if the verifier matches the challenge`() {
 
-            val code = AuthorisationCode.Pkce(
+            val code = AuthorisationCode.PKCE(
                 value = UUID.randomUUID(),
                 issuedAt = now(),
                 expiresAt = now().plus(1, DAYS),

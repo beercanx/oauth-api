@@ -27,14 +27,14 @@ sealed interface AuthorisationCode {
         override val username: AuthenticatedUsername,
         override val redirectUri: String,
         override val scopes: Set<Scope>,
-        override val state: String? = null
+        override val state: String?
     ) : AuthorisationCode {
         override fun toString(): String {
             return "AuthorisationCode.Basic(value='REDACTED', issuedAt=$issuedAt, expiresAt=$expiresAt, clientId=$clientId, username=$username, redirectUri='$redirectUri', scopes=$scopes, state='REDACTED')"
         }
     }
 
-    data class Pkce(
+    data class PKCE(
         override val value: UUID,
         override val issuedAt: Instant,
         override val expiresAt: Instant,
@@ -42,12 +42,12 @@ sealed interface AuthorisationCode {
         override val username: AuthenticatedUsername,
         override val redirectUri: String,
         override val scopes: Set<Scope>,
-        override val state: String? = null,
+        override val state: String?,
         val codeChallenge: CodeChallenge,
         val codeChallengeMethod: CodeChallengeMethod,
     ) : AuthorisationCode {
         override fun toString(): String {
-            return "AuthorisationCode.Pkce(value='REDACTED', issuedAt=$issuedAt, expiresAt=$expiresAt, clientId=$clientId, username=$username, redirectUri='$redirectUri', scopes=$scopes, state='REDACTED', codeChallenge='REDACTED', codeChallengeMethod=$codeChallengeMethod)"
+            return "AuthorisationCode.PKCE(value='REDACTED', issuedAt=$issuedAt, expiresAt=$expiresAt, clientId=$clientId, username=$username, redirectUri='$redirectUri', scopes=$scopes, state='REDACTED', codeChallenge='REDACTED', codeChallengeMethod=$codeChallengeMethod)"
         }
     }
 }

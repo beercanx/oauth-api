@@ -72,7 +72,7 @@ interface AuthorisationCodeValidation {
             authorisationCode.hasExpired() -> null
 
             // Verify the code verifier and then return
-            authorisationCode is AuthorisationCode.Pkce -> when {
+            authorisationCode is AuthorisationCode.PKCE -> when {
 
                 // Verify there is a code verifier provided
                 codeVerifier == null -> null
@@ -95,7 +95,7 @@ interface AuthorisationCodeValidation {
     /**
      * See https://datatracker.ietf.org/doc/html/rfc7636#section-4.6
      */
-    fun validateCodeVerifier(authorisationCode: AuthorisationCode.Pkce, codeVerifier: String): Boolean {
+    fun validateCodeVerifier(authorisationCode: AuthorisationCode.PKCE, codeVerifier: String): Boolean {
 
         fun ascii(string: String): ByteArray = string.toByteArray(Charsets.US_ASCII)
         fun sha256(bytes: ByteArray): ByteArray = MessageDigest.getInstance("SHA-256").digest(bytes)

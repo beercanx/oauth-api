@@ -3,6 +3,7 @@ package uk.co.baconi.oauth.api.server
 import io.ktor.server.routing.*
 import uk.co.baconi.oauth.api.assets.AssetsRoute
 import uk.co.baconi.oauth.api.authentication.AuthenticationRoute
+import uk.co.baconi.oauth.api.authorisation.AuthorisationCodeService
 import uk.co.baconi.oauth.api.authorisation.AuthorisationRoute
 import uk.co.baconi.oauth.api.common.AuthenticationModule
 import uk.co.baconi.oauth.api.common.CommonModule.common
@@ -34,6 +35,7 @@ import uk.co.baconi.oauth.api.user.info.UserInfoService
 
 object FullServer : AuthenticationModule, AssetsRoute, AuthenticationRoute, AuthorisationRoute, TokenRoute, IntrospectionRoute, UserInfoRoute, TestAccessTokenModule, TestUserModule {
 
+
     private val accessTokenRepository = AccessTokenRepository(accessTokenDatabase)
     override val accessTokenService = AccessTokenService(accessTokenRepository)
 
@@ -44,16 +46,16 @@ object FullServer : AuthenticationModule, AssetsRoute, AuthenticationRoute, Auth
     override val assertionGrant = AssertionGrant(accessTokenService, refreshTokenService)
 
     private val clientSecretRepository = ClientSecretRepository()
-    private val clientConfigurationRepository = ClientConfigurationRepository()
+    override val clientConfigurationRepository = ClientConfigurationRepository()
     override val clientSecretService = ClientSecretService(clientSecretRepository, clientConfigurationRepository)
 
     override val authorisationCodeGrant = AuthorisationCodeGrant(accessTokenService, refreshTokenService)
     override val authorisationCodeRepository = AuthorisationCodeRepository(authorisationCodeDatabase)
+    override val authorisationCodeService = AuthorisationCodeService(authorisationCodeRepository)
 
     override val customerStatusRepository = CustomerStatusRepository(customerStatusDatabase)
     override val customerCredentialRepository = CustomerCredentialRepository(customerCredentialDatabase)
-    override val customerAuthenticationService =
-        CustomerAuthenticationService(customerCredentialRepository, customerStatusRepository)
+    override val customerAuthenticationService = CustomerAuthenticationService(customerCredentialRepository, customerStatusRepository)
 
     override val passwordGrant = PasswordGrant(accessTokenService, refreshTokenService, customerAuthenticationService)
 

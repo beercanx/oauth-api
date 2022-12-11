@@ -15,6 +15,7 @@ sealed class ClientPrincipal : Principal {
     fun can(action: ClientAction): Boolean = configuration.allowedActions.contains(action)
     fun can(grantType: GrantType): Boolean = configuration.allowedGrantTypes.contains(grantType)
     fun canHave(responseType: AuthorisationResponseType): Boolean {
+        // TODO - Replace with can(GrantType.AuthorisationCode)?
         return configuration.allowedAuthorisationResponseTypes.contains(responseType)
     }
     fun canBeIssued(scope: Scope): Boolean = configuration.allowedScopes.contains(scope)

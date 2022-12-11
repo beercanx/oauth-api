@@ -43,7 +43,7 @@ interface AuthenticationRoute {
 
         // TODO - Update error handling to always return JSON, even on 500's
         route("/authentication") {
-            contentType(Application.Json) {
+            accept(Application.Json) {
                 get {
 
                     val csrfToken = UUID.randomUUID()
@@ -59,6 +59,8 @@ interface AuthenticationRoute {
 
                     call.respond(OK, CsrfToken(csrfToken)) // TODO - Verify this is JSON shaped
                 }
+            }
+            contentType(Application.Json) {
                 post {
                     // TODO - Expect CSRF token
                     runCatching {

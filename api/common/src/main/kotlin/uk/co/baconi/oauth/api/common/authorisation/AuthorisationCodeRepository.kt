@@ -25,7 +25,7 @@ class AuthorisationCodeRepository(private val database: Database) {
                     is AuthorisationCode.Basic -> {
                         it[type] = BASIC
                     }
-                    is AuthorisationCode.Pkce -> {
+                    is AuthorisationCode.PKCE -> {
                         it[type] = PKCE
                         it[codeChallenge] = new.codeChallenge.value
                         it[codeChallengeMethod] = new.codeChallengeMethod.name
@@ -37,6 +37,7 @@ class AuthorisationCodeRepository(private val database: Database) {
                 it[expiresAt] = new.expiresAt
                 it[scopes] = new.scopes.let(ScopesSerializer::serialize)
                 it[redirectUri] = new.redirectUri
+                it[state] = new.state
             }
         }
     }
@@ -72,8 +73,9 @@ class AuthorisationCodeRepository(private val database: Database) {
                 expiresAt = it[AuthorisationCodeTable.expiresAt],
                 scopes = it[AuthorisationCodeTable.scopes].let(ScopesSerializer::deserialize),
                 redirectUri = it[AuthorisationCodeTable.redirectUri],
+                state = it[AuthorisationCodeTable.state],
             )
-            PKCE -> AuthorisationCode.Pkce(
+            PKCE -> AuthorisationCode.PKCE(
                 value = it[AuthorisationCodeTable.id].value,
                 username = it[AuthorisationCodeTable.username].let(::AuthenticatedUsername),
                 clientId = it[AuthorisationCodeTable.clientId].let(::ClientId),
@@ -81,6 +83,7 @@ class AuthorisationCodeRepository(private val database: Database) {
                 expiresAt = it[AuthorisationCodeTable.expiresAt],
                 scopes = it[AuthorisationCodeTable.scopes].let(ScopesSerializer::deserialize),
                 redirectUri = it[AuthorisationCodeTable.redirectUri],
+                state = it[AuthorisationCodeTable.state],
                 codeChallenge = CodeChallenge(checkNotNull(it[AuthorisationCodeTable.codeChallenge])),
                 codeChallengeMethod = enumValueOf(checkNotNull(it[AuthorisationCodeTable.codeChallengeMethod])),
             )

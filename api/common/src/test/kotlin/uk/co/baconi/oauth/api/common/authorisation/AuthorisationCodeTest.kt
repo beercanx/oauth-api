@@ -32,6 +32,7 @@ class AuthorisationCodeTest {
                         redirectUri = "uk.co.baconi.oauth.consumerz://callback",
                         issuedAt = Instant.now(),
                         expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
+                        state = null,
                     ).hasExpired() shouldBe true
                 }
             }
@@ -47,6 +48,7 @@ class AuthorisationCodeTest {
                         redirectUri = "uk.co.baconi.oauth.consumerz://callback",
                         issuedAt = Instant.now(),
                         expiresAt = Instant.now().plus(1, ChronoUnit.DAYS),
+                        state = null,
                     ).hasExpired() shouldBe false
                 }
             }
@@ -67,6 +69,7 @@ class AuthorisationCodeTest {
                         redirectUri = "uk.co.baconi.oauth.consumerz://callback",
                         issuedAt = Instant.now(),
                         expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
+                        state = null,
                     ).toString()
                 ) {
                     shouldNotContain(value.toString())
@@ -77,7 +80,7 @@ class AuthorisationCodeTest {
     }
 
     @Nested
-    inner class Pkce {
+    inner class PKCE {
 
         @Nested
         inner class HasExpired {
@@ -85,7 +88,7 @@ class AuthorisationCodeTest {
             @Test
             fun `should return true if expires at is in the past`() {
                 withClue("hasExpired") {
-                    AuthorisationCode.Pkce(
+                    AuthorisationCode.PKCE(
                         value = UUID.randomUUID(),
                         username = AuthenticatedUsername("aardvark"),
                         clientId = ClientId("consumer-z"),
@@ -95,6 +98,7 @@ class AuthorisationCodeTest {
                         expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
                         codeChallenge = CodeChallenge(""),
                         codeChallengeMethod = CodeChallengeMethod.S256,
+                        state = null,
                     ).hasExpired() shouldBe true
                 }
             }
@@ -102,7 +106,7 @@ class AuthorisationCodeTest {
             @Test
             fun `should return false if expires at is in the future`() {
                 withClue("hasExpired") {
-                    AuthorisationCode.Pkce(
+                    AuthorisationCode.PKCE(
                         value = UUID.randomUUID(),
                         username = AuthenticatedUsername("aardvark"),
                         clientId = ClientId("consumer-z"),
@@ -112,6 +116,7 @@ class AuthorisationCodeTest {
                         expiresAt = Instant.now().plus(1, ChronoUnit.DAYS),
                         codeChallenge = CodeChallenge(""),
                         codeChallengeMethod = CodeChallengeMethod.S256,
+                        state = null,
                     ).hasExpired() shouldBe false
                 }
             }
@@ -124,7 +129,7 @@ class AuthorisationCodeTest {
             fun `should not include authorisation code value`() {
                 val value = UUID.randomUUID()
                 assertSoftly(
-                    AuthorisationCode.Pkce(
+                    AuthorisationCode.PKCE(
                         value = value,
                         username = AuthenticatedUsername("aardvark"),
                         clientId = ClientId("consumer-z"),
@@ -134,6 +139,7 @@ class AuthorisationCodeTest {
                         expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
                         codeChallenge = CodeChallenge(""),
                         codeChallengeMethod = CodeChallengeMethod.S256,
+                        state = null,
                     ).toString()
                 ) {
                     shouldNotContain(value.toString())

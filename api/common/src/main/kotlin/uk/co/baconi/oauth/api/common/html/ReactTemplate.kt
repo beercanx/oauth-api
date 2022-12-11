@@ -1,21 +1,18 @@
 package uk.co.baconi.oauth.api.common.html
 
 import kotlinx.html.*
+import uk.co.baconi.oauth.api.common.html.PageTemplate.base
+import uk.co.baconi.oauth.api.common.html.PageTemplate.bootstrap
+import uk.co.baconi.oauth.api.common.html.PageTemplate.metaData
 
 object ReactTemplate {
 
     fun HTML.reactPage(title: String, reactSource: String) {
-        lang = "en"
+        base()
         head {
-            meta { charset = "utf-8" }
-            meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
+            metaData()
+            bootstrap()
             title { +title }
-            link {
-                rel = "stylesheet"
-                crossorigin = "anonymous"
-                href = "https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
-                integrity = "sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
-            }
             script { defer = true; src = reactSource }
         }
         body {

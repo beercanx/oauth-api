@@ -19,7 +19,7 @@ interface AuthorisationRequestValidation {
 
     suspend fun ApplicationCall.validateAuthorisationRequest(): AuthorisationRequest {
 
-        val params = request.queryParameters;
+        val params = request.queryParameters
 
         val config = params[CLIENT_ID]?.let(clientConfigurationRepository::findByClientId)
         val principal = config?.let(ClientPrincipal::fromConfiguration)
@@ -46,14 +46,6 @@ interface AuthorisationRequestValidation {
                 state = state
             )
 
-            // Support aborting an authorisation via a users choice
-            abort -> AuthorisationRequest.Invalid(
-                redirectUri = redirectUri,
-                error = "access_denied",
-                description = "user aborted",
-                state = state
-            )
-
             params[RESPONSE_TYPE] == null -> AuthorisationRequest.Invalid(
                 redirectUri = redirectUri,
                 error = "invalid_request",
@@ -74,10 +66,10 @@ interface AuthorisationRequestValidation {
             )
 
             // Enforce the use of a state parameter
-            state.isNullOrBlank() -> AuthorisationRequest.Invalid(
+            state != null && state.isBlank() -> AuthorisationRequest.Invalid(
                 redirectUri = redirectUri,
                 error = "invalid_request",
-                description = "missing parameter: state",
+                description = "invalid parameter: state",
                 state = state
             )
 
@@ -86,6 +78,14 @@ interface AuthorisationRequestValidation {
                 redirectUri = redirectUri,
                 error = "invalid_request",
                 description = "invalid parameter: scope",
+                state = state
+            )
+
+            // Support aborting an authorisation via a users choice
+            abort -> AuthorisationRequest.Invalid(
+                redirectUri = redirectUri,
+                error = "access_denied",
+                description = "user aborted",
                 state = state
             )
 

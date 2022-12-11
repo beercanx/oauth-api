@@ -23,7 +23,7 @@ class AuthorisationCodeRequestTest {
             assertSoftly(
                 AuthorisationCodeRequest(
                     principal = mockk(),
-                    code = Basic(value, now(), now(), ClientId(""), AuthenticatedUsername(""), "", emptySet())
+                    code = Basic(value, now(), now(), ClientId(""), AuthenticatedUsername(""), "", emptySet(), null)
                 ).toString()
             ) {
                 shouldNotContain(value.toString())
