@@ -105,7 +105,7 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
 
             assertSoftly(validateAuthorisationCodeRequest(parameters, client)) {
                 shouldBeInstanceOf<TokenRequest.Invalid>()
-                error shouldBe InvalidRequest
+                error shouldBe InvalidGrant
                 description shouldBe "invalid parameter: code"
             }
         }
@@ -139,12 +139,13 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
         @Test
         fun `should return invalid request on invalid authorisation code`() {
 
+            every { parameters["code"] } returns uuid.toString()
             every { authorisationCodeRepository.findById(uuid) } returns null
 
             assertSoftly(validateAuthorisationCodeRequest(parameters, client)) {
                 shouldBeInstanceOf<TokenRequest.Invalid>()
                 error shouldBe InvalidGrant
-                description shouldBe "invalid: authorisation code"
+                description shouldBe "invalid parameter: code"
             }
         }
 

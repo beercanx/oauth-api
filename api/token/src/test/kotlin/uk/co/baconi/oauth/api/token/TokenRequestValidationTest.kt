@@ -43,6 +43,10 @@ class TokenRequestValidationTest : TokenRequestValidation {
     override val authorisationCodeRepository = mockk<AuthorisationCodeRepository>()
     override val refreshTokenService = mockk<RefreshTokenService>()
 
+    override fun validateAssertionRequest(parameters: Parameters, client: ClientPrincipal): TokenRequest {
+        return tokenRequest
+    }
+
     override fun validateAuthorisationCodeRequest(parameters: Parameters, client: ClientPrincipal): TokenRequest {
         return tokenRequest
     }
