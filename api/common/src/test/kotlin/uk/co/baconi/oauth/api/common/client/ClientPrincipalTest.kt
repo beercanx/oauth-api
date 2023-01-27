@@ -11,11 +11,12 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.api.common.grant.GrantType.AuthorisationCode
+import uk.co.baconi.oauth.api.common.client.ClientAction.Authorise
 import uk.co.baconi.oauth.api.common.client.ClientAction.ProofKeyForCodeExchange
 import uk.co.baconi.oauth.api.common.client.ClientType.Confidential
 import uk.co.baconi.oauth.api.common.client.ClientType.Public
 import uk.co.baconi.oauth.api.common.grant.GrantType
+import uk.co.baconi.oauth.api.common.grant.GrantType.*
 import uk.co.baconi.oauth.api.common.scope.Scope
 
 class ClientPrincipalTest {
@@ -164,15 +165,21 @@ class ClientPrincipalTest {
         }
 
         @Test
-        fun `should throw an exception if a public client is configured to perform non pkce based actions`() {
+        fun `should throw an exception if a public client is configured to perform banned actions`() {
+
+            val expectedBanned = enumValues<ClientAction>()
+                .filterNot(Authorise::equals)
+                .filterNot(ProofKeyForCodeExchange::equals)
+
             assertSoftly {
-                enumValues<ClientAction>().filterNot(ProofKeyForCodeExchange::equals).forEach { action ->
-                    withClue("action: $action") {
+                expectedBanned.forEach { action ->
+                    withClue("expected banned action: $action") {
                         shouldThrow<IllegalArgumentException> {
                             PublicClient(mockk {
                                 every { id } returns ConsumerY
                                 every { type } returns Public
                                 every { allowedActions } returns setOf(action)
+                                every { allowedGrantTypes } returns emptySet()
                             })
                         }
                     }
@@ -181,10 +188,15 @@ class ClientPrincipalTest {
         }
 
         @Test
-        fun `should throw an exception if a public client is configured to perform non pkce based grants`() {
+        fun `should throw an exception if a public client is configured to perform banned grant types`() {
+
+            val expectedBanned = enumValues<GrantType>()
+                .filterNot(RefreshToken::equals)
+                .filterNot(Assertion::equals)
+
             assertSoftly {
-                enumValues<GrantType>().forEach { grantType ->
-                    withClue("grantType: $grantType") {
+                expectedBanned.forEach { grantType ->
+                    withClue("expected banned grantType: $grantType") {
                         shouldThrow<IllegalArgumentException> {
                             PublicClient(mockk {
                                 every { id } returns ConsumerY
