@@ -31,6 +31,9 @@ allprojects {
             exceptionFormat = TestExceptionFormat.FULL
         }
     }
+    tasks.withType<Jar>().configureEach {
+        duplicatesStrategy = DuplicatesStrategy.WARN
+    }
 }
 
 tasks.withType<Wrapper>().configureEach {
