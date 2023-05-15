@@ -10,6 +10,7 @@ declare namespace LoginForm {
         username: string
         password: string
         csrfToken: string
+        redirectUri: string
     }
 }
 
@@ -25,7 +26,8 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
         this.state = {
             username: "",
             password: "",
-            csrfToken: ""
+            csrfToken: "",
+            redirectUri: "" // TODO - Get from current page
         };
 
         this.handleChangeUsername = this.handleChangeUsername.bind(this);
@@ -67,6 +69,7 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
         event.preventDefault();
         console.log("Authentication Aborted!");
         this.setState({username: "", password: ""});
+        // TODO - Redirect back with abort=true
     }
 
     // TODO - Replace with HTML form submit to enable server side redirect and reduce the UI code?
