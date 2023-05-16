@@ -10,12 +10,10 @@ import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.automation.api.*
 import uk.co.baconi.oauth.automation.api.sockets.withSslSocket
-import uk.co.baconi.oauth.automation.matchers.beBound
-import uk.co.baconi.oauth.automation.matchers.beClosed
-import uk.co.baconi.oauth.automation.matchers.beConnected
-import javax.net.ssl.SSLContext
+import uk.co.baconi.oauth.automation.api.sockets.beBound
+import uk.co.baconi.oauth.automation.api.sockets.beClosed
+import uk.co.baconi.oauth.automation.api.sockets.beConnected
 import javax.net.ssl.SSLHandshakeException
-import javax.net.ssl.SSLSocket
 
 @Tag(RFC7662)
 @Tag(TOKEN_INTROSPECTION)

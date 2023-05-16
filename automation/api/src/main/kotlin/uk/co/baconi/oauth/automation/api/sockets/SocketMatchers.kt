@@ -1,4 +1,4 @@
-package uk.co.baconi.oauth.automation.matchers
+package uk.co.baconi.oauth.automation.api.sockets
 
 import io.kotest.matchers.Matcher
 import io.kotest.matchers.MatcherResult
