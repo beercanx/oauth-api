@@ -1,12 +1,18 @@
 package uk.co.baconi.oauth.automation.api.token.introspection
 
 import com.typesafe.config.ConfigFactory
+import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldNot
 import io.kotest.matchers.string.shouldStartWith
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.automation.api.*
+import uk.co.baconi.oauth.automation.api.sockets.withSslSocket
+import uk.co.baconi.oauth.automation.matchers.beBound
+import uk.co.baconi.oauth.automation.matchers.beClosed
+import uk.co.baconi.oauth.automation.matchers.beConnected
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLHandshakeException
 import javax.net.ssl.SSLSocket
@@ -27,64 +33,73 @@ class TokenIntrospectionSecurity {
      * security considerations can be found in Recommendations for Secure Use of TLS and DTLS [BCP195].
      */
     @Test
-    fun `must support tls 1-2`() = withSslSocket("TLSv1.2") { socket ->
+    fun `must support tls 1-2`() = withSslSocket("TLSv1.2", hostname, port) { socket ->
         socket.startHandshake()
-        socket.isBound shouldBe true
-        socket.isClosed shouldBe false
-        socket.isConnected shouldBe true
+        assertSoftly {
+            socket should beBound()
+            socket shouldNot beClosed()
+            socket should beConnected()
+        }
     }
 
     @Test
-    fun `should support tls 1-3`() = withSslSocket("TLSv1.3") { socket ->
+    fun `should support tls 1-3`() = withSslSocket("TLSv1.3", hostname, port) { socket ->
         socket.startHandshake()
-        socket.isBound shouldBe true
-        socket.isClosed shouldBe false
-        socket.isConnected shouldBe true
+        assertSoftly {
+            socket should beBound()
+            socket shouldNot beClosed()
+            socket should beConnected()
+        }
     }
 
     @Test
-    fun `must not support tls 1-1`() = withSslSocket("TLSv1.1") { socket ->
+    fun `must not support tls 1-1`() = withSslSocket("TLSv1.1", hostname, port) { socket ->
 
         val exception = shouldThrow<SSLHandshakeException> {
             socket.startHandshake()
         }
 
-        exception.message shouldStartWith "No appropriate protocol"
+        assertSoftly {
+            exception.message shouldStartWith "No appropriate protocol"
 
-        socket.isClosed shouldBe true
+            socket should beBound()
+            socket should beClosed()
+            socket should beConnected()
+        }
     }
 
     @Test
-    fun `must not support tls 1-0`() = withSslSocket("TLSv1") { socket ->
+    fun `must not support tls 1-0`() = withSslSocket("TLSv1", hostname, port) { socket ->
 
         val exception = shouldThrow<SSLHandshakeException> {
             socket.startHandshake()
         }
 
-        exception.message shouldStartWith "No appropriate protocol"
+        assertSoftly {
+            exception.message shouldStartWith "No appropriate protocol"
 
-        socket.isClosed shouldBe true
+            socket should beBound()
+            socket should beClosed()
+            socket should beConnected()
+        }
     }
 
     @Test
-    fun `must not support ssl 3-0`() = withSslSocket("SSLv3") { socket ->
+    fun `must not support ssl 3-0`() = withSslSocket("SSLv3", hostname, port) { socket ->
 
         val exception = shouldThrow<SSLHandshakeException> {
             socket.startHandshake()
         }
 
-        exception.message shouldStartWith "No appropriate protocol"
+        assertSoftly {
+            exception.message shouldStartWith "No appropriate protocol"
 
-        socket.isClosed shouldBe true
+            socket should beBound()
+            socket should beClosed()
+            socket should beConnected()
+        }
     }
 
     // TODO - Include a cipher suites check???
 
-    private fun withSslSocket(protocol: String, block: (SSLSocket) -> Unit) {
-        val sslContext = SSLContext.getInstance(protocol)
-        sslContext.init(null, null, null)
-        val sslSocketFactory = sslContext.socketFactory
-        val sslSocket = sslSocketFactory.createSocket(hostname, port) as SSLSocket
-        sslSocket.use(block)
-    }
 }
