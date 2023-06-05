@@ -8,6 +8,10 @@ import io.kotest.matchers.shouldNot
 import io.kotest.matchers.string.shouldStartWith
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvFileSource
 import uk.co.baconi.oauth.automation.api.*
 import uk.co.baconi.oauth.automation.api.sockets.withSslSocket
 import uk.co.baconi.oauth.automation.api.sockets.beBound
@@ -98,6 +102,54 @@ class TokenIntrospectionSecurity {
         }
     }
 
-    // TODO - Include a cipher suites check???
+    @ParameterizedTest
+    @CsvFileSource(resources = ["/cipher-suites/insecure.csv"])
+    fun `must not use insecure cipher suites`(cipherSuite: String) = withSslSocket("TLSv1.2", hostname, port) { socket ->
 
+        try {
+            socket.enabledCipherSuites = arrayOf(cipherSuite)
+        } catch (exception: IllegalArgumentException) {
+            return@withSslSocket assertSoftly {
+                exception.message shouldStartWith "Unsupported CipherSuite: $cipherSuite"
+            }
+        }
+
+        val exception = shouldThrow<SSLHandshakeException> {
+            socket.startHandshake()
+        }
+
+        assertSoftly {
+            exception.message shouldStartWith "No appropriate protocol"
+
+            socket should beBound()
+            socket should beClosed()
+            socket should beConnected()
+        }
+    }
+
+    @ParameterizedTest
+    @Execution(ExecutionMode.CONCURRENT)
+    @CsvFileSource(resources = ["/cipher-suites/weak.csv"])
+    fun `should not use weak cipher suites`(cipherSuite: String) = withSslSocket("TLSv1.2", hostname, port) { socket ->
+
+        try {
+            socket.enabledCipherSuites = arrayOf(cipherSuite)
+        } catch (exception: IllegalArgumentException) {
+            return@withSslSocket assertSoftly {
+                exception.message shouldStartWith "Unsupported CipherSuite: $cipherSuite"
+            }
+        }
+
+        val exception = shouldThrow<SSLHandshakeException> {
+            socket.startHandshake()
+        }
+
+        assertSoftly {
+            exception.message shouldStartWith "No appropriate protocol"
+
+            socket should beBound()
+            socket should beClosed()
+            socket should beConnected()
+        }
+    }
 }
