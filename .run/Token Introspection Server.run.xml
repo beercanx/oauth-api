@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Token Introspection Server" type="JetRunConfigurationType">
+    <option name="MAIN_CLASS_NAME" value="uk.co.baconi.oauth.api.token.introspection.MainKt" />
+    <module name="oauth.api.token-introspection.main" />
+    <shortenClasspath name="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
