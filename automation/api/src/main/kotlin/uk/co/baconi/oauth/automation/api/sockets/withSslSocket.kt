@@ -9,5 +9,4 @@ fun withSslSocket(protocol: String, hostname: String, port: Int, block: (SSLSock
     val sslSocketFactory = sslContext.socketFactory
     val sslSocket = sslSocketFactory.createSocket(hostname, port) as SSLSocket
     sslSocket.use(block)
-    sslSocket.close()
 }

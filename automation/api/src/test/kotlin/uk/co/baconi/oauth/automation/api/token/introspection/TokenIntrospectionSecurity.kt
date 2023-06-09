@@ -6,6 +6,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldNot
 import io.kotest.matchers.string.shouldStartWith
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
@@ -18,6 +19,7 @@ import uk.co.baconi.oauth.automation.api.sockets.beBound
 import uk.co.baconi.oauth.automation.api.sockets.beClosed
 import uk.co.baconi.oauth.automation.api.sockets.beConnected
 import javax.net.ssl.SSLHandshakeException
+import javax.net.ssl.SSLSocket
 
 @Tag(RFC7662)
 @Tag(TOKEN_INTROSPECTION)
@@ -110,6 +112,7 @@ class TokenIntrospectionSecurity {
             socket.enabledCipherSuites = arrayOf(cipherSuite)
         } catch (exception: IllegalArgumentException) {
             return@withSslSocket assertSoftly {
+                // TODO - Might be better reported neither as a failure or error when unsupported nor as success.
                 exception.message shouldStartWith "Unsupported CipherSuite: $cipherSuite"
             }
         }
@@ -136,6 +139,7 @@ class TokenIntrospectionSecurity {
             socket.enabledCipherSuites = arrayOf(cipherSuite)
         } catch (exception: IllegalArgumentException) {
             return@withSslSocket assertSoftly {
+                // TODO - Might be better reported neither as a failure or error when unsupported nor as success.
                 exception.message shouldStartWith "Unsupported CipherSuite: $cipherSuite"
             }
         }
