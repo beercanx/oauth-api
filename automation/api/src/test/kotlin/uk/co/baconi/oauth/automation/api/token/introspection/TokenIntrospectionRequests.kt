@@ -67,7 +67,39 @@ class TokenIntrospectionRequests : WithRestAssuredDriver {
         }
 
         @Test
-        fun `accept valid basic authentication`() {
+        fun `reject a public client authentication`() {
+
+            given(driver.rest)
+                .urlEncodingEnabled(true)
+                .params(mapOf(
+                    "client_id" to "consumer-y"
+                ))
+                .post(location)
+                .then()
+                .statusCode(401)
+                .body(emptyString())
+        }
+
+        @Test
+        fun `reject a valid client that is missing the introspection allowed action`() {
+
+            given(driver.rest)
+                .auth().basic("no-op", "MQgQKBW3*j1m4QyHWnMsp52sqADHq7j3")
+                .urlEncodingEnabled(true)
+                .params(mapOf(
+                    "token" to UUID.randomUUID().toString()
+                ))
+                .post(location)
+                .then()
+                .statusCode(403)
+                .body(
+                    "error", equalTo("unauthorized_client"),
+                    "description", equalTo("client is not allowed to introspect")
+                )
+        }
+
+        @Test
+        fun `accept a valid client using basic authentication`() {
 
             given(driver.rest)
                 .withValidClient()

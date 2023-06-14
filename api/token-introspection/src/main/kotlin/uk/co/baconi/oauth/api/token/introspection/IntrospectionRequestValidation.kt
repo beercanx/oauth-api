@@ -22,7 +22,6 @@ object IntrospectionRequestValidation {
         val tokenUuid = token?.let(UUIDSerializer::fromValueOrNull)
 
         return when {
-            // TODO - 403?
             !principal.can(Introspect) -> Invalid(UnauthorizedClient, "client is not allowed to introspect")
 
             token == null -> Invalid(InvalidRequest, "missing parameter: token")
