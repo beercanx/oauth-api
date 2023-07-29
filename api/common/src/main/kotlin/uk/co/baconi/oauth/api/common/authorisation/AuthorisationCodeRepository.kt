@@ -1,6 +1,8 @@
 package uk.co.baconi.oauth.api.common.authorisation
 
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
 import org.jetbrains.exposed.sql.transactions.transaction
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
@@ -53,13 +55,13 @@ class AuthorisationCodeRepository(private val database: Database) {
 
     fun deleteById(id: UUID) {
         transaction(database) {
-            AuthorisationCodeTable.deleteWhere { AuthorisationCodeTable.id eq id }
+            AuthorisationCodeTable.deleteWhere { this.id eq id }
         }
     }
 
     fun deleteExpired() {
         transaction(database) {
-            AuthorisationCodeTable.deleteWhere { AuthorisationCodeTable.expiresAt lessEq Instant.now() }
+            AuthorisationCodeTable.deleteWhere { this.expiresAt lessEq Instant.now() }
         }
     }
 

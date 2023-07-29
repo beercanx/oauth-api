@@ -31,7 +31,9 @@ dependencies {
     implementation("com.google.guava:guava:31.1-jre") // Patching transitive from json-schema-validator
 
     // JUnit 5 for tests definitions and running
-    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testImplementation(platform("org.junit:junit-bom:$junitVersion"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 // TODO - Add in a means of running the automation test pack against an environment.

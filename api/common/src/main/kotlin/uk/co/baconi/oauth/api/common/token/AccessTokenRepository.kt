@@ -1,6 +1,8 @@
 package uk.co.baconi.oauth.api.common.token
 
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
 import org.jetbrains.exposed.sql.transactions.transaction
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
@@ -51,19 +53,19 @@ class AccessTokenRepository(private val database: Database) {
 
     fun deleteById(id: UUID) {
         transaction(database) {
-            AccessTokenTable.deleteWhere { AccessTokenTable.id eq id }
+            AccessTokenTable.deleteWhere { this.id eq id }
         }
     }
 
     fun deleteByRecord(record: AccessToken) {
         transaction(database) {
-            AccessTokenTable.deleteWhere { AccessTokenTable.id eq record.value }
+            AccessTokenTable.deleteWhere { this.id eq record.value }
         }
     }
 
     fun deleteExpired() {
         transaction(database) {
-            AccessTokenTable.deleteWhere { AccessTokenTable.expiresAt lessEq Instant.now() }
+            AccessTokenTable.deleteWhere { this.expiresAt lessEq Instant.now() }
         }
     }
 
