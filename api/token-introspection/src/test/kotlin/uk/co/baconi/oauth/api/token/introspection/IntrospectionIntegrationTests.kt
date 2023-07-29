@@ -19,6 +19,7 @@ import io.ktor.http.HttpMethod.Companion.Options
 import io.ktor.http.HttpMethod.Companion.Patch
 import io.ktor.http.HttpMethod.Companion.Put
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
+import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
@@ -173,7 +174,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
                 }
 
                 assertSoftly(response) {
-                    status shouldBe BadRequest // TODO - Review based on whether this is really a 400 or 403
+                    status shouldBe Forbidden
                     assertSoftly(body<Map<String, String>>()) {
                         shouldContain("error" to "unauthorized_client")
                         shouldContain("description" to "client is not allowed to introspect")

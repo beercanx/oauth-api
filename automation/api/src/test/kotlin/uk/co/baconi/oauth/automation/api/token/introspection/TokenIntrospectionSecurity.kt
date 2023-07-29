@@ -22,6 +22,7 @@ import javax.net.ssl.SSLHandshakeException
 import javax.net.ssl.SSLSocket
 
 @Tag(RFC7662)
+@Tag(AUTOMATION)
 @Tag(TOKEN_INTROSPECTION)
 class TokenIntrospectionSecurity {
 

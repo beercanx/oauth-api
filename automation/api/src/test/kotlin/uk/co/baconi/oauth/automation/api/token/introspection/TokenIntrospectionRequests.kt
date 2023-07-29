@@ -15,14 +15,12 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE
 import org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE
-import uk.co.baconi.oauth.automation.api.RFC6749
-import uk.co.baconi.oauth.automation.api.RFC6750
-import uk.co.baconi.oauth.automation.api.RFC7662
-import uk.co.baconi.oauth.automation.api.TOKEN_INTROSPECTION
+import uk.co.baconi.oauth.automation.api.*
 import uk.co.baconi.oauth.automation.api.driver.WithRestAssuredDriver
 import java.util.*
 
 @Tag(RFC7662)
+@Tag(AUTOMATION)
 @Tag(TOKEN_INTROSPECTION)
 class TokenIntrospectionRequests : WithRestAssuredDriver {
 
