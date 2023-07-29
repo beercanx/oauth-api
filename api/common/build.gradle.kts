@@ -8,6 +8,7 @@ val exposedVersion: String by project
 val h2DatabaseVersion: String by project
 val argon2Version: String by project
 val argon2Type: String by project
+val commonsLang3Version: String by project
 
 plugins {
     kotlin("jvm")
@@ -62,5 +63,5 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
 
     // Test data generation
-    testImplementation("org.apache.commons:commons-lang3:3.12.0")
+    testImplementation("org.apache.commons:commons-lang3:$commonsLang3Version")
 }
