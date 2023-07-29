@@ -51,7 +51,9 @@ dependencies {
     api("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 
     // JUnit 5 for tests definitions and running
-    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testImplementation(platform("org.junit:junit-bom:$junitVersion"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Asserting stuff
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
