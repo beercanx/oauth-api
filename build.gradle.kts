@@ -1,6 +1,7 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinTopLevelExtension
 
 plugins {
     base
@@ -14,12 +15,10 @@ allprojects {
         mavenCentral()
         mavenLocal()
     }
-    tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions {
-            verbose = true
-            jvmTarget = "11" // mockk doesn't work on source generated for 17 https://github.com/mockk/mockk/issues/832
-            apiVersion = "1.7"
-            languageVersion = "1.7"
+    plugins.withId("org.jetbrains.kotlin.jvm") {
+        // Replacement for kotlin { jvmToolchain(17) } in each project
+        extensions.configure<KotlinJvmProjectExtension> {
+            jvmToolchain(17)
         }
     }
     tasks.withType<Test>().configureEach {
