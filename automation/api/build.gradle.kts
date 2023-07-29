@@ -33,3 +33,11 @@ dependencies {
     // JUnit 5 for tests definitions and running
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
 }
+
+// TODO - Add in a means of running the automation test pack against an environment.
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform {
+        excludeTags("automation") // Exclude automation tests from CI building. TODO - Consider support testing a local instance.
+    }
+}

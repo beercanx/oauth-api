@@ -2,6 +2,7 @@ package uk.co.baconi.oauth.api.token.introspection
 
 import io.ktor.http.ContentType.Application.FormUrlEncoded
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
+import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.UnsupportedMediaType
 import io.ktor.server.application.*
@@ -10,6 +11,8 @@ import io.ktor.server.routing.*
 import uk.co.baconi.oauth.api.common.client.ConfidentialClient
 import uk.co.baconi.oauth.api.common.ktor.auth.authenticate
 import uk.co.baconi.oauth.api.common.ktor.auth.extractClient
+import uk.co.baconi.oauth.api.token.introspection.IntrospectionErrorType.InvalidRequest
+import uk.co.baconi.oauth.api.token.introspection.IntrospectionErrorType.UnauthorizedClient
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionRequestValidation.validateIntrospectionRequest
 
 interface IntrospectionRoute {
@@ -33,7 +36,10 @@ interface IntrospectionRoute {
                         }
 
                         when (response) {
-                            is IntrospectionResponse.Invalid -> call.respond(BadRequest, response)
+                            is IntrospectionResponse.Invalid -> when(response.error) {
+                                InvalidRequest -> call.respond(BadRequest, response)
+                                UnauthorizedClient -> call.respond(Forbidden, response)
+                            }
                             is IntrospectionResponse.Inactive -> call.respond(OK, response)
                             is IntrospectionResponse.Active -> call.respond(OK, response)
                         }

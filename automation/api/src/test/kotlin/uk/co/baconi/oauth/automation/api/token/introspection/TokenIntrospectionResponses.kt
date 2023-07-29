@@ -6,6 +6,7 @@ import uk.co.baconi.oauth.automation.api.*
 import uk.co.baconi.oauth.automation.api.TOKEN_INTROSPECTION
 
 @Tag(RFC7662)
+@Tag(AUTOMATION)
 @Tag(TOKEN_INTROSPECTION)
 class TokenIntrospectionResponses {
 

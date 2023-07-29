@@ -133,7 +133,8 @@ class ClientConfigurationRepositoryIntegrationTest {
         @Test
         fun `should return all the known client ids`() {
             assertSoftly(underTest.findAllClientIds()) {
-                shouldHaveSize(11) // 8 from application.conf and 3 from the reference.conf
+                shouldHaveSize(12) // 8 from application.conf and 4 from the reference.conf
+                shouldContain(ClientId("no-op"))
                 shouldContain(ClientId("consumer-x"))
                 shouldContain(ClientId("consumer-y"))
                 shouldContain(ClientId("consumer-z"))
