@@ -23,12 +23,11 @@ dependencies {
 
     // Rest stuff
     implementation("io.rest-assured:rest-assured:$restAssured")
-    implementation("commons-codec:commons-codec:1.15") // Patching transitive from rest-assured
+    implementation("commons-codec:commons-codec:1.16.0") // Patching transitive from rest-assured
     implementation("io.rest-assured:kotlin-extensions:$restAssured")
     implementation("io.rest-assured:json-path:$restAssured")
     implementation("io.rest-assured:json-schema-validator:$restAssured")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.0") // Patching transitive from json-schema-validator
-    implementation("com.google.guava:guava:31.1-jre") // Patching transitive from json-schema-validator
 
     // JUnit 5 for tests definitions and running
     testImplementation(platform("org.junit:junit-bom:$junitVersion"))
