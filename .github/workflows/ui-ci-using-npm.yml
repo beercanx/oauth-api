@@ -1,6 +1,7 @@
 name: UI CI using NPM
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
     paths:

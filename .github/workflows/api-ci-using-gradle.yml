@@ -1,6 +1,7 @@
 name: API CI using Gradle
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
     paths-ignore: 
