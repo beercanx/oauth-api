@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: gradle
+    directory: /
+    open-pull-requests-limit: 0
+    schedule:
+      interval: daily
+#  - package-ecosystem: npm
+#    directory: /user-interface
+#    open-pull-requests-limit: 0
+#    schedule:
+#      interval: daily
