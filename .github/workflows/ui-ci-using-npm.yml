@@ -1,0 +1,43 @@
+name: UI CI using NPM
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "user-interface/**"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "user-interface/**"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        project:
+          - "user-interface/authentication"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: 'npm'
+
+      - name: Resolve dependencies
+        run: npm ci
+        working-directory: ${{ matrix.project }}
+      
+      - name: Run build
+        run: npm run build --if-present
+        working-directory: ${{ matrix.project }}
+      
+      - name: Run tests
+        run: npm test
+        working-directory: ${{ matrix.project }}
