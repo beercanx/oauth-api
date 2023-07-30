@@ -15,10 +15,10 @@ include(":api:server")
 
 // User Interface - Not imported here as they are NPM projects.
 
-// TODO - Automation
+// Automation
 include(":automation:api")
-//include(":automation:browser")
-//include(":automation:load")
+// TODO include(":automation:browser")
+// TODO include(":automation:load")
 
 // TODO - Test Consumers
 

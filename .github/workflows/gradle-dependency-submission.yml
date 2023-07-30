@@ -24,3 +24,19 @@ jobs:
         with:
           sub-module-mode: INDIVIDUAL
           fail-on-error: true
+          gradle-build-module: |-
+            :
+            :api:common
+            :api:assets
+            :api:authorisation
+            :api:authentication
+            :api:session-info
+            :api:token
+            :api:token-introspection
+            :api:token-revocation
+            :api:user-info
+            :api:well-known
+            :api:server
+            :automation:api
+# TODO      :automation:browser
+# TODO      :automation:load
