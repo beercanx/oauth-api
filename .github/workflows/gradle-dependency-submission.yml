@@ -19,8 +19,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Run Snapshot Action
-        uses: mikepenz/gradle-dependency-submission@{latest}
+      - name: Gradle Dependency Submission
+        uses: mikepenz/gradle-dependency-submission@v0.9.0
         with:
           sub-module-mode: INDIVIDUAL
           fail-on-error: true
