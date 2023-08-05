@@ -10,10 +10,6 @@ interface AssetsRoute {
 
         application.log.info("Registering the AssetsRoute.assets() routes")
 
-        static("/assets") {
-            static("/js") {
-                resources("static.js")
-            }
-        }
+        staticResources(remotePath = "/assets/js", basePackage = "static/js", index = null)
     }
 }

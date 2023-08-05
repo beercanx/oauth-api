@@ -3,14 +3,14 @@ import React, {ChangeEvent, FormEvent, MouseEvent} from "react";
 declare namespace LoginForm {
 
     interface Props {
-        authenticationEndpoint: string // TODO - Work out if this would change, if not move into a static const setup.
+        authenticationEndpoint: string
     }
 
     interface State {
         username: string
         password: string
         csrfToken: string
-        redirectUri: string
+        redirectUri: string | null
     }
 }
 
@@ -27,7 +27,7 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
             username: "",
             password: "",
             csrfToken: "",
-            redirectUri: "" // TODO - Get from current page
+            redirectUri: new URLSearchParams(document.location.search).get("redirectUri")
         };
 
         this.handleChangeUsername = this.handleChangeUsername.bind(this);
@@ -41,7 +41,7 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
     }
 
     async getCsrfToken() {
-        console.log("Handling the CSRF token");
+        console.info("Getting a CSRF token");
         // Alternative would be to tie this to the hosting service, and it has to provide a CSRF token in the page.
         await window
             .fetch(this.props.authenticationEndpoint, {
@@ -51,10 +51,10 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
             })
             .then(response => response.json())
             .then(result => {
-                console.log("CSRF Deserialized:", result)
+                console.info("CSRF token deserialized:", result)
                 this.setState({csrfToken: result.csrfToken})
             })
-            .catch(exception => console.error("CSRF Error:", exception));
+            .catch(exception => console.error("CSRF token error:", exception));
     }
 
     handleChangeUsername(event: ChangeEvent<HTMLInputElement>) {
@@ -70,9 +70,9 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
         console.log("Authentication Aborted!");
         this.setState({username: "", password: ""});
         // TODO - Redirect back with abort=true
+        // TODO - What do we do about any existing "Authenticated-Customer" markers if we allow logins when we know who they are.
     }
 
-    // TODO - Replace with HTML form submit to enable server side redirect and reduce the UI code?
     async handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         console.log("Authentication Submitted!");
@@ -89,12 +89,18 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
                 })
             })
             .then(response => response.json())
-            .then(result => console.log("Authentication Deserialized:", result))
-            .catch(exception => console.error("Authentication Error:", exception));
+            .then(result => {
+                console.info("Authentication deserialized:", result)
+                if (this.state.redirectUri != null) {
+                    window.location.href = this.state.redirectUri
+                } else {
+                    console.error("Missing redirectUri")
+                }
+            })
+            .catch(exception => console.error("Authentication error:", exception));
 
         // TODO - Handle invalid CSRF token by getting a new one
         // TODO - Handle error responses in the UI
-        // TODO - Handle success responses with a redirect
     }
 
     // TODO - Detect another tab / window completing the authentication and redirect back to /authorise if this happens.

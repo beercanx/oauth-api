@@ -8,18 +8,16 @@ import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.http.HttpStatusCode.Companion.UnsupportedMediaType
 import io.ktor.server.application.*
 import io.ktor.server.html.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
-import uk.co.baconi.oauth.api.authentication.AuthenticationRequest
 import uk.co.baconi.oauth.api.authentication.AuthenticationRequest.InvalidField
 import uk.co.baconi.oauth.api.authentication.AuthenticationRequest.Valid
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication
-import uk.co.baconi.oauth.api.common.html.ReactTemplate.reactPage
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Failure
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Success
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
+import uk.co.baconi.oauth.api.common.html.ReactTemplate.reactPage
 import uk.co.baconi.oauth.api.common.location.Location
 import java.util.*
 import kotlin.time.Duration.Companion.hours
@@ -38,10 +36,10 @@ interface AuthenticationRoute : AuthenticationRequestValidation {
 
         val bundleLocation = url {
             takeFrom(Location.Assets.baseUrl)
-            path("/assets/js/authentication.js") // TODO - Extract into configuration
+            path("/assets/js/authentication.js")
         }
 
-        application.log.debug("Authentication location: $bundleLocation")
+        application.log.debug("Authentication asset location: {}", bundleLocation)
 
         // TODO - Update error handling to always return JSON, even on 500's
         route("/authentication") {
@@ -66,10 +64,14 @@ interface AuthenticationRoute : AuthenticationRequestValidation {
                 post {
                     when (val request = call.validateAuthenticationRequest()) {
 
-                        is InvalidField -> call.respond<CustomerAuthentication>(BadRequest, Failure())
+                        is InvalidField -> call.respond<CustomerAuthentication>(BadRequest, Failure()).also {
+                            application.log.debug("{}", request)
+                        }
 
                         is Valid -> when(val result = customerAuthenticationService.authenticate(request.username, request.password)) {
-                            is Failure -> call.respond<CustomerAuthentication>(Unauthorized, result)
+                            is Failure -> call.respond<CustomerAuthentication>(Unauthorized, result).also {
+                                application.log.debug("{}", result)
+                            }
                             is Success -> {
 
                                 // TODO - Convert to signed client session or switch to passed JWT.

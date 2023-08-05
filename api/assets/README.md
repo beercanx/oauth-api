@@ -8,12 +8,19 @@ Ultimate idea would be that all the static assets are published to a CDN and not
 
 ### [src/main/resources/static/js/authentication.js](src/main/resources/static/js/authentication.js)
 
-1. Build the Authentication UI project
-    ```bash
-    cd user-interface/authentication
-    npm run build
-    ```
-2. Copy the code into the Asset project
-    ```bash
-    cp build/static/js/main.*.js ../../api/assets/src/main/resources/static/js/authentication.js
-    ```
+ ```bash
+cd ../../user-interface/authentication
+
+npm run build
+
+cp build/static/js/main.*.js ../../api/assets/src/main/resources/static/js/authentication.js
+ ```
+
+Reverse helper for those on Windows because of https://youtrack.jetbrains.com/issue/IDEA-294997
+```bash
+cp build/static/js/main.*.js ../../api/assets/src/main/resources/static/js/authentication.js
+
+npm run build
+
+cd ../../user-interface/authentication
+```

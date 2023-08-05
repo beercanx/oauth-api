@@ -12,9 +12,12 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.dataconversion.*
 import io.ktor.server.plugins.doublereceive.*
 import io.ktor.server.plugins.hsts.*
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
 
 object CommonModule {
 
+    @OptIn(ExperimentalSerializationApi::class)
     fun Application.common() {
 
         log.info("Registering the CommonModule.common() module")
@@ -28,7 +31,9 @@ object CommonModule {
         }
 
         install(ContentNegotiation) {
-            json()
+            json(Json {
+                explicitNulls = false
+            })
         }
 
         // Removing this could enable a Native first server (a long side replacing the DB)
