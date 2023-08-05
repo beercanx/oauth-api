@@ -17,7 +17,7 @@ class IntrospectionRequestTest {
     inner class Valid {
 
         @Test
-        fun `should not include token value`() {
+        fun `should not include token value in toString()`() {
 
             val underTest = IntrospectionRequest.Valid(
                 principal = ConfidentialClient(
