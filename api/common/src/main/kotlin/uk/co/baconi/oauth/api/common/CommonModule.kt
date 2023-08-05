@@ -31,7 +31,7 @@ object CommonModule {
         }
 
         install(ContentNegotiation) {
-            json(Json {
+            json(Json(DefaultJson) {
                 explicitNulls = false
             })
         }
