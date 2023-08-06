@@ -14,7 +14,9 @@ import uk.co.baconi.oauth.api.common.html.PageTemplate.base
 import uk.co.baconi.oauth.api.common.html.PageTemplate.bootstrap
 import uk.co.baconi.oauth.api.common.html.PageTemplate.metaData
 import uk.co.baconi.oauth.api.common.location.Location
+import kotlin.time.Duration.Companion.minutes
 
+private const val COOKIE_REDIRECT_URI = "Authenticate-Redirect-Uri"
 private const val COOKIE_CUSTOMER = "Authenticated-Customer"
 
 interface AuthorisationRoute : AuthorisationRequestValidation {
@@ -77,15 +79,26 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
                             // TODO - Convert to either a session (server/client) or manually pass a JWT
                             //when (val authenticated = call.sessions.get<AuthenticatedSession>()) {
                             when (val authenticated = call.request.cookies[COOKIE_CUSTOMER]?.let(::AuthenticatedUsername)) {
+
                                 // Seek authorisation decision
                                 null -> {
+
+                                    // TODO - Change to rendering the authentication page here.
+                                    //        As this will remove the need for messy redirects that need validating and tracking.
+
                                     // Redirect to our "login" page with a redirect back to here.
                                     val currentURl = call.url() // TODO - Rethink as it can change the current domain
+                                    call.response.cookies.append(
+                                        name = COOKIE_REDIRECT_URI,
+                                        value = currentURl,
+                                        maxAge = 30.minutes.inWholeSeconds,
+                                        //secure = true, // TODO - Enable if behind TLS, may need https://ktor.io/docs/forward-headers.html
+                                        httpOnly = true,
+                                    )
                                     call.respondRedirect(
                                         url {
                                             takeFrom(Location.Authentication.baseUrl)
                                             path("/authentication")
-                                            parameters["redirectUri"] = currentURl
                                         }
                                     )
                                 }

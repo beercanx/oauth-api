@@ -1,6 +1,7 @@
 package uk.co.baconi.oauth.api.common.html
 
 import kotlinx.html.*
+import java.util.UUID
 
 object PageTemplate {
 
@@ -11,6 +12,14 @@ object PageTemplate {
     fun HEAD.metaData() {
         meta { charset = "utf-8" }
         meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
+    }
+
+    fun HEAD.csrfToken(csrfToken: UUID) {
+        meta("_csrf", csrfToken.toString())
+    }
+
+    fun HEAD.redirectUri(redirectUri: String) {
+        meta("_redirectUri", redirectUri)
     }
 
     fun HEAD.bootstrap() {

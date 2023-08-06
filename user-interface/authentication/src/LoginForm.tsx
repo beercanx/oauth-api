@@ -9,8 +9,8 @@ declare namespace LoginForm {
     interface State {
         username: string
         password: string
-        csrfToken: string
-        redirectUri: string | null
+        csrfToken: string | undefined
+        redirectUri: string | undefined
     }
 }
 
@@ -26,35 +26,19 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
         this.state = {
             username: "",
             password: "",
-            csrfToken: "",
-            redirectUri: new URLSearchParams(document.location.search).get("redirectUri")
+            csrfToken: document.head.querySelector<HTMLMetaElement>("meta[name='_csrf']")?.content,
+
+            // TODO - Replace the need for this by not doing redirects, all we do is keep patching issue after issue.
+            redirectUri: document.head.querySelector<HTMLMetaElement>("meta[name='_redirectUri']")?.content
         };
+
+        console.info("CSRF Token:", this.state.csrfToken);
+        console.info("Redirect URI:", this.state.redirectUri);
 
         this.handleChangeUsername = this.handleChangeUsername.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
         this.handleAbort = this.handleAbort.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    async componentDidMount() {
-        await this.getCsrfToken();
-    }
-
-    async getCsrfToken() {
-        console.info("Getting a CSRF token");
-        // Alternative would be to tie this to the hosting service, and it has to provide a CSRF token in the page.
-        await window
-            .fetch(this.props.authenticationEndpoint, {
-                method: "GET",
-                headers: {'accept': 'application/json'},
-                credentials: "include"
-            })
-            .then(response => response.json())
-            .then(result => {
-                console.info("CSRF token deserialized:", result)
-                this.setState({csrfToken: result.csrfToken})
-            })
-            .catch(exception => console.error("CSRF token error:", exception));
     }
 
     handleChangeUsername(event: ChangeEvent<HTMLInputElement>) {
@@ -99,7 +83,7 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
             })
             .catch(exception => console.error("Authentication error:", exception));
 
-        // TODO - Handle invalid CSRF token by getting a new one
+        // TODO - Handle invalid CSRF token by refreshing the page.
         // TODO - Handle error responses in the UI
     }
 

@@ -3,6 +3,7 @@ package uk.co.baconi.oauth.api.authentication
 import io.ktor.http.*
 import io.ktor.http.ContentType.Application
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
+import io.ktor.http.HttpStatusCode.Companion.NotAcceptable
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.http.HttpStatusCode.Companion.UnsupportedMediaType
@@ -24,6 +25,7 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
 const val COOKIE_CSRF = "Authenticate-CSRF"
+const val COOKIE_REDIRECT_URI = "Authenticate-Redirect-Uri"
 const val COOKIE_CUSTOMER = "Authenticated-Customer"
 
 interface AuthenticationRoute : AuthenticationRequestValidation {
@@ -41,23 +43,10 @@ interface AuthenticationRoute : AuthenticationRequestValidation {
 
         application.log.debug("Authentication asset location: {}", bundleLocation)
 
-        // TODO - Update error handling to always return JSON, even on 500's
         route("/authentication") {
             accept(Application.Json) {
                 get {
-
-                    val csrfToken = UUID.randomUUID()
-
-                    // TODO - Convert to signed client session or switch to passed JWT.
-                    call.response.cookies.append(
-                        name = COOKIE_CSRF,
-                        value = csrfToken.toString(),
-                        maxAge = 30.minutes.inWholeSeconds,
-                        //secure = true, // TODO - Enable if behind TLS, may need https://ktor.io/docs/forward-headers.html
-                        httpOnly = true,
-                    )
-
-                    call.respond(OK, CsrfToken(csrfToken)) // TODO - Verify this is JSON shaped
+                    call.respond(NotAcceptable)
                 }
             }
             contentType(Application.Json) {
@@ -90,10 +79,25 @@ interface AuthenticationRoute : AuthenticationRequestValidation {
                 }
             }
             get {
-                // TODO - Create CSRF Token here and save into session, possibly use a short lived cached value?
                 // TODO - Handle already being logged in, do we redirect, pop out a new UI or assume you're logging in as someone new?
                 call.respondHtml(OK) {
-                    reactPage(title = "Login Page", reactSource = bundleLocation)
+
+                    val csrfToken = UUID.randomUUID()
+
+                    // TODO - Convert to signed client session or switch to passed JWT.
+                    call.response.cookies.append(
+                        name = COOKIE_CSRF,
+                        value = csrfToken.toString(),
+                        maxAge = 30.minutes.inWholeSeconds,
+                        //secure = true, // TODO - Enable if behind TLS, may need https://ktor.io/docs/forward-headers.html
+                        httpOnly = true,
+                    )
+
+                    val redirectUri = call.request.cookies[COOKIE_REDIRECT_URI]
+
+                    application.log.debug("CSRF: {}, Redirect URI: {}", csrfToken, redirectUri)
+
+                    reactPage(title = "Login Page", reactSource = bundleLocation, csrfToken, redirectUri)
                 }
             }
             post {
