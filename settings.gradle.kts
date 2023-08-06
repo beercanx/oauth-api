@@ -17,7 +17,7 @@ include(":api:server")
 
 // Automation
 include(":automation:api")
-// TODO include(":automation:browser")
+include(":automation:browser")
 // TODO include(":automation:load")
 
 // TODO - Test Consumers
