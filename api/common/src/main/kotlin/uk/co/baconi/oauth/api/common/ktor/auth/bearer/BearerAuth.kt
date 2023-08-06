@@ -7,10 +7,12 @@ import io.ktor.http.auth.*
 import io.ktor.http.auth.HttpAuthHeader.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.AuthenticationFailedCause.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import uk.co.baconi.oauth.api.common.ktor.auth.OAuth21ResponseParameters
 import uk.co.baconi.oauth.api.common.ktor.auth.bearer.BearerAuthenticationProvider.Config
+import uk.co.baconi.oauth.api.common.ktor.auth.bearer.BearerErrorCode.InvalidToken
 import uk.co.baconi.oauth.api.common.scope.Scope
 import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
 
@@ -31,15 +33,15 @@ class BearerAuthenticationProvider internal constructor(config: Config) : Authen
         val credentials = call.request.bearerAuthenticationCredentials()
         val principal = credentials?.let { authenticationFunction(call, it) }
 
-        val cause = when {
-            credentials == null -> AuthenticationFailedCause.NoCredentials
-            principal == null -> AuthenticationFailedCause.InvalidCredentials
-            else -> null
+        val (cause, errorCode) = when {
+            credentials == null -> NoCredentials to null
+            principal == null -> InvalidCredentials to InvalidToken
+            else -> null to null
         }
 
         if (cause != null) {
             context.challenge(bearerAuthenticationChallengeKey, cause) { challenge, challengeCall ->
-                challengeCall.respond(UnauthorizedResponse(bearerAuthChallenge(realm, null, null)))
+                challengeCall.respond(UnauthorizedResponse(bearerAuthChallenge(realm, errorCode, null)))
                 challenge.complete()
             }
         }

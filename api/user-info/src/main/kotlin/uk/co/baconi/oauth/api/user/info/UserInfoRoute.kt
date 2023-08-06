@@ -37,8 +37,11 @@ interface UserInfoRoute {
 
                         // This access token is not authorised to call the application block.
                         !accessToken.scopes.contains(OpenId) -> {
-                            // TODO - Do we include a reason, like which expected scopes were missing?
-                            call.respond(ForbiddenResponse(bearerAuthChallenge(realm, InsufficientScope)))
+                            call.respond(
+                                ForbiddenResponse(
+                                    bearerAuthChallenge(realm, error = InsufficientScope, scopes = setOf(OpenId))
+                                )
+                            )
                         }
 
                         // Check that the access token contains all the required scopes.

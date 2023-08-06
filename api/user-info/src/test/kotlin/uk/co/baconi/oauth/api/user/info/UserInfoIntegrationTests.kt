@@ -18,11 +18,11 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.http.HttpMethod.Companion.Delete
 import io.ktor.http.HttpMethod.Companion.Get
-import io.ktor.http.HttpMethod.Companion.Head
 import io.ktor.http.HttpMethod.Companion.Options
 import io.ktor.http.HttpMethod.Companion.Patch
 import io.ktor.http.HttpMethod.Companion.Post
 import io.ktor.http.HttpMethod.Companion.Put
+import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.serialization.kotlinx.json.*
@@ -31,7 +31,6 @@ import io.ktor.util.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.AuthenticationModule
@@ -61,12 +60,14 @@ class UserInfoIntegrationTests : AuthenticationModule, UserInfoRoute {
         private val accessTokenRepository = AccessTokenRepository(database)
 
         private val activeToken = accessToken()
+        private val noScopesToken = accessToken(scopes = emptySet())
         private val futureToken = accessToken(now = Instant.now().plus(10, ChronoUnit.DAYS))
         private val expiredToken = accessToken(now = Instant.now().minus(10, ChronoUnit.DAYS))
 
         init {
             transaction(database) { SchemaUtils.create(AccessTokenTable) }
             accessTokenRepository.insert(activeToken)
+            accessTokenRepository.insert(noScopesToken)
             accessTokenRepository.insert(futureToken)
             accessTokenRepository.insert(expiredToken)
         }
@@ -111,7 +112,7 @@ class UserInfoIntegrationTests : AuthenticationModule, UserInfoRoute {
     inner class InvalidHttpRequest {
 
         @Test
-        fun `should only support get requests`() = setupApplication { client ->
+        fun `should only support get and head requests`() = setupApplication { client ->
             assertSoftly {
                 for (method in listOf(Post, Put, Patch, Delete, Options)) {
                     withClue(method) {
@@ -129,8 +130,6 @@ class UserInfoIntegrationTests : AuthenticationModule, UserInfoRoute {
 
     @Nested
     inner class InvalidAuthentication {
-
-        // TODO - Implement that it error on invalid tokens or missing auth
 
         @Test
         fun `should return unauthorised response when authentication is missing`() = setupApplication { client ->
@@ -150,7 +149,6 @@ class UserInfoIntegrationTests : AuthenticationModule, UserInfoRoute {
         }
 
         @Test
-        @Disabled("Because we need to work out how to support this requirement")
         fun `should return unauthorised response when an expired access token is used`() = setupApplication { client ->
 
             val response = client.request(USERINFO_ENDPOINT) {
@@ -161,12 +159,24 @@ class UserInfoIntegrationTests : AuthenticationModule, UserInfoRoute {
                 status shouldBe Unauthorized
                 bodyAsText() should beBlank()
                 it.headers.toMap() shouldContainKey "WWW-Authenticate"
-                // TODO - Implement the error type below on expired/invalid tokens
-                it.headers["WWW-Authenticate"] shouldBe """Bearer realm=oauth-api, error=invalid_token, error_description="The access token expired""""
+                it.headers["WWW-Authenticate"] shouldBe "Bearer realm=oauth-api, error=invalid_token"
             }
         }
 
-        // TODO - Implement that it should error on insufficient scope (aka no OpenId)
+        @Test
+        fun `should return forbidden response when using a token with no openid scope`() = setupApplication { client ->
+
+            val response = client.request(USERINFO_ENDPOINT) {
+                userInfoRequest(noScopesToken)
+            }
+
+            assertSoftly(response) {
+                status shouldBe Forbidden
+                bodyAsText() should beBlank()
+                it.headers.toMap() shouldContainKey "WWW-Authenticate"
+                it.headers["WWW-Authenticate"] shouldBe "Bearer realm=oauth-api, error=insufficient_scope, scope=openid"
+            }
+        }
     }
 
     @Nested
