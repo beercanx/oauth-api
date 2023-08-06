@@ -2,8 +2,6 @@ val kotestVersion: String by project
 val typesafeConfigVersion: String by project
 val logbackVersion: String by project
 val junitVersion: String by project
-val seleniumJupiterVersion: String by project
-val webDriverVersion: String by project
 val selenideVersion: String by project
 
 plugins {
@@ -19,12 +17,12 @@ dependencies {
     implementation("com.typesafe:config:$typesafeConfigVersion")
 
     // Asserting stuff
-    implementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    //implementation("io.kotest:kotest-assertions-core:$kotestVersion")
 
-    // Browser/Selenium stuff
+    // Browser stuff
     testImplementation("com.codeborne:selenide:$selenideVersion")
-    testImplementation("org.seleniumhq.selenium:selenium-java:$webDriverVersion")
-    testImplementation("io.github.bonigarcia:selenium-jupiter:$seleniumJupiterVersion")
+    testImplementation("com.google.guava:guava:32.0.0-jre") // Patching transitive from selenide
+    testImplementation("io.netty:netty-handler:4.1.94.Final") // Patching transitive from selenide
 
     // JUnit 5 for tests definitions and running
     testImplementation(platform("org.junit:junit-bom:$junitVersion"))

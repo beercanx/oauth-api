@@ -27,7 +27,8 @@ dependencies {
     implementation("io.rest-assured:kotlin-extensions:$restAssured")
     implementation("io.rest-assured:json-path:$restAssured")
     implementation("io.rest-assured:json-schema-validator:$restAssured")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.0") // Patching transitive from json-schema-validator
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2") // Patching transitive from rest-assured
+    implementation("org.mozilla:rhino:1.7.12") // Patching transitive from rest-assured
 
     // JUnit 5 for tests definitions and running
     testImplementation(platform("org.junit:junit-bom:$junitVersion"))
