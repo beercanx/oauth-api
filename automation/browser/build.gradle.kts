@@ -16,13 +16,13 @@ dependencies {
     // Configuration
     implementation("com.typesafe:config:$typesafeConfigVersion")
 
-    // Asserting stuff
-    //implementation("io.kotest:kotest-assertions-core:$kotestVersion")
-
     // Browser stuff
-    testImplementation("com.codeborne:selenide:$selenideVersion")
-    testImplementation("com.google.guava:guava:32.0.0-jre") // Patching transitive from selenide
-    testImplementation("io.netty:netty-handler:4.1.94.Final") // Patching transitive from selenide
+    implementation("com.codeborne:selenide:$selenideVersion")
+    implementation("com.google.guava:guava:32.0.0-jre") // Patching transitive from selenide
+    implementation("io.netty:netty-handler:4.1.94.Final") // Patching transitive from selenide
+
+    // Manually asserting stuff
+    implementation("io.kotest:kotest-assertions-core:$kotestVersion")
 
     // JUnit 5 for tests definitions and running
     testImplementation(platform("org.junit:junit-bom:$junitVersion"))
