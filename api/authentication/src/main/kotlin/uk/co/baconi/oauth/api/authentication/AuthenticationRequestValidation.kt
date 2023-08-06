@@ -19,12 +19,13 @@ interface AuthenticationRequestValidation {
 
             // Basic field validation
             raw.username.isNullOrBlank() -> AuthenticationRequest.InvalidField("username")
-            raw.password.isNullOrBlank() -> AuthenticationRequest.InvalidField("password")
+            raw.password == null -> AuthenticationRequest.InvalidField("password")
+            raw.password.isEmpty() -> AuthenticationRequest.InvalidField("password")
 
             // Good enough to attempt an authentication
             else -> AuthenticationRequest.Valid(
                 username = raw.username,
-                password = raw.password.toCharArray(),
+                password = raw.password,
                 csrfToken = raw.csrfToken
             )
         }

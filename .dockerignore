@@ -8,6 +8,7 @@
 **/scripts/
 **/node_modules/
 **/out/
+**/.github/
 **/*.md
 **/.dockerignore
 **/.gitignore

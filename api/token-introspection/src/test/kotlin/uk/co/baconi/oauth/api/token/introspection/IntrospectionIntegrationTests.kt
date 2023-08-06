@@ -164,7 +164,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         }
 
         @Test
-        fun `should return 'unauthorised' response when a confidential clients without the allowed action is used`() =
+        fun `should return unauthorised response when a confidential clients without the allowed action is used`() =
             setupApplication { client ->
 
                 val response = client.request(introspectionEndpoint) {

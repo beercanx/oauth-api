@@ -5,6 +5,8 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.util.reflect.*
+import uk.co.baconi.oauth.api.common.claim.Claim
 import uk.co.baconi.oauth.api.common.ktor.auth.authenticate
 import uk.co.baconi.oauth.api.common.ktor.auth.bearer.BearerErrorCode
 import uk.co.baconi.oauth.api.common.ktor.auth.bearer.BearerErrorCode.InsufficientScope
@@ -35,8 +37,11 @@ interface UserInfoRoute {
 
                         // This access token is not authorised to call the application block.
                         !accessToken.scopes.contains(OpenId) -> {
-                            // TODO - Do we include a reason, like which expected scopes were missing?
-                            call.respond(ForbiddenResponse(bearerAuthChallenge(realm, InsufficientScope)))
+                            call.respond(
+                                ForbiddenResponse(
+                                    bearerAuthChallenge(realm, error = InsufficientScope, scopes = setOf(OpenId))
+                                )
+                            )
                         }
 
                         // Check that the access token contains all the required scopes.
