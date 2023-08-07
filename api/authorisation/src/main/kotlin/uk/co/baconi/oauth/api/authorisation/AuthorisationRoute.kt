@@ -2,6 +2,7 @@ package uk.co.baconi.oauth.api.authorisation
 
 import io.ktor.http.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
+import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.application.*
 import io.ktor.server.html.*
 import io.ktor.server.response.*
@@ -13,10 +14,12 @@ import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType.Cod
 import uk.co.baconi.oauth.api.common.html.PageTemplate.base
 import uk.co.baconi.oauth.api.common.html.PageTemplate.bootstrap
 import uk.co.baconi.oauth.api.common.html.PageTemplate.metaData
+import uk.co.baconi.oauth.api.common.html.ReactTemplate.reactPage
 import uk.co.baconi.oauth.api.common.location.Location
+import java.util.*
 import kotlin.time.Duration.Companion.minutes
 
-private const val COOKIE_REDIRECT_URI = "Authenticate-Redirect-Uri"
+private const val COOKIE_CSRF = "Authenticate-CSRF"
 private const val COOKIE_CUSTOMER = "Authenticated-Customer"
 
 interface AuthorisationRoute : AuthorisationRequestValidation {
@@ -26,6 +29,13 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
     fun Route.authorisation() {
 
         application.log.info("Registering the AuthorisationRoute.authorisation() routes")
+
+        val authenticationBundle = url {
+            takeFrom(Location.Assets.baseUrl)
+            path("/assets/js/authentication.js")
+        }
+
+        application.log.debug("Authentication asset location: {}", authenticationBundle)
 
         // TODO - Verify assumptions, not sure this has been done correctly
         // TODO - What about those who navigate back?
@@ -83,24 +93,23 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
                                 // Seek authorisation decision
                                 null -> {
 
-                                    // TODO - Change to rendering the authentication page here.
-                                    //        As this will remove the need for messy redirects that need validating and tracking.
+                                    val csrfToken = UUID.randomUUID()
 
-                                    // Redirect to our "login" page with a redirect back to here.
-                                    val currentURl = call.url() // TODO - Rethink as it can change the current domain
+                                    // TODO - Convert to signed client session or switch to passed JWT.
                                     call.response.cookies.append(
-                                        name = COOKIE_REDIRECT_URI,
-                                        value = currentURl,
+                                        name = COOKIE_CSRF,
+                                        value = csrfToken.toString(),
                                         maxAge = 30.minutes.inWholeSeconds,
                                         //secure = true, // TODO - Enable if behind TLS, may need https://ktor.io/docs/forward-headers.html
                                         httpOnly = true,
                                     )
-                                    call.respondRedirect(
-                                        url {
-                                            takeFrom(Location.Authentication.baseUrl)
-                                            path("/authentication")
-                                        }
-                                    )
+
+                                    // TODO - Replace with an in place page refresh in the React UI?
+                                    val currentURl = call.url() // TODO - Rethink as it can change the current domain
+
+                                    call.respondHtml(OK) {
+                                        reactPage("Login Page", authenticationBundle, csrfToken, currentURl)
+                                    }
                                 }
 
                                 // Handle authorisation decision [success]
