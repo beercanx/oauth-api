@@ -32,6 +32,7 @@ dependencies {
     // Server: Common
     api("io.ktor:ktor-server-core:$ktorVersion")
     api("io.ktor:ktor-server-auth:$ktorVersion")
+    api("io.ktor:ktor-server-sessions:$ktorVersion")
     api("io.ktor:ktor-server-html-builder:$ktorVersion")
     implementation("io.ktor:ktor-server-cors:$ktorVersion")
     implementation("io.ktor:ktor-server-hsts:$ktorVersion")
@@ -50,6 +51,8 @@ dependencies {
     api("org.jetbrains.exposed:exposed-core:$exposedVersion")
     api("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     api("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
+    implementation("io.ktor:ktor-server-core-jvm:2.3.2")
+    implementation("io.ktor:ktor-server-sessions-jvm:2.3.2")
 
     // JUnit 5 for tests definitions and running
     testImplementation(platform("org.junit:junit-bom:$junitVersion"))

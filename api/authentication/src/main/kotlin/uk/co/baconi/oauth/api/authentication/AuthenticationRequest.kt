@@ -13,7 +13,7 @@ sealed class AuthenticationRequest {
         override fun toString() = "InvalidField(name='$name')"
     }
 
-    class Valid(val username: String, val password: CharArray, val csrfToken: String) : AuthenticationRequest() {
-        override fun toString() = "Valid(username='$username', password='REDACTED', csrfToken='$csrfToken')"
+    class Valid(val username: String, val password: CharArray) : AuthenticationRequest() {
+        override fun toString() = "Valid(username='$username', password='REDACTED')"
     }
 }

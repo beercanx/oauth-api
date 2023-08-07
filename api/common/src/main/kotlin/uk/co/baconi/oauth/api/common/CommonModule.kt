@@ -12,8 +12,17 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.dataconversion.*
 import io.ktor.server.plugins.doublereceive.*
 import io.ktor.server.plugins.hsts.*
+import io.ktor.server.sessions.*
+import io.ktor.util.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import uk.co.baconi.oauth.api.common.authentication.AuthenticateSession
+import uk.co.baconi.oauth.api.common.authentication.AuthenticatedSession
+import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
+import java.util.UUID
+import kotlin.collections.forEach
+import kotlin.collections.set
+import kotlin.time.Duration.Companion.minutes
 
 object CommonModule {
 
@@ -68,6 +77,29 @@ object CommonModule {
             }
             allowHeader(HttpHeaders.ContentType)
             allowCredentials = true
+        }
+
+        install(Sessions) {
+            cookie<AuthenticateSession>("authenticate") {
+                cookie.path = "/"
+                cookie.maxAge = 5.minutes
+                transform(
+                    SessionTransportTransformerEncrypt( // TODO - Extract into config
+                        hex("901c7e7ad029ad1ecfab8020d0005ee0"), // 128-bit
+                        hex("8d712329a4d2cbab") // 64-bit
+                    )
+                )
+            }
+            cookie<AuthenticatedSession>("authenticated") {
+                cookie.path = "/"
+                cookie.maxAge = 30.minutes
+                transform(
+                    SessionTransportTransformerEncrypt( // TODO - Extract into config
+                        hex("854dd2c698be10ea0ae7cd0337b23721"), // 128-bit
+                        hex("62faa3a4a55c3108") // 64-bit
+                    )
+                )
+            }
         }
 
         // TODO - Call ID

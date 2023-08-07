@@ -7,8 +7,11 @@ import io.ktor.server.application.*
 import io.ktor.server.html.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import io.ktor.server.util.*
 import kotlinx.html.*
+import uk.co.baconi.oauth.api.common.authentication.AuthenticateSession
+import uk.co.baconi.oauth.api.common.authentication.AuthenticatedSession
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType.Code
 import uk.co.baconi.oauth.api.common.html.PageTemplate.base
@@ -18,9 +21,6 @@ import uk.co.baconi.oauth.api.common.html.ReactTemplate.reactPage
 import uk.co.baconi.oauth.api.common.location.Location
 import java.util.*
 import kotlin.time.Duration.Companion.minutes
-
-private const val COOKIE_CSRF = "Authenticate-CSRF"
-private const val COOKIE_CUSTOMER = "Authenticated-Customer"
 
 interface AuthorisationRoute : AuthorisationRequestValidation {
 
@@ -86,25 +86,11 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
 
                     is AuthorisationRequest.Valid -> when (request.responseType) {
                         Code -> {
-                            // TODO - Convert to either a session (server/client) or manually pass a JWT
-                            //when (val authenticated = call.sessions.get<AuthenticatedSession>()) {
-                            when (val authenticated = call.request.cookies[COOKIE_CUSTOMER]?.let(::AuthenticatedUsername)) {
+                            when (val authenticated = call.sessions.get<AuthenticatedSession>()) {
 
                                 // Seek authorisation decision
                                 null -> {
-
-                                    val csrfToken = UUID.randomUUID()
-
-                                    // TODO - Convert to signed client session or switch to passed JWT.
-                                    // call.sessions.set<AuthenticateSession>(AuthenticateSession(csrfToken))
-                                    call.response.cookies.append(
-                                        name = COOKIE_CSRF,
-                                        value = csrfToken.toString(),
-                                        maxAge = 30.minutes.inWholeSeconds,
-                                        //secure = true, // TODO - Enable if behind TLS, may need https://ktor.io/docs/forward-headers.html
-                                        httpOnly = true,
-                                    )
-
+                                    val (csrfToken) = call.sessions.getOrSet { AuthenticateSession(UUID.randomUUID()) }
                                     call.respondHtml(OK) {
                                         reactPage("Login Page", authenticationBundle, csrfToken)
                                     }
@@ -112,8 +98,8 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
 
                                 // Handle authorisation decision [success]
                                 else -> {
-                                    // TODO - Don't just issue an AuthorisationCode off the back of a raw string value...
-                                    val authorisationCode = authorisationCodeService.issue(request, authenticated)
+                                    val (username) = authenticated
+                                    val authorisationCode = authorisationCodeService.issue(request, username)
                                     val code = authorisationCode.value.toString()
                                     val state = authorisationCode.state
 
