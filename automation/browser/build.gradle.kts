@@ -1,13 +1,11 @@
-val ktorVersion: String by project
 val kotestVersion: String by project
 val typesafeConfigVersion: String by project
 val logbackVersion: String by project
 val junitVersion: String by project
-val restAssured: String by project
+val selenideVersion: String by project
 
 plugins {
     kotlin("jvm")
-    kotlin("plugin.serialization")
 }
 
 dependencies {
@@ -18,17 +16,13 @@ dependencies {
     // Configuration
     implementation("com.typesafe:config:$typesafeConfigVersion")
 
-    // Asserting stuff
-    implementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    // Browser stuff
+    implementation("com.codeborne:selenide:$selenideVersion")
+    implementation("com.google.guava:guava:32.0.0-jre") // Patching transitive from selenide
+    implementation("io.netty:netty-handler:4.1.94.Final") // Patching transitive from selenide
 
-    // Rest stuff
-    implementation("io.rest-assured:rest-assured:$restAssured")
-    implementation("commons-codec:commons-codec:1.16.0") // Patching transitive from rest-assured
-    implementation("io.rest-assured:kotlin-extensions:$restAssured")
-    implementation("io.rest-assured:json-path:$restAssured")
-    implementation("io.rest-assured:json-schema-validator:$restAssured")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2") // Patching transitive from rest-assured
-    implementation("org.mozilla:rhino:1.7.12") // Patching transitive from rest-assured
+    // Manually asserting stuff
+    implementation("io.kotest:kotest-assertions-core:$kotestVersion")
 
     // JUnit 5 for tests definitions and running
     testImplementation(platform("org.junit:junit-bom:$junitVersion"))

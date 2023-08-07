@@ -3,6 +3,8 @@ package uk.co.baconi.oauth.api.authentication
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 
+private const val COOKIE_CSRF = "Authenticate-CSRF"
+
 interface AuthenticationRequestValidation {
 
     suspend fun ApplicationCall.validateAuthenticationRequest(): AuthenticationRequest {
