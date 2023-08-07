@@ -16,8 +16,7 @@ import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Succe
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
 import kotlin.time.Duration.Companion.hours
 
-const val COOKIE_CSRF = "Authenticate-CSRF"
-const val COOKIE_CUSTOMER = "Authenticated-Customer"
+private const val COOKIE_CUSTOMER = "Authenticated-Customer"
 
 interface AuthenticationRoute : AuthenticationRequestValidation {
 

@@ -96,6 +96,7 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
                                     val csrfToken = UUID.randomUUID()
 
                                     // TODO - Convert to signed client session or switch to passed JWT.
+                                    // call.sessions.set<AuthenticateSession>(AuthenticateSession(csrfToken))
                                     call.response.cookies.append(
                                         name = COOKIE_CSRF,
                                         value = csrfToken.toString(),
@@ -104,11 +105,8 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
                                         httpOnly = true,
                                     )
 
-                                    // TODO - Replace with an in place page refresh in the React UI?
-                                    val currentURl = call.url() // TODO - Rethink as it can change the current domain
-
                                     call.respondHtml(OK) {
-                                        reactPage("Login Page", authenticationBundle, csrfToken, currentURl)
+                                        reactPage("Login Page", authenticationBundle, csrfToken)
                                     }
                                 }
 

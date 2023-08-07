@@ -10,7 +10,6 @@ declare namespace LoginForm {
         username: string
         password: string
         csrfToken: string | undefined
-        redirectUri: string | undefined
     }
 }
 
@@ -27,13 +26,7 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
             username: "",
             password: "",
             csrfToken: document.head.querySelector<HTMLMetaElement>("meta[name='_csrf']")?.content,
-
-            // TODO - Replace the need for this by not doing redirects, all we do is keep patching issue after issue.
-            redirectUri: document.head.querySelector<HTMLMetaElement>("meta[name='_redirectUri']")?.content
         };
-
-        console.info("CSRF Token:", this.state.csrfToken);
-        console.info("Redirect URI:", this.state.redirectUri);
 
         this.handleChangeUsername = this.handleChangeUsername.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
@@ -53,8 +46,8 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
         event.preventDefault();
         console.log("Authentication Aborted!");
         this.setState({username: "", password: ""});
-        // TODO - Redirect back with abort=true
         // TODO - What do we do about any existing "Authenticated-Customer" markers if we allow logins when we know who they are.
+        window.location.search += "&abort=true";
     }
 
     async handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -73,14 +66,7 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
                 })
             })
             .then(response => response.json())
-            .then(result => {
-                console.info("Authentication deserialized:", result)
-                if (this.state.redirectUri != null) {
-                    window.location.href = this.state.redirectUri
-                } else {
-                    console.error("Missing redirectUri")
-                }
-            })
+            .then(result => window.location.reload())
             .catch(exception => console.error("Authentication error:", exception));
 
         // TODO - Handle invalid CSRF token by refreshing the page.

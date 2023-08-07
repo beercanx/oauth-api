@@ -10,12 +10,11 @@ import java.util.*
 
 object ReactTemplate {
 
-    fun HTML.reactPage(title: String, reactSource: String, csrfToken: UUID? = null, redirectUri: String? = null) {
+    fun HTML.reactPage(title: String, reactSource: String, csrfToken: UUID? = null) {
         base()
         head {
             metaData()
             if (csrfToken != null) csrfToken(csrfToken)
-            if (redirectUri != null) redirectUri(redirectUri)
             bootstrap()
             title { +title }
             script { defer = true; src = reactSource }
