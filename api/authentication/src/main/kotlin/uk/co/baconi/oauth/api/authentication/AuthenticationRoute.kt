@@ -8,15 +8,16 @@ import io.ktor.http.HttpStatusCode.Companion.UnsupportedMediaType
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import uk.co.baconi.oauth.api.authentication.AuthenticationRequest.InvalidField
 import uk.co.baconi.oauth.api.authentication.AuthenticationRequest.Valid
+import uk.co.baconi.oauth.api.common.authentication.AuthenticateSession
+import uk.co.baconi.oauth.api.common.authentication.AuthenticatedSession
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Failure
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Success
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
 import kotlin.time.Duration.Companion.hours
-
-private const val COOKIE_CUSTOMER = "Authenticated-Customer"
 
 interface AuthenticationRoute : AuthenticationRequestValidation {
 
@@ -41,14 +42,11 @@ interface AuthenticationRoute : AuthenticationRequestValidation {
                             }
                             is Success -> {
 
-                                // TODO - Convert to signed client session or switch to passed JWT.
-                                call.response.cookies.append(
-                                    name = COOKIE_CUSTOMER,
-                                    value = result.username.value,
-                                    maxAge = 24.hours.inWholeSeconds,
-                                    //secure = true, // TODO - Enable if behind TLS, may need https://ktor.io/docs/forward-headers.html
-                                    httpOnly = true,
-                                )
+                                // Set up the authenticated session.
+                                call.sessions.set(AuthenticatedSession(result.username))
+
+                                // Destroy pre-authenticated session.
+                                call.sessions.clear<AuthenticateSession>()
 
                                 call.respond<CustomerAuthentication>(OK, result)
                             }

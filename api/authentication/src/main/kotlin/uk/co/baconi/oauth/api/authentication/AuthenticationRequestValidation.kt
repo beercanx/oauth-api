@@ -2,22 +2,22 @@ package uk.co.baconi.oauth.api.authentication
 
 import io.ktor.server.application.*
 import io.ktor.server.request.*
-
-private const val COOKIE_CSRF = "Authenticate-CSRF"
+import io.ktor.server.sessions.*
+import uk.co.baconi.oauth.api.common.authentication.AuthenticateSession
 
 interface AuthenticationRequestValidation {
 
     suspend fun ApplicationCall.validateAuthenticationRequest(): AuthenticationRequest {
 
         val raw = receive<AuthenticationRequest.Raw>()
-        val expectedCsrfToken = request.cookies[COOKIE_CSRF] // TODO - Verify HTTP only?
+        val authenticateSession = sessions.get<AuthenticateSession>()
 
         return when {
 
             // Check CSRF Token
-            expectedCsrfToken.isNullOrBlank() -> AuthenticationRequest.InvalidField("csrfToken")
+            authenticateSession == null -> AuthenticationRequest.InvalidField("csrfToken")
             raw.csrfToken.isNullOrBlank() -> AuthenticationRequest.InvalidField("csrfToken")
-            raw.csrfToken != expectedCsrfToken -> AuthenticationRequest.InvalidField("csrfToken")
+            raw.csrfToken != authenticateSession.csrfToken.toString() -> AuthenticationRequest.InvalidField("csrfToken")
 
             // Basic field validation
             raw.username.isNullOrBlank() -> AuthenticationRequest.InvalidField("username")
@@ -28,7 +28,6 @@ interface AuthenticationRequestValidation {
             else -> AuthenticationRequest.Valid(
                 username = raw.username,
                 password = raw.password,
-                csrfToken = raw.csrfToken
             )
         }
     }
