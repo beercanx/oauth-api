@@ -32,7 +32,7 @@ object AuthorisationCodeTable : IdTable<UUID>() {
      * Assuming serialisation is via a space delimited string calculate the max length of the scope field.
      */
     private fun calculateMaxScopeFieldLength(): Int {
-        val scopes = Scope.values()
+        val scopes = Scope.entries.toTypedArray()
         val gapSize = scopes.size
         val scopeSize = scopes.fold(0) { size, scope ->
             size + scope.value.length
