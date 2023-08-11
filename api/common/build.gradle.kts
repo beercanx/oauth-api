@@ -67,4 +67,11 @@ dependencies {
 
     // Test data generation
     testImplementation("org.apache.commons:commons-lang3:$commonsLang3Version")
+
+    // Security patching
+    constraints {
+        api("commons-codec:commons-codec:1.16.0") {
+            because("Apache Http Client brings in 1.11")
+        }
+    }
 }
