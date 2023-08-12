@@ -4,6 +4,7 @@ val mockkVersion: String by project
 val kotestVersion: String by project
 
 plugins {
+    jacoco
     application
     kotlin("jvm")
     kotlin("plugin.serialization")

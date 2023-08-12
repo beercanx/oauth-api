@@ -1,6 +1,7 @@
 val ktorVersion: String by project
 
 plugins {
+    jacoco
     application
     kotlin("jvm")
 }

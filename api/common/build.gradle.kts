@@ -11,6 +11,7 @@ val argon2Type: String by project
 val commonsLang3Version: String by project
 
 plugins {
+    jacoco
     kotlin("jvm")
     kotlin("plugin.serialization")
 }
@@ -44,7 +45,7 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
 
     // Crypto for safe credential checking
-    implementation("de.mkammerer:$argon2Type:$argon2Version")
+    api("de.mkammerer:$argon2Type:$argon2Version")
 
     // Database
     api("com.h2database:h2:$h2DatabaseVersion")

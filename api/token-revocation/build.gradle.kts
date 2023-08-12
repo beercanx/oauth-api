@@ -1,4 +1,5 @@
 plugins {
+    jacoco
     application
     kotlin("jvm")
     kotlin("plugin.serialization")
