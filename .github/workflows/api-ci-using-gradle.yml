@@ -37,6 +37,7 @@ jobs:
 
     - name: Jacoco Report to PR
       id: jacoco
+      if: github.event_name == 'pull_request'
       uses: madrapps/jacoco-report@v1.6
       with:
         paths: ${{ github.workspace }}/**/build/reports/jacoco/**/jacocoTestReport.xml
@@ -47,3 +48,4 @@ jobs:
         update-comment: true
         pass-emoji: ':green_circle:'
         fail-emoji: ':red_circle:'
+        debug-mode: true
