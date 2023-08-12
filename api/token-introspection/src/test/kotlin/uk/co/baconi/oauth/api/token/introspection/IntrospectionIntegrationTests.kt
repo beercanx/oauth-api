@@ -18,6 +18,7 @@ import io.ktor.http.HttpMethod.Companion.Head
 import io.ktor.http.HttpMethod.Companion.Options
 import io.ktor.http.HttpMethod.Companion.Patch
 import io.ktor.http.HttpMethod.Companion.Put
+import io.ktor.http.HttpMethod.Companion.parse
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
@@ -31,6 +32,8 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import uk.co.baconi.oauth.api.common.AuthenticationModule
 import uk.co.baconi.oauth.api.common.CommonModule.common
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
@@ -109,20 +112,15 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
     @Nested
     inner class InvalidHttpRequest {
 
-        @Test
-        fun `should only support post requests`() = setupApplication { client ->
-            assertSoftly {
-                for (method in listOf(Get, Put, Patch, Delete, Head, Options)) {
-                    withClue(method) {
+        @ParameterizedTest
+        @CsvSource("GET", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS")
+        fun `should only support post requests`(method: String) = setupApplication { client ->
 
-                        val response = client.request(introspectionEndpoint) {
-                            introspectionRequest(method = method)
-                        }
-
-                        response.status shouldBe MethodNotAllowed
-                    }
-                }
+            val response = client.request(introspectionEndpoint) {
+                introspectionRequest(method = parse(method))
             }
+
+            response.status shouldBe MethodNotAllowed
         }
 
         @Test
