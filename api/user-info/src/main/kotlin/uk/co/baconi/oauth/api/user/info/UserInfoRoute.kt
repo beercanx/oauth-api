@@ -5,10 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.util.reflect.*
-import uk.co.baconi.oauth.api.common.claim.Claim
 import uk.co.baconi.oauth.api.common.ktor.auth.authenticate
-import uk.co.baconi.oauth.api.common.ktor.auth.bearer.BearerErrorCode
 import uk.co.baconi.oauth.api.common.ktor.auth.bearer.BearerErrorCode.InsufficientScope
 import uk.co.baconi.oauth.api.common.ktor.auth.bearer.bearerAuthChallenge
 import uk.co.baconi.oauth.api.common.scope.Scope.OpenId

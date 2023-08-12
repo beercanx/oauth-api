@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.assets
 
 import io.ktor.server.application.*
-import io.ktor.server.http.content.*
+import io.ktor.server.http.content.staticResources
 import io.ktor.server.routing.*
 
 interface AssetsRoute {

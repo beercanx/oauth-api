@@ -74,11 +74,12 @@ sealed interface TokenResponse {
          * Human-readable ASCII text providing additional information, used to assist the client developer in
          * understanding the error that occurred.
          */
-        val error_description: String
+        @SerialName("error_description")
+        val errorDescription: String
 
     ) : TokenResponse {
         init {
-            require(error_description.isNotBlank()) { "Error description should not be blank!" }
+            require(errorDescription.isNotBlank()) { "Error description should not be blank!" }
         }
     }
 }

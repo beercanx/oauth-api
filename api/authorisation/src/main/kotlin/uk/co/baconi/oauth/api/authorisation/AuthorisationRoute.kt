@@ -12,7 +12,6 @@ import io.ktor.server.util.*
 import kotlinx.html.*
 import uk.co.baconi.oauth.api.common.authentication.AuthenticateSession
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedSession
-import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType.Code
 import uk.co.baconi.oauth.api.common.html.PageTemplate.base
 import uk.co.baconi.oauth.api.common.html.PageTemplate.bootstrap
@@ -20,7 +19,6 @@ import uk.co.baconi.oauth.api.common.html.PageTemplate.metaData
 import uk.co.baconi.oauth.api.common.html.ReactTemplate.reactPage
 import uk.co.baconi.oauth.api.common.location.Location
 import java.util.*
-import kotlin.time.Duration.Companion.minutes
 
 interface AuthorisationRoute : AuthorisationRequestValidation {
 
@@ -46,7 +44,7 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
 
             // TODO - How to detect user click back in the browser from the authentication screen
             get {
-                when(val request = call.validateAuthorisationRequest()) {
+                when (val request = call.validateAuthorisationRequest()) {
 
                     // Unsafe to redirect when either client or redirect uri is invalid.
                     is AuthorisationRequest.InvalidClient, is AuthorisationRequest.InvalidRedirect -> {

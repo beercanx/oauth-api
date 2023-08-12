@@ -17,11 +17,14 @@ import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Failure
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Success
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
-import kotlin.time.Duration.Companion.hours
 
 interface AuthenticationRoute : AuthenticationRequestValidation {
 
     val customerAuthenticationService: CustomerAuthenticationService
+
+    private fun authenticate(username: String, password: CharArray): CustomerAuthentication {
+        return customerAuthenticationService.authenticate(username, password)
+    }
 
     fun Route.authentication() {
 
@@ -36,10 +39,11 @@ interface AuthenticationRoute : AuthenticationRequestValidation {
                             application.log.debug("{}", request)
                         }
 
-                        is Valid -> when(val result = customerAuthenticationService.authenticate(request.username, request.password)) {
+                        is Valid -> when (val result = authenticate(request.username, request.password)) {
                             is Failure -> call.respond<CustomerAuthentication>(Unauthorized, result).also {
                                 application.log.debug("{}", result)
                             }
+
                             is Success -> {
 
                                 // Set up the authenticated session.

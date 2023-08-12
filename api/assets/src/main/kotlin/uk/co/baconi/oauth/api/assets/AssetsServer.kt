@@ -8,7 +8,6 @@ import uk.co.baconi.oauth.api.common.embeddedCommonServer
  * Start a server for just static Asset requests
  */
 internal object AssetsServer : AssetsRoute {
-
     fun start() {
         embeddedCommonServer {
             common()

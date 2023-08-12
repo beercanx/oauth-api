@@ -35,7 +35,6 @@ import uk.co.baconi.oauth.api.user.info.UserInfoService
 
 object FullServer : AuthenticationModule, AssetsRoute, AuthenticationRoute, AuthorisationRoute, TokenRoute, IntrospectionRoute, UserInfoRoute, TestAccessTokenModule, TestUserModule {
 
-
     private val accessTokenRepository = AccessTokenRepository(accessTokenDatabase)
     override val accessTokenService = AccessTokenService(accessTokenRepository)
 
