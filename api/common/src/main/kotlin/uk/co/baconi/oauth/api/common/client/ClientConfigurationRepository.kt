@@ -37,7 +37,7 @@ class ClientConfigurationRepository {
                         .getString("type")
                         .let(ClientType::fromValue),
                     redirectUris = config
-                        .tryGetStringList("redirectUrls")
+                        .tryGetStringList("redirectUris")
                         ?.filter(String::isNotBlank)
                         ?.map(String::trim)
                         ?.toSet()

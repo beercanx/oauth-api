@@ -31,7 +31,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
                 # Working example
                 consumer-y: {
                     type: Public,
-                    redirectUrls: [
+                    redirectUris: [
                         "uk.co.baconi.consumer-y://callback",
                     ]
                 },
@@ -93,7 +93,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
             every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Public,
-                    redirectUrls: null
+                    redirectUris: null
                 """.trimIndent()
             )
 
@@ -109,7 +109,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
             every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Public,
-                    redirectUrls: []
+                    redirectUris: []
                 """.trimIndent()
             )
 
@@ -125,7 +125,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
             every { repository.getConfig(ConsumerZ.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Public,
-                    redirectUrls: ["uk.co.consumer-z://callback"]
+                    redirectUris: ["uk.co.consumer-z://callback"]
                 """.trimIndent()
             )
 
@@ -258,7 +258,7 @@ class TypesafeClientConfigurationRepositoryIntegrationTest {
             every { repository.getConfig(ConsumerX.serialise()) } returns ConfigFactory.parseString(
                 """
                     type: Public,
-                    redirectUrls: true
+                    redirectUris: true
                 """.trimIndent()
             )
 
