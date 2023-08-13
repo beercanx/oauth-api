@@ -80,15 +80,15 @@ class ConfidentialAuthorisationCodeGrantTest {
             .shouldHave(urlContaining("code="))
             .shouldHave(urlContaining("state=$state"))
             .driver().url()
+            .asUrl()
 
         // Verify the callback is a successful type
-        val query = URL(callbackUri).query?.split("&")?.associate { it.split("=").let { (key, value) -> key to value } }
-        query.shouldNotBeNull()
-        assertSoftly(query) {
-            query shouldContainKey "state"
-            query shouldContain ("state" to state)
-            query shouldContainKey "code"
-            query["code"]?.let(UUID::fromString) should beInstanceOf<UUID>() // A crude and terrible assertion
+        assertSoftly(callbackUri.extractQueryParameters()) {
+            this.shouldNotBeNull()
+            this shouldContainKey "state"
+            this shouldContain ("state" to state)
+            this shouldContainKey "code"
+            this["code"]?.let(UUID::fromString) should beInstanceOf<UUID>() // A crude and terrible assertion
         }
 
         // TODO - Utilise a test app to prove the authentication code is valid and exchangeable.
