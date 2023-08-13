@@ -10,7 +10,15 @@ sealed class AuthorisationRequest {
 
     data class InvalidRedirect(val reason: String) : AuthorisationRequest()
 
-    data class Invalid(val redirectUri: String, val error: String, val description: String, val state: String?) : AuthorisationRequest()
+    data class Invalid(val redirectUri: String, val error: String, val description: String, val state: String?) : AuthorisationRequest() {
+
+        /**
+         * Generated to exclude [state] from the toString output.
+         */
+        override fun toString(): String {
+            return "Invalid(redirectUri='$redirectUri', error='$error', description='$description', state='REDACTED')"
+        }
+    }
 
     // TODO - Add PKCE support?
 
@@ -18,7 +26,7 @@ sealed class AuthorisationRequest {
         val responseType: AuthorisationResponseType,
         val clientId: ClientId,
         val redirectUri: String,
-        val state: String?,
+        val state: String,
         val scopes: Set<Scope>
     ) : AuthorisationRequest() {
 

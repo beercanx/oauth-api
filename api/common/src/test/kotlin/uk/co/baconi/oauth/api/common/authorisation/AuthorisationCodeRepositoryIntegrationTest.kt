@@ -147,7 +147,8 @@ class AuthorisationCodeRepositoryIntegrationTest {
         clientId: String = "badger",
         redirectUri: String = "uk.co.baconi.oauth.consumerz://callback",
         scopes: Set<Scope> = setOf(Scope.OpenId, Scope.ProfileRead, Scope.ProfileWrite),
-        now: Instant = Instant.now()
+        now: Instant = Instant.now(),
+        state: String = "da4d809e-ed89-42bd-aa3e-8c975b9242d0",
     ) = AuthorisationCode.Basic(
         value = value,
         username = AuthenticatedUsername(username),
@@ -156,7 +157,7 @@ class AuthorisationCodeRepositoryIntegrationTest {
         redirectUri = redirectUri,
         issuedAt = now,
         expiresAt = now.plusSeconds(60),
-        state = null,
+        state = state,
     )
 
     private fun authorisationCodePkce(
@@ -166,6 +167,7 @@ class AuthorisationCodeRepositoryIntegrationTest {
         redirectUri: String = "uk.co.baconi.oauth.consumerz://callback",
         scopes: Set<Scope> = setOf(Scope.OpenId, Scope.ProfileRead, Scope.ProfileWrite),
         now: Instant = Instant.now(),
+        state: String = "da4d809e-ed89-42bd-aa3e-8c975b9242d0",
         codeChallenge: String = "code-challenge",
     ) = AuthorisationCode.PKCE(
         value = value,
@@ -175,7 +177,7 @@ class AuthorisationCodeRepositoryIntegrationTest {
         redirectUri = redirectUri,
         issuedAt = now,
         expiresAt = now.plusSeconds(60),
-        state = null,
+        state = state,
         codeChallenge = CodeChallenge(codeChallenge),
         codeChallengeMethod = CodeChallengeMethod.S256
     )

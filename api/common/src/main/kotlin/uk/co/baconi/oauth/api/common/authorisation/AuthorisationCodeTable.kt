@@ -22,7 +22,7 @@ object AuthorisationCodeTable : IdTable<UUID>() {
     val expiresAt: Column<Instant> = timestamp("expires_at").index()
     val scopes: Column<String> = varchar("scopes", calculateMaxScopeFieldLength())
     val redirectUri: Column<String> = varchar("redirect_uri", 255)
-    val state: Column<String?> = varchar("state", 255).nullable()
+    val state: Column<String> = varchar("state", 255)
     val codeChallenge: Column<String?> = varchar("code_challenge", 255).nullable()
     val codeChallengeMethod: Column<String?> = varchar("code_challenge_method", 255).nullable()
 

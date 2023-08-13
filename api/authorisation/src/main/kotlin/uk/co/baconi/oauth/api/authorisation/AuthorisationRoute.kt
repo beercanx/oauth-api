@@ -105,7 +105,7 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
                                         url {
                                             takeFrom(request.redirectUri)
                                             parameters["code"] = code
-                                            if (state != null) parameters["state"] = state
+                                            parameters["state"] = state
                                         }
                                     )
                                 }

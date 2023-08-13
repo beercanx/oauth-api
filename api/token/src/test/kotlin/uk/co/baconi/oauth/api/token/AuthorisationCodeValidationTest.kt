@@ -160,7 +160,7 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
                 username = AuthenticatedUsername("aardvark"),
                 redirectUri = "uk.co.baconi.valid://callback",
                 scopes = emptySet(),
-                state = null
+                state = UUID.randomUUID().toString()
             )
 
             assertSoftly(validateAuthorisationCodeRequest(parameters, client)) {
@@ -301,7 +301,7 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
                 username = AuthenticatedUsername("username"),
                 redirectUri = "uk.co.baconi.valid://callback",
                 scopes = emptySet(),
-                state = null,
+                state = UUID.randomUUID().toString(),
                 codeChallenge = CodeChallenge(""),
                 codeChallengeMethod = CodeChallengeMethod.S256
             )
@@ -320,7 +320,7 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
                 username = AuthenticatedUsername("username"),
                 redirectUri = "uk.co.baconi.valid://callback",
                 scopes = emptySet(),
-                state = null,
+                state = UUID.randomUUID().toString(),
                 codeChallenge = CodeChallenge("KABWKWtD0pRRdnAB17BZwxxs83Z3po8TDCO_lruY-L4"),
                 codeChallengeMethod = CodeChallengeMethod.S256
             )

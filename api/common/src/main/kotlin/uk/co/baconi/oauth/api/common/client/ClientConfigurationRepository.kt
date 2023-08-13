@@ -57,11 +57,6 @@ class ClientConfigurationRepository {
                         ?.map(GrantType::fromValue)
                         ?.toSet()
                         ?: emptySet(),
-                    allowedAuthorisationResponseTypes = config
-                        .tryGetStringList("allowedAuthorisationResponseTypes")
-                        ?.map(AuthorisationResponseType::fromValue)
-                        ?.toSet()
-                        ?: emptySet(),
                 )
             }
         }

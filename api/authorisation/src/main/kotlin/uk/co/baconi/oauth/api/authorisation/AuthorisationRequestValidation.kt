@@ -1,9 +1,13 @@
 package uk.co.baconi.oauth.api.authorisation
 
+import io.ktor.http.*
 import io.ktor.server.application.*
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType
+import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType.Code
 import uk.co.baconi.oauth.api.common.client.*
 import uk.co.baconi.oauth.api.common.client.ClientAction.Authorise
+import uk.co.baconi.oauth.api.common.grant.GrantType
+import uk.co.baconi.oauth.api.common.grant.GrantType.AuthorisationCode
 import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
 
 private const val CLIENT_ID = "client_id"
@@ -18,15 +22,17 @@ interface AuthorisationRequestValidation {
     val clientConfigurationRepository: ClientConfigurationRepository
 
     suspend fun ApplicationCall.validateAuthorisationRequest(): AuthorisationRequest {
+        return validateAuthorisationRequest(request.queryParameters)
+    }
 
-        val params = request.queryParameters
+    fun validateAuthorisationRequest(params: Parameters): AuthorisationRequest {
 
         val config = params[CLIENT_ID]?.let(clientConfigurationRepository::findByClientId)
         val principal = config?.let(ClientPrincipal::fromConfiguration)
 
         val redirectUri = params[REDIRECT_ID]
         val responseType = params[RESPONSE_TYPE]?.let(AuthorisationResponseType::fromValueOrNull)
-        val scopes = parameters[SCOPE]?.let(ScopesSerializer::deserialize) ?: emptySet()
+        val scopes = params[SCOPE]?.let(ScopesSerializer::deserialize) ?: emptySet()
         val state = params[STATE]
         val abort = params[ABORT]?.toBooleanStrictOrNull() ?: false
 
@@ -39,7 +45,8 @@ interface AuthorisationRequestValidation {
             !principal.hasRedirectUri(redirectUri) -> AuthorisationRequest.InvalidRedirect("invalid")
             !redirectUri.isAbsoluteURI(false) -> AuthorisationRequest.InvalidRedirect("invalid")
 
-            !principal.can(Authorise) -> AuthorisationRequest.Invalid(
+            // Currently only support authorisation code
+            !(principal.can(Authorise) && principal.can(AuthorisationCode)) -> AuthorisationRequest.Invalid(
                 redirectUri = redirectUri,
                 error = "unauthorized_client",
                 description = "unauthorized client",
@@ -52,21 +59,21 @@ interface AuthorisationRequestValidation {
                 description = "missing parameter: response_type",
                 state = state
             )
-            responseType == null -> AuthorisationRequest.Invalid(
+            responseType == null || responseType != Code -> AuthorisationRequest.Invalid(
                 redirectUri = redirectUri,
                 error = "unsupported_response_type",
                 description = "unsupported response type: ${params[RESPONSE_TYPE]}",
                 state = state
             )
-            !principal.canHave(responseType) -> AuthorisationRequest.Invalid(
-                redirectUri = redirectUri,
-                error = "unauthorized_client",
-                description = "unauthorized client",
-                state = state
-            )
 
             // Enforce the use of a state parameter
-            state != null && state.isBlank() -> AuthorisationRequest.Invalid(
+            state == null -> AuthorisationRequest.Invalid(
+                redirectUri = redirectUri,
+                error = "invalid_request",
+                description = "missing parameter: state",
+                state = null
+            )
+            state.isBlank() -> AuthorisationRequest.Invalid(
                 redirectUri = redirectUri,
                 error = "invalid_request",
                 description = "invalid parameter: state",
