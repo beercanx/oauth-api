@@ -7,12 +7,14 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import io.kotest.matchers.throwable.shouldHaveMessage
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.client.ClientAction.Authorise
 import uk.co.baconi.oauth.api.common.client.ClientAction.ProofKeyForCodeExchange
+import uk.co.baconi.oauth.api.common.client.ClientPrincipal.Companion.fromConfiguration
 import uk.co.baconi.oauth.api.common.client.ClientType.Confidential
 import uk.co.baconi.oauth.api.common.client.ClientType.Public
 import uk.co.baconi.oauth.api.common.grant.GrantType
@@ -24,6 +26,24 @@ class ClientPrincipalTest {
     companion object {
         private val ConsumerZ = ClientId("consumer-z")
         private val ConsumerY = ClientId("consumer-y")
+    }
+
+    @Nested
+    inner class FromConfiguration {
+
+        @Test
+        fun `should return a confidential principal from the configuration of a confidential client`() {
+            fromConfiguration(mockk(relaxed = true) {
+                every { type } returns Confidential
+            }).shouldBeInstanceOf<ConfidentialClient>()
+        }
+
+        @Test
+        fun `should return a public principal from the configuration of a public client`() {
+            fromConfiguration(mockk(relaxed = true) {
+                every { type } returns Public
+            }).shouldBeInstanceOf<PublicClient>()
+        }
     }
 
     @Nested
