@@ -18,10 +18,6 @@ object PageTemplate {
         meta("_csrf", csrfToken.toString())
     }
 
-    fun HEAD.redirectUri(redirectUri: String) {
-        meta("_redirectUri", redirectUri)
-    }
-
     fun HEAD.bootstrap() {
         link {
             rel = "stylesheet"
