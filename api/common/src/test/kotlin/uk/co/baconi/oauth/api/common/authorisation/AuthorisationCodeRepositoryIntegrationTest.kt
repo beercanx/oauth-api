@@ -2,7 +2,9 @@ package uk.co.baconi.oauth.api.common.authorisation
 
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.beEmpty
 import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -17,6 +19,7 @@ import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 class AuthorisationCodeRepositoryIntegrationTest {
@@ -138,6 +141,24 @@ class AuthorisationCodeRepositoryIntegrationTest {
             underTest.findById(uuid).shouldBeNull()
             underTest.deleteById(uuid)
             underTest.findById(uuid).shouldBeNull()
+        }
+    }
+
+    @Nested
+    inner class DeleteExpired {
+
+        @Test
+        fun `should delete any expired refresh tokens`() {
+            val expired = authorisationCodeBasic(now = Instant.now().minus(1, ChronoUnit.HOURS))
+            underTest.insert(expired)
+            underTest.findById(expired.value) shouldBe expired
+            underTest.deleteExpired()
+            underTest.findById(expired.value).shouldBeNull()
+        }
+
+        @Test
+        fun `should not fail if no tokens are deleted`() {
+            underTest.deleteExpired()
         }
     }
 
