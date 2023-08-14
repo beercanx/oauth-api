@@ -201,7 +201,7 @@ class UserInfoIntegrationTests : AuthenticationModule, UserInfoRoute {
                 body<Map<String, String?>>().apply {
                     this shouldNot beEmpty()
                     this should haveSize(1)
-                    this["sub"] shouldBe activeToken.username.value
+                    this["sub"] shouldBe "aardvark"
                 }
             }
         }

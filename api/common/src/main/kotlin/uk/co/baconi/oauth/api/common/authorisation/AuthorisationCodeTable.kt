@@ -4,6 +4,10 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.javatime.timestamp
+import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
+import uk.co.baconi.oauth.api.common.authentication.authenticatedUsernameColumn
+import uk.co.baconi.oauth.api.common.client.ClientId
+import uk.co.baconi.oauth.api.common.client.clientIdColumn
 import uk.co.baconi.oauth.api.common.scope.Scope
 import java.time.Instant
 import java.util.*
@@ -16,8 +20,8 @@ object AuthorisationCodeTable : IdTable<UUID>() {
     override val id: Column<EntityID<UUID>> = uuid("id").entityId()
 
     val type: Column<String> = varchar("type", 6) // basic|pkce
-    val username: Column<String> = varchar("username", 50)
-    val clientId: Column<String> = varchar("client_id", 25)
+    val username: Column<AuthenticatedUsername> = authenticatedUsernameColumn()
+    val clientId: Column<ClientId> = clientIdColumn()
     val issuedAt: Column<Instant> = timestamp("issued_at") // TODO - Verify Instant over LocalDateTime as Instant still seems like its persisting in local time not UTC
     val expiresAt: Column<Instant> = timestamp("expires_at").index()
     val scopes: Column<String> = varchar("scopes", calculateMaxScopeFieldLength())

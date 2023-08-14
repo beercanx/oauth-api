@@ -2,8 +2,10 @@ package uk.co.baconi.oauth.api.common.token
 
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.beEmpty
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -18,6 +20,8 @@ import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
 import java.time.Instant
+import java.time.temporal.ChronoUnit
+import java.time.temporal.ChronoUnit.HOURS
 import java.util.*
 
 /**
@@ -95,12 +99,12 @@ class AccessTokenRepositoryIntegrationTest {
             underTest.insert(accessToken(username = "find-all-by-username", clientId = "4"))
             underTest.insert(accessToken(username = "find-all-by-username", clientId = "5"))
 
-            underTest.findAllByUsername("find-all-by-username") shouldHaveSize 5
+            underTest.findAllByUsername(AuthenticatedUsername("find-all-by-username")) shouldHaveSize 5
         }
 
         @Test
         fun `should return an empty sequence for a username with no access tokens`() {
-            underTest.findAllByUsername("find-none-by-username") shouldHaveSize 0
+            underTest.findAllByUsername(AuthenticatedUsername("find-none-by-username")) shouldHaveSize 0
         }
     }
 
@@ -164,6 +168,26 @@ class AccessTokenRepositoryIntegrationTest {
             underTest.findById(accessToken.value).shouldBeNull()
             underTest.deleteByRecord(accessToken)
             underTest.findById(accessToken.value).shouldBeNull()
+        }
+    }
+
+    @Nested
+    inner class DeleteExpired {
+
+        @Test
+        fun `should delete any expired access tokens`() {
+            val expired = accessToken(now = Instant.now().minus(1, HOURS))
+            underTest.insert(expired)
+            underTest.findById(expired.value) shouldBe expired
+            underTest.deleteExpired()
+            underTest.findById(expired.value).shouldBeNull()
+        }
+
+        @Test
+        fun `should not fail if no tokens are deleted`() {
+            underTest.deleteExpired()
+            underTest.findAllByUsername(AuthenticatedUsername("aardvark")) should beEmpty()
+            underTest.findAllByClientId(ClientId("badger")) should beEmpty()
         }
     }
 

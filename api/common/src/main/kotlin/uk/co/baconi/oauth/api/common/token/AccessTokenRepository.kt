@@ -16,8 +16,8 @@ class AccessTokenRepository(private val database: Database) {
         transaction(database) {
             AccessTokenTable.insertAndGetId {
                 it[id] = new.value
-                it[username] = new.username.value
-                it[clientId] = new.clientId.value
+                it[username] = new.username
+                it[clientId] = new.clientId
                 it[scopes] = new.scopes.let(ScopesSerializer::serialize)
                 it[issuedAt] = new.issuedAt
                 it[expiresAt] = new.expiresAt
@@ -35,7 +35,7 @@ class AccessTokenRepository(private val database: Database) {
         }
     }
 
-    fun findAllByUsername(username: String): List<AccessToken> {
+    fun findAllByUsername(username: AuthenticatedUsername): List<AccessToken> {
         return transaction(database) {
             AccessTokenTable
                 .select { AccessTokenTable.username eq username }
@@ -46,7 +46,7 @@ class AccessTokenRepository(private val database: Database) {
     fun findAllByClientId(clientId: ClientId): List<AccessToken> {
         return transaction(database) {
             AccessTokenTable
-                .select { AccessTokenTable.clientId eq clientId.value }
+                .select { AccessTokenTable.clientId eq clientId }
                 .map(::toAccessToken)
         }
     }
@@ -72,8 +72,8 @@ class AccessTokenRepository(private val database: Database) {
     private fun toAccessToken(it: ResultRow): AccessToken {
         return AccessToken(
             value = it[AccessTokenTable.id].value,
-            username = it[AccessTokenTable.username].let(::AuthenticatedUsername),
-            clientId = it[AccessTokenTable.clientId].let(::ClientId),
+            username = it[AccessTokenTable.username],
+            clientId = it[AccessTokenTable.clientId],
             scopes = it[AccessTokenTable.scopes].let(ScopesSerializer::deserialize),
             issuedAt = it[AccessTokenTable.issuedAt],
             expiresAt = it[AccessTokenTable.expiresAt],

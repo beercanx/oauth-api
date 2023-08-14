@@ -33,8 +33,8 @@ class AuthorisationCodeRepository(private val database: Database) {
                         it[codeChallengeMethod] = new.codeChallengeMethod.name
                     }
                 }
-                it[username] = new.username.value
-                it[clientId] = new.clientId.value
+                it[username] = new.username
+                it[clientId] = new.clientId
                 it[issuedAt] = new.issuedAt
                 it[expiresAt] = new.expiresAt
                 it[scopes] = new.scopes.let(ScopesSerializer::serialize)
@@ -69,8 +69,8 @@ class AuthorisationCodeRepository(private val database: Database) {
         return when (val type = it[AuthorisationCodeTable.type]) {
             BASIC -> AuthorisationCode.Basic(
                 value = it[AuthorisationCodeTable.id].value,
-                username = it[AuthorisationCodeTable.username].let(::AuthenticatedUsername),
-                clientId = it[AuthorisationCodeTable.clientId].let(::ClientId),
+                username = it[AuthorisationCodeTable.username],
+                clientId = it[AuthorisationCodeTable.clientId],
                 issuedAt = it[AuthorisationCodeTable.issuedAt],
                 expiresAt = it[AuthorisationCodeTable.expiresAt],
                 scopes = it[AuthorisationCodeTable.scopes].let(ScopesSerializer::deserialize),
@@ -79,8 +79,8 @@ class AuthorisationCodeRepository(private val database: Database) {
             )
             PKCE -> AuthorisationCode.PKCE(
                 value = it[AuthorisationCodeTable.id].value,
-                username = it[AuthorisationCodeTable.username].let(::AuthenticatedUsername),
-                clientId = it[AuthorisationCodeTable.clientId].let(::ClientId),
+                username = it[AuthorisationCodeTable.username],
+                clientId = it[AuthorisationCodeTable.clientId],
                 issuedAt = it[AuthorisationCodeTable.issuedAt],
                 expiresAt = it[AuthorisationCodeTable.expiresAt],
                 scopes = it[AuthorisationCodeTable.scopes].let(ScopesSerializer::deserialize),
