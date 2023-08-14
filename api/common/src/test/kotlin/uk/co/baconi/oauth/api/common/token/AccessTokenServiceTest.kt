@@ -10,6 +10,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
+import io.mockk.verify
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
@@ -91,6 +92,8 @@ class AccessTokenServiceTest {
             every { repository.deleteByRecord(any()) } returns Unit
 
             underTest.authenticate(UUID.randomUUID()) should beNull()
+
+            verify { repository.deleteByRecord(any()) }
         }
 
         @Test

@@ -19,7 +19,7 @@ interface Token {
     val username: AuthenticatedUsername
 
     /**
-     * The if of the oauth client this token was issued to.
+     * The id of the oauth client this token was issued to.
      */
     val clientId: ClientId
 
@@ -42,4 +42,5 @@ interface Token {
      * The date and time indicating when this token is not to be used before.
      */
     val notBefore: Instant
+
 }
