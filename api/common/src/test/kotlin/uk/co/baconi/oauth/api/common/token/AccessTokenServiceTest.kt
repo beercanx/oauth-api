@@ -68,6 +68,11 @@ class AccessTokenServiceTest {
     inner class Authenticate {
 
         @Test
+        fun `should return null if String token is an invalid format`() {
+            underTest.authenticate("aardvark") should beNull()
+        }
+
+        @Test
         fun `should return null if there is no matching access token in the repository`() {
 
             every { repository.findById(any()) } returns null
@@ -89,6 +94,17 @@ class AccessTokenServiceTest {
         }
 
         @Test
+        fun `should return null if discovered the access token is yet to be valid`() {
+
+            every { repository.findById(any()) } returns mockk {
+                every { hasExpired() } returns false
+                every { isBefore() } returns true
+            }
+
+            underTest.authenticate(UUID.randomUUID()) should beNull()
+        }
+
+        @Test
         fun `should return the access token if its discovered and has not expired`() {
 
             val accessToken = mockk<AccessToken>("aardvark") {
@@ -99,6 +115,20 @@ class AccessTokenServiceTest {
             every { repository.findById(any()) } returns accessToken
 
             underTest.authenticate(UUID.randomUUID()) shouldBe accessToken
+        }
+
+        @Test
+        fun `should return the access token if by String its discovered and has not expired`() {
+
+            val accessToken = mockk<AccessToken> {
+                every { value } returns UUID.fromString("536023bf-8673-441d-a81a-ffe1b03cf698")
+                every { hasExpired() } returns false
+                every { isBefore() } returns false
+            }
+
+            every { repository.findById(any()) } returns accessToken
+
+            underTest.authenticate("536023bf-8673-441d-a81a-ffe1b03cf698") shouldBe accessToken
         }
     }
 }
