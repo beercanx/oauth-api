@@ -47,7 +47,7 @@ interface AuthenticationModule {
             }
             bearer<AccessToken> {
                 this.realm = realm
-                validate { (token) ->
+                authenticate { (token) ->
                     accessTokenService.authenticate(token)
                 }
             }
