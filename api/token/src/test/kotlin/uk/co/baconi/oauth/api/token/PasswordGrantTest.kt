@@ -24,7 +24,7 @@ import java.time.Instant
 import java.util.*
 
 class PasswordGrantTest {
-    
+
     private val accessToken = UUID.randomUUID()
     private val accessTokenService = mockk<AccessTokenService> {
         every { issue(any(), any(), any()) } returns mockk {
