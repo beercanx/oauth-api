@@ -1,2 +1,2 @@
 # Token Introspection Endpoint
-* https://datatracker.ietf.org/doc/html/rfc7662#section-2
+* https://www.rfc-editor.org/rfc/rfc7662#section-2

@@ -94,7 +94,7 @@ enum class Claim(internal val value: String) {
     //@SerialName("zoneinfo") ZoneInfo("zoneinfo"),
 
     /**
-     * End-User's locale, represented as a RFC5646 [https://tools.ietf.org/html/rfc5646] language tag. This is typically
+     * End-User's locale, represented as a RFC5646 [https://www.rfc-editor.org/rfc/rfc5646] language tag. This is typically
      * an ISO 639-1 Alpha-2 [ISO639‑1] language code in lowercase and an ISO 3166-1 Alpha-2 [ISO3166‑1] country code in
      * uppercase, separated by a dash. For example, en-US or fr-CA. As a compatibility note, some implementations have
      * used an underscore as the separator rather than a dash, for example, en_US; Relying Parties MAY choose to accept
