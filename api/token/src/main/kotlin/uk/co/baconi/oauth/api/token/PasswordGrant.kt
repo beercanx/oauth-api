@@ -13,7 +13,7 @@ class PasswordGrant(
     private val authenticationService: CustomerAuthenticationService,
 ) {
 
-    suspend fun exchange(request: PasswordRequest): TokenResponse {
+    fun exchange(request: PasswordRequest): TokenResponse {
 
         return when(val authentication = authenticationService.authenticate(request.username, request.password)) {
             // TODO - Reconsider the description value
