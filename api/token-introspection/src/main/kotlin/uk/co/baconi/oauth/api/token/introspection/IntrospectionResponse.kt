@@ -11,7 +11,7 @@ import uk.co.baconi.oauth.api.common.token.TokenType
 sealed class IntrospectionResponse {
 
     /**
-     * https://datatracker.ietf.org/doc/html/rfc7662#section-2.2
+     * https://www.rfc-editor.org/rfc/rfc7662#section-2.2
      */
     @Serializable
     data class Active(
@@ -25,13 +25,13 @@ sealed class IntrospectionResponse {
          * owner, and is within its given time window of validity (e.g., after its issuance time and before its expiration
          * time).
          *
-         * See Section 4 for information on implementation of such checks [https://datatracker.ietf.org/doc/html/rfc7662#section-4].
+         * See Section 4 for information on implementation of such checks [https://www.rfc-editor.org/rfc/rfc7662#section-4].
          */
         val active: Boolean = true,
 
         /**
          * A JSON string containing a space-separated list of scopes associated with this token, in the format described
-         * in Section 3.3 of OAuth 2.0 [https://datatracker.ietf.org/doc/html/rfc6749].
+         * in Section 3.3 of OAuth 2.0 [https://www.rfc-editor.org/rfc/rfc6749].
          */
         @Serializable(with = ScopesSerializer::class) val scope: Set<Scope>,
 
@@ -46,25 +46,25 @@ sealed class IntrospectionResponse {
         val username: AuthenticatedUsername,
 
         /**
-         * Type of the token as defined in Section 5.1 of OAuth 2.0 [https://datatracker.ietf.org/doc/html/rfc6749].
+         * Type of the token as defined in Section 5.1 of OAuth 2.0 [https://www.rfc-editor.org/rfc/rfc6749].
          */
         @SerialName("token_type") val tokenType: TokenType,
 
         /**
          * Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token will
-         * expire, as defined in JWT [https://datatracker.ietf.org/doc/html/rfc7519].
+         * expire, as defined in JWT [https://www.rfc-editor.org/rfc/rfc7519].
          */
         @SerialName("exp") val expirationTime: Long,
 
         /**
          * Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token was
-         * originally issued, as defined in JWT [https://datatracker.ietf.org/doc/html/rfc7519].
+         * originally issued, as defined in JWT [https://www.rfc-editor.org/rfc/rfc7519].
          */
         @SerialName("iat") val issuedAt: Long,
 
         /**
          * Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token is not
-         * to be used before, as defined in JWT [https://datatracker.ietf.org/doc/html/rfc7519].
+         * to be used before, as defined in JWT [https://www.rfc-editor.org/rfc/rfc7519].
          */
         @SerialName("nbf") val notBefore: Long,
 
@@ -86,11 +86,27 @@ sealed class IntrospectionResponse {
         }
     }
 
-    @Serializable // TODO - Verify if description or error_description is what the variable should be
-    data class Invalid(val error: IntrospectionErrorType, val description: String) : IntrospectionResponse() {
+    /**
+     * https://www.rfc-editor.org/rfc/rfc7662#section-2.3
+     */
+    @Serializable
+    data class Invalid(
+
+        /**
+         * A single ASCII error code from the defined list.
+         */
+        val error: IntrospectionErrorType,
+
+        /**
+         * Human-readable ASCII text providing additional information, used to assist the client developer in
+         * understanding the error that occurred.
+         */
+        @SerialName("error_description")
+        val errorDescription: String
+
+    ) : IntrospectionResponse() {
         init {
-            require(description.isNotBlank()) { "Error description should not be blank!" }
+            require(errorDescription.isNotBlank()) { "Error description should not be blank!" }
         }
     }
-
 }

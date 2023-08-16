@@ -7,17 +7,11 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.beBlank
 import io.ktor.client.*
-import io.ktor.client.call.body
+import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.http.HttpMethod.Companion.Delete
-import io.ktor.http.HttpMethod.Companion.Get
-import io.ktor.http.HttpMethod.Companion.Head
-import io.ktor.http.HttpMethod.Companion.Options
-import io.ktor.http.HttpMethod.Companion.Patch
-import io.ktor.http.HttpMethod.Companion.Put
 import io.ktor.http.HttpMethod.Companion.parse
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
@@ -175,7 +169,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
                     status shouldBe Forbidden
                     assertSoftly(body<Map<String, String>>()) {
                         shouldContain("error" to "unauthorized_client")
-                        shouldContain("description" to "client is not allowed to introspect")
+                        shouldContain("error_description" to "client is not allowed to introspect")
                     }
                 }
             }
@@ -195,7 +189,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
                 status shouldBe BadRequest
                 assertSoftly(body<Map<String, String>>()) {
                     shouldContain("error" to "invalid_request")
-                    shouldContain("description" to "missing parameter: token")
+                    shouldContain("error_description" to "missing parameter: token")
                 }
             }
         }
@@ -211,7 +205,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
                 status shouldBe BadRequest
                 assertSoftly(body<Map<String, String>>()) {
                     shouldContain("error" to "invalid_request")
-                    shouldContain("description" to "invalid parameter: token")
+                    shouldContain("error_description" to "invalid parameter: token")
                 }
             }
         }
@@ -227,7 +221,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
                 status shouldBe BadRequest
                 assertSoftly(body<Map<String, String>>()) {
                     shouldContain("error" to "invalid_request")
-                    shouldContain("description" to "invalid parameter: token")
+                    shouldContain("error_description" to "invalid parameter: token")
                 }
             }
         }
