@@ -56,7 +56,7 @@ sealed interface TokenResponse {
 
     ) : TokenResponse {
         override fun toString(): String {
-            return "Success(accessToken='REDACTED', tokenType=$tokenType, expiresIn=$expiresIn, scope=$scope, state=$state)"
+            return "Success(accessToken='REDACTED', tokenType=$tokenType, expiresIn=$expiresIn, refreshToken='REDACTED', scope=$scope, state='REDACTED')"
         }
     }
 
