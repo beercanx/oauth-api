@@ -117,23 +117,15 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
             response.status shouldBe MethodNotAllowed
         }
 
-        @Test
-        fun `should only support url encoded form requests`() = setupApplication { client ->
-            assertSoftly {
-                for ((contentType, body) in listOf(
-                    ContentType.Application.Json to """{"token": "${UUID.randomUUID()}"}""",
-                    ContentType.Application.Xml to "<token>${UUID.randomUUID()}</token>"
-                )) {
-                    withClue(contentType) {
+        @ParameterizedTest
+        @CsvSource("""json,{"token":"88900459-98af-4680-94b9-29e5b0b2e59e"}""", """xml,<token>88900459-98af-4680-94b9-29e5b0b2e59e</token>""")
+        fun `should only support url encoded form requests`(type: String, body: String) = setupApplication { client ->
 
-                        val response = client.request(introspectionEndpoint) {
-                            introspectionRequest(contentType = contentType, body = body)
-                        }
-
-                        response.status shouldBe UnsupportedMediaType
-                    }
-                }
+            val response = client.request(introspectionEndpoint) {
+                introspectionRequest(contentType = ContentType("application", type), body = body)
             }
+
+            response.status shouldBe UnsupportedMediaType
         }
     }
 
