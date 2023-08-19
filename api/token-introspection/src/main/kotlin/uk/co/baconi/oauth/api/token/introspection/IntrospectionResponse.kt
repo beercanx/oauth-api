@@ -101,8 +101,7 @@ sealed class IntrospectionResponse {
          * Human-readable ASCII text providing additional information, used to assist the client developer in
          * understanding the error that occurred.
          */
-        @SerialName("error_description")
-        val errorDescription: String
+        @SerialName("error_description") val errorDescription: String
 
     ) : IntrospectionResponse() {
         init {

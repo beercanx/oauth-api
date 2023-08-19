@@ -60,6 +60,9 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
+    // Ktor testing
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+
     // Asserting stuff
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
 
