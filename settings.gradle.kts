@@ -18,7 +18,7 @@ include(":api:server")
 // Automation
 include(":automation:api")
 include(":automation:browser")
-// TODO include(":automation:load")
+include(":automation:load")
 
 // TODO - Test Consumers
 
@@ -27,6 +27,7 @@ pluginManagement {
     val kotlinVersion: String by settings
     plugins {
         kotlin("jvm") version kotlinVersion apply false
+        kotlin("plugin.allopen") version kotlinVersion apply false
         kotlin("plugin.serialization") version kotlinVersion apply false
     }
 }
