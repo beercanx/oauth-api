@@ -1,8 +1,10 @@
 package uk.co.baconi.oauth.api.common
 
-import io.ktor.http.auth.*
+import io.ktor.http.auth.HttpAuthHeader.*
+import io.ktor.http.auth.HttpAuthHeader.Parameters.Realm
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.response.*
 import uk.co.baconi.oauth.api.common.client.ClientSecretService
 import uk.co.baconi.oauth.api.common.client.ConfidentialClient
 import uk.co.baconi.oauth.api.common.client.PublicClient
@@ -34,12 +36,7 @@ interface AuthenticationModule {
                 userParamName = "client_id"
                 passwordParamName = "client_id"
                 challenge {
-                    UnauthorizedResponse(
-                        HttpAuthHeader.Parameterized(
-                            "Body",
-                            mapOf(HttpAuthHeader.Parameters.Realm to realm)
-                        )
-                    )
+                    call.respond(UnauthorizedResponse(Parameterized("Body", mapOf(Realm to realm))))
                 }
                 validate { (clientId, _) ->
                     clientSecretService.authenticate(clientId)
@@ -47,7 +44,7 @@ interface AuthenticationModule {
             }
             bearer<AccessToken> {
                 this.realm = realm
-                validate { (token) ->
+                authenticate { (token) ->
                     accessTokenService.authenticate(token)
                 }
             }

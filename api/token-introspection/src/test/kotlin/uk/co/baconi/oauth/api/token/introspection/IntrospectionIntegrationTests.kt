@@ -7,17 +7,12 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.beBlank
 import io.ktor.client.*
-import io.ktor.client.call.body
+import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.http.HttpMethod.Companion.Delete
-import io.ktor.http.HttpMethod.Companion.Get
-import io.ktor.http.HttpMethod.Companion.Head
-import io.ktor.http.HttpMethod.Companion.Options
-import io.ktor.http.HttpMethod.Companion.Patch
-import io.ktor.http.HttpMethod.Companion.Put
+import io.ktor.http.HttpMethod.Companion.parse
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
@@ -31,6 +26,8 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import uk.co.baconi.oauth.api.common.AuthenticationModule
 import uk.co.baconi.oauth.api.common.CommonModule.common
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
@@ -109,39 +106,26 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
     @Nested
     inner class InvalidHttpRequest {
 
-        @Test
-        fun `should only support post requests`() = setupApplication { client ->
-            assertSoftly {
-                for (method in listOf(Get, Put, Patch, Delete, Head, Options)) {
-                    withClue(method) {
+        @ParameterizedTest
+        @CsvSource("GET", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS")
+        fun `should only support post requests`(method: String) = setupApplication { client ->
 
-                        val response = client.request(introspectionEndpoint) {
-                            introspectionRequest(method = method)
-                        }
-
-                        response.status shouldBe MethodNotAllowed
-                    }
-                }
+            val response = client.request(introspectionEndpoint) {
+                introspectionRequest(method = parse(method))
             }
+
+            response.status shouldBe MethodNotAllowed
         }
 
-        @Test
-        fun `should only support url encoded form requests`() = setupApplication { client ->
-            assertSoftly {
-                for ((contentType, body) in listOf(
-                    ContentType.Application.Json to """{"token": "${UUID.randomUUID()}"}""",
-                    ContentType.Application.Xml to "<token>${UUID.randomUUID()}</token>"
-                )) {
-                    withClue(contentType) {
+        @ParameterizedTest
+        @CsvSource("""json,{"token":"88900459-98af-4680-94b9-29e5b0b2e59e"}""", """xml,<token>88900459-98af-4680-94b9-29e5b0b2e59e</token>""")
+        fun `should only support url encoded form requests`(type: String, body: String) = setupApplication { client ->
 
-                        val response = client.request(introspectionEndpoint) {
-                            introspectionRequest(contentType = contentType, body = body)
-                        }
-
-                        response.status shouldBe UnsupportedMediaType
-                    }
-                }
+            val response = client.request(introspectionEndpoint) {
+                introspectionRequest(contentType = ContentType("application", type), body = body)
             }
+
+            response.status shouldBe UnsupportedMediaType
         }
     }
 
@@ -177,7 +161,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
                     status shouldBe Forbidden
                     assertSoftly(body<Map<String, String>>()) {
                         shouldContain("error" to "unauthorized_client")
-                        shouldContain("description" to "client is not allowed to introspect")
+                        shouldContain("error_description" to "client is not allowed to introspect")
                     }
                 }
             }
@@ -197,7 +181,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
                 status shouldBe BadRequest
                 assertSoftly(body<Map<String, String>>()) {
                     shouldContain("error" to "invalid_request")
-                    shouldContain("description" to "missing parameter: token")
+                    shouldContain("error_description" to "missing parameter: token")
                 }
             }
         }
@@ -213,7 +197,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
                 status shouldBe BadRequest
                 assertSoftly(body<Map<String, String>>()) {
                     shouldContain("error" to "invalid_request")
-                    shouldContain("description" to "invalid parameter: token")
+                    shouldContain("error_description" to "invalid parameter: token")
                 }
             }
         }
@@ -229,7 +213,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
                 status shouldBe BadRequest
                 assertSoftly(body<Map<String, String>>()) {
                     shouldContain("error" to "invalid_request")
-                    shouldContain("description" to "invalid parameter: token")
+                    shouldContain("error_description" to "invalid parameter: token")
                 }
             }
         }

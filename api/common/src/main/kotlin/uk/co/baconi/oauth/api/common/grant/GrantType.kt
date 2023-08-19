@@ -20,6 +20,6 @@ enum class GrantType(val value: String) {
 
     companion object {
         fun fromValue(value: String): GrantType = checkNotNull(fromValueOrNull(value)) { "No such GrantType [$value]" }
-        fun fromValueOrNull(value: String): GrantType? = values().firstOrNull { scope -> scope.value == value }
+        fun fromValueOrNull(value: String): GrantType? = entries.firstOrNull { scope -> scope.value == value }
     }
 }

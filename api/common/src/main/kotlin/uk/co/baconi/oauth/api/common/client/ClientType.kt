@@ -18,7 +18,7 @@ enum class ClientType(internal val value: String) {
             "No such ClientType [$value]"
         }
 
-        fun fromValueOrNull(value: String): ClientType? = values().firstOrNull { type ->
+        fun fromValueOrNull(value: String): ClientType? = entries.firstOrNull { type ->
             type.value == value
         }
     }

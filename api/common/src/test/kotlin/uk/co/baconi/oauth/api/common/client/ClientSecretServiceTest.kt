@@ -18,7 +18,6 @@ class ClientSecretServiceTest {
         allowedScopes = emptySet(),
         allowedActions = emptySet(),
         allowedGrantTypes = emptySet(),
-        allowedAuthorisationResponseTypes = emptySet(),
     )
 
     private val consumerZSecret = mockk<ClientSecret> {
@@ -33,7 +32,6 @@ class ClientSecretServiceTest {
         allowedScopes = emptySet(),
         allowedActions = emptySet(),
         allowedGrantTypes = emptySet(),
-        allowedAuthorisationResponseTypes = emptySet(),
     )
 
     private val consumerYSecret = mockk<ClientSecret> {

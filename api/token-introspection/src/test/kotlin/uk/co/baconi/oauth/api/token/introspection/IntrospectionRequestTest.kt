@@ -28,7 +28,6 @@ class IntrospectionRequestTest {
                         allowedScopes = emptySet(),
                         allowedActions = emptySet(),
                         allowedGrantTypes = emptySet(),
-                        allowedAuthorisationResponseTypes = emptySet()
                     )
                 ),
                 token = UUID.randomUUID()

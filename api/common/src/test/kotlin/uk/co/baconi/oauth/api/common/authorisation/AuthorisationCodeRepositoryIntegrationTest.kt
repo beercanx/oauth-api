@@ -2,7 +2,9 @@ package uk.co.baconi.oauth.api.common.authorisation
 
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.beEmpty
 import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -17,6 +19,7 @@ import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 class AuthorisationCodeRepositoryIntegrationTest {
@@ -141,13 +144,32 @@ class AuthorisationCodeRepositoryIntegrationTest {
         }
     }
 
+    @Nested
+    inner class DeleteExpired {
+
+        @Test
+        fun `should delete any expired refresh tokens`() {
+            val expired = authorisationCodeBasic(now = Instant.now().minus(1, ChronoUnit.HOURS))
+            underTest.insert(expired)
+            underTest.findById(expired.value) shouldBe expired
+            underTest.deleteExpired()
+            underTest.findById(expired.value).shouldBeNull()
+        }
+
+        @Test
+        fun `should not fail if no tokens are deleted`() {
+            underTest.deleteExpired()
+        }
+    }
+
     private fun authorisationCodeBasic(
         value: UUID = UUID.randomUUID(),
         username: String = "aardvark",
         clientId: String = "badger",
         redirectUri: String = "uk.co.baconi.oauth.consumerz://callback",
         scopes: Set<Scope> = setOf(Scope.OpenId, Scope.ProfileRead, Scope.ProfileWrite),
-        now: Instant = Instant.now()
+        now: Instant = Instant.now(),
+        state: String = "da4d809e-ed89-42bd-aa3e-8c975b9242d0",
     ) = AuthorisationCode.Basic(
         value = value,
         username = AuthenticatedUsername(username),
@@ -156,7 +178,7 @@ class AuthorisationCodeRepositoryIntegrationTest {
         redirectUri = redirectUri,
         issuedAt = now,
         expiresAt = now.plusSeconds(60),
-        state = null,
+        state = state,
     )
 
     private fun authorisationCodePkce(
@@ -166,6 +188,7 @@ class AuthorisationCodeRepositoryIntegrationTest {
         redirectUri: String = "uk.co.baconi.oauth.consumerz://callback",
         scopes: Set<Scope> = setOf(Scope.OpenId, Scope.ProfileRead, Scope.ProfileWrite),
         now: Instant = Instant.now(),
+        state: String = "da4d809e-ed89-42bd-aa3e-8c975b9242d0",
         codeChallenge: String = "code-challenge",
     ) = AuthorisationCode.PKCE(
         value = value,
@@ -175,7 +198,7 @@ class AuthorisationCodeRepositoryIntegrationTest {
         redirectUri = redirectUri,
         issuedAt = now,
         expiresAt = now.plusSeconds(60),
-        state = null,
+        state = state,
         codeChallenge = CodeChallenge(codeChallenge),
         codeChallengeMethod = CodeChallengeMethod.S256
     )

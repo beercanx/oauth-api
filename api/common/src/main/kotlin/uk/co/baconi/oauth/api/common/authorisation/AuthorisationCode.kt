@@ -16,7 +16,7 @@ sealed interface AuthorisationCode {
     val username: AuthenticatedUsername
     val redirectUri: String
     val scopes: Set<Scope>
-    val state: String?
+    val state: String
     fun hasExpired(): Boolean = now().isAfter(expiresAt)
 
     data class Basic(
@@ -27,7 +27,7 @@ sealed interface AuthorisationCode {
         override val username: AuthenticatedUsername,
         override val redirectUri: String,
         override val scopes: Set<Scope>,
-        override val state: String?
+        override val state: String
     ) : AuthorisationCode {
         override fun toString(): String {
             return "AuthorisationCode.Basic(value='REDACTED', issuedAt=$issuedAt, expiresAt=$expiresAt, clientId=$clientId, username=$username, redirectUri='$redirectUri', scopes=$scopes, state='REDACTED')"
@@ -42,7 +42,7 @@ sealed interface AuthorisationCode {
         override val username: AuthenticatedUsername,
         override val redirectUri: String,
         override val scopes: Set<Scope>,
-        override val state: String?,
+        override val state: String,
         val codeChallenge: CodeChallenge,
         val codeChallengeMethod: CodeChallengeMethod,
     ) : AuthorisationCode {

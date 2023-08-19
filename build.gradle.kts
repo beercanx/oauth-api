@@ -1,7 +1,6 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinTopLevelExtension
 
 plugins {
     base
@@ -28,6 +27,16 @@ allprojects {
             showStandardStreams = true
             events = setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED, TestLogEvent.PASSED)
             exceptionFormat = TestExceptionFormat.FULL
+        }
+        // Make sure the JaCoCo report is always generated after tests run.
+        finalizedBy(tasks.withType<JacocoReport>())
+    }
+    tasks.withType<JacocoReport>().configureEach {
+        // Make sure the tests are always run before generating the report.
+        dependsOn(tasks.withType<Test>())
+        reports {
+            html.required.set(true)
+            xml.required.set(true)
         }
     }
     tasks.withType<Jar>().configureEach {

@@ -10,6 +10,6 @@ enum class Scope(internal val value: String) {
     @SerialName("profile::write") ProfileWrite("profile::write");
     companion object {
         fun fromValue(value: String): Scope = checkNotNull(fromValueOrNull(value)) { "No such Scope [$value]" }
-        fun fromValueOrNull(value: String): Scope? = values().firstOrNull { scope -> scope.value == value }
+        fun fromValueOrNull(value: String): Scope? = entries.firstOrNull { scope -> scope.value == value }
     }
 }

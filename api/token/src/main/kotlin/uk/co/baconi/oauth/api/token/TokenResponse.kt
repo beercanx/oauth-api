@@ -15,7 +15,7 @@ import java.util.*
 sealed interface TokenResponse {
 
     /**
-     * https://tools.ietf.org/html/rfc6749#section-5.1
+     * https://www.rfc-editor.org/rfc/rfc6749#section-5.1
      */
     @Serializable
     data class Success(
@@ -25,7 +25,7 @@ sealed interface TokenResponse {
         @SerialName("access_token") val accessToken: UUID,
 
         /**
-         * The type of the token issued as described in https://tools.ietf.org/html/rfc6749#section-7.1
+         * The type of the token issued as described in https://www.rfc-editor.org/rfc/rfc6749#section-7.1
          */
         @SerialName("token_type") val tokenType: TokenType = Bearer,
 
@@ -44,7 +44,7 @@ sealed interface TokenResponse {
 
         /**
          * OPTIONAL if identical to the scope requested by the client; otherwise, REQUIRED.
-         * The scope of the access token as described by https://tools.ietf.org/html/rfc6749#section-3.3
+         * The scope of the access token as described by https://www.rfc-editor.org/rfc/rfc6749#section-3.3
          */
         @Serializable(with = ScopesSerializer::class) val scope: Set<Scope>,
 
@@ -56,12 +56,12 @@ sealed interface TokenResponse {
 
     ) : TokenResponse {
         override fun toString(): String {
-            return "Success(accessToken='REDACTED', tokenType=$tokenType, expiresIn=$expiresIn, scope=$scope, state=$state)"
+            return "Success(accessToken='REDACTED', tokenType=$tokenType, expiresIn=$expiresIn, refreshToken='REDACTED', scope=$scope, state='REDACTED')"
         }
     }
 
     /**
-     * https://tools.ietf.org/html/rfc6749#section-5.2
+     * https://www.rfc-editor.org/rfc/rfc6749#section-5.2
      */
     @Serializable
     data class Failed(
@@ -74,11 +74,12 @@ sealed interface TokenResponse {
          * Human-readable ASCII text providing additional information, used to assist the client developer in
          * understanding the error that occurred.
          */
-        val error_description: String
+        @SerialName("error_description")
+        val errorDescription: String
 
     ) : TokenResponse {
         init {
-            require(error_description.isNotBlank()) { "Error description should not be blank!" }
+            require(errorDescription.isNotBlank()) { "Error description should not be blank!" }
         }
     }
 }

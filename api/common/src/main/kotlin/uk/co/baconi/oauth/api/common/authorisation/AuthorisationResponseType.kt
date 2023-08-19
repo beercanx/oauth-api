@@ -14,7 +14,7 @@ enum class AuthorisationResponseType(internal val value: String) {
             "No such AuthorisationResponseType [$value]"
         }
 
-        fun fromValueOrNull(value: String): AuthorisationResponseType? = values().firstOrNull { type ->
+        fun fromValueOrNull(value: String): AuthorisationResponseType? = entries.firstOrNull { type ->
             type.value == value
         }
     }

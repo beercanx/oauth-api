@@ -16,8 +16,8 @@ class RefreshTokenRepository(private val database: Database) {
         transaction(database) {
             RefreshTokenTable.insertAndGetId {
                 it[id] = new.value
-                it[username] = new.username.value
-                it[clientId] = new.clientId.value
+                it[username] = new.username
+                it[clientId] = new.clientId
                 it[scopes] = new.scopes.let(ScopesSerializer::serialize)
                 it[issuedAt] = new.issuedAt
                 it[expiresAt] = new.expiresAt
@@ -35,7 +35,7 @@ class RefreshTokenRepository(private val database: Database) {
         }
     }
 
-    fun findAllByUsername(username: String): List<RefreshToken> {
+    fun findAllByUsername(username: AuthenticatedUsername): List<RefreshToken> {
         return transaction(database) {
             RefreshTokenTable
                 .select { RefreshTokenTable.username eq username }
@@ -46,7 +46,7 @@ class RefreshTokenRepository(private val database: Database) {
     fun findAllByClientId(clientId: ClientId): List<RefreshToken> {
         return transaction(database) {
             RefreshTokenTable
-                .select { RefreshTokenTable.clientId eq clientId.value }
+                .select { RefreshTokenTable.clientId eq clientId }
                 .map(::toRefreshToken)
         }
     }
@@ -72,8 +72,8 @@ class RefreshTokenRepository(private val database: Database) {
     private fun toRefreshToken(it: ResultRow): RefreshToken {
         return RefreshToken(
             value = it[RefreshTokenTable.id].value,
-            username = it[RefreshTokenTable.username].let(::AuthenticatedUsername),
-            clientId = it[RefreshTokenTable.clientId].let(::ClientId),
+            username = it[RefreshTokenTable.username],
+            clientId = it[RefreshTokenTable.clientId],
             scopes = it[RefreshTokenTable.scopes].let(ScopesSerializer::deserialize),
             issuedAt = it[RefreshTokenTable.issuedAt],
             expiresAt = it[RefreshTokenTable.expiresAt],

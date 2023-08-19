@@ -36,11 +36,11 @@ docker build --tag 'oauth-api:server-well-known' --target server-well-known .
 
 ## Sources
 OAuth and related RFCs
- * https://tools.ietf.org/html/rfc6749 - The OAuth 2.0 Authorization Framework
- * https://tools.ietf.org/html/rfc8252 - OAuth 2.0 for Native Apps
- * https://tools.ietf.org/html/rfc7662 - OAuth 2.0 Token Introspection
- * https://tools.ietf.org/html/rfc7009 - OAuth 2.0 Token Revocation
- * https://tools.ietf.org/html/rfc6750 - The OAuth 2.0 Authorization Framework: Bearer Token Usage
- * https://tools.ietf.org/html/rfc7521 - Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants
- * https://tools.ietf.org/html/rfc7523 - JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants
- * https://tools.ietf.org/html/rfc7636 - Proof Key for Code Exchange by OAuth Public Clients
+ * https://www.rfc-editor.org/rfc/rfc6749 - The OAuth 2.0 Authorization Framework
+ * https://www.rfc-editor.org/rfc/rfc8252 - OAuth 2.0 for Native Apps
+ * https://www.rfc-editor.org/rfc/rfc7662 - OAuth 2.0 Token Introspection
+ * https://www.rfc-editor.org/rfc/rfc7009 - OAuth 2.0 Token Revocation
+ * https://www.rfc-editor.org/rfc/rfc6750 - The OAuth 2.0 Authorization Framework: Bearer Token Usage
+ * https://www.rfc-editor.org/rfc/rfc7521 - Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants
+ * https://www.rfc-editor.org/rfc/rfc7523 - JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants
+ * https://www.rfc-editor.org/rfc/rfc7636 - Proof Key for Code Exchange by OAuth Public Clients

@@ -37,7 +37,7 @@ class ClientConfigurationRepository {
                         .getString("type")
                         .let(ClientType::fromValue),
                     redirectUris = config
-                        .tryGetStringList("redirectUrls")
+                        .tryGetStringList("redirectUris")
                         ?.filter(String::isNotBlank)
                         ?.map(String::trim)
                         ?.toSet()
@@ -55,11 +55,6 @@ class ClientConfigurationRepository {
                     allowedGrantTypes = config
                         .tryGetStringList("allowedGrantTypes")
                         ?.map(GrantType::fromValue)
-                        ?.toSet()
-                        ?: emptySet(),
-                    allowedAuthorisationResponseTypes = config
-                        .tryGetStringList("allowedAuthorisationResponseTypes")
-                        ?.map(AuthorisationResponseType::fromValue)
                         ?.toSet()
                         ?: emptySet(),
                 )

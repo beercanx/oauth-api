@@ -18,8 +18,6 @@ dependencies {
 
     // Browser stuff
     implementation("com.codeborne:selenide:$selenideVersion")
-    implementation("com.google.guava:guava:32.0.0-jre") // Patching transitive from selenide
-    implementation("io.netty:netty-handler:4.1.94.Final") // Patching transitive from selenide
 
     // Manually asserting stuff
     implementation("io.kotest:kotest-assertions-core:$kotestVersion")
@@ -28,6 +26,16 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:$junitVersion"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // Security patching
+    constraints {
+        implementation("com.google.guava:guava:32.0.0-jre") {
+            because("selenide brings in 31.1-jre")
+        }
+        implementation("io.netty:netty-handler:4.1.94.Final") {
+            because("selenide brings in 4.1.92.Final")
+        }
+    }
 }
 
 // TODO - Add in a means of running the automation test pack against an environment.

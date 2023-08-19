@@ -1,7 +1,6 @@
 package uk.co.baconi.oauth.api.common.client
 
 import io.ktor.server.auth.*
-import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType
 import uk.co.baconi.oauth.api.common.client.ClientAction.Introspect
 import uk.co.baconi.oauth.api.common.client.ClientAction.ProofKeyForCodeExchange
 import uk.co.baconi.oauth.api.common.grant.GrantType
@@ -14,10 +13,6 @@ sealed class ClientPrincipal : Principal {
     abstract val configuration: ClientConfiguration
     fun can(action: ClientAction): Boolean = configuration.allowedActions.contains(action)
     fun can(grantType: GrantType): Boolean = configuration.allowedGrantTypes.contains(grantType)
-    fun canHave(responseType: AuthorisationResponseType): Boolean {
-        // TODO - Replace with can(GrantType.AuthorisationCode)?
-        return configuration.allowedAuthorisationResponseTypes.contains(responseType)
-    }
     fun canBeIssued(scope: Scope): Boolean = configuration.allowedScopes.contains(scope)
     fun hasRedirectUri(redirectUri: String): Boolean = configuration.redirectUris.contains(redirectUri)
 

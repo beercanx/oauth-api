@@ -36,10 +36,11 @@ interface IntrospectionRoute {
                         }
 
                         when (response) {
-                            is IntrospectionResponse.Invalid -> when(response.error) {
+                            is IntrospectionResponse.Invalid -> when (response.error) {
                                 InvalidRequest -> call.respond(BadRequest, response)
                                 UnauthorizedClient -> call.respond(Forbidden, response)
                             }
+
                             is IntrospectionResponse.Inactive -> call.respond(OK, response)
                             is IntrospectionResponse.Active -> call.respond(OK, response)
                         }

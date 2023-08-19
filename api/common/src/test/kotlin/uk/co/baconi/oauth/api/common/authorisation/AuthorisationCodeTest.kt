@@ -32,7 +32,7 @@ class AuthorisationCodeTest {
                         redirectUri = "uk.co.baconi.oauth.consumerz://callback",
                         issuedAt = Instant.now(),
                         expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
-                        state = null,
+                        state = UUID.randomUUID().toString(),
                     ).hasExpired() shouldBe true
                 }
             }
@@ -48,7 +48,7 @@ class AuthorisationCodeTest {
                         redirectUri = "uk.co.baconi.oauth.consumerz://callback",
                         issuedAt = Instant.now(),
                         expiresAt = Instant.now().plus(1, ChronoUnit.DAYS),
-                        state = null,
+                        state = UUID.randomUUID().toString(),
                     ).hasExpired() shouldBe false
                 }
             }
@@ -69,7 +69,7 @@ class AuthorisationCodeTest {
                         redirectUri = "uk.co.baconi.oauth.consumerz://callback",
                         issuedAt = Instant.now(),
                         expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
-                        state = null,
+                        state = UUID.randomUUID().toString(),
                     ).toString()
                 ) {
                     shouldNotContain(value.toString())
@@ -98,7 +98,7 @@ class AuthorisationCodeTest {
                         expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
                         codeChallenge = CodeChallenge(""),
                         codeChallengeMethod = CodeChallengeMethod.S256,
-                        state = null,
+                        state = UUID.randomUUID().toString(),
                     ).hasExpired() shouldBe true
                 }
             }
@@ -116,7 +116,7 @@ class AuthorisationCodeTest {
                         expiresAt = Instant.now().plus(1, ChronoUnit.DAYS),
                         codeChallenge = CodeChallenge(""),
                         codeChallengeMethod = CodeChallengeMethod.S256,
-                        state = null,
+                        state = UUID.randomUUID().toString(),
                     ).hasExpired() shouldBe false
                 }
             }
@@ -139,7 +139,7 @@ class AuthorisationCodeTest {
                         expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
                         codeChallenge = CodeChallenge(""),
                         codeChallengeMethod = CodeChallengeMethod.S256,
-                        state = null,
+                        state = UUID.randomUUID().toString(),
                     ).toString()
                 ) {
                     shouldNotContain(value.toString())

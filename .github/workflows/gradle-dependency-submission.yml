@@ -38,5 +38,5 @@ jobs:
             :api:well-known
             :api:server
             :automation:api
-# TODO      :automation:browser
+            :automation:browser
 # TODO      :automation:load

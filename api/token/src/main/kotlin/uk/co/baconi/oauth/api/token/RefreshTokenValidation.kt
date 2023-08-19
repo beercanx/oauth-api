@@ -52,11 +52,10 @@ interface RefreshTokenValidation {
                 val token = refreshTokenService.verify(client, uuid)
                 when {
                     token == null -> TokenRequest.Invalid(InvalidGrant, "invalid parameter: $REFRESH_TOKEN")
-                    parameters[SCOPE] == null -> RefreshTokenRequest(
-                        client,
-                        token.scopes,
-                        token
-                    ) // TODO - what if a config change reduces the clients allowed scopes?
+
+                    // TODO - what if a config change reduces the clients allowed scopes?
+                    parameters[SCOPE] == null -> RefreshTokenRequest(client, token.scopes, token)
+
                     else -> RefreshTokenRequest(client, scopes.filter(token.scopes::contains).toSet(), token)
                 }
             }

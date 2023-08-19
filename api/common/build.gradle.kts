@@ -11,6 +11,7 @@ val argon2Type: String by project
 val commonsLang3Version: String by project
 
 plugins {
+    jacoco
     kotlin("jvm")
     kotlin("plugin.serialization")
 }
@@ -44,7 +45,7 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
 
     // Crypto for safe credential checking
-    implementation("de.mkammerer:$argon2Type:$argon2Version")
+    api("de.mkammerer:$argon2Type:$argon2Version")
 
     // Database
     api("com.h2database:h2:$h2DatabaseVersion")
@@ -59,6 +60,9 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
+    // Ktor testing
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+
     // Asserting stuff
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
 
@@ -67,4 +71,11 @@ dependencies {
 
     // Test data generation
     testImplementation("org.apache.commons:commons-lang3:$commonsLang3Version")
+
+    // Security patching
+    constraints {
+        api("commons-codec:commons-codec:1.16.0") {
+            because("Apache Http Client brings in 1.11")
+        }
+    }
 }

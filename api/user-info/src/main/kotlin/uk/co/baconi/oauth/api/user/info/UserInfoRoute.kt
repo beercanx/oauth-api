@@ -1,16 +1,14 @@
 package uk.co.baconi.oauth.api.user.info
 
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
+import io.ktor.http.auth.*
+import io.ktor.http.auth.AuthScheme.Bearer
+import io.ktor.http.auth.HttpAuthHeader.Companion.bearerAuthChallenge
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.util.reflect.*
-import uk.co.baconi.oauth.api.common.claim.Claim
 import uk.co.baconi.oauth.api.common.ktor.auth.authenticate
-import uk.co.baconi.oauth.api.common.ktor.auth.bearer.BearerErrorCode
-import uk.co.baconi.oauth.api.common.ktor.auth.bearer.BearerErrorCode.InsufficientScope
-import uk.co.baconi.oauth.api.common.ktor.auth.bearer.bearerAuthChallenge
 import uk.co.baconi.oauth.api.common.scope.Scope.OpenId
 import uk.co.baconi.oauth.api.common.token.AccessToken
 
@@ -39,7 +37,7 @@ interface UserInfoRoute {
                         !accessToken.scopes.contains(OpenId) -> {
                             call.respond(
                                 ForbiddenResponse(
-                                    bearerAuthChallenge(realm, error = InsufficientScope, scopes = setOf(OpenId))
+                                    bearerAuthChallenge(Bearer, realm)
                                 )
                             )
                         }

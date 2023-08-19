@@ -1,2 +1,2 @@
 # Token Revocation Endpoint
-* https://datatracker.ietf.org/doc/html/rfc7009#section-2
+* https://www.rfc-editor.org/rfc/rfc7009#section-2

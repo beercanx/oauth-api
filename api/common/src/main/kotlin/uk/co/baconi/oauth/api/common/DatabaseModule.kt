@@ -1,31 +1,48 @@
 package uk.co.baconi.oauth.api.common
 
-import io.ktor.server.application.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
-import uk.co.baconi.oauth.api.common.token.AccessTokenRepository
+import com.typesafe.config.Config
+import com.typesafe.config.ConfigFactory
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.transactions.transaction
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import uk.co.baconi.oauth.api.common.authentication.CustomerCredentialTable
+import uk.co.baconi.oauth.api.common.authentication.CustomerStatusTable
+import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeTable
+import uk.co.baconi.oauth.api.common.token.AccessTokenTable
+import uk.co.baconi.oauth.api.common.token.RefreshTokenTable
 
 interface DatabaseModule {
 
-    val accessTokenRepository: AccessTokenRepository
-    val authorisationCodeRepository: AuthorisationCodeRepository
+    private val logger: Logger get() = LoggerFactory.getLogger(DatabaseModule::class.java)
 
-    fun Application.databaseExpiration() {
+    val databaseConfiguration: Config get() = ConfigFactory.load().getConfig("uk.co.baconi.oauth.api.database")
 
-        log.info("Registering the DatabaseModule.databaseExpiration() module")
+    val accessTokenDatabase: Database get() = connect("access-token", AccessTokenTable)
+    val authorisationCodeDatabase: Database get() = connect("authorisation-code", AuthorisationCodeTable)
+    val customerStatusDatabase: Database get() = connect("customer-status", CustomerStatusTable)
+    val customerCredentialDatabase: Database get() = connect("customer-credential", CustomerCredentialTable)
+    val refreshTokenDatabase: Database get() = connect("refresh-token", RefreshTokenTable)
 
-        // Every second, look for and remove any expired tokens or codes - TODO - Extract delay into config.
-        doIndefinitely(1_000, accessTokenRepository::deleteExpired)
-        doIndefinitely(1_000, authorisationCodeRepository::deleteExpired)
-    }
+    private fun connect(name: String, table: Table, vararg tables: Table): Database {
 
-    private fun Application.doIndefinitely(timeMillis: Long, block: suspend () -> Unit) {
-        launch {
-            while (true) {
-                block()
-                delay(timeMillis)
-            }
+        logger.info("Starting the '$name' database connection")
+
+        val database = Database.connect(
+            url = databaseConfiguration.getString("$name.url"),
+            driver = databaseConfiguration.getString("$name.driver"),
+            user = databaseConfiguration.getString("$name.user"),
+            password = databaseConfiguration.getString("$name.password")
+        )
+
+        logger.debug("Connected to a '{}' with version '{}' on '{}'", database.vendor, database.version, database.url)
+
+        transaction(database) {
+            SchemaUtils.create(table, *tables)
         }
+
+        return database
     }
 }
