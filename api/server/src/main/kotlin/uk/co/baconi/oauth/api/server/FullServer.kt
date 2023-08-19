@@ -14,7 +14,6 @@ import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretService
-import uk.co.baconi.oauth.api.common.scope.ScopeConfigurationRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
 import uk.co.baconi.oauth.api.common.token.RefreshTokenRepository
@@ -22,10 +21,8 @@ import uk.co.baconi.oauth.api.common.token.RefreshTokenService
 import uk.co.baconi.oauth.api.token.*
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionRoute
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionService
-import uk.co.baconi.oauth.api.user.info.UserInfoRoute
-import uk.co.baconi.oauth.api.user.info.UserInfoService
 
-object FullServer : AuthenticationModule, DatabaseModule, AssetsRoute, AuthenticationRoute, AuthorisationRoute, TokenRoute, IntrospectionRoute, UserInfoRoute, TestAccessTokenModule, TestUserModule {
+object FullServer : AuthenticationModule, DatabaseModule, AssetsRoute, AuthenticationRoute, AuthorisationRoute, TokenRoute, IntrospectionRoute, TestAccessTokenModule, TestUserModule {
 
     private val accessTokenRepository = AccessTokenRepository(accessTokenDatabase)
     override val accessTokenService = AccessTokenService(accessTokenRepository)
@@ -52,9 +49,6 @@ object FullServer : AuthenticationModule, DatabaseModule, AssetsRoute, Authentic
 
     override val introspectionService = IntrospectionService(accessTokenRepository)
 
-    private val scopeConfigurationRepository = ScopeConfigurationRepository()
-    override val userInfoService = UserInfoService(scopeConfigurationRepository)
-
     fun start() {
         embeddedCommonServer {
             common()
@@ -67,8 +61,6 @@ object FullServer : AuthenticationModule, DatabaseModule, AssetsRoute, Authentic
                 token()
                 introspection()
                 // TODO - revocation()
-                userInfo()
-                // TODO - wellKnown()
             }
             generateTestAccessTokens()
             generateTestUsers()

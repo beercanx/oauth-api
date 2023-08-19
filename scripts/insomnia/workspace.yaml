@@ -158,7 +158,7 @@ resources:
           value: "121212"
           id: pair_aef97154cd864084b40c0fe0f7184988
         - name: scope
-          value: openid
+          value: basic
           id: pair_b18290f764ec400dad44941a187e381a
     parameters: []
     headers:
@@ -282,34 +282,6 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_61b61315495e4324bb88e480edce2564
-    parentId: fld_41b5b23827534e5fb9a0dfbcb9219858
-    modified: 1621682975671
-    created: 1619253677457
-    url: http://localhost:8080/userinfo
-    name: /userinfo
-    description: ""
-    method: GET
-    body: {}
-    parameters: []
-    headers:
-      - name: Accept
-        value: application/json
-        description: ""
-        id: pair_3348036cf2c249b2a627f4a1b518c95d
-    authentication:
-      type: bearer
-      token: "{% response 'body', 'req_a9ab37147ef6483caa98ce9716998a8a',
-        'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'when-expired', 3600 %}"
-    metaSortKey: -1616237718949
-    isPrivate: false
-    settingStoreCookies: true
-    settingSendCookies: true
-    settingDisableRenderRequestBody: false
-    settingEncodeUrl: true
-    settingRebuildPath: true
-    settingFollowRedirects: global
-    _type: request
   - _id: req_535fec7d6acb460d8235308984a6c805
     parentId: fld_e89672a31d594137af8193f34641141a
     modified: 1621683554624
@@ -332,7 +304,7 @@ resources:
           value: "212121"
           id: pair_aef97154cd864084b40c0fe0f7184988
         - name: scope
-          value: openid
+          value: basic
           id: pair_b18290f764ec400dad44941a187e381a
     parameters: []
     headers:
@@ -390,7 +362,7 @@ resources:
           value: "121212"
           id: pair_aef97154cd864084b40c0fe0f7184988
         - name: scope
-          value: openid
+          value: basic
           id: pair_b18290f764ec400dad44941a187e381a
     parameters: []
     headers:
@@ -448,7 +420,7 @@ resources:
           value: "122112"
           id: pair_aef97154cd864084b40c0fe0f7184988
         - name: scope
-          value: openid
+          value: basic
           id: pair_b18290f764ec400dad44941a187e381a
     parameters: []
     headers:

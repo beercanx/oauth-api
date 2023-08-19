@@ -66,7 +66,7 @@ object TokenEndpoint {
                 .formParam("grant_type", "password")
                 .formParam("username", username)
                 .formParam("password", password)
-                .formParam("scope", "openid")
+                .formParam("scope", "basic")
                 .header("content-type", "application/x-www-form-urlencoded")
                 .header("accept", "application/json")
                 .check(status().shouldBe(200))
@@ -74,7 +74,7 @@ object TokenEndpoint {
                 .check(hasAccessTokenAndSave)
                 .check(hasBearerTokenType)
                 .check(hasExpiresInTwoHours)
-                .check(hasScopes("openid"))
+                .check(hasScopes("basic"))
                 .check(hasCacheControlDisabled)
         )
     }

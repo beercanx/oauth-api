@@ -53,14 +53,14 @@ class ClientPrincipalTest {
             every { id } returns ConsumerZ
             every { type } returns Confidential
             every { allowedActions } returns emptySet()
-            every { allowedScopes } returns setOf(Scope.OpenId)
+            every { allowedScopes } returns setOf(Scope.Basic)
             every { redirectUris } returns setOf("https://example.com")
         })
 
         @Test
         fun `should return true if the scope can be issued to the principal`() {
-            withClue("canBeIssued(Scope.OpenId)") {
-                underTest.canBeIssued(Scope.OpenId) shouldBe true
+            withClue("canBeIssued(Scope.basic)") {
+                underTest.canBeIssued(Scope.Basic) shouldBe true
             }
         }
 

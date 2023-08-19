@@ -30,8 +30,6 @@ docker build --tag 'oauth-api:server-session-info' --target server-session-info 
 docker build --tag 'oauth-api:server-token' --target server-token .
 docker build --tag 'oauth-api:server-token-introspection' --target server-token-introspection .
 docker build --tag 'oauth-api:server-token-revocation' --target server-token-revocation .
-docker build --tag 'oauth-api:server-user-info' --target server-user-info .
-docker build --tag 'oauth-api:server-well-known' --target server-well-known .
 ```
 
 ## Sources

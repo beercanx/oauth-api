@@ -35,7 +35,7 @@ import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.client.ClientSecretRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretService
-import uk.co.baconi.oauth.api.common.scope.Scope.OpenId
+import uk.co.baconi.oauth.api.common.scope.Scope.Basic
 import uk.co.baconi.oauth.api.common.token.*
 import uk.co.baconi.oauth.api.common.token.TokenType.Bearer
 import java.time.Instant
@@ -172,14 +172,14 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                 refreshToken = refreshToken,
                 tokenType = Bearer,
                 expiresIn = 5,
-                scope = setOf(OpenId),
+                scope = setOf(Basic),
                 state = "$state"
             )
 
             val response = client.post(TOKEN_ENDPOINT) {
                 basicAuth("confidential-cicada", "9VylF3DbEeJbtdbih3lqpNXBw@Non#bi")
                 contentType(Application.FormUrlEncoded)
-                setBody("grant_type=password&username=aardvark&password=121212&scope=openid")
+                setBody("grant_type=password&username=aardvark&password=121212&scope=basic")
             }
 
             val body = response.body<Map<String, String>>()
@@ -190,7 +190,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                 body shouldContain ("refresh_token" to "$refreshToken")
                 body shouldContain ("token_type" to "bearer")
                 body shouldContain ("expires_in" to "5")
-                body shouldContain ("scope" to "openid")
+                body shouldContain ("scope" to "basic")
                 body shouldContain ("state" to "$state")
             }
         }
@@ -206,7 +206,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                 accessToken = accessToken,
                 refreshToken = refreshToken,
                 expiresIn = 5,
-                scope = setOf(OpenId),
+                scope = setOf(Basic),
                 state = "$state"
             )
 
@@ -220,7 +220,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                     clientId = ClientId("confidential-cicada"),
                     username = AuthenticatedUsername("aardvark"),
                     redirectUri = "https://redirect.baconi.co.uk",
-                    scopes = setOf(OpenId),
+                    scopes = setOf(Basic),
                     state = "$state"
                 )
             )
@@ -239,7 +239,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                 body shouldContain ("refresh_token" to "$refreshToken")
                 body shouldContain ("token_type" to "bearer")
                 body shouldContain ("expires_in" to "5")
-                body shouldContain ("scope" to "openid")
+                body shouldContain ("scope" to "basic")
                 body shouldContain ("state" to "$state")
             }
         }
@@ -255,7 +255,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                 accessToken = accessToken,
                 refreshToken = refreshToken,
                 expiresIn = 5,
-                scope = setOf(OpenId),
+                scope = setOf(Basic),
                 state = "$state"
             )
 
@@ -269,14 +269,14 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                     notBefore = now,
                     clientId = ClientId("confidential-cicada"),
                     username = AuthenticatedUsername("aardvark"),
-                    scopes = setOf(OpenId),
+                    scopes = setOf(Basic),
                 )
             )
 
             val response = client.post(TOKEN_ENDPOINT) {
                 basicAuth("confidential-cicada", "9VylF3DbEeJbtdbih3lqpNXBw@Non#bi")
                 contentType(Application.FormUrlEncoded)
-                setBody("grant_type=refresh_token&refresh_token=$token&scope=openid")
+                setBody("grant_type=refresh_token&refresh_token=$token&scope=basic")
             }
 
             val body = response.body<Map<String, String>>()
@@ -287,7 +287,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                 body shouldContain ("refresh_token" to "$refreshToken")
                 body shouldContain ("token_type" to "bearer")
                 body shouldContain ("expires_in" to "5")
-                body shouldContain ("scope" to "openid")
+                body shouldContain ("scope" to "basic")
                 body shouldContain ("state" to "$state")
             }
         }
@@ -303,7 +303,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                 accessToken = accessToken,
                 refreshToken = refreshToken,
                 expiresIn = 5,
-                scope = setOf(OpenId),
+                scope = setOf(Basic),
                 state = "$state"
             )
 
@@ -323,7 +323,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                 body shouldContain ("refresh_token" to "$refreshToken")
                 body shouldContain ("token_type" to "bearer")
                 body shouldContain ("expires_in" to "5")
-                body shouldContain ("scope" to "openid")
+                body shouldContain ("scope" to "basic")
                 body shouldContain ("state" to "$state")
             }
         }

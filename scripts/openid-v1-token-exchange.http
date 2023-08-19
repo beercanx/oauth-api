@@ -5,7 +5,7 @@ POST http://localhost:8080/token
 authorization: Basic Y29uc3VtZXItejo3WExseXpqUnB2SUNFa05yc2d0T3V1ajFTMzBCajlYdQ==
 Content-Type: application/x-www-form-urlencoded
 
-grant_type=password&scope=openid&username=aardvark&password=121212
+grant_type=password&scope=basic&username=aardvark&password=121212
 
 ###
 

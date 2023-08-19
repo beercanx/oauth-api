@@ -39,7 +39,7 @@ class IntrospectionServiceTest {
             active shouldBe true
             username shouldBe AuthenticatedUsername("active")
             clientId shouldBe ClientId("badger")
-            scope shouldContain OpenId
+            scope shouldContain Basic
         }
     }
 

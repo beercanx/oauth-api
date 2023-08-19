@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.client.ConfidentialClient
 import uk.co.baconi.oauth.api.common.client.PublicClient
 import uk.co.baconi.oauth.api.common.grant.GrantType.Password
-import uk.co.baconi.oauth.api.common.scope.Scope.OpenId
+import uk.co.baconi.oauth.api.common.scope.Scope.Basic
 import uk.co.baconi.oauth.api.token.TokenErrorType.*
 
 class PasswordValidationTest : PasswordValidation {
@@ -26,7 +26,7 @@ class PasswordValidationTest : PasswordValidation {
     private val parameters = mockk<Parameters> {
         every { this@mockk["username"] } returns "aardvark"
         every { this@mockk["password"] } returns "badger"
-        every { this@mockk["scope"] } returns "openid"
+        every { this@mockk["scope"] } returns "basic"
     }
 
     @Test
@@ -145,7 +145,7 @@ class PasswordValidationTest : PasswordValidation {
             principal shouldBe client
             username shouldBe "aardvark"
             password shouldBe "badger".toCharArray()
-            scopes shouldContainExactly setOf(OpenId)
+            scopes shouldContainExactly setOf(Basic)
         }
     }
 }

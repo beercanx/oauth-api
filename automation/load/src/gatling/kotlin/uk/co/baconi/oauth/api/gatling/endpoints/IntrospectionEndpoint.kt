@@ -66,7 +66,7 @@ object IntrospectionEndpoint {
                 .check(hasClientId(clientId))
                 .check(hasUsername(username))
                 .check(hasSubject(username))
-                .check(hasScopes("openid"))
+                .check(hasScopes("basic"))
                 .check(hasCacheControlDisabled)
         )
     }

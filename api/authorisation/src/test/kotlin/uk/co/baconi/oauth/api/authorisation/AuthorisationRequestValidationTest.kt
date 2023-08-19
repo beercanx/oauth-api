@@ -17,7 +17,7 @@ import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.client.ClientType.Confidential
 import uk.co.baconi.oauth.api.common.grant.GrantType.AuthorisationCode
-import uk.co.baconi.oauth.api.common.scope.Scope.OpenId
+import uk.co.baconi.oauth.api.common.scope.Scope.Basic
 
 class AuthorisationRequestValidationTest {
 
@@ -28,7 +28,7 @@ class AuthorisationRequestValidationTest {
                 id = ClientId("aardvark"),
                 type = Confidential,
                 redirectUris = setOf("https://aardvark.baconi.co.uk", "/aardvark"),
-                allowedScopes = setOf(OpenId),
+                allowedScopes = setOf(Basic),
                 allowedActions = setOf(Authorise),
                 allowedGrantTypes = setOf(AuthorisationCode)
             )
@@ -229,7 +229,7 @@ class AuthorisationRequestValidationTest {
             this["redirect_uri"] = "https://aardvark.baconi.co.uk"
             this["response_type"] = "code"
             this["state"] = "000cdd20-f577-4e9a-b49c-7ded0b06188d"
-            this["scope"] = "openid profile::read"
+            this["scope"] = "basic profile::read"
         })
 
         assertSoftly(result) {
@@ -250,7 +250,7 @@ class AuthorisationRequestValidationTest {
             this["redirect_uri"] = "https://aardvark.baconi.co.uk"
             this["response_type"] = "code"
             this["state"] = "000cdd20-f577-4e9a-b49c-7ded0b06188d"
-            this["scope"] = "openid"
+            this["scope"] = "basic"
             this["abort"] = "true"
         })
 
@@ -272,7 +272,7 @@ class AuthorisationRequestValidationTest {
             this["redirect_uri"] = "https://aardvark.baconi.co.uk"
             this["response_type"] = "code"
             this["state"] = "000cdd20-f577-4e9a-b49c-7ded0b06188d"
-            this["scope"] = "openid"
+            this["scope"] = "basic"
         })
 
         assertSoftly(result) {
@@ -282,7 +282,7 @@ class AuthorisationRequestValidationTest {
 
             responseType shouldBe Code
             clientId shouldBe ClientId("aardvark")
-            scopes shouldHaveSingleElement OpenId
+            scopes shouldHaveSingleElement Basic
         }
     }
 }
