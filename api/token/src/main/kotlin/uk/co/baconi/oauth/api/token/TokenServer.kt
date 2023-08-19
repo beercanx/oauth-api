@@ -3,11 +3,7 @@ package uk.co.baconi.oauth.api.token
 import io.ktor.server.routing.*
 import uk.co.baconi.oauth.api.common.AuthenticationModule
 import uk.co.baconi.oauth.api.common.CommonModule.common
-import uk.co.baconi.oauth.api.common.DatabaseFactory.accessTokenDatabase
-import uk.co.baconi.oauth.api.common.DatabaseFactory.authorisationCodeDatabase
-import uk.co.baconi.oauth.api.common.DatabaseFactory.customerCredentialDatabase
-import uk.co.baconi.oauth.api.common.DatabaseFactory.customerStatusDatabase
-import uk.co.baconi.oauth.api.common.DatabaseFactory.refreshTokenDatabase
+import uk.co.baconi.oauth.api.common.DatabaseModule
 import uk.co.baconi.oauth.api.common.TestAccessTokenModule
 import uk.co.baconi.oauth.api.common.TestUserModule
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
@@ -26,7 +22,7 @@ import uk.co.baconi.oauth.api.common.token.RefreshTokenService
 /**
  * Start a server for just Introspection requests
  */
-internal object TokenServer : AuthenticationModule, TokenRoute, TestAccessTokenModule, TestUserModule {
+internal object TokenServer : AuthenticationModule, DatabaseModule, TokenRoute, TestAccessTokenModule, TestUserModule {
 
     private val accessTokenRepository = AccessTokenRepository(accessTokenDatabase)
     override val accessTokenService = AccessTokenService(accessTokenRepository)

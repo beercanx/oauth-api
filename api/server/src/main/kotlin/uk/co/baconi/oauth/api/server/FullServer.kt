@@ -5,15 +5,8 @@ import uk.co.baconi.oauth.api.assets.AssetsRoute
 import uk.co.baconi.oauth.api.authentication.AuthenticationRoute
 import uk.co.baconi.oauth.api.authorisation.AuthorisationCodeService
 import uk.co.baconi.oauth.api.authorisation.AuthorisationRoute
-import uk.co.baconi.oauth.api.common.AuthenticationModule
+import uk.co.baconi.oauth.api.common.*
 import uk.co.baconi.oauth.api.common.CommonModule.common
-import uk.co.baconi.oauth.api.common.DatabaseFactory.accessTokenDatabase
-import uk.co.baconi.oauth.api.common.DatabaseFactory.authorisationCodeDatabase
-import uk.co.baconi.oauth.api.common.DatabaseFactory.customerCredentialDatabase
-import uk.co.baconi.oauth.api.common.DatabaseFactory.customerStatusDatabase
-import uk.co.baconi.oauth.api.common.DatabaseFactory.refreshTokenDatabase
-import uk.co.baconi.oauth.api.common.TestAccessTokenModule
-import uk.co.baconi.oauth.api.common.TestUserModule
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
 import uk.co.baconi.oauth.api.common.authentication.CustomerCredentialRepository
 import uk.co.baconi.oauth.api.common.authentication.CustomerStatusRepository
@@ -21,7 +14,6 @@ import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretService
-import uk.co.baconi.oauth.api.common.embeddedCommonServer
 import uk.co.baconi.oauth.api.common.scope.ScopeConfigurationRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
@@ -33,7 +25,7 @@ import uk.co.baconi.oauth.api.token.introspection.IntrospectionService
 import uk.co.baconi.oauth.api.user.info.UserInfoRoute
 import uk.co.baconi.oauth.api.user.info.UserInfoService
 
-object FullServer : AuthenticationModule, AssetsRoute, AuthenticationRoute, AuthorisationRoute, TokenRoute, IntrospectionRoute, UserInfoRoute, TestAccessTokenModule, TestUserModule {
+object FullServer : AuthenticationModule, DatabaseModule, AssetsRoute, AuthenticationRoute, AuthorisationRoute, TokenRoute, IntrospectionRoute, UserInfoRoute, TestAccessTokenModule, TestUserModule {
 
     private val accessTokenRepository = AccessTokenRepository(accessTokenDatabase)
     override val accessTokenService = AccessTokenService(accessTokenRepository)
