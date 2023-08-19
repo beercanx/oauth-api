@@ -49,3 +49,5 @@ jobs:
         pass-emoji: ':green_circle:'
         fail-emoji: ':red_circle:'
         debug-mode: true
+        skip-if-no-changes: true
+        continue-on-error: true
