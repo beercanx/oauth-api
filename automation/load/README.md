@@ -4,4 +4,5 @@
 
 ## How to run?
 1. Start the full server on port 8080
-2. `./gradlew gatlingRun`
+2. On the command line just run `./gradlew gatlingRun`
+3. Or just use the saved and shared IntelliJ Idea run configuration `oauth-api [gatlingRun]`
