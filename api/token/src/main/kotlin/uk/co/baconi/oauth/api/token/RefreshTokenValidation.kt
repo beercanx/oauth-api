@@ -3,7 +3,8 @@ package uk.co.baconi.oauth.api.token
 import io.ktor.http.*
 import uk.co.baconi.oauth.api.common.client.ClientPrincipal
 import uk.co.baconi.oauth.api.common.grant.GrantType
-import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
+import uk.co.baconi.oauth.api.common.scope.ScopesDeserializer
 import uk.co.baconi.oauth.api.common.token.RefreshTokenService
 import uk.co.baconi.oauth.api.common.uuid.UUIDSerializer
 import uk.co.baconi.oauth.api.token.TokenErrorType.*
@@ -13,12 +14,14 @@ private const val REFRESH_TOKEN = "refresh_token"
 
 interface RefreshTokenValidation {
 
+    val scopeRepository: ScopeRepository
     val refreshTokenService: RefreshTokenService
 
     fun validateRefreshTokenRequest(parameters: Parameters, client: ClientPrincipal): TokenRequest {
 
         val uuid = parameters[REFRESH_TOKEN]?.let(UUIDSerializer::fromValueOrNull)
-        val scopes = parameters[SCOPE]?.let(ScopesSerializer::deserialize) ?: emptySet()
+        val rawScopes = parameters[SCOPE]?.let(ScopesDeserializer::deserialize) ?: emptySet()
+        val scopes = rawScopes.mapNotNull(scopeRepository::findById).toSet()
 
         return when {
             !client.can(GrantType.RefreshToken) -> TokenRequest.Invalid(
@@ -37,7 +40,7 @@ interface RefreshTokenValidation {
             )
 
             // The requested scope is invalid, unknown, or malformed.
-            parameters[SCOPE] != null && scopes.isEmpty() -> TokenRequest.Invalid(
+            rawScopes.size != scopes.size -> TokenRequest.Invalid(
                 InvalidScope,
                 "invalid parameter: $SCOPE"
             )

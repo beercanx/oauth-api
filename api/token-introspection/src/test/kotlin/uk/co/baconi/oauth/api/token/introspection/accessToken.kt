@@ -12,7 +12,7 @@ internal fun accessToken(
     value: UUID = UUID.randomUUID(),
     username: String = "aardvark",
     clientId: String = "badger",
-    scopes: Set<Scope> = setOf(Scope.Basic, Scope.ProfileRead, Scope.ProfileWrite),
+    scopes: Set<Scope> = setOf(Scope("basic"), Scope("profile::read"), Scope("profile::write")),
     now: Instant = Instant.now()
 ) = AccessToken(
     value = value,

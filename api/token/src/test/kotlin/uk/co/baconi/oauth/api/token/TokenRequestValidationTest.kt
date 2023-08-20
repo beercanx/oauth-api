@@ -19,10 +19,13 @@ import uk.co.baconi.oauth.api.common.client.ClientAction
 import uk.co.baconi.oauth.api.common.client.ClientPrincipal
 import uk.co.baconi.oauth.api.common.grant.GrantType
 import uk.co.baconi.oauth.api.common.grant.GrantType.Password
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
 import uk.co.baconi.oauth.api.common.token.RefreshTokenService
 import uk.co.baconi.oauth.api.token.TokenErrorType.*
 
 class TokenRequestValidationTest : TokenRequestValidation {
+
+    override val scopeRepository = ScopeRepository()
 
     init {
         // Enables mocking receive<Parameters>() extension

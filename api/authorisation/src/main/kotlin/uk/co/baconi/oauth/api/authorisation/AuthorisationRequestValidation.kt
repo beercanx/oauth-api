@@ -4,11 +4,12 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType.Code
-import uk.co.baconi.oauth.api.common.client.*
 import uk.co.baconi.oauth.api.common.client.ClientAction.Authorise
-import uk.co.baconi.oauth.api.common.grant.GrantType
+import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
+import uk.co.baconi.oauth.api.common.client.ClientPrincipal
 import uk.co.baconi.oauth.api.common.grant.GrantType.AuthorisationCode
-import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
+import uk.co.baconi.oauth.api.common.scope.ScopesDeserializer
 
 private const val CLIENT_ID = "client_id"
 private const val REDIRECT_ID = "redirect_uri"
@@ -19,6 +20,7 @@ private const val ABORT = "abort"
 
 interface AuthorisationRequestValidation {
 
+    val scopeRepository: ScopeRepository
     val clientConfigurationRepository: ClientConfigurationRepository
 
     suspend fun ApplicationCall.validateAuthorisationRequest(): AuthorisationRequest {
@@ -32,7 +34,8 @@ interface AuthorisationRequestValidation {
 
         val redirectUri = params[REDIRECT_ID]
         val responseType = params[RESPONSE_TYPE]?.let(AuthorisationResponseType::fromValueOrNull)
-        val scopes = params[SCOPE]?.let(ScopesSerializer::deserialize) ?: emptySet()
+        val rawScopes = params[SCOPE]?.let(ScopesDeserializer::deserialize) ?: emptySet()
+        val scopes = rawScopes.mapNotNull(scopeRepository::findById).toSet()
         val state = params[STATE]
         val abort = params[ABORT]?.toBooleanStrictOrNull() ?: false
 
@@ -81,7 +84,7 @@ interface AuthorisationRequestValidation {
             )
 
             // The requested scope is invalid, unknown, or malformed.
-            !scopes.all(principal::canBeIssued) -> AuthorisationRequest.Invalid(
+            rawScopes.size != scopes.size || !scopes.all(principal::canBeIssued) -> AuthorisationRequest.Invalid(
                 redirectUri = redirectUri,
                 error = "invalid_request",
                 description = "invalid parameter: scope",

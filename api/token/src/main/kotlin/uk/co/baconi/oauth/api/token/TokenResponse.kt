@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import uk.co.baconi.oauth.api.common.uuid.UUIDSerializer
 import uk.co.baconi.oauth.api.common.scope.Scope
+import uk.co.baconi.oauth.api.common.scope.ScopesDeserializer
 import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
 import uk.co.baconi.oauth.api.common.token.TokenType
 import uk.co.baconi.oauth.api.common.token.TokenType.Bearer
@@ -54,7 +55,7 @@ sealed interface TokenResponse {
          */
         val state: String?,
 
-    ) : TokenResponse {
+        ) : TokenResponse {
         override fun toString(): String {
             return "Success(accessToken='REDACTED', tokenType=$tokenType, expiresIn=$expiresIn, refreshToken='REDACTED', scope=$scope, state='REDACTED')"
         }

@@ -165,7 +165,7 @@ class AuthorisationCodeRepositoryIntegrationTest {
         username: String = "aardvark",
         clientId: String = "badger",
         redirectUri: String = "uk.co.baconi.oauth.consumerz://callback",
-        scopes: Set<Scope> = setOf(Scope.Basic, Scope.ProfileRead, Scope.ProfileWrite),
+        scopes: Set<Scope> = setOf(Scope("basic"), Scope("profile::read"), Scope("profile::write")),
         now: Instant = Instant.now(),
         state: String = "da4d809e-ed89-42bd-aa3e-8c975b9242d0",
     ) = AuthorisationCode.Basic(
@@ -184,7 +184,7 @@ class AuthorisationCodeRepositoryIntegrationTest {
         username: String = "aardvark",
         clientId: String = "badger",
         redirectUri: String = "uk.co.baconi.oauth.consumerz://callback",
-        scopes: Set<Scope> = setOf(Scope.Basic, Scope.ProfileRead, Scope.ProfileWrite),
+        scopes: Set<Scope> = setOf(Scope("basic"), Scope("profile::read"), Scope("profile::write")),
         now: Instant = Instant.now(),
         state: String = "da4d809e-ed89-42bd-aa3e-8c975b9242d0",
         codeChallenge: String = "code-challenge",

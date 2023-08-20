@@ -14,10 +14,14 @@ import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.client.ConfidentialClient
 import uk.co.baconi.oauth.api.common.client.PublicClient
 import uk.co.baconi.oauth.api.common.grant.GrantType.Password
-import uk.co.baconi.oauth.api.common.scope.Scope.Basic
+import uk.co.baconi.oauth.api.common.scope.Scope
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
+
 import uk.co.baconi.oauth.api.token.TokenErrorType.*
 
 class PasswordValidationTest : PasswordValidation {
+
+    override val scopeRepository = ScopeRepository()
 
     private val client = mockk<ConfidentialClient> {
         every { can(Password) } returns true
@@ -145,7 +149,7 @@ class PasswordValidationTest : PasswordValidation {
             principal shouldBe client
             username shouldBe "aardvark"
             password shouldBe "badger".toCharArray()
-            scopes shouldContainExactly setOf(Basic)
+            scopes shouldContainExactly setOf(Scope("basic"))
         }
     }
 }

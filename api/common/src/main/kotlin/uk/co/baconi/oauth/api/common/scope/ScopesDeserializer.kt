@@ -6,7 +6,7 @@ import kotlinx.serialization.SerializationException
  * Custom scope field serializer because OAuth spec requires it to be a space separated string field.
  * For example, it will look like: `basic profile::read`
  */
-object ScopesSerializer : SpaceDelimitedSerializer<Scope>() {
-    override fun encode(value: Scope): String = value.value
-    override fun decode(string: String): Scope = throw SerializationException("Serialisation not supported")
+object ScopesDeserializer : SpaceDelimitedSerializer<String>() {
+    override fun encode(value: String): String = throw SerializationException("Serialisation not supported")
+    override fun decode(string: String): String? = string.ifBlank { null }
 }

@@ -4,9 +4,9 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
 import org.jetbrains.exposed.sql.transactions.transaction
-import uk.co.baconi.oauth.api.common.client.ClientId
+import uk.co.baconi.oauth.api.common.scope.Scope
+import uk.co.baconi.oauth.api.common.scope.ScopesDeserializer
 import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
-import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import java.time.Instant
 import java.util.*
 
@@ -73,7 +73,7 @@ class AuthorisationCodeRepository(private val database: Database) {
                 clientId = it[AuthorisationCodeTable.clientId],
                 issuedAt = it[AuthorisationCodeTable.issuedAt],
                 expiresAt = it[AuthorisationCodeTable.expiresAt],
-                scopes = it[AuthorisationCodeTable.scopes].let(ScopesSerializer::deserialize),
+                scopes = it[AuthorisationCodeTable.scopes].let(ScopesDeserializer::deserialize).map(::Scope).toSet(),
                 redirectUri = it[AuthorisationCodeTable.redirectUri],
                 state = it[AuthorisationCodeTable.state],
             )
@@ -83,7 +83,7 @@ class AuthorisationCodeRepository(private val database: Database) {
                 clientId = it[AuthorisationCodeTable.clientId],
                 issuedAt = it[AuthorisationCodeTable.issuedAt],
                 expiresAt = it[AuthorisationCodeTable.expiresAt],
-                scopes = it[AuthorisationCodeTable.scopes].let(ScopesSerializer::deserialize),
+                scopes = it[AuthorisationCodeTable.scopes].let(ScopesDeserializer::deserialize).map(::Scope).toSet(),
                 redirectUri = it[AuthorisationCodeTable.redirectUri],
                 state = it[AuthorisationCodeTable.state],
                 codeChallenge = CodeChallenge(checkNotNull(it[AuthorisationCodeTable.codeChallenge])),

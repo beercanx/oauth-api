@@ -11,10 +11,14 @@ import org.slf4j.LoggerFactory
 import uk.co.baconi.oauth.api.common.authentication.CustomerCredentialTable
 import uk.co.baconi.oauth.api.common.authentication.CustomerStatusTable
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeTable
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenTable
 import uk.co.baconi.oauth.api.common.token.RefreshTokenTable
 
 interface DatabaseModule {
+
+    // Needed to remind us to initialise as many tables needs a static field populating.
+    val scopeRepository: ScopeRepository
 
     private val logger: Logger get() = LoggerFactory.getLogger(DatabaseModule::class.java)
 
