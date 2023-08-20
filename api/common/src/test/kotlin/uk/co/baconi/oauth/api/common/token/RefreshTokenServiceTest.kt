@@ -16,7 +16,8 @@ import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.client.ClientPrincipal
-import uk.co.baconi.oauth.api.common.scope.Scope.Basic
+import uk.co.baconi.oauth.api.common.scope.Scope
+
 import java.time.LocalDateTime.ofInstant
 import java.time.ZoneOffset
 import java.util.*
@@ -45,7 +46,7 @@ class RefreshTokenServiceTest {
             val result = underTest.issue(
                 username = AuthenticatedUsername("aardvark"),
                 clientId = ConsumerZ,
-                scopes = setOf(Basic)
+                scopes = setOf(Scope("basic"))
             )
 
             refreshTokenSlot.captured shouldBe result

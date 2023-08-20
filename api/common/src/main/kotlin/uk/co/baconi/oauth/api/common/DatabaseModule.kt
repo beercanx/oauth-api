@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory
 import uk.co.baconi.oauth.api.common.authentication.CustomerCredentialTable
 import uk.co.baconi.oauth.api.common.authentication.CustomerStatusTable
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeTable
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenTable
 import uk.co.baconi.oauth.api.common.token.RefreshTokenTable
 

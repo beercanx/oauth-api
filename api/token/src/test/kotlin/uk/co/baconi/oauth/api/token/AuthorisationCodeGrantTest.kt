@@ -11,7 +11,8 @@ import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCode
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.client.ConfidentialClient
-import uk.co.baconi.oauth.api.common.scope.Scope.Basic
+import uk.co.baconi.oauth.api.common.scope.Scope
+
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
 import uk.co.baconi.oauth.api.common.token.RefreshTokenService
 import java.time.Instant
@@ -24,7 +25,7 @@ class AuthorisationCodeGrantTest {
         every { issue(any(), any(), any()) } returns mockk {
             val now = Instant.now()
             every { value } returns accessToken
-            every { scopes } returns setOf(Basic)
+            every { scopes } returns setOf(Scope("basic"))
             every { issuedAt } returns now
             every { expiresAt } returns now
         }
@@ -49,7 +50,7 @@ class AuthorisationCodeGrantTest {
         val authorisationCode = mockk<AuthorisationCode> {
             every { username } returns AuthenticatedUsername("aardvark")
             every { clientId } returns principal.id
-            every { scopes } returns setOf(Basic)
+            every { scopes } returns setOf(Scope("basic"))
             every { state } returns "a5385765-0a4b-41be-bb97-5415a5c2be67"
         }
 
@@ -58,7 +59,7 @@ class AuthorisationCodeGrantTest {
             this.accessToken shouldBe accessToken
             this.refreshToken shouldBe refreshToken
             this.expiresIn shouldBe 0
-            this.scope shouldContainExactly setOf(Basic)
+            this.scope shouldContainExactly setOf(Scope("basic"))
             this.state shouldBe "a5385765-0a4b-41be-bb97-5415a5c2be67"
         }
     }

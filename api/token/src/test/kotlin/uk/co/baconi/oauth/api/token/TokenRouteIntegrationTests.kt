@@ -35,7 +35,9 @@ import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.client.ClientSecretRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretService
-import uk.co.baconi.oauth.api.common.scope.Scope.Basic
+import uk.co.baconi.oauth.api.common.scope.Scope
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
+
 import uk.co.baconi.oauth.api.common.token.*
 import uk.co.baconi.oauth.api.common.token.TokenType.Bearer
 import java.time.Instant
@@ -53,6 +55,8 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
             driver = "org.h2.Driver"
         )
 
+        private val scopeRepository = ScopeRepository()
+
         init {
             transaction(database) {
                 SchemaUtils.create(AccessTokenTable)
@@ -62,6 +66,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
         }
     }
 
+    override val scopeRepository = Companion.scopeRepository
 
     private val accessTokenRepository = AccessTokenRepository(database)
     private val refreshTokenRepository = RefreshTokenRepository(database)
@@ -70,7 +75,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
     override val refreshTokenService = RefreshTokenService(refreshTokenRepository)
 
     private val clientSecretRepository = ClientSecretRepository()
-    private val clientConfigurationRepository = ClientConfigurationRepository()
+    private val clientConfigurationRepository = ClientConfigurationRepository(scopeRepository)
     override val clientSecretService = ClientSecretService(clientSecretRepository, clientConfigurationRepository)
 
     override val authorisationCodeRepository = AuthorisationCodeRepository(database)
@@ -172,7 +177,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                 refreshToken = refreshToken,
                 tokenType = Bearer,
                 expiresIn = 5,
-                scope = setOf(Basic),
+                scope = setOf(Scope("basic")),
                 state = "$state"
             )
 
@@ -206,7 +211,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                 accessToken = accessToken,
                 refreshToken = refreshToken,
                 expiresIn = 5,
-                scope = setOf(Basic),
+                scope = setOf(Scope("basic")),
                 state = "$state"
             )
 
@@ -220,7 +225,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                     clientId = ClientId("confidential-cicada"),
                     username = AuthenticatedUsername("aardvark"),
                     redirectUri = "https://redirect.baconi.co.uk",
-                    scopes = setOf(Basic),
+                    scopes = setOf(Scope("basic")),
                     state = "$state"
                 )
             )
@@ -255,7 +260,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                 accessToken = accessToken,
                 refreshToken = refreshToken,
                 expiresIn = 5,
-                scope = setOf(Basic),
+                scope = setOf(Scope("basic")),
                 state = "$state"
             )
 
@@ -269,7 +274,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                     notBefore = now,
                     clientId = ClientId("confidential-cicada"),
                     username = AuthenticatedUsername("aardvark"),
-                    scopes = setOf(Basic),
+                    scopes = setOf(Scope("basic")),
                 )
             )
 
@@ -303,7 +308,7 @@ class TokenRouteIntegrationTests : AuthenticationModule, TokenRoute {
                 accessToken = accessToken,
                 refreshToken = refreshToken,
                 expiresIn = 5,
-                scope = setOf(Basic),
+                scope = setOf(Scope("basic")),
                 state = "$state"
             )
 

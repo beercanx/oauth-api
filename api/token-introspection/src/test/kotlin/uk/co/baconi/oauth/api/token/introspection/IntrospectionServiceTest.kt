@@ -9,6 +9,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
+import uk.co.baconi.oauth.api.common.scope.Scope
 import uk.co.baconi.oauth.api.common.scope.Scope.*
 import uk.co.baconi.oauth.api.common.token.AccessTokenRepository
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionRequest.Valid
@@ -39,7 +40,7 @@ class IntrospectionServiceTest {
             active shouldBe true
             username shouldBe AuthenticatedUsername("active")
             clientId shouldBe ClientId("badger")
-            scope shouldContain Basic
+            scope shouldContain Scope("basic")
         }
     }
 

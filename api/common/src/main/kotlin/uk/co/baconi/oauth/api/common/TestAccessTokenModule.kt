@@ -19,7 +19,7 @@ interface TestAccessTokenModule {
         val accessToken = accessTokenService.issue(
             AuthenticatedUsername("aardvark"),
             ClientId("consumer-x"),
-            setOf(Scope.Basic)
+            setOf(Scope("basic"))
         )
 
         log.info("Generated Access Token: ${accessToken.value}")

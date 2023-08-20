@@ -16,7 +16,8 @@ import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Succe
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.client.ConfidentialClient
-import uk.co.baconi.oauth.api.common.scope.Scope.Basic
+import uk.co.baconi.oauth.api.common.scope.Scope
+
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
 import uk.co.baconi.oauth.api.common.token.RefreshTokenService
 import uk.co.baconi.oauth.api.token.TokenErrorType.InvalidGrant
@@ -30,7 +31,7 @@ class PasswordGrantTest {
         every { issue(any(), any(), any()) } returns mockk {
             val now = Instant.now()
             every { value } returns accessToken
-            every { scopes } returns setOf(Basic)
+            every { scopes } returns setOf(Scope("basic"))
             every { issuedAt } returns now
             every { expiresAt } returns now
         }
@@ -52,7 +53,7 @@ class PasswordGrantTest {
 
         every { authenticationService.authenticate(any(), any()) } returns Failure(Closed)
 
-        val request = PasswordRequest(mockk(), setOf(Basic), "aardvark", "1234".toCharArray())
+        val request = PasswordRequest(mockk(), setOf(Scope("basic")), "aardvark", "1234".toCharArray())
 
         assertSoftly(underTest.exchange(request)) {
             shouldBeInstanceOf<TokenResponse.Failed>()
@@ -70,14 +71,14 @@ class PasswordGrantTest {
             every { id } returns ClientId("badger")
         }
 
-        val request = PasswordRequest(principal, setOf(Basic), "aardvark", "1234".toCharArray())
+        val request = PasswordRequest(principal, setOf(Scope("basic")), "aardvark", "1234".toCharArray())
 
         assertSoftly(underTest.exchange(request)) {
             shouldBeInstanceOf<TokenResponse.Success>()
             this.accessToken shouldBe accessToken
             this.refreshToken shouldBe refreshToken
             this.expiresIn shouldBe 0
-            this.scope shouldContainExactly setOf(Basic)
+            this.scope shouldContainExactly setOf(Scope("basic"))
             this.state should beNull()
         }
     }

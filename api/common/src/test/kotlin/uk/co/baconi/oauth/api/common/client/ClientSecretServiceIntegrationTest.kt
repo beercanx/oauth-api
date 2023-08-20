@@ -5,11 +5,13 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.client.ClientType.Confidential
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
 
 class ClientSecretServiceIntegrationTest {
 
+    private val scopeRepository = ScopeRepository()
     private val clientSecretRepository = ClientSecretRepository()
-    private val clientConfigurationRepository = ClientConfigurationRepository()
+    private val clientConfigurationRepository = ClientConfigurationRepository(scopeRepository)
 
     private val underTest = ClientSecretService(clientSecretRepository, clientConfigurationRepository)
 

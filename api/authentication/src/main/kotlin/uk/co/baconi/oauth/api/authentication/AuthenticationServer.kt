@@ -8,6 +8,7 @@ import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationServic
 import uk.co.baconi.oauth.api.common.authentication.CustomerCredentialRepository
 import uk.co.baconi.oauth.api.common.authentication.CustomerStatusRepository
 import uk.co.baconi.oauth.api.common.embeddedCommonServer
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
 
 /**
  * Start a server for just Authentication requests

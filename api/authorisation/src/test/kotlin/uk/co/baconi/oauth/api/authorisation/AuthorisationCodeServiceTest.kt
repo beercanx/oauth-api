@@ -16,7 +16,8 @@ import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCode
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType.Code
 import uk.co.baconi.oauth.api.common.client.ClientId
-import uk.co.baconi.oauth.api.common.scope.Scope.Basic
+import uk.co.baconi.oauth.api.common.scope.Scope
+
 import java.time.Instant.now
 import java.time.temporal.ChronoUnit.MINUTES
 import java.time.temporal.ChronoUnit.SECONDS
@@ -29,7 +30,7 @@ class AuthorisationCodeServiceTest {
     @Test
     fun `should be able to issue a new authorisation code`() {
 
-        val request = Valid(Code, ClientId("badger"), "https://localhost", "state-1-2-3", setOf(Basic))
+        val request = Valid(Code, ClientId("badger"), "https://localhost", "state-1-2-3", setOf(Scope("basic")))
 
         val result = underTest.issue(request, AuthenticatedUsername("aardvark"))
 
@@ -41,7 +42,7 @@ class AuthorisationCodeServiceTest {
             clientId shouldBe ClientId("badger")
             redirectUri shouldBe "https://localhost"
             state shouldBe "state-1-2-3"
-            scopes shouldHaveSingleElement Basic
+            scopes shouldHaveSingleElement Scope("basic")
 
             issuedAt.shouldBeBefore(now().plus(5, SECONDS))
             expiresAt.shouldBeAfter(now())

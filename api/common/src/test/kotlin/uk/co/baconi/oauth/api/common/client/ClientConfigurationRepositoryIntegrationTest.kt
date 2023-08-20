@@ -13,10 +13,12 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.grant.GrantType
 import uk.co.baconi.oauth.api.common.scope.Scope
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
 
 class ClientConfigurationRepositoryIntegrationTest {
 
-    private val underTest = ClientConfigurationRepository()
+    private val scopeRepository = ScopeRepository()
+    private val underTest = ClientConfigurationRepository(scopeRepository)
 
     @Nested
     inner class ToUrls {
@@ -85,7 +87,7 @@ class ClientConfigurationRepositoryIntegrationTest {
         fun `should be able to handle valid scope entry`() {
             assertSoftly(underTest.findById(ClientId("allowed-scopes-valid"))) {
                 shouldNotBeNull()
-                allowedScopes shouldContainExactly setOf(Scope.Basic)
+                allowedScopes shouldContainExactly setOf(Scope("basic"))
             }
         }
     }
@@ -99,7 +101,7 @@ class ClientConfigurationRepositoryIntegrationTest {
                 id = ClientId("consumer-y"),
                 type = ClientType.Public,
                 redirectUris = setOf("uk.co.baconi.consumer-y://callback"),
-                allowedScopes = setOf(Scope.Basic),
+                allowedScopes = setOf(Scope("basic")),
                 allowedActions = setOf(ClientAction.ProofKeyForCodeExchange),
                 allowedGrantTypes = setOf(GrantType.AuthorisationCode),
             )

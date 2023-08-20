@@ -16,7 +16,6 @@ import io.ktor.http.ContentType.*
 import io.ktor.http.HttpHeaders.Location
 import io.ktor.http.HttpStatusCode.Companion.Found
 import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
-import io.ktor.http.HttpStatusCode.Companion.MovedPermanently
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
@@ -35,6 +34,7 @@ import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeTable
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
 import java.net.URL
 import java.net.URLDecoder.decode
 import kotlin.text.Charsets.UTF_8
@@ -51,13 +51,16 @@ class AuthorisationRouteIntegrationTests : AuthorisationRoute {
             driver = "org.h2.Driver"
         )
 
+        private val scopeRepository = ScopeRepository()
+
         init {
             transaction(database) { SchemaUtils.create(AuthorisationCodeTable) }
         }
     }
 
+    override val scopeRepository = Companion.scopeRepository
     override val authorisationCodeService = AuthorisationCodeService(AuthorisationCodeRepository(database))
-    override val clientConfigurationRepository = ClientConfigurationRepository()
+    override val clientConfigurationRepository = ClientConfigurationRepository(scopeRepository)
 
     private fun setupApplication(block: suspend ApplicationTestBuilder.(HttpClient) -> Unit) {
         testApplication {

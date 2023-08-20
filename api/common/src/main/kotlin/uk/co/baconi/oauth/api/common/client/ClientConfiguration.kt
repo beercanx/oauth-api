@@ -7,7 +7,7 @@ data class ClientConfiguration(
     val id: ClientId,
     val type: ClientType,
     val redirectUris: Set<String>,
-    val allowedScopes: Set<Scope>,
+    val allowedScopes: Set<Scope>, // TODO - Will need to reconsider if ScopeRepository is dynamic rather than static.
     val allowedActions: Set<ClientAction>,
     val allowedGrantTypes: Set<GrantType>,
 ) {

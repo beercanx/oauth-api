@@ -15,7 +15,8 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
-import uk.co.baconi.oauth.api.common.scope.Scope.Basic
+import uk.co.baconi.oauth.api.common.scope.Scope
+
 import java.time.LocalDateTime.ofInstant
 import java.time.ZoneOffset
 import java.util.*
@@ -42,7 +43,7 @@ class AccessTokenServiceTest {
             val result = underTest.issue(
                 username = AuthenticatedUsername("aardvark"),
                 clientId = ConsumerZ,
-                scopes = setOf(Basic)
+                scopes = setOf(Scope("basic"))
             )
 
             accessTokenSlot.captured shouldBe result

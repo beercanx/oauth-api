@@ -14,6 +14,7 @@ import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretService
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
 import uk.co.baconi.oauth.api.common.token.RefreshTokenRepository
@@ -23,6 +24,8 @@ import uk.co.baconi.oauth.api.token.introspection.IntrospectionRoute
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionService
 
 object FullServer : AuthenticationModule, DatabaseModule, AssetsRoute, AuthenticationRoute, AuthorisationRoute, TokenRoute, IntrospectionRoute, TestAccessTokenModule, TestUserModule {
+
+    override val scopeRepository = ScopeRepository()
 
     private val accessTokenRepository = AccessTokenRepository(accessTokenDatabase)
     override val accessTokenService = AccessTokenService(accessTokenRepository)
@@ -34,7 +37,7 @@ object FullServer : AuthenticationModule, DatabaseModule, AssetsRoute, Authentic
     override val assertionGrant = AssertionGrant(accessTokenService, refreshTokenService)
 
     private val clientSecretRepository = ClientSecretRepository()
-    override val clientConfigurationRepository = ClientConfigurationRepository()
+    override val clientConfigurationRepository = ClientConfigurationRepository(scopeRepository)
     override val clientSecretService = ClientSecretService(clientSecretRepository, clientConfigurationRepository)
 
     override val authorisationCodeGrant = AuthorisationCodeGrant(accessTokenService, refreshTokenService)

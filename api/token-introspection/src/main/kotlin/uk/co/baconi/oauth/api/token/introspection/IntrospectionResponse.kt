@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
+import uk.co.baconi.oauth.api.common.scope.ScopesDeserializer
 import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
 import uk.co.baconi.oauth.api.common.token.TokenType
 

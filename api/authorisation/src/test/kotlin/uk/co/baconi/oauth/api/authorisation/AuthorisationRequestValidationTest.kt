@@ -17,18 +17,23 @@ import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.client.ClientType.Confidential
 import uk.co.baconi.oauth.api.common.grant.GrantType.AuthorisationCode
-import uk.co.baconi.oauth.api.common.scope.Scope.Basic
+import uk.co.baconi.oauth.api.common.scope.Scope
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
+
 
 class AuthorisationRequestValidationTest {
 
     private val underTest = object : AuthorisationRequestValidation {
+
+        override val scopeRepository = ScopeRepository()
+
         override val clientConfigurationRepository = mockk<ClientConfigurationRepository> {
 
             every { findByClientId("aardvark") } returns ClientConfiguration(
                 id = ClientId("aardvark"),
                 type = Confidential,
                 redirectUris = setOf("https://aardvark.baconi.co.uk", "/aardvark"),
-                allowedScopes = setOf(Basic),
+                allowedScopes = setOf(Scope("basic")),
                 allowedActions = setOf(Authorise),
                 allowedGrantTypes = setOf(AuthorisationCode)
             )
@@ -282,7 +287,7 @@ class AuthorisationRequestValidationTest {
 
             responseType shouldBe Code
             clientId shouldBe ClientId("aardvark")
-            scopes shouldHaveSingleElement Basic
+            scopes shouldHaveSingleElement Scope("basic")
         }
     }
 }

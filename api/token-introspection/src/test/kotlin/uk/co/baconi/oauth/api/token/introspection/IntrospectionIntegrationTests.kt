@@ -1,7 +1,6 @@
 package uk.co.baconi.oauth.api.token.introspection
 
 import io.kotest.assertions.assertSoftly
-import io.kotest.assertions.withClue
 import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
@@ -33,6 +32,7 @@ import uk.co.baconi.oauth.api.common.CommonModule.common
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretRepository
 import uk.co.baconi.oauth.api.common.client.ClientSecretService
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
 import uk.co.baconi.oauth.api.common.token.AccessTokenTable
@@ -49,6 +49,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
             driver = "org.h2.Driver"
         )
 
+        private val scopeRepository = ScopeRepository()
         private val accessTokenRepository = AccessTokenRepository(database)
 
         private const val introspectionEndpoint = "/introspect"
@@ -65,7 +66,8 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         }
     }
 
-    override val clientSecretService = ClientSecretService(ClientSecretRepository(), ClientConfigurationRepository())
+    override val clientSecretService =
+        ClientSecretService(ClientSecretRepository(), ClientConfigurationRepository(scopeRepository))
     override val accessTokenService = AccessTokenService(accessTokenRepository)
     override val introspectionService = IntrospectionService(accessTokenRepository)
 

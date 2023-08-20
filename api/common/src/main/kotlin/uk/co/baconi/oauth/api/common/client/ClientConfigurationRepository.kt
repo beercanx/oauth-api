@@ -2,13 +2,12 @@ package uk.co.baconi.oauth.api.common.client
 
 import com.typesafe.config.ConfigFactory
 import io.ktor.server.config.*
-import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType
 import uk.co.baconi.oauth.api.common.grant.GrantType
-import uk.co.baconi.oauth.api.common.scope.Scope
+import uk.co.baconi.oauth.api.common.scope.ScopeRepository
 
-class ClientConfigurationRepository {
+class ClientConfigurationRepository(scopeRepository: ScopeRepository) {
 
-    private val clientConfiguration: Map<ClientId, ClientConfiguration> = loadClientConfiguration()
+    private val clientConfiguration: Map<ClientId, ClientConfiguration> = loadClientConfiguration(scopeRepository)
 
     fun findById(id: ClientId): ClientConfiguration? {
         return clientConfiguration[id]
@@ -28,7 +27,7 @@ class ClientConfigurationRepository {
         private val clientIds = baseConfig.getObject("uk.co.baconi.oauth.api.client.configuration").keys.map(::ClientId)
         private val clientConfiguration = baseConfig.getConfig("uk.co.baconi.oauth.api.client.configuration")
 
-        private fun loadClientConfiguration(): Map<ClientId, ClientConfiguration> {
+        private fun loadClientConfiguration(scopeRepository: ScopeRepository): Map<ClientId, ClientConfiguration> {
             return clientIds.associateWith { clientId ->
                 val config = clientConfiguration.getConfig(clientId.value)
                 ClientConfiguration(
@@ -44,7 +43,7 @@ class ClientConfigurationRepository {
                         ?: emptySet(),
                     allowedScopes = config
                         .tryGetStringList("allowedScopes")
-                        ?.map(Scope::fromValue)
+                        ?.mapNotNull(scopeRepository::findById)
                         ?.toSet()
                         ?: emptySet(),
                     allowedActions = config

@@ -53,21 +53,21 @@ class ClientPrincipalTest {
             every { id } returns ConsumerZ
             every { type } returns Confidential
             every { allowedActions } returns emptySet()
-            every { allowedScopes } returns setOf(Scope.Basic)
+            every { allowedScopes } returns setOf(Scope("basic"))
             every { redirectUris } returns setOf("https://example.com")
         })
 
         @Test
         fun `should return true if the scope can be issued to the principal`() {
-            withClue("canBeIssued(Scope.basic)") {
-                underTest.canBeIssued(Scope.Basic) shouldBe true
+            withClue("canBeIssued(basic)") {
+                underTest.canBeIssued(Scope("basic")) shouldBe true
             }
         }
 
         @Test
         fun `should return false if the scope cannot be issued to the principal`() {
-            withClue("canBeIssued(Scope.ProfileRead)") {
-                underTest.canBeIssued(Scope.ProfileRead) shouldBe false
+            withClue("canBeIssued(profile::read)") {
+                underTest.canBeIssued(Scope("profile::read")) shouldBe false
             }
         }
 

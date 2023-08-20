@@ -4,9 +4,11 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
 import org.jetbrains.exposed.sql.transactions.transaction
-import uk.co.baconi.oauth.api.common.client.ClientId
-import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
+import uk.co.baconi.oauth.api.common.client.ClientId
+import uk.co.baconi.oauth.api.common.scope.Scope
+import uk.co.baconi.oauth.api.common.scope.ScopesDeserializer
+import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
 import java.time.Instant
 import java.util.*
 
@@ -74,7 +76,7 @@ class AccessTokenRepository(private val database: Database) {
             value = it[AccessTokenTable.id].value,
             username = it[AccessTokenTable.username],
             clientId = it[AccessTokenTable.clientId],
-            scopes = it[AccessTokenTable.scopes].let(ScopesSerializer::deserialize),
+            scopes = it[AccessTokenTable.scopes].let(ScopesDeserializer::deserialize).map(::Scope).toSet(),
             issuedAt = it[AccessTokenTable.issuedAt],
             expiresAt = it[AccessTokenTable.expiresAt],
             notBefore = it[AccessTokenTable.notBefore],
