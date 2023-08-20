@@ -10,18 +10,7 @@ import kotlinx.serialization.encoding.Encoder
 
 // Created to prevent accidental deserialisation of a Scope from external input.
 object ScopeSerializer : KSerializer<Scope> {
-
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Scope", PrimitiveKind.STRING)
-
-    override fun serialize(encoder: Encoder, value: Scope) {
-        when {
-            value.value.isBlank() -> throw SerializationException("Invalid client id [${value.value}]")
-            value.value.trim() != value.value -> throw SerializationException("Invalid client id [${value.value}]")
-            else -> encoder.encodeString(value.value)
-        }
-    }
-
-    override fun deserialize(decoder: Decoder): Scope {
-        throw SerializationException("Deserialize unsupported for Scope")
-    }
+    override fun serialize(encoder: Encoder, value: Scope) = encoder.encodeString(value.value)
+    override fun deserialize(decoder: Decoder): Scope = throw SerializationException("Deserialize unsupported for Scope")
 }

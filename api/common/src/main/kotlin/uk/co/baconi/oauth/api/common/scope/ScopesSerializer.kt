@@ -8,5 +8,5 @@ import kotlinx.serialization.SerializationException
  */
 object ScopesSerializer : SpaceDelimitedSerializer<Scope>() {
     override fun encode(value: Scope): String = value.value
-    override fun decode(string: String): Scope = throw SerializationException("Serialisation not supported")
+    override fun decode(string: String): Scope = throw SerializationException("Decoding not supported")
 }

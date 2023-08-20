@@ -7,6 +7,6 @@ import kotlinx.serialization.SerializationException
  * For example, it will look like: `basic profile::read`
  */
 object ScopesDeserializer : SpaceDelimitedSerializer<String>() {
-    override fun encode(value: String): String = throw SerializationException("Serialisation not supported")
+    override fun encode(value: String): String = throw SerializationException("Encoding not supported")
     override fun decode(string: String): String? = string.ifBlank { null }
 }
