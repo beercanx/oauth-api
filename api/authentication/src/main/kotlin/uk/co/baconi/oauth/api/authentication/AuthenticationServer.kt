@@ -15,7 +15,6 @@ import uk.co.baconi.oauth.api.common.scope.ScopeRepository
  */
 internal object AuthenticationServer : DatabaseModule, AuthenticationRoute, TestUserModule {
 
-    override val scopeRepository = ScopeRepository()
     override val customerCredentialRepository = CustomerCredentialRepository(customerCredentialDatabase)
     override val customerStatusRepository = CustomerStatusRepository(customerStatusDatabase)
     override val customerAuthenticationService = CustomerAuthenticationService(customerCredentialRepository, customerStatusRepository)

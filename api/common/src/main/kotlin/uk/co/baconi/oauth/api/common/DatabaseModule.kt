@@ -17,9 +17,6 @@ import uk.co.baconi.oauth.api.common.token.RefreshTokenTable
 
 interface DatabaseModule {
 
-    // Needed to remind us to initialise as many tables needs a static field populating.
-    val scopeRepository: ScopeRepository
-
     private val logger: Logger get() = LoggerFactory.getLogger(DatabaseModule::class.java)
 
     val databaseConfiguration: Config get() = ConfigFactory.load().getConfig("uk.co.baconi.oauth.api.database")

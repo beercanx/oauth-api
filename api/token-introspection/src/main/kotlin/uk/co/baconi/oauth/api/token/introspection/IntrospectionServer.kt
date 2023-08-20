@@ -18,11 +18,10 @@ import uk.co.baconi.oauth.api.common.token.AccessTokenService
  */
 internal object IntrospectionServer : AuthenticationModule, DatabaseModule, IntrospectionRoute, TestAccessTokenModule {
 
-    override val scopeRepository = ScopeRepository()
-
     private val accessTokenRepository = AccessTokenRepository(accessTokenDatabase)
     override val accessTokenService = AccessTokenService(accessTokenRepository)
 
+    private val scopeRepository = ScopeRepository()
     private val clientSecretRepository = ClientSecretRepository()
     private val clientConfigurationRepository = ClientConfigurationRepository(scopeRepository)
     override val clientSecretService = ClientSecretService(clientSecretRepository, clientConfigurationRepository)

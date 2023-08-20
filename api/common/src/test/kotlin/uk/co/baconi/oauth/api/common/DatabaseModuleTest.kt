@@ -24,8 +24,6 @@ import java.util.*
 
 class DatabaseModuleTest : DatabaseModule {
 
-    override val scopeRepository = ScopeRepository()
-
     override val databaseConfiguration: Config = mockk {
         val path = slot<String>()
         every { getString(capture(path)) } answers {

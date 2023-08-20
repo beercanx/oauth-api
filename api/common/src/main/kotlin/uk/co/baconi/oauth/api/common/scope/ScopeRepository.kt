@@ -12,7 +12,9 @@ class ScopeRepository {
 
     companion object {
 
-        private var _maxScopeFieldLength: Int? = null
+        private val baseConfig = ConfigFactory.load()
+        private val scopeKeys = baseConfig.getObject("uk.co.baconi.oauth.api.scopes").keys
+        private val scopes = baseConfig.getConfig("uk.co.baconi.oauth.api.scopes")
 
         /**
          * Assuming serialisation is via a space delimited string calculate the max length of the scope field.
@@ -20,12 +22,7 @@ class ScopeRepository {
          *
          * TODO - Remove the need for this by actually implementing a relational database setup between scopes and entities.
          */
-        val maxScopeFieldLength: Int
-            get() = _maxScopeFieldLength ?: throw IllegalStateException("maxScopeFieldLength hasn't been calculated.")
-
-        private val baseConfig = ConfigFactory.load()
-        private val scopeKeys = baseConfig.getObject("uk.co.baconi.oauth.api.scopes").keys
-        private val scopes = baseConfig.getConfig("uk.co.baconi.oauth.api.scopes")
+        val maxScopeFieldLength: Int = calculateMaxScopeFieldLength()
 
         private fun loadScopes(): Map<String, Scope?> {
             return scopeKeys.associateWith { scope ->
@@ -35,14 +32,15 @@ class ScopeRepository {
                 } else {
                     null
                 }
-            }.apply {
-                val values = values.filterNotNull()
-                val gapSize = values.size - 1
-                val scopeSize = values.fold(0) { size, scope ->
-                    size + scope.value.length
-                }
-                _maxScopeFieldLength = gapSize + scopeSize
             }
+        }
+
+        private fun calculateMaxScopeFieldLength(): Int {
+            val gapSize = scopeKeys.size - 1
+            val scopeSize = scopeKeys.fold(0) { size, scope ->
+                size + scope.length
+            }
+            return gapSize + scopeSize
         }
     }
 }
