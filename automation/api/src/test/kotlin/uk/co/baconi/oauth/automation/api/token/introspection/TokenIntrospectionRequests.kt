@@ -105,7 +105,7 @@ class TokenIntrospectionRequests : WithRestAssuredDriver {
                 .contentType(ContentType.JSON)
                 .body(
                     "error", equalTo("unauthorized_client"),
-                    "description", equalTo("client is not allowed to introspect")
+                    "error_description", equalTo("client is not allowed to introspect")
                 )
         }
 
@@ -121,7 +121,7 @@ class TokenIntrospectionRequests : WithRestAssuredDriver {
                 .contentType(ContentType.JSON)
                 .body(
                     "error", equalTo("invalid_request"),
-                    "description", equalTo("missing parameter: token")
+                    "error_description", equalTo("missing parameter: token")
                 )
         }
     }
