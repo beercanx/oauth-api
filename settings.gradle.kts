@@ -9,8 +9,6 @@ include(":api:session-info")
 include(":api:token")
 include(":api:token-introspection")
 include(":api:token-revocation")
-include(":api:user-info")
-include(":api:well-known")
 include(":api:server")
 
 // User Interface - Not imported here as they are NPM projects.

@@ -16,9 +16,7 @@ enum class Location(val baseUrl: Url) {
     SessionInfo("session-info"),
     Token("token"),
     TokenIntrospection("token-introspection"),
-    TokenRevocation("token-revocation"),
-    UserInfo("user-info"),
-    WellKnown("well-known");
+    TokenRevocation("token-revocation");
 
     constructor(name: String) : this(
         Url(config.getString(name)),

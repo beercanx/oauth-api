@@ -10,10 +10,9 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
-import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCode
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.client.ConfidentialClient
-import uk.co.baconi.oauth.api.common.scope.Scope.OpenId
+import uk.co.baconi.oauth.api.common.scope.Scope.Basic
 import uk.co.baconi.oauth.api.common.scope.Scope.ProfileRead
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
 import uk.co.baconi.oauth.api.common.token.RefreshToken
@@ -28,7 +27,7 @@ class RefreshTokenGrantTest {
         every { issue(any(), any(), any()) } returns mockk {
             val now = Instant.now()
             every { value } returns accessToken
-            every { scopes } returns setOf(OpenId)
+            every { scopes } returns setOf(Basic)
             every { issuedAt } returns now
             every { expiresAt } returns now
         }
@@ -53,15 +52,15 @@ class RefreshTokenGrantTest {
         val oldRefreshToken = mockk<RefreshToken> {
             every { username } returns AuthenticatedUsername("aardvark")
             every { clientId } returns principal.id
-            every { scopes } returns setOf(OpenId, ProfileRead)
+            every { scopes } returns setOf(Basic, ProfileRead)
         }
 
-        assertSoftly(underTest.exchange(RefreshTokenRequest(principal, setOf(OpenId), oldRefreshToken))) {
+        assertSoftly(underTest.exchange(RefreshTokenRequest(principal, setOf(Basic), oldRefreshToken))) {
             shouldBeInstanceOf<TokenResponse.Success>()
             this.accessToken shouldBe accessToken
             this.refreshToken shouldBe refreshToken
             this.expiresIn shouldBe 0
-            this.scope shouldContainExactly setOf(OpenId)
+            this.scope shouldContainExactly setOf(Basic)
             this.state should beNull()
         }
     }

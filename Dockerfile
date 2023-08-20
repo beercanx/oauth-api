@@ -25,8 +25,6 @@ COPY api/session-info/build.gradle.kts  /project/api/session-info/
 COPY api/token/build.gradle.kts  /project/api/token/
 COPY api/token-introspection/build.gradle.kts  /project/api/token-introspection/
 COPY api/token-revocation/build.gradle.kts  /project/api/token-revocation/
-COPY api/user-info/build.gradle.kts  /project/api/user-info/
-COPY api/well-known/build.gradle.kts  /project/api/well-known/
 RUN --mount=type=cache,target=/root/.gradle \
     --mount=type=cache,target=/project/.gradle \
     ./gradlew -Pargon2Type=argon2-jvm-nolibs dependencies
@@ -50,8 +48,6 @@ RUN --mount=type=cache,target=/root/.gradle \
     --mount=type=cache,target=/project/api/token/build \
     --mount=type=cache,target=/project/api/token-introspection/build \
     --mount=type=cache,target=/project/api/token-revocation/build \
-    --mount=type=cache,target=/project/api/user-info/build \
-    --mount=type=cache,target=/project/api/well-known/build \
     --mount=type=cache,target=/project/build \
     ./gradlew -Pargon2Type=argon2-jvm-nolibs build \
     # Unzip all the distributions ready for copying later on \
@@ -127,15 +123,3 @@ FROM server-base as server-token-revocation
 COPY --from=code-build /project/distributions/token-revocation/ /application
 WORKDIR /application
 CMD "./bin/token-revocation"
-
-## Create Server - User Info
-FROM server-base as server-user-info
-COPY --from=code-build /project/distributions/user-info/ /application
-WORKDIR /application
-CMD "./bin/user-info"
-
-## Create Server - Well Known
-FROM server-base as server-well-known
-COPY --from=code-build /project/distributions/well-known/ /application
-WORKDIR /application
-CMD "./bin/well-known"

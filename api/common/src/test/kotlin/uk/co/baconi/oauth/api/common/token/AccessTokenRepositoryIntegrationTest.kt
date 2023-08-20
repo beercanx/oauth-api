@@ -20,7 +20,6 @@ import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
 import java.time.Instant
-import java.time.temporal.ChronoUnit
 import java.time.temporal.ChronoUnit.HOURS
 import java.util.*
 
@@ -195,7 +194,7 @@ class AccessTokenRepositoryIntegrationTest {
         value: UUID = UUID.randomUUID(),
         username: String = "aardvark",
         clientId: String = "badger",
-        scopes: Set<Scope> = setOf(Scope.OpenId, Scope.ProfileRead, Scope.ProfileWrite),
+        scopes: Set<Scope> = setOf(Scope.Basic, Scope.ProfileRead, Scope.ProfileWrite),
         now: Instant = Instant.now()
     ) = AccessToken(
         value = value,

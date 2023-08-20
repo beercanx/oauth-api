@@ -14,10 +14,8 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import org.junit.jupiter.params.provider.NullSource
 import uk.co.baconi.oauth.api.common.client.ClientPrincipal
 import uk.co.baconi.oauth.api.common.grant.GrantType
-import uk.co.baconi.oauth.api.common.scope.Scope
 import uk.co.baconi.oauth.api.common.scope.Scope.*
 import uk.co.baconi.oauth.api.common.token.RefreshToken
 import uk.co.baconi.oauth.api.common.token.RefreshTokenService
@@ -64,7 +62,7 @@ class RefreshTokenValidationTest {
     fun `should reject requests with a missing refresh token parameter`() {
 
         every { parameters["refresh_token"] } returns null
-        every { parameters["scope"] } returns "openid"
+        every { parameters["scope"] } returns "basic"
 
         assertSoftly(underTest.validateRefreshTokenRequest(parameters, client)) {
             shouldBeInstanceOf<Invalid>()
@@ -105,7 +103,7 @@ class RefreshTokenValidationTest {
     fun `should reject requests with scopes that cannot be issued to the client`() {
 
         every { parameters["refresh_token"] } returns validRefreshToken
-        every { parameters["scope"] } returns "openid"
+        every { parameters["scope"] } returns "basic"
         every { client.canBeIssued(any()) } returns false
 
         assertSoftly(underTest.validateRefreshTokenRequest(parameters, client)) {
@@ -114,7 +112,7 @@ class RefreshTokenValidationTest {
             description shouldBe "invalid parameter: scope"
         }
 
-        verify { client.canBeIssued(OpenId) }
+        verify { client.canBeIssued(Basic) }
     }
 
     @Test
@@ -138,12 +136,12 @@ class RefreshTokenValidationTest {
 
         every { parameters["refresh_token"] } returns validRefreshToken
         every { parameters["scope"] } returns null
-        every { mockRefreshToken.scopes } returns setOf(OpenId)
+        every { mockRefreshToken.scopes } returns setOf(Basic)
 
         assertSoftly(underTest.validateRefreshTokenRequest(parameters, client)) {
             shouldBeInstanceOf<RefreshTokenRequest>()
             principal shouldBe client
-            scopes shouldContain OpenId
+            scopes shouldContain Basic
             refreshToken.value shouldBe UUID.fromString(validRefreshToken)
         }
     }
@@ -153,7 +151,7 @@ class RefreshTokenValidationTest {
 
         every { parameters["refresh_token"] } returns validRefreshToken
         every { parameters["scope"] } returns "profile::read"
-        every { mockRefreshToken.scopes } returns setOf(OpenId, ProfileRead)
+        every { mockRefreshToken.scopes } returns setOf(Basic, ProfileRead)
         every { client.canBeIssued(ProfileRead) } returns true
 
         assertSoftly(underTest.validateRefreshTokenRequest(parameters, client)) {
@@ -169,7 +167,7 @@ class RefreshTokenValidationTest {
 
         every { parameters["refresh_token"] } returns validRefreshToken
         every { parameters["scope"] } returns "profile::write"
-        every { mockRefreshToken.scopes } returns setOf(OpenId, ProfileRead)
+        every { mockRefreshToken.scopes } returns setOf(Basic, ProfileRead)
         every { client.canBeIssued(ProfileWrite) } returns true
 
         // TODO - Verify if this should work like this or if we should have failed to issue the refresh token.

@@ -64,7 +64,7 @@ class ConfidentialAuthorisationCodeGrantTest {
             "client_id" to "consumer-z",
             "redirect_uri" to "https://consumer-z.baconi.co.uk/callback",
             "state" to state,
-            "scope" to "openid",
+            "scope" to "basic",
         )))
 
         // fill in username, password and click login
@@ -110,7 +110,7 @@ class ConfidentialAuthorisationCodeGrantTest {
                 "client_id" to "consumer-z",
                 "redirect_uri" to "https://consumer-z.baconi.co.uk/callback",
                 "state" to state,
-                "scope" to "openid",
+                "scope" to "basic",
             )))
         } catch (exception: WebDriverException) {
             // Ignoring exceptions because we get a direct redirect back to the redirect uri, which cannot be resolved.
@@ -146,7 +146,7 @@ class ConfidentialAuthorisationCodeGrantTest {
             "client_id" to "consumer-z",
             "redirect_uri" to "https://consumer-z.baconi.co.uk/callback",
             "state" to state,
-            "scope" to "openid",
+            "scope" to "basic",
         )))
 
         element(byId("login-form"))

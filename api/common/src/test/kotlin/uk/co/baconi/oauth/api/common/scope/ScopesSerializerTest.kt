@@ -23,12 +23,12 @@ class ScopesSerializerTest {
 
     @Test
     fun `should be able to encode a singleton set of scopes`() {
-        encode(setOf(OpenId)) shouldBe "\"openid\""
+        encode(setOf(Basic)) shouldBe "\"basic\""
     }
 
     @Test
     fun `should be able to encode a full set of scopes`() {
-        encode(setOf(OpenId, ProfileRead, ProfileWrite)) shouldBe "\"openid profile::read profile::write\""
+        encode(setOf(Basic, ProfileRead, ProfileWrite)) shouldBe "\"basic profile::read profile::write\""
     }
 
     @Test
@@ -38,12 +38,12 @@ class ScopesSerializerTest {
 
     @Test
     fun `should be able to decode a singleton set of scopes`() {
-        decode("\"openid\"") should containExactly(OpenId)
+        decode("\"basic\"") should containExactly(Basic)
     }
 
     @Test
     fun `should be able to decode a full set of scopes`() {
-        decode("\"openid profile::read profile::write\"") should containExactly(OpenId, ProfileRead, ProfileWrite)
+        decode("\"basic profile::read profile::write\"") should containExactly(Basic, ProfileRead, ProfileWrite)
     }
 
     @Test

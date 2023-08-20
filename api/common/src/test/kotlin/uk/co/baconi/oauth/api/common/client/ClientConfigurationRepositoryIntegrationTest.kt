@@ -7,7 +7,6 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.sequences.shouldContain
-import io.kotest.matchers.sequences.shouldHaveSize
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Nested
@@ -86,7 +85,7 @@ class ClientConfigurationRepositoryIntegrationTest {
         fun `should be able to handle valid scope entry`() {
             assertSoftly(underTest.findById(ClientId("allowed-scopes-valid"))) {
                 shouldNotBeNull()
-                allowedScopes shouldContainExactly setOf(Scope.OpenId)
+                allowedScopes shouldContainExactly setOf(Scope.Basic)
             }
         }
     }
@@ -100,7 +99,7 @@ class ClientConfigurationRepositoryIntegrationTest {
                 id = ClientId("consumer-y"),
                 type = ClientType.Public,
                 redirectUris = setOf("uk.co.baconi.consumer-y://callback"),
-                allowedScopes = setOf(Scope.OpenId),
+                allowedScopes = setOf(Scope.Basic),
                 allowedActions = setOf(ClientAction.ProofKeyForCodeExchange),
                 allowedGrantTypes = setOf(GrantType.AuthorisationCode),
             )

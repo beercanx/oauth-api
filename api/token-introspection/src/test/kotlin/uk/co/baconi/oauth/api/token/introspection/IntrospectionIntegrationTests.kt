@@ -234,7 +234,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
                 assertSoftly(body<Map<String, String>>()) {
                     shouldContain("active" to "true")
                     shouldContain("sub" to "aardvark")
-                    shouldContain("scope" to "openid profile::read profile::write")
+                    shouldContain("scope" to "basic profile::read profile::write")
                     shouldContain("username" to "aardvark")
                     shouldContain("client_id" to "badger")
                     shouldContain("token_type" to "bearer")

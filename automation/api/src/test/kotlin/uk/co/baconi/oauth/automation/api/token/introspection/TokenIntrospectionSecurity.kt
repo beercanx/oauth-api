@@ -21,6 +21,7 @@ import uk.co.baconi.oauth.automation.api.sockets.beConnected
 import javax.net.ssl.SSLHandshakeException
 import javax.net.ssl.SSLSocket
 
+@Tag(TLS)
 @Tag(RFC7662)
 @Tag(AUTOMATION)
 @Tag(TOKEN_INTROSPECTION)

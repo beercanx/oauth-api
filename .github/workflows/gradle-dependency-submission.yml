@@ -34,9 +34,7 @@ jobs:
             :api:token
             :api:token-introspection
             :api:token-revocation
-            :api:user-info
-            :api:well-known
             :api:server
             :automation:api
             :automation:browser
-# TODO      :automation:load
+            :automation:load

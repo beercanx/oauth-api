@@ -2,9 +2,7 @@ package uk.co.baconi.oauth.api.common.authorisation
 
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.matchers.collections.beEmpty
 import io.kotest.matchers.nulls.shouldBeNull
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -167,7 +165,7 @@ class AuthorisationCodeRepositoryIntegrationTest {
         username: String = "aardvark",
         clientId: String = "badger",
         redirectUri: String = "uk.co.baconi.oauth.consumerz://callback",
-        scopes: Set<Scope> = setOf(Scope.OpenId, Scope.ProfileRead, Scope.ProfileWrite),
+        scopes: Set<Scope> = setOf(Scope.Basic, Scope.ProfileRead, Scope.ProfileWrite),
         now: Instant = Instant.now(),
         state: String = "da4d809e-ed89-42bd-aa3e-8c975b9242d0",
     ) = AuthorisationCode.Basic(
@@ -186,7 +184,7 @@ class AuthorisationCodeRepositoryIntegrationTest {
         username: String = "aardvark",
         clientId: String = "badger",
         redirectUri: String = "uk.co.baconi.oauth.consumerz://callback",
-        scopes: Set<Scope> = setOf(Scope.OpenId, Scope.ProfileRead, Scope.ProfileWrite),
+        scopes: Set<Scope> = setOf(Scope.Basic, Scope.ProfileRead, Scope.ProfileWrite),
         now: Instant = Instant.now(),
         state: String = "da4d809e-ed89-42bd-aa3e-8c975b9242d0",
         codeChallenge: String = "code-challenge",

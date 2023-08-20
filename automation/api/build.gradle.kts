@@ -46,10 +46,15 @@ dependencies {
     }
 }
 
-// TODO - Add in a means of running the automation test pack against an environment.
-
 tasks.withType<Test>().configureEach {
+
+    val enabled = (environment["ENABLE_AUTOMATION_API"] as String?).toBoolean()
+    val tls = (environment["ENABLE_AUTOMATION_API_TLS"] as String?).toBoolean()
+
+    if(enabled) outputs.upToDateWhen { false }
+
     useJUnitPlatform {
-        excludeTags("automation") // Exclude automation tests from CI building. TODO - Consider support testing a local instance.
+        if(!enabled) excludeTags("automation")
+        if(!tls) excludeTags("tls")
     }
 }

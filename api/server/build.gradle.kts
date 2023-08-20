@@ -13,8 +13,6 @@ dependencies {
     implementation(project(":api:token"))
     implementation(project(":api:token-introspection"))
     implementation(project(":api:token-revocation"))
-    implementation(project(":api:user-info"))
-    implementation(project(":api:well-known"))
 }
 
 application {

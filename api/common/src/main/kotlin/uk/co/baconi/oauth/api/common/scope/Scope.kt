@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class Scope(internal val value: String) {
-    @SerialName("openid") OpenId("openid"),
+    @SerialName("basic") Basic("basic"),
     @SerialName("profile::read") ProfileRead("profile::read"),
     @SerialName("profile::write") ProfileWrite("profile::write");
     companion object {

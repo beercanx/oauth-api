@@ -179,7 +179,7 @@ class AuthorisationRouteIntegrationTests : AuthorisationRoute {
                     parameters["client_id"] = "with-authorise-action"
                     parameters["redirect_uri"] = "https://redirect.baconi.co.uk"
                     parameters["response_type"] = "code"
-                    parameters["scope"] = "openid"
+                    parameters["scope"] = "basic"
                     parameters["state"] = "7d9736a2-92ed-4a95-a83d-8adf4d2da0ee"
                 }
             }
@@ -205,7 +205,7 @@ class AuthorisationRouteIntegrationTests : AuthorisationRoute {
                     parameters["client_id"] = "with-authorise-action"
                     parameters["redirect_uri"] = "https://redirect.baconi.co.uk"
                     parameters["response_type"] = "code"
-                    parameters["scope"] = "openid"
+                    parameters["scope"] = "basic"
                     parameters["state"] = "7d9736a2-92ed-4a95-a83d-8adf4d2da0ee"
                 }
             }
