@@ -1,11 +1,8 @@
 package uk.co.baconi.oauth.automation.api.token.introspection
 
-import com.typesafe.config.ConfigFactory
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import io.restassured.http.Method
-import io.restassured.response.ValidatableResponse
-import io.restassured.specification.RequestSpecification
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -16,25 +13,25 @@ import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE
 import org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE
 import uk.co.baconi.oauth.automation.api.*
-import uk.co.baconi.oauth.automation.api.driver.WithRestAssuredDriver
+import uk.co.baconi.oauth.automation.api.config.AccessToken
+import uk.co.baconi.oauth.automation.api.config.Client
+import uk.co.baconi.oauth.automation.api.driver.RestAssuredDriverTest
+import uk.co.baconi.oauth.automation.api.driver.basic
 import java.util.*
 
 @Tag(RFC7662)
 @Tag(AUTOMATION)
 @Tag(TOKEN_INTROSPECTION)
-class TokenIntrospectionRequests : WithRestAssuredDriver {
-
-    private val config = ConfigFactory.load().getConfig("uk.co.baconi.oauth.automation.api.token.introspection")
-    private val location = config.getString("location")
+class TokenIntrospectionRequests : RestAssuredDriverTest() {
 
     @ParameterizedTest
     @EnumSource(Method::class, mode = EXCLUDE, names = ["POST"])
     fun `should allow only post requests`(method: Method) {
-        given(driver.rest)
-            .request(method, location)
+        given(driver.serverSpecification)
+            .request(method, driver.introspectionLocation)
             .then()
             .statusCode(405)
-            .expectNoWwwAuthenticateHeader()
+            .header("WWW-Authenticate", nullValue())
             .body(emptyString())
     }
 
@@ -50,8 +47,8 @@ class TokenIntrospectionRequests : WithRestAssuredDriver {
         @Test
         fun `reject missing authentication`() {
 
-            given(driver.rest)
-                .post(location)
+            given(driver.serverSpecification)
+                .post(driver.introspectionLocation)
                 .then()
                 .statusCode(401)
                 .header("WWW-Authenticate", "Basic realm=oauth-api, charset=UTF-8")
@@ -61,9 +58,9 @@ class TokenIntrospectionRequests : WithRestAssuredDriver {
         @Test
         fun `reject invalid basic authentication`() {
 
-            given(driver.rest)
+            given(driver.serverSpecification)
                 .auth().basic("aardvark", "badger")
-                .post(location)
+                .post(driver.introspectionLocation)
                 .then()
                 .statusCode(401)
                 .header("WWW-Authenticate", "Basic realm=oauth-api, charset=UTF-8")
@@ -73,14 +70,14 @@ class TokenIntrospectionRequests : WithRestAssuredDriver {
         @Test
         fun `reject public client authentication`() {
 
-            given(driver.rest)
+            given(driver.serverSpecification)
                 .urlEncodingEnabled(true)
                 .params(
                     mapOf(
                         "client_id" to "consumer-y"
                     )
                 )
-                .post(location)
+                .post(driver.introspectionLocation)
                 .then()
                 .statusCode(401)
                 .header("WWW-Authenticate", "Basic realm=oauth-api, charset=UTF-8")
@@ -90,7 +87,7 @@ class TokenIntrospectionRequests : WithRestAssuredDriver {
         @Test
         fun `reject a valid client that is missing the introspection allowed action`() {
 
-            given(driver.rest)
+            given(driver.serverSpecification)
                 .auth().basic("no-op", "MQgQKBW3*j1m4QyHWnMsp52sqADHq7j3")
                 .urlEncodingEnabled(true)
                 .params(
@@ -98,10 +95,10 @@ class TokenIntrospectionRequests : WithRestAssuredDriver {
                         "token" to UUID.randomUUID().toString()
                     )
                 )
-                .post(location)
+                .post(driver.introspectionLocation)
                 .then()
                 .statusCode(403)
-                .expectNoWwwAuthenticateHeader()
+                .header("WWW-Authenticate", nullValue())
                 .contentType(ContentType.JSON)
                 .body(
                     "error", equalTo("unauthorized_client"),
@@ -110,14 +107,14 @@ class TokenIntrospectionRequests : WithRestAssuredDriver {
         }
 
         @Test
-        fun `accept a valid client using basic authentication`() {
+        fun `accept a valid client using basic authentication`(client: Client) {
 
-            given(driver.rest)
-                .withValidClient()
-                .post(location)
+            given(driver.serverSpecification)
+                .auth().basic(client)
+                .post(driver.introspectionLocation)
                 .then()
                 .statusCode(400)
-                .expectNoWwwAuthenticateHeader()
+                .header("WWW-Authenticate", nullValue())
                 .contentType(ContentType.JSON)
                 .body(
                     "error", equalTo("invalid_request"),
@@ -131,69 +128,52 @@ class TokenIntrospectionRequests : WithRestAssuredDriver {
     inner class ShouldAllowOnlyUrlEncodedFormRequests {
 
         @Test
-        fun `reject JSON body requests`() {
+        fun `reject JSON body requests`(client: Client) {
 
-            given(driver.rest)
-                .withValidClient()
+            given(driver.serverSpecification)
+                .auth().basic(client)
                 .contentType(ContentType.JSON)
                 .body("""{ "token": "${UUID.randomUUID()}" }""")
-                .post(location)
+                .post(driver.introspectionLocation)
                 .then()
                 .statusCode(415)
-                .expectNoWwwAuthenticateHeader()
+                .header("WWW-Authenticate", nullValue())
                 .body(emptyString())
         }
 
         @Test
-        fun `reject XML body requests`() {
+        fun `reject XML body requests`(client: Client) {
 
-            given(driver.rest)
-                .withValidClient()
+            given(driver.serverSpecification)
+                .auth().basic(client)
                 .contentType(ContentType.XML)
                 .body("<token>${UUID.randomUUID()}</token>")
-                .post(location)
+                .post(driver.introspectionLocation)
                 .then()
                 .statusCode(415)
-                .expectNoWwwAuthenticateHeader()
+                .header("WWW-Authenticate", nullValue())
                 .body(emptyString())
         }
 
         @ParameterizedTest
         @EnumSource(ContentType::class, mode = INCLUDE, names = ["TEXT", "JSON", "XML", "HTML"])
-        fun `reject non url encoded form posts`(contentType: ContentType) {
+        fun `reject non url encoded form posts`(contentType: ContentType, client: Client) {
 
-            given(driver.rest)
-                .withValidClient()
+            given(driver.serverSpecification)
+                .auth().basic(client)
                 .contentType(contentType)
-                .post(location)
+                .post(driver.introspectionLocation)
                 .then()
                 .statusCode(415)
-                .expectNoWwwAuthenticateHeader()
+                .header("WWW-Authenticate", nullValue())
                 .body(emptyString())
         }
 
         @Test
-        fun `accept URL encoded form body requests`() {
+        fun `accept URL encoded form body requests`(client: Client) {
 
-            given(driver.rest)
-                .withValidClient()
-                .contentType(ContentType.URLENC)
-                .formParams(
-                    mapOf(
-                        "token" to UUID.randomUUID().toString()
-                    )
-                )
-                .post(location)
-                .then()
-                .statusCode(200)
-                .expectNoWwwAuthenticateHeader()
-                .contentType(ContentType.JSON)
+            driver.introspect(client, AccessToken(UUID.randomUUID()))
                 .body("active", equalTo(false))
         }
     }
-
-    private fun RequestSpecification.withValidClient() = auth().basic("consumer-x", "9VylF3DbEeJbtdbih3lqpNXBw@Non#bi")
-
-    private fun ValidatableResponse.expectNoWwwAuthenticateHeader() = header("WWW-Authenticate", nullValue())
-
 }

@@ -11,24 +11,31 @@ interface TestUserModule {
     val customerStatusRepository: CustomerStatusRepository
 
     @Deprecated("This is intended to be removed once code complete")
-    fun Application.generateTestUsers() {
+    fun Application.generateTestUsers(users: Map<String, String> = mapOf(
+        "aardvark" to "121212",
+        "badger" to "212121",
+        "elephant" to "122112",
+    )) {
 
         log.info("Registering the TestUserModule.generateTestUsers() module")
 
         val argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id)
 
-        val customerCredential = CustomerCredential(
-            username = "aardvark",
-            hashedSecret = argon2.hash(2, 16, 1, "121212".toCharArray())
-        ).also(customerCredentialRepository::insert)
+        users.forEach { (username, password) ->
 
-        log.info("Generated: $customerCredential")
+            val customerCredential = CustomerCredential(
+                username = username,
+                hashedSecret = argon2.hash(2, 16, 1, password.toCharArray())
+            ).also(customerCredentialRepository::insert)
 
-        val customerStatus = CustomerStatus(
-            username = "aardvark",
-            state = CustomerState.Active
-        ).also(customerStatusRepository::insert)
+            log.info("Generated: $customerCredential")
 
-        log.info("Generated: $customerStatus")
+            val customerStatus = CustomerStatus(
+                username = username,
+                state = CustomerState.Active
+            ).also(customerStatusRepository::insert)
+
+            log.info("Generated: $customerStatus")
+        }
     }
 }
