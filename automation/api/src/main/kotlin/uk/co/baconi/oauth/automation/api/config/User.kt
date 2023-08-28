@@ -1,5 +1,5 @@
 package uk.co.baconi.oauth.automation.api.config
 
-class User(val username: String, val password: CharArray) {
+data class User(val username: String, val password: String) {
     override fun toString() = "User(username='$username', password='REDACTED')"
 }

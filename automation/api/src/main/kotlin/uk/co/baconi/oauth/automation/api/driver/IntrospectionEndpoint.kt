@@ -5,9 +5,9 @@ import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import io.restassured.response.ValidatableResponse
 import io.restassured.specification.RequestSpecification
-import org.hamcrest.Matchers.nullValue
 import uk.co.baconi.oauth.automation.api.config.AccessToken
 import uk.co.baconi.oauth.automation.api.config.Client
+import uk.co.baconi.oauth.automation.api.config.ConfidentialClient
 import uk.co.baconi.oauth.automation.api.getUri
 import java.net.URI
 
@@ -22,11 +22,15 @@ interface IntrospectionEndpoint {
     /**
      * Perform an introspection as [client] of [accessToken]
      */
-    fun introspect(client: Client, accessToken: AccessToken): ValidatableResponse {
+    fun introspect(client: ConfidentialClient, accessToken: AccessToken): ValidatableResponse {
         return given(serverSpecification)
             .auth().preemptive().basic(client)
             .contentType(ContentType.URLENC)
-            .formParams(mapOf("token" to accessToken.value))
+            .formParams(
+                mapOf(
+                    "token" to accessToken.value
+                )
+            )
             .post(introspectionLocation)
             .then()
             .statusCode(200)

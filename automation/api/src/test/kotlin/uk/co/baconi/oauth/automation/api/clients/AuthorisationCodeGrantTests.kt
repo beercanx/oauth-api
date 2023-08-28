@@ -1,13 +1,15 @@
 package uk.co.baconi.oauth.automation.api.clients
 
 import io.kotest.matchers.shouldBe
+import io.restassured.response.ValidatableResponse
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
 import uk.co.baconi.oauth.automation.api.AUTOMATION
 import uk.co.baconi.oauth.automation.api.CLIENTS
-import uk.co.baconi.oauth.automation.api.config.Client
-import uk.co.baconi.oauth.automation.api.config.User
+import uk.co.baconi.oauth.automation.api.config.*
+import uk.co.baconi.oauth.automation.api.config.ClientType.Confidential
 import uk.co.baconi.oauth.automation.api.driver.RestAssuredDriverTest
 import java.util.*
 
@@ -15,8 +17,9 @@ import java.util.*
 @Tag(AUTOMATION)
 class AuthorisationCodeGrantTests : RestAssuredDriverTest() {
 
-    @Test
-    fun `authorisation code grant`(client: Client, user: User) {
+    @ParameterizedTest
+    @ClientSource(clientTypes = [Confidential])
+    fun `authorisation code grant`(client: ConfidentialClient, user: User) {
 
         val state = UUID.randomUUID()
         val scopes = setOf("basic")
@@ -54,5 +57,20 @@ class AuthorisationCodeGrantTests : RestAssuredDriverTest() {
             .body("exp", notNullValue())
             .body("iat", notNullValue())
             .body("nbf", notNullValue())
+    }
+
+    //@ParameterizedTest
+    //@ClientSource(with = [ProofKeyOfCodeExchange])
+    fun `authorisation code grant using PKCE`(client: Client, user: User) {
+
+        // TODO - Do stuff before this
+        val code = ""
+
+        val response: ValidatableResponse = when(client) {
+            is PublicClient -> TODO("driver.authorisationCodeGrant(client, code, challenge..etc)")
+            is ConfidentialClient -> driver.authorisationCodeGrant(client, code)
+        }
+
+        TODO("Implement")
     }
 }

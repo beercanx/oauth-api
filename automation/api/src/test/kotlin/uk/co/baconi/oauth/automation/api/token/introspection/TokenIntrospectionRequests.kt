@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE
 import uk.co.baconi.oauth.automation.api.*
 import uk.co.baconi.oauth.automation.api.config.AccessToken
 import uk.co.baconi.oauth.automation.api.config.Client
+import uk.co.baconi.oauth.automation.api.config.ConfidentialClient
 import uk.co.baconi.oauth.automation.api.driver.RestAssuredDriverTest
 import uk.co.baconi.oauth.automation.api.driver.basic
 import java.util.*
@@ -107,7 +108,7 @@ class TokenIntrospectionRequests : RestAssuredDriverTest() {
         }
 
         @Test
-        fun `accept a valid client using basic authentication`(client: Client) {
+        fun `accept a valid client using basic authentication`(client: ConfidentialClient) {
 
             given(driver.serverSpecification)
                 .auth().basic(client)
@@ -128,7 +129,7 @@ class TokenIntrospectionRequests : RestAssuredDriverTest() {
     inner class ShouldAllowOnlyUrlEncodedFormRequests {
 
         @Test
-        fun `reject JSON body requests`(client: Client) {
+        fun `reject JSON body requests`(client: ConfidentialClient) {
 
             given(driver.serverSpecification)
                 .auth().basic(client)
@@ -142,7 +143,7 @@ class TokenIntrospectionRequests : RestAssuredDriverTest() {
         }
 
         @Test
-        fun `reject XML body requests`(client: Client) {
+        fun `reject XML body requests`(client: ConfidentialClient) {
 
             given(driver.serverSpecification)
                 .auth().basic(client)
@@ -157,7 +158,7 @@ class TokenIntrospectionRequests : RestAssuredDriverTest() {
 
         @ParameterizedTest
         @EnumSource(ContentType::class, mode = INCLUDE, names = ["TEXT", "JSON", "XML", "HTML"])
-        fun `reject non url encoded form posts`(contentType: ContentType, client: Client) {
+        fun `reject non url encoded form posts`(contentType: ContentType, client: ConfidentialClient) {
 
             given(driver.serverSpecification)
                 .auth().basic(client)
@@ -170,7 +171,7 @@ class TokenIntrospectionRequests : RestAssuredDriverTest() {
         }
 
         @Test
-        fun `accept URL encoded form body requests`(client: Client) {
+        fun `accept URL encoded form body requests`(client: ConfidentialClient) {
 
             driver.introspect(client, AccessToken(UUID.randomUUID()))
                 .body("active", equalTo(false))

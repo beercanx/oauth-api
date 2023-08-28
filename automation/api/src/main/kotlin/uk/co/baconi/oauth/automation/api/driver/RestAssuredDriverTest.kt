@@ -1,19 +1,19 @@
 package uk.co.baconi.oauth.automation.api.driver
 
-import io.restassured.config.CsrfConfig
 import io.restassured.config.CsrfConfig.csrfConfig
-import io.restassured.internal.csrf.CsrfTokenFinder
 import io.restassured.internal.csrf.CsrfTokenFinder.findInHtml
 import io.restassured.response.Response
 import io.restassured.response.ValidatableResponse
 import org.junit.jupiter.api.extension.ExtendWith
 import uk.co.baconi.oauth.automation.api.config.AccessToken
-import uk.co.baconi.oauth.automation.api.config.ClientParameterResolver
-import uk.co.baconi.oauth.automation.api.config.UserParameterResolver
+import uk.co.baconi.oauth.automation.api.config.ClientSourceResolver
+import uk.co.baconi.oauth.automation.api.config.ConfidentialClientResolver
+import uk.co.baconi.oauth.automation.api.config.UserResolver
 import java.net.URI
 
-@ExtendWith(ClientParameterResolver::class)
-@ExtendWith(UserParameterResolver::class)
+@ExtendWith(UserResolver::class)
+@ExtendWith(ClientSourceResolver::class)
+@ExtendWith(ConfidentialClientResolver::class)
 abstract class RestAssuredDriverTest {
 
     protected val driver: RestAssuredDriver = RestAssuredDriver()

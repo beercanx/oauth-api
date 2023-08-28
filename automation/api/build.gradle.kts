@@ -33,6 +33,7 @@ dependencies {
     // JUnit 5 bits for providing things like custom resolvers
     implementation(platform("org.junit:junit-bom:$junitVersion"))
     implementation("org.junit.jupiter:junit-jupiter-api")
+    implementation("org.junit.jupiter:junit-jupiter-params")
 
     // JUnit 5 for tests definitions and running
     testImplementation("org.junit.jupiter:junit-jupiter")
