@@ -27,6 +27,7 @@ class AuthorisationCodeRepository(private val database: Database) {
                     is AuthorisationCode.Basic -> {
                         it[type] = BASIC
                     }
+
                     is AuthorisationCode.PKCE -> {
                         it[type] = PKCE
                         it[codeChallenge] = new.codeChallenge.value
@@ -67,29 +68,25 @@ class AuthorisationCodeRepository(private val database: Database) {
 
     private fun toAuthorisationCode(it: ResultRow): AuthorisationCode {
         return when (val type = it[AuthorisationCodeTable.type]) {
-            BASIC -> AuthorisationCode.Basic(
-                value = it[AuthorisationCodeTable.id].value,
-                username = it[AuthorisationCodeTable.username],
-                clientId = it[AuthorisationCodeTable.clientId],
-                issuedAt = it[AuthorisationCodeTable.issuedAt],
-                expiresAt = it[AuthorisationCodeTable.expiresAt],
-                scopes = it[AuthorisationCodeTable.scopes].let(ScopesDeserializer::deserialize).map(::Scope).toSet(),
-                redirectUri = it[AuthorisationCodeTable.redirectUri],
-                state = it[AuthorisationCodeTable.state],
-            )
+            BASIC -> it.toBasic()
             PKCE -> AuthorisationCode.PKCE(
-                value = it[AuthorisationCodeTable.id].value,
-                username = it[AuthorisationCodeTable.username],
-                clientId = it[AuthorisationCodeTable.clientId],
-                issuedAt = it[AuthorisationCodeTable.issuedAt],
-                expiresAt = it[AuthorisationCodeTable.expiresAt],
-                scopes = it[AuthorisationCodeTable.scopes].let(ScopesDeserializer::deserialize).map(::Scope).toSet(),
-                redirectUri = it[AuthorisationCodeTable.redirectUri],
-                state = it[AuthorisationCodeTable.state],
+                base = it.toBasic(),
                 codeChallenge = CodeChallenge(checkNotNull(it[AuthorisationCodeTable.codeChallenge])),
                 codeChallengeMethod = enumValueOf(checkNotNull(it[AuthorisationCodeTable.codeChallengeMethod])),
             )
+
             else -> throw IllegalStateException("Unknown authorisation code type: $type")
         }
     }
+
+    private fun ResultRow.toBasic() = AuthorisationCode.Basic(
+        value = this[AuthorisationCodeTable.id].value,
+        username = this[AuthorisationCodeTable.username],
+        clientId = this[AuthorisationCodeTable.clientId],
+        issuedAt = this[AuthorisationCodeTable.issuedAt],
+        expiresAt = this[AuthorisationCodeTable.expiresAt],
+        scopes = this[AuthorisationCodeTable.scopes].let(ScopesDeserializer::deserialize).map(::Scope).toSet(),
+        redirectUri = this[AuthorisationCodeTable.redirectUri],
+        state = this[AuthorisationCodeTable.state],
+    )
 }

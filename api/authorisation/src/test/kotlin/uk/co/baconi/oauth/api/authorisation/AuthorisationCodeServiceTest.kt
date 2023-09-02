@@ -10,7 +10,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.api.authorisation.AuthorisationRequest.Valid
+import uk.co.baconi.oauth.api.authorisation.AuthorisationRequest.Basic
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCode
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
@@ -30,7 +30,7 @@ class AuthorisationCodeServiceTest {
     @Test
     fun `should be able to issue a new authorisation code`() {
 
-        val request = Valid(Code, ClientId("badger"), "https://localhost", "state-1-2-3", setOf(Scope("basic")))
+        val request = Basic(Code, ClientId("badger"), "https://localhost", "state-1-2-3", setOf(Scope("basic")))
 
         val result = underTest.issue(request, AuthenticatedUsername("aardvark"))
 

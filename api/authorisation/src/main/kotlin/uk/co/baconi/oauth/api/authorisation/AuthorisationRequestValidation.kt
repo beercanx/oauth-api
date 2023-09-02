@@ -4,7 +4,10 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType.Code
+import uk.co.baconi.oauth.api.common.authorisation.CodeChallenge
+import uk.co.baconi.oauth.api.common.authorisation.CodeChallengeMethod
 import uk.co.baconi.oauth.api.common.client.ClientAction.Authorise
+import uk.co.baconi.oauth.api.common.client.ClientAction.ProofKeyForCodeExchange
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.client.ClientPrincipal
 import uk.co.baconi.oauth.api.common.grant.GrantType.AuthorisationCode
@@ -16,6 +19,8 @@ private const val REDIRECT_ID = "redirect_uri"
 private const val RESPONSE_TYPE = "response_type"
 private const val SCOPE = "scope"
 private const val STATE = "state"
+private const val CODE_CHALLENGE = "code_challenge"
+private const val CODE_CHALLENGE_METHOD = "code_challenge_method"
 private const val ABORT = "abort"
 
 interface AuthorisationRequestValidation {
@@ -37,6 +42,8 @@ interface AuthorisationRequestValidation {
         val rawScopes = params[SCOPE]?.let(ScopesDeserializer::deserialize) ?: emptySet()
         val scopes = rawScopes.mapNotNull(scopeRepository::findById).toSet()
         val state = params[STATE]
+        val codeChallenge = params[CODE_CHALLENGE]
+        val codeChallengeMethod = params[CODE_CHALLENGE_METHOD]?.let(CodeChallengeMethod::fromNameOrNull)
         val abort = params[ABORT]?.toBooleanStrictOrNull() ?: false
 
         return when {
@@ -56,12 +63,7 @@ interface AuthorisationRequestValidation {
                 state = state
             )
 
-            params[RESPONSE_TYPE] == null -> AuthorisationRequest.Invalid(
-                redirectUri = redirectUri,
-                error = "invalid_request",
-                description = "missing parameter: response_type",
-                state = state
-            )
+            params[RESPONSE_TYPE] == null -> missingParameter(redirectUri, state, RESPONSE_TYPE)
             responseType == null || responseType != Code -> AuthorisationRequest.Invalid(
                 redirectUri = redirectUri,
                 error = "unsupported_response_type",
@@ -70,26 +72,12 @@ interface AuthorisationRequestValidation {
             )
 
             // Enforce the use of a state parameter
-            state == null -> AuthorisationRequest.Invalid(
-                redirectUri = redirectUri,
-                error = "invalid_request",
-                description = "missing parameter: state",
-                state = null
-            )
-            state.isBlank() -> AuthorisationRequest.Invalid(
-                redirectUri = redirectUri,
-                error = "invalid_request",
-                description = "invalid parameter: state",
-                state = state
-            )
+            state == null -> missingParameter(redirectUri, null, STATE)
+            state.isBlank() -> invalidParameter(redirectUri, state, STATE)
 
             // The requested scope is invalid, unknown, or malformed.
-            rawScopes.size != scopes.size || !scopes.all(principal::canBeIssued) -> AuthorisationRequest.Invalid(
-                redirectUri = redirectUri,
-                error = "invalid_request",
-                description = "invalid parameter: scope",
-                state = state
-            )
+            rawScopes.size != scopes.size -> invalidParameter(redirectUri, state, SCOPE)
+            !scopes.all(principal::canBeIssued) -> invalidParameter(redirectUri, state, SCOPE)
 
             // Support aborting an authorisation via a users choice
             abort -> AuthorisationRequest.Invalid(
@@ -99,7 +87,28 @@ interface AuthorisationRequestValidation {
                 state = state
             )
 
-            else -> AuthorisationRequest.Valid(
+            // If a client "can" do PKCE, we're going to enforce that they do.
+            principal.can(ProofKeyForCodeExchange) -> when {
+
+                codeChallenge == null -> missingParameter(redirectUri, state, CODE_CHALLENGE)
+                codeChallenge.isBlank() -> invalidParameter(redirectUri, state, CODE_CHALLENGE)
+                params[CODE_CHALLENGE_METHOD] == null -> missingParameter(redirectUri, state, CODE_CHALLENGE_METHOD)
+                codeChallengeMethod == null -> invalidParameter(redirectUri, state, CODE_CHALLENGE_METHOD)
+
+                else -> AuthorisationRequest.PKCE(
+                    base = AuthorisationRequest.Basic(
+                        responseType = responseType,
+                        clientId = config.id,
+                        redirectUri = redirectUri,
+                        state = state,
+                        scopes = scopes
+                    ),
+                    codeChallenge = codeChallenge.let(::CodeChallenge),
+                    codeChallengeMethod = codeChallengeMethod
+                )
+            }
+
+            else -> AuthorisationRequest.Basic(
                 responseType = responseType,
                 clientId = config.id,
                 redirectUri = redirectUri,
@@ -108,4 +117,25 @@ interface AuthorisationRequestValidation {
             )
         }
     }
+
+    private fun missingParameter(redirectUri: String, state: String?, name: String) = invalid(
+        redirectUri = redirectUri,
+        state = state,
+        name = name,
+        type = "missing"
+    )
+
+    private fun invalidParameter(redirectUri: String, state: String?, name: String) = invalid(
+        redirectUri = redirectUri,
+        state = state,
+        name = name,
+        type = "invalid"
+    )
+
+    private fun invalid(redirectUri: String, state: String?, name: String, type: String) = AuthorisationRequest.Invalid(
+        redirectUri = redirectUri,
+        error = "invalid_request",
+        description = "$type parameter: $name",
+        state = state
+    )
 }

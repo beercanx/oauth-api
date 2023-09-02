@@ -35,17 +35,10 @@ sealed interface AuthorisationCode {
     }
 
     data class PKCE(
-        override val value: UUID,
-        override val issuedAt: Instant,
-        override val expiresAt: Instant,
-        override val clientId: ClientId,
-        override val username: AuthenticatedUsername,
-        override val redirectUri: String,
-        override val scopes: Set<Scope>,
-        override val state: String,
+        private val base: Basic,
         val codeChallenge: CodeChallenge,
         val codeChallengeMethod: CodeChallengeMethod,
-    ) : AuthorisationCode {
+    ) : AuthorisationCode by base {
         override fun toString(): String {
             return "AuthorisationCode.PKCE(value='REDACTED', issuedAt=$issuedAt, expiresAt=$expiresAt, clientId=$clientId, username=$username, redirectUri='$redirectUri', scopes=$scopes, state='REDACTED', codeChallenge='REDACTED', codeChallengeMethod=$codeChallengeMethod)"
         }

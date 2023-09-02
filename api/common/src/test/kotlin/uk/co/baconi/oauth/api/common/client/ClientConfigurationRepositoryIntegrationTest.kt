@@ -102,7 +102,7 @@ class ClientConfigurationRepositoryIntegrationTest {
                 type = ClientType.Public,
                 redirectUris = setOf("uk.co.baconi.consumer-y://callback"),
                 allowedScopes = setOf(Scope("basic")),
-                allowedActions = setOf(ClientAction.ProofKeyForCodeExchange),
+                allowedActions = setOf(ClientAction.Authorise, ClientAction.ProofKeyForCodeExchange),
                 allowedGrantTypes = setOf(GrantType.AuthorisationCode),
             )
         }
