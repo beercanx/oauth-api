@@ -28,12 +28,17 @@ annotation class ClientSource(
     /**
      * [Client]s will be one of these types of client.
      */
-    val clientTypes: Array<ClientType> = [Confidential],
+    val clientTypes: Array<ClientType> = [],
 
     /**
      * [Client]s must be able to perform all these grant types.
      */
-    val grantTypes: Array<GrantType> = [AuthorizationCode]
+    val grantTypes: Array<GrantType> = [],
+
+    /**
+     * [Client]s must have these extra capabilities.
+     */
+    val capabilities: Array<ClientCapabilities> = [],
 )
 
 /**
@@ -58,18 +63,22 @@ class ClientArgumentsProvider : AnnotationBasedArgumentsProvider<ClientSource>()
             val (clientId, value) = entry
             val type: ClientType = value.getEnum(ClientType::class.java, "type")
             val grantTypes = value.getEnumSetOrEmpty<GrantType>("grantTypes")
+            val capabilities = value.getEnumSetOrEmpty<ClientCapabilities>("capabilities")
 
             return when (type) {
                 Confidential -> object : ConfidentialClient {
                     override val id = clientId
                     override val grantTypes = grantTypes
+                    override val capabilities = capabilities
                     override val redirectUri by lazy { value.getUri("redirectUri") }
                     override val secret by lazy { value.getString("secret").let(::ClientSecret) }
                     override fun toString() = "ConfidentialClient(id='${id.value}')"
                 }
+
                 Public -> object : PublicClient {
                     override val id = clientId
                     override val grantTypes = grantTypes
+                    override val capabilities = capabilities
                     override val redirectUri by lazy { value.getUri("redirectUri") }
                     override fun toString() = "PublicClient(id='${id.value}')"
                 }
@@ -87,6 +96,7 @@ class ClientArgumentsProvider : AnnotationBasedArgumentsProvider<ClientSource>()
         return clients
             .filter(hasValidClientType(clientSource))
             .filter(hasValidGrantType(clientSource))
+            .filter(hasValidClientCapabilities(clientSource))
     }
 
     private fun hasValidClientType(clientSource: ClientSource): (Client) -> Boolean = { value ->
@@ -95,6 +105,10 @@ class ClientArgumentsProvider : AnnotationBasedArgumentsProvider<ClientSource>()
 
     private fun hasValidGrantType(clientSource: ClientSource): (Client) -> Boolean = { value ->
         value.grantTypes.containsAll(clientSource.grantTypes.asList())
+    }
+
+    private fun hasValidClientCapabilities(clientSource: ClientSource): (Client) -> Boolean = { value ->
+        value.capabilities.containsAll(clientSource.capabilities.asList())
     }
 }
 

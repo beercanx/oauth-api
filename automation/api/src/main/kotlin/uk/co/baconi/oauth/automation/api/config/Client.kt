@@ -7,7 +7,7 @@ sealed interface Client {
     val type: ClientType
     val redirectUri: URI
     val grantTypes: Set<GrantType>
-    // TODO - Consider some thing like actionTypes for "can introspect" look ups
+    val capabilities: Set<ClientCapabilities>
 }
 
 interface PublicClient : Client {

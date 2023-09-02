@@ -26,10 +26,12 @@ interface AuthenticationEndpoint {
             .body("""{"username": "$username", "password": ${password.asJsonArray()}, "csrfToken": "$csrfToken"}""")
             .post(authenticationLocation)
             .then()
-            .statusCode(200)
             .contentType(ContentType.JSON)
-            .body("type", equalTo("success"))
-            .body("username", equalTo(user.username))
+            .body(
+                "type", equalTo("success"),
+                "username", equalTo(user.username)
+            )
+            .statusCode(200)
     }
 
     private fun String.asJsonArray() = toCharArray().contentToString()
