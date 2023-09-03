@@ -38,7 +38,7 @@ class AuthorisationCodeRepository(private val database: Database) {
                 it[clientId] = new.clientId
                 it[issuedAt] = new.issuedAt
                 it[expiresAt] = new.expiresAt
-                it[scopes] = new.scopes.let(ScopesSerializer::serialize)
+                it[scopes] = new.scopes
                 it[redirectUri] = new.redirectUri
                 it[state] = new.state
             }
@@ -85,7 +85,7 @@ class AuthorisationCodeRepository(private val database: Database) {
         clientId = this[AuthorisationCodeTable.clientId],
         issuedAt = this[AuthorisationCodeTable.issuedAt],
         expiresAt = this[AuthorisationCodeTable.expiresAt],
-        scopes = this[AuthorisationCodeTable.scopes].let(ScopesDeserializer::deserialize).map(::Scope).toSet(),
+        scopes = this[AuthorisationCodeTable.scopes],
         redirectUri = this[AuthorisationCodeTable.redirectUri],
         state = this[AuthorisationCodeTable.state],
     )

@@ -2,6 +2,9 @@ package uk.co.baconi.oauth.api.authorisation
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeTable.CODE_CHALLENGE_LENGTH
+import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeTable.REDIRECT_URI_LENGTH
+import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeTable.STATE_LENGTH
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType.Code
 import uk.co.baconi.oauth.api.common.authorisation.CodeChallenge
@@ -15,7 +18,7 @@ import uk.co.baconi.oauth.api.common.scope.ScopeRepository
 import uk.co.baconi.oauth.api.common.scope.ScopesDeserializer
 
 private const val CLIENT_ID = "client_id"
-private const val REDIRECT_ID = "redirect_uri"
+private const val REDIRECT_URI = "redirect_uri"
 private const val RESPONSE_TYPE = "response_type"
 private const val SCOPE = "scope"
 private const val STATE = "state"
@@ -37,7 +40,7 @@ interface AuthorisationRequestValidation {
         val config = params[CLIENT_ID]?.let(clientConfigurationRepository::findByClientId)
         val principal = config?.let(ClientPrincipal::fromConfiguration)
 
-        val redirectUri = params[REDIRECT_ID]
+        val redirectUri = params[REDIRECT_URI]
         val responseType = params[RESPONSE_TYPE]?.let(AuthorisationResponseType::fromValueOrNull)
         val rawScopes = params[SCOPE]?.let(ScopesDeserializer::deserialize) ?: emptySet()
         val scopes = rawScopes.mapNotNull(scopeRepository::findById).toSet()
@@ -54,6 +57,7 @@ interface AuthorisationRequestValidation {
             redirectUri == null -> AuthorisationRequest.InvalidRedirect("missing")
             !principal.hasRedirectUri(redirectUri) -> AuthorisationRequest.InvalidRedirect("invalid")
             !redirectUri.isAbsoluteURI(false) -> AuthorisationRequest.InvalidRedirect("invalid")
+            redirectUri.length >= REDIRECT_URI_LENGTH -> invalidParameter(redirectUri, state, REDIRECT_URI)
 
             // Currently only support authorisation code
             !(principal.can(Authorise) && principal.can(AuthorisationCode)) -> AuthorisationRequest.Invalid(
@@ -74,6 +78,7 @@ interface AuthorisationRequestValidation {
             // Enforce the use of a state parameter
             state == null -> missingParameter(redirectUri, null, STATE)
             state.isBlank() -> invalidParameter(redirectUri, state, STATE)
+            state.length >= STATE_LENGTH -> invalidParameter(redirectUri, state, STATE)
 
             // The requested scope is invalid, unknown, or malformed.
             rawScopes.size != scopes.size -> invalidParameter(redirectUri, state, SCOPE)
@@ -92,6 +97,8 @@ interface AuthorisationRequestValidation {
 
                 codeChallenge == null -> missingParameter(redirectUri, state, CODE_CHALLENGE)
                 codeChallenge.isBlank() -> invalidParameter(redirectUri, state, CODE_CHALLENGE)
+                codeChallenge.length >= CODE_CHALLENGE_LENGTH -> invalidParameter(redirectUri, state, CODE_CHALLENGE)
+
                 params[CODE_CHALLENGE_METHOD] == null -> missingParameter(redirectUri, state, CODE_CHALLENGE_METHOD)
                 codeChallengeMethod == null -> invalidParameter(redirectUri, state, CODE_CHALLENGE_METHOD)
 

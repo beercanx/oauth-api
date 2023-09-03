@@ -114,7 +114,7 @@ class ClientPrincipalTest {
                 })
             }
 
-            exception shouldHaveMessage "type cannot be [Public]"
+            exception shouldHaveMessage "[ClientId(value=consumer-y)] type cannot be [Public]"
         }
 
         @Test
@@ -161,7 +161,7 @@ class ClientPrincipalTest {
                 })
             }
 
-            exception shouldHaveMessage "type cannot be [Confidential]"
+            exception shouldHaveMessage "[ClientId(value=consumer-z)] type cannot be [Confidential]"
         }
 
         @Test
