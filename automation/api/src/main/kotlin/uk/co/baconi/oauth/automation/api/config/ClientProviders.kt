@@ -9,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.AnnotationBasedArgumentsProvider
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsSource
+import org.slf4j.LoggerFactory
 import uk.co.baconi.oauth.automation.api.config.ClientType.Confidential
 import uk.co.baconi.oauth.automation.api.config.ClientType.Public
 import uk.co.baconi.oauth.automation.api.config.GrantType.AuthorizationCode
@@ -16,12 +17,11 @@ import uk.co.baconi.oauth.automation.api.getConfig
 import uk.co.baconi.oauth.automation.api.getEnumSetOrEmpty
 import uk.co.baconi.oauth.automation.api.getUri
 import java.util.stream.Stream
-import kotlin.annotation.AnnotationTarget.ANNOTATION_CLASS
-import kotlin.annotation.AnnotationTarget.FUNCTION
+import kotlin.annotation.AnnotationTarget.*
 import kotlin.reflect.KClass
 import kotlin.streams.asStream
 
-@Target(ANNOTATION_CLASS, FUNCTION)
+@Target(ANNOTATION_CLASS, FUNCTION, VALUE_PARAMETER)
 @ArgumentsSource(ClientArgumentsProvider::class)
 annotation class ClientSource(
 
@@ -128,7 +128,7 @@ abstract class ClientResolver(private val kClass: KClass<*>) : ParameterResolver
         }
 
         // Only support the defined type
-        if (parameterContext.parameter.type != kClass.java) {
+        if (!kClass.java.isAssignableFrom(parameterContext.parameter.type)) {
             return false
         }
 

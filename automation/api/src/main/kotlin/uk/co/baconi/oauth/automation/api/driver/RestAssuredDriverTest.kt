@@ -24,6 +24,14 @@ abstract class RestAssuredDriverTest {
             .let(::AccessToken)
     }
 
+    protected fun ValidatableResponse.extractRefreshToken(): RefreshToken {
+        return extract()
+            .body()
+            .jsonPath()
+            .getString("refresh_token")
+            .let(::RefreshToken)
+    }
+
     protected fun ValidatableResponse.extractLocationsQueryParameters(): Map<String, String> {
         return extract()
             .header("Location")

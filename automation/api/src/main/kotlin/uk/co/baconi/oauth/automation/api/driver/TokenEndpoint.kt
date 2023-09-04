@@ -9,6 +9,7 @@ import org.hamcrest.Matchers.equalTo
 import uk.co.baconi.oauth.automation.api.config.Client
 import uk.co.baconi.oauth.automation.api.config.ConfidentialClient
 import uk.co.baconi.oauth.automation.api.config.PublicClient
+import uk.co.baconi.oauth.automation.api.config.User
 import uk.co.baconi.oauth.automation.api.getUri
 import uk.co.baconi.oauth.automation.api.isUUID
 import java.net.URI
@@ -58,6 +59,34 @@ interface TokenEndpoint {
                     this["code_verifier"] = codeVerifier
                     withPublicAuthentication(client)
                 }
+            )
+            .post(tokenLocation)
+            .then()
+            .contentType(ContentType.JSON)
+            .body(
+                "access_token", isUUID(),
+                "refresh_token", isUUID(),
+                "token_type", equalTo("bearer"),
+                "expires_in", equalTo(7200)
+            )
+            .statusCode(200)
+    }
+
+    /**
+     * Resource Owner Password Credentials - https://www.rfc-editor.org/rfc/rfc6749#section-1.3.3
+     */
+    fun passwordGrant(client: ConfidentialClient, user: User, scopes: Set<String>): ValidatableResponse {
+
+        return given(serverSpecification)
+            .withConfidentialAuthentication(client)
+            .contentType(ContentType.URLENC)
+            .formParams(
+                mapOf<String, String> (
+                    "grant_type" to "password",
+                    "username" to user.username,
+                    "password" to user.password,
+                    "scope" to scopes.joinToString(separator = " ")
+                )
             )
             .post(tokenLocation)
             .then()

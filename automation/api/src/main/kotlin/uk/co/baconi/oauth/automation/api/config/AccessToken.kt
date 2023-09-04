@@ -2,7 +2,6 @@ package uk.co.baconi.oauth.automation.api.config
 
 import java.util.UUID
 
-@JvmInline
-value class AccessToken(val value: String) {
+data class AccessToken(override val value: String) : Token {
     constructor(uuid: UUID) : this(uuid.toString())
 }

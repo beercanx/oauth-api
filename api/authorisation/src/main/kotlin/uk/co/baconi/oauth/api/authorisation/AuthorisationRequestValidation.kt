@@ -59,6 +59,14 @@ interface AuthorisationRequestValidation {
             !redirectUri.isAbsoluteURI(false) -> AuthorisationRequest.InvalidRedirect("invalid")
             redirectUri.length >= REDIRECT_URI_LENGTH -> invalidParameter(redirectUri, state, REDIRECT_URI)
 
+            // Support aborting an authorisation via a users choice
+            abort -> AuthorisationRequest.Invalid(
+                redirectUri = redirectUri,
+                error = "access_denied",
+                description = "user aborted",
+                state = state
+            )
+
             // Currently only support authorisation code
             !(principal.can(Authorise) && principal.can(AuthorisationCode)) -> AuthorisationRequest.Invalid(
                 redirectUri = redirectUri,
@@ -83,14 +91,6 @@ interface AuthorisationRequestValidation {
             // The requested scope is invalid, unknown, or malformed.
             rawScopes.size != scopes.size -> invalidParameter(redirectUri, state, SCOPE)
             !scopes.all(principal::canBeIssued) -> invalidParameter(redirectUri, state, SCOPE)
-
-            // Support aborting an authorisation via a users choice
-            abort -> AuthorisationRequest.Invalid(
-                redirectUri = redirectUri,
-                error = "access_denied",
-                description = "user aborted",
-                state = state
-            )
 
             // If a client "can" do PKCE, we're going to enforce that they do.
             principal.can(ProofKeyForCodeExchange) -> when {
