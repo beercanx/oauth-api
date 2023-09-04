@@ -14,6 +14,9 @@ dependencies {
 
     // Logging
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("org.slf4j:jcl-over-slf4j:2.0.7")
+    implementation("org.slf4j:log4j-over-slf4j:2.0.7")
+    implementation("org.slf4j:jul-to-slf4j:2.0.7")
 
     // Configuration
     implementation("com.typesafe:config:$typesafeConfigVersion")
@@ -27,8 +30,12 @@ dependencies {
     implementation("io.rest-assured:json-path:$restAssured")
     implementation("io.rest-assured:json-schema-validator:$restAssured")
 
+    // JUnit 5 bits for providing things like custom resolvers
+    implementation(platform("org.junit:junit-bom:$junitVersion"))
+    implementation("org.junit.jupiter:junit-jupiter-api")
+    implementation("org.junit.jupiter:junit-jupiter-params")
+
     // JUnit 5 for tests definitions and running
-    testImplementation(platform("org.junit:junit-bom:$junitVersion"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 

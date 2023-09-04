@@ -6,6 +6,7 @@ import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.authorisation.CodeChallengeMethod.S256
 import uk.co.baconi.oauth.api.common.client.ClientAction.ProofKeyForCodeExchange
 import uk.co.baconi.oauth.api.common.client.ClientPrincipal
+import uk.co.baconi.oauth.api.common.client.PublicClient
 import uk.co.baconi.oauth.api.common.uuid.UUIDSerializer
 import uk.co.baconi.oauth.api.token.TokenErrorType.InvalidGrant
 import uk.co.baconi.oauth.api.token.TokenErrorType.InvalidRequest
@@ -47,7 +48,6 @@ interface AuthorisationCodeValidation {
         }
     }
 
-    // TODO - Add trace logging to assist in debugging consumer integrations?
     fun validateAuthorisationCode(
         client: ClientPrincipal,
         code: UUID,
@@ -57,10 +57,12 @@ interface AuthorisationCodeValidation {
 
         val authorisationCode = authorisationCodeRepository.findById(code)
 
+        // TODO - Change return type to support providing a reason, to help with unit testing and trace logging.
+
         return when {
 
             // Validate the [code] is a valid code via a repository
-            authorisationCode == null -> null
+            authorisationCode == null -> null // TODO - This should trigger session destruction?
 
             // Validate the [client_id] is the same as what was used to generate the [code]
             authorisationCode.clientId != client.id -> null
@@ -70,6 +72,9 @@ interface AuthorisationCodeValidation {
 
             // Verify the authorisation code has not yet expired.
             authorisationCode.hasExpired() -> null
+
+            // Verify if the client MUST be exchanging PKCE
+            client is PublicClient && authorisationCode !is AuthorisationCode.PKCE -> null
 
             // Verify the code verifier and then return
             authorisationCode is AuthorisationCode.PKCE -> when {

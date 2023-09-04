@@ -294,14 +294,16 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
         fun `should return false if the verifier fails to match the challenge`() {
 
             val code = AuthorisationCode.PKCE(
-                value = UUID.randomUUID(),
-                issuedAt = now(),
-                expiresAt = now().plus(1, DAYS),
-                clientId = ClientId("consumer-x"),
-                username = AuthenticatedUsername("username"),
-                redirectUri = "uk.co.baconi.valid://callback",
-                scopes = emptySet(),
-                state = UUID.randomUUID().toString(),
+                base = AuthorisationCode.Basic(
+                    value = UUID.randomUUID(),
+                    issuedAt = now(),
+                    expiresAt = now().plus(1, DAYS),
+                    clientId = ClientId("consumer-x"),
+                    username = AuthenticatedUsername("username"),
+                    redirectUri = "uk.co.baconi.valid://callback",
+                    scopes = emptySet(),
+                    state = UUID.randomUUID().toString()
+                ),
                 codeChallenge = CodeChallenge(""),
                 codeChallengeMethod = CodeChallengeMethod.S256
             )
@@ -313,14 +315,16 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
         fun `should return true if the verifier matches the challenge`() {
 
             val code = AuthorisationCode.PKCE(
-                value = UUID.randomUUID(),
-                issuedAt = now(),
-                expiresAt = now().plus(1, DAYS),
-                clientId = ClientId("consumer-x"),
-                username = AuthenticatedUsername("username"),
-                redirectUri = "uk.co.baconi.valid://callback",
-                scopes = emptySet(),
-                state = UUID.randomUUID().toString(),
+                base = AuthorisationCode.Basic(
+                    value = UUID.randomUUID(),
+                    issuedAt = now(),
+                    expiresAt = now().plus(1, DAYS),
+                    clientId = ClientId("consumer-x"),
+                    username = AuthenticatedUsername("username"),
+                    redirectUri = "uk.co.baconi.valid://callback",
+                    scopes = emptySet(),
+                    state = UUID.randomUUID().toString()
+                ),
                 codeChallenge = CodeChallenge("KABWKWtD0pRRdnAB17BZwxxs83Z3po8TDCO_lruY-L4"),
                 codeChallengeMethod = CodeChallengeMethod.S256
             )

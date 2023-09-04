@@ -89,16 +89,18 @@ class AuthorisationCodeTest {
             fun `should return true if expires at is in the past`() {
                 withClue("hasExpired") {
                     AuthorisationCode.PKCE(
-                        value = UUID.randomUUID(),
-                        username = AuthenticatedUsername("aardvark"),
-                        clientId = ClientId("consumer-z"),
-                        scopes = emptySet(),
-                        redirectUri = "uk.co.baconi.oauth.consumerz://callback",
-                        issuedAt = Instant.now(),
-                        expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
+                        base = AuthorisationCode.Basic(
+                            value = UUID.randomUUID(),
+                            username = AuthenticatedUsername("aardvark"),
+                            clientId = ClientId("consumer-z"),
+                            scopes = emptySet(),
+                            redirectUri = "uk.co.baconi.oauth.consumerz://callback",
+                            issuedAt = Instant.now(),
+                            expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
+                            state = UUID.randomUUID().toString(),
+                        ),
                         codeChallenge = CodeChallenge(""),
                         codeChallengeMethod = CodeChallengeMethod.S256,
-                        state = UUID.randomUUID().toString(),
                     ).hasExpired() shouldBe true
                 }
             }
@@ -107,16 +109,18 @@ class AuthorisationCodeTest {
             fun `should return false if expires at is in the future`() {
                 withClue("hasExpired") {
                     AuthorisationCode.PKCE(
-                        value = UUID.randomUUID(),
-                        username = AuthenticatedUsername("aardvark"),
-                        clientId = ClientId("consumer-z"),
-                        scopes = emptySet(),
-                        redirectUri = "uk.co.baconi.oauth.consumerz://callback",
-                        issuedAt = Instant.now(),
-                        expiresAt = Instant.now().plus(1, ChronoUnit.DAYS),
+                        base = AuthorisationCode.Basic(
+                            value = UUID.randomUUID(),
+                            username = AuthenticatedUsername("aardvark"),
+                            clientId = ClientId("consumer-z"),
+                            scopes = emptySet(),
+                            redirectUri = "uk.co.baconi.oauth.consumerz://callback",
+                            issuedAt = Instant.now(),
+                            expiresAt = Instant.now().plus(1, ChronoUnit.DAYS),
+                            state = UUID.randomUUID().toString(),
+                        ),
                         codeChallenge = CodeChallenge(""),
                         codeChallengeMethod = CodeChallengeMethod.S256,
-                        state = UUID.randomUUID().toString(),
                     ).hasExpired() shouldBe false
                 }
             }
@@ -130,16 +134,18 @@ class AuthorisationCodeTest {
                 val value = UUID.randomUUID()
                 assertSoftly(
                     AuthorisationCode.PKCE(
-                        value = value,
-                        username = AuthenticatedUsername("aardvark"),
-                        clientId = ClientId("consumer-z"),
-                        scopes = emptySet(),
-                        redirectUri = "uk.co.baconi.oauth.consumerz://callback",
-                        issuedAt = Instant.now(),
-                        expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
+                        base = AuthorisationCode.Basic(
+                            value = value,
+                            username = AuthenticatedUsername("aardvark"),
+                            clientId = ClientId("consumer-z"),
+                            scopes = emptySet(),
+                            redirectUri = "uk.co.baconi.oauth.consumerz://callback",
+                            issuedAt = Instant.now(),
+                            expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
+                            state = UUID.randomUUID().toString(),
+                        ),
                         codeChallenge = CodeChallenge(""),
                         codeChallengeMethod = CodeChallengeMethod.S256,
-                        state = UUID.randomUUID().toString(),
                     ).toString()
                 ) {
                     shouldNotContain(value.toString())

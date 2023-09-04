@@ -189,14 +189,16 @@ class AuthorisationCodeRepositoryIntegrationTest {
         state: String = "da4d809e-ed89-42bd-aa3e-8c975b9242d0",
         codeChallenge: String = "code-challenge",
     ) = AuthorisationCode.PKCE(
-        value = value,
-        username = AuthenticatedUsername(username),
-        clientId = ClientId(clientId),
-        scopes = scopes,
-        redirectUri = redirectUri,
-        issuedAt = now,
-        expiresAt = now.plusSeconds(60),
-        state = state,
+        base = AuthorisationCode.Basic(
+            value = value,
+            username = AuthenticatedUsername(username),
+            clientId = ClientId(clientId),
+            scopes = scopes,
+            redirectUri = redirectUri,
+            issuedAt = now,
+            expiresAt = now.plusSeconds(60),
+            state = state
+        ),
         codeChallenge = CodeChallenge(codeChallenge),
         codeChallengeMethod = CodeChallengeMethod.S256
     )

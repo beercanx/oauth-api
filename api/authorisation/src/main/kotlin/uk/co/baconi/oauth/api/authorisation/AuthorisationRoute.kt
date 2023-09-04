@@ -82,6 +82,7 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
                         )
                     }
 
+                    // TODO - Redirect with server_error or temporarily_unavailable instead of an error page on exceptions.
                     is AuthorisationRequest.Valid -> when (request.responseType) {
                         Code -> {
                             when (val authenticated = call.sessions.get<AuthenticatedSession>()) {

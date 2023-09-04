@@ -35,3 +35,8 @@ const val RFC7159 = "rfc7159" // https://www.rfc-editor.org/rfc/rfc7159.html
  * OAuth 2.0 Token Introspection
  */
 const val RFC7662 = "rfc7662" // https://www.rfc-editor.org/rfc/rfc7662.html
+
+/**
+ * Proof Key for Code Exchange by OAuth Public Clients
+ */
+const val RFC7636 = "rfc7636" // https://www.rfc-editor.org/rfc/rfc7636.html
