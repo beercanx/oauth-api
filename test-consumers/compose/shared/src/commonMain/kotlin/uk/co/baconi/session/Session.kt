@@ -15,19 +15,12 @@ value class AccessToken(val value: String)
 @Serializable
 value class RefreshToken(val value: String)
 
-sealed interface Session {
-    val accessToken: AccessToken
-    val refreshToken: RefreshToken
-    val expires: Long // TODO - Sort out multiplatform date time object.
-    val scopes: Set<String>
-}
-
 @Serializable
-data class Success(
-    @SerialName("access_token") override val accessToken: AccessToken,
-    @SerialName("refresh_token") override val refreshToken: RefreshToken,
-    @SerialName("expires_in") override val expires: Long,
-    @Serializable(with = SpaceDelimitedSerializer::class) @SerialName("scope") override val scopes: Set<String>,
+data class Session(
+    @SerialName("access_token") val accessToken: AccessToken,
+    @SerialName("refresh_token") val refreshToken: RefreshToken,
+    @SerialName("expires_in") val expires: Long,
+    @Serializable(with = SpaceDelimitedSerializer::class) @SerialName("scope") val scopes: Set<String>,
     @SerialName("token_type") val tokenType: String,
     val state: String? = null,
-) : Session
+)

@@ -33,7 +33,7 @@ class SessionService(
             }))
         }
 
-        val result = response.body<Success>()
+        val result = response.body<Session>()
         println(result)
         return result
     }

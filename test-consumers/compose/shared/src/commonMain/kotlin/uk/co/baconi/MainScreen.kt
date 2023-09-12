@@ -1,17 +1,24 @@
 package uk.co.baconi
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
+import kotlinx.coroutines.delay
 import uk.co.baconi.loading.LoadingScreen
+import uk.co.baconi.session.Session
+import uk.co.baconi.session.SessionScreen
 import uk.co.baconi.session.SessionService
 
 @Composable
 fun MainScreen() {
 
-    LoadingScreen()
+    var sessionState: Session? by remember { mutableStateOf(null) }
 
-    // TODO - Switch from loading to screen screen
+    when(val session = sessionState) {
+        null -> LoadingScreen()
+        else -> SessionScreen(session)
+    }
+
     LaunchedEffect(Unit) {
-        SessionService().getSession("aardvark", "121212")
+        delay(250)
+        sessionState = SessionService().getSession("aardvark", "121212")
     }
 }
