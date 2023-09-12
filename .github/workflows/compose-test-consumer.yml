@@ -1,0 +1,35 @@
+name: Build the Compose test consumer
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "test-consumers/compose/**"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "test-consumers/compose/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Java JDK
+      uses: actions/setup-java@v3
+      working-directory: ./test-consumers/compose
+      with:
+        distribution: temurin
+        java-version: 11
+
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+      working-directory: ./test-consumers/compose
+
+    - name: Gradle build
+      working-directory: ./test-consumers/compose
+      run: ./gradlew build
