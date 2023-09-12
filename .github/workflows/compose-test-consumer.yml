@@ -28,7 +28,7 @@ jobs:
 
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
-      working-directory: ./test-consumers/compose
+      build-root-directory: ./test-consumers/compose
 
     - name: Gradle build
       working-directory: ./test-consumers/compose
