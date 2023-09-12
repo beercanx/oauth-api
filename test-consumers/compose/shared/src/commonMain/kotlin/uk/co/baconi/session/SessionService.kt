@@ -7,16 +7,18 @@ import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.http.ContentType.Application.FormUrlEncoded
 import io.ktor.http.ContentType.Application.Json
+import uk.co.baconi.createHttpClient
+import uk.co.baconi.getLocalhost
 
 class SessionService(
-    private val httpClient: HttpClient,
-    private val tokenEndpoint: String = "http://localhost:8080/token"
+    private val httpClient: HttpClient = createHttpClient()
 ) {
 
+    private val tokenEndpoint: String = "http://${getLocalhost()}:8080/token"
     private val clientId = "consumer-z"
     private val clientSecret = "7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu"
 
-    suspend fun getSession(username: String, password: String) {
+    suspend fun getSession(username: String, password: String): Session {
 
         // TODO - Replace with the authorisation code grant
         val response = httpClient.post(tokenEndpoint) {
@@ -31,10 +33,9 @@ class SessionService(
             }))
         }
 
-        when(val result = response.body<TokenResponse>()) {
-            is Success -> println("Success: $result")
-            is Failed -> println("Failure: $result")
-        }
+        val result = response.body<Success>()
+        println(result)
+        return result
     }
 
 }
