@@ -76,6 +76,7 @@ object CommonModule {
                 allowHost("localhost:808${it}")
             }
             allowHeader(HttpHeaders.ContentType)
+            allowHeader(HttpHeaders.Authorization) // TODO - Remove once we stop doing Password Grant in the browser
             allowCredentials = true
         }
 

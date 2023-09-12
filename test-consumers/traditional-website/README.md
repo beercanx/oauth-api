@@ -1,2 +1,0 @@
-# Traditional Website
-A very traditional website with a solid base, it will have a backend server that handles the OAuth integration, so it will be able to use a confidential client to get a user via OAuth.
