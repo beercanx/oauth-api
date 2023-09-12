@@ -21,7 +21,6 @@ jobs:
 
     - name: Setup Java JDK
       uses: actions/setup-java@v3
-      working-directory: ./test-consumers/compose
       with:
         distribution: temurin
         java-version: 11
