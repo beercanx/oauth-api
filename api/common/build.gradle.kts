@@ -53,7 +53,7 @@ dependencies {
     api("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     api("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
     implementation("io.ktor:ktor-server-core-jvm:2.3.2")
-    implementation("io.ktor:ktor-server-sessions-jvm:2.3.2")
+    implementation("io.ktor:ktor-server-sessions-jvm:2.3.6")
 
     // JUnit 5 for tests definitions and running
     testImplementation(platform("org.junit:junit-bom:$junitVersion"))
