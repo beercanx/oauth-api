@@ -47,7 +47,7 @@ dependencies {
         implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2") {
             because("json-schema-validator brings in 2.11")
         }
-        implementation("org.mozilla:rhino:1.7.12") {
+        implementation("org.mozilla:rhino:1.7.14") {
             because("json-schema-validator brings in 1.7.7.2")
         }
     }
