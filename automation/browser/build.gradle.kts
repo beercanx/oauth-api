@@ -29,7 +29,7 @@ dependencies {
 
     // Security patching
     constraints {
-        implementation("com.google.guava:guava:32.1.2-jre") {
+        implementation("com.google.guava:guava:32.1.3-jre") {
             because("selenide brings in 31.1-jre")
         }
         implementation("io.netty:netty-handler:4.1.101.Final") {
