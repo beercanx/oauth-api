@@ -16,7 +16,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("org.slf4j:jcl-over-slf4j:2.0.7")
     implementation("org.slf4j:log4j-over-slf4j:2.0.7")
-    implementation("org.slf4j:jul-to-slf4j:2.0.7")
+    implementation("org.slf4j:jul-to-slf4j:2.0.9")
 
     // Configuration
     implementation("com.typesafe:config:$typesafeConfigVersion")
