@@ -1,0 +1,46 @@
+version: 2
+updates:
+
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "github-actions"
+      - "dependencies"
+
+  # Maintain Gradle modules?
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "gradle"
+      - "dependencies"
+
+  # Maintain React bundles
+  - package-ecosystem: "npm"
+    directory: "/user-interface/authentication"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "ui-authentication"
+      - "dependencies"
+
+  # Maintain automation test packs
+  - package-ecosystem: "gradle"
+    directory: "/automation/api"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "automation-api"
+      - "dependencies"
+  
+  - package-ecosystem: "gradle"
+    directory: "/automation/browser"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "automation-browser"
+      - "dependencies"
