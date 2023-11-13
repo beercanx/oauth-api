@@ -1,5 +1,9 @@
 # A Ktor bare-bones OAuth API
 
+[![API CI using Gradle](https://github.com/beercan1989/oauth-api/actions/workflows/api-ci-using-gradle.yml/badge.svg)](https://github.com/beercan1989/oauth-api/actions/workflows/api-ci-using-gradle.yml)
+[![UI CI using NPM](https://github.com/beercan1989/oauth-api/actions/workflows/ui-ci-using-npm.yml/badge.svg)](https://github.com/beercan1989/oauth-api/actions/workflows/ui-ci-using-npm.yml)
+[![Docker CI and Push](https://github.com/beercan1989/oauth-api/actions/workflows/docker-ci-and-publish.yml/badge.svg)](https://github.com/beercan1989/oauth-api/actions/workflows/docker-ci-and-publish.yml)
+
 ## Using Gradle
 ```bash
 # To run tests for a project, Gradle will not run tests for area's that have not had any changes.
