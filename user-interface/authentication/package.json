@@ -4,7 +4,7 @@
   "homepage": "/authentication",
   "private": true,
   "engines": {
-    "node": "^16.16"
+    "node": "^20"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^6.1.4",
