@@ -16,3 +16,7 @@ Reference materials:
 * https://github.com/JetBrains/compose-multiplatform-template#readme
 * https://github.com/Kotlin/kotlin-wasm-examples/tree/main/compose-imageviewer#compose-multiplatform-for-web
 * https://github.com/beercan1989/playground-compose-multiplatform#readme
+
+Extra reading materials used:
+* https://levelup.gitconnected.com/oauth-in-compose-for-desktop-with-auth0-9990075606a1
+* https://github.com/sproctor/AuthCompose

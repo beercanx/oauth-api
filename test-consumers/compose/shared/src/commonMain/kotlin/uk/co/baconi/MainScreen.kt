@@ -1,24 +1,28 @@
 package uk.co.baconi
 
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import kotlinx.coroutines.delay
 import uk.co.baconi.loading.LoadingScreen
 import uk.co.baconi.session.Session
+import uk.co.baconi.session.SessionManager
 import uk.co.baconi.session.SessionScreen
 import uk.co.baconi.session.SessionService
 
 @Composable
 fun MainScreen() {
 
-    var sessionState: Session? by remember { mutableStateOf(null) }
+    val sessionManager = remember { SessionManager() }
 
-    when(val session = sessionState) {
-        null -> LoadingScreen()
-        else -> SessionScreen(session)
+    MaterialTheme {
+        when(val session = sessionManager.session.collectAsState().value) {
+            null -> LoadingScreen()
+            else -> SessionScreen(session)
+        }
     }
 
     LaunchedEffect(Unit) {
         delay(250)
-        sessionState = SessionService().getSession("aardvark", "121212")
+        sessionManager.startLoginFlow()
     }
 }

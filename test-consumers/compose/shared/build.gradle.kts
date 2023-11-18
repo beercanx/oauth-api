@@ -75,6 +75,9 @@ kotlin {
 
                 api("io.ktor:ktor-client-cio:$ktorVersion")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-swing:$kotlinxCoroutinesVersion")
+
+                api("io.ktor:ktor-server-core:$ktorVersion")
+                api("io.ktor:ktor-server-netty:$ktorVersion")
             }
         }
 

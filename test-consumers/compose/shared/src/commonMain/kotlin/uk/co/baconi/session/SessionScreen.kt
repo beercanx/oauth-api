@@ -25,7 +25,7 @@ fun SessionScreen(session: Session) {
                 entry("Refresh Token:", session.refreshToken.value)
                 entry("Expires In:", "${session.expires}")
                 entry("Scopes:", session.scopes.joinToString(" "))
-                entry("State:", session.state ?: "")
+                entry("State:", session.state?.value ?: "")
             }
         }
     }
