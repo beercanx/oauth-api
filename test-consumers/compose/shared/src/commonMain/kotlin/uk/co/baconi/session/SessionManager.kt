@@ -1,19 +1,18 @@
 package uk.co.baconi.session
 
-import androidx.compose.runtime.collectAsState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import uk.co.baconi.coroutines.Dispatchers
+import uk.co.baconi.coroutines.getIoDispatcher
 import uk.co.baconi.session.oauth.State
 
 class SessionManager {
 
     private val sessionService = SessionService()
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+    private val coroutineScope = CoroutineScope(getIoDispatcher())
 
     private val _callback = MutableStateFlow<Job?>(null)
     val isAuthorising = _callback.map { it?.isActive == true }
