@@ -1,8 +1,11 @@
 package uk.co.baconi.session
 
+import androidx.compose.runtime.collectAsState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import uk.co.baconi.coroutines.Dispatchers
 import uk.co.baconi.session.oauth.State
@@ -12,12 +15,17 @@ class SessionManager {
     private val sessionService = SessionService()
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
+    private val _callback = MutableStateFlow<Job?>(null)
+    val isAuthorising = _callback.map { it?.isActive == true }
+
     private val _session = MutableStateFlow<Session?>(null)
     val session = _session.asStateFlow()
 
-    fun startLoginFlow() {
-        // TODO - Place a lock to prevent multiple?
-        coroutineScope.launch {
+    fun startLogin() {
+
+        if(_callback.value != null) return
+
+        _callback.value = coroutineScope.launch {
             try {
                 val state = State(generateUUID())
                 val verifier = sessionService.createVerifier()
@@ -33,6 +41,15 @@ class SessionManager {
             } catch (exception: Exception) {
                 exception.printStackTrace()
             }
+        }.also { job ->
+            job.invokeOnCompletion {
+                _callback.value = null
+            }
         }
+    }
+
+    fun cancelLogin() {
+        _callback.value?.cancel()
+        _callback.value = null
     }
 }

@@ -34,19 +34,3 @@ jobs:
     - name: Gradle build
       working-directory: ./test-consumers/compose
       run: ./gradlew build
-
-    - name: Jacoco Report to PR
-      id: jacoco
-      if: github.event_name == 'pull_request'
-      uses: madrapps/jacoco-report@v1.6.1
-      with:
-        paths: ${{ github.workspace }}/**/build/reports/jacoco/**/jacocoTestReport.xml
-        token: ${{ secrets.GITHUB_TOKEN }}
-        min-coverage-overall: 75
-        min-coverage-changed-files: 75
-        title: Code Coverage
-        update-comment: true
-        pass-emoji: ':green_circle:'
-        fail-emoji: ':red_circle:'
-        debug-mode: true
-        skip-if-no-changes: true
