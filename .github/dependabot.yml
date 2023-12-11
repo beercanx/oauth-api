@@ -5,7 +5,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     labels:
       - "github-actions"
       - "dependencies"
@@ -14,7 +14,7 @@ updates:
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     labels:
       - "gradle"
       - "dependencies"
@@ -23,7 +23,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/user-interface/authentication"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     labels:
       - "ui-authentication"
       - "dependencies"
