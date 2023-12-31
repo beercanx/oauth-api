@@ -10,24 +10,18 @@ val kotlinxCoroutinesVersion: String by project
 
 kotlin {
 
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
+    js(IR) {
         moduleName = "compose-website"
         binaries.executable()
         browser {
             commonWebpackConfig {
                 outputFileName = "$moduleName.js"
-                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).copy(
-                    static = (devServer?.static ?: mutableListOf()).apply {
-                        add(project.rootDir.path)
-                    }
-                )
             }
         }
     }
 
     sourceSets {
-        val wasmJsMain by getting {
+        val jsMain by getting {
             dependencies {
                 implementation(project(":shared"))
             }
@@ -37,19 +31,4 @@ kotlin {
 
 compose.experimental {
     web.application {}
-}
-
-// WORKAROUND for js-joda that's incorrectly pulled in for WASM by a dependency.
-tasks {
-    val hackNodeModuleImports by registering(Copy::class) {
-        group = "kotlin browser"
-        mustRunAfter(":kotlinNpmInstall")
-        from(rootProject.buildDir.path + "/js/node_modules/@js-joda/core/dist/js-joda.esm.js")
-        into(rootProject.buildDir.path + "/js/packages/compose-website/kotlin/@js-joda/core/dist/")
-    }
-    for (dependent in listOf("wasmJsBrowserProductionRun", "wasmJsBrowserDevelopmentRun")) {
-        named(dependent) {
-            dependsOn(hackNodeModuleImports)
-        }
-    }
 }

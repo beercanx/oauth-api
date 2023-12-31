@@ -1,5 +1,4 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
     kotlin("multiplatform")
@@ -25,8 +24,7 @@ kotlin {
 
     jvm("desktop")
 
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
+    js(IR) {
         browser()
     }
 
@@ -74,7 +72,7 @@ kotlin {
             }
         }
 
-        val wasmJsMain by getting {
+        val jsMain by getting {
             dependencies {
                 api("io.ktor:ktor-client-js:$ktorVersion")
             }
@@ -83,7 +81,7 @@ kotlin {
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 34
     namespace = "uk.co.baconi.compose.shared"
     defaultConfig {
         minSdk = 26
@@ -92,8 +90,5 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlin {
-        jvmToolchain(11)
     }
 }

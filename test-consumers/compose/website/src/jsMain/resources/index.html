@@ -3,18 +3,11 @@
     <head>
         <meta charset="UTF-8">
         <title>OAuth - Compose</title>
-        <script type="importmap">
-            {
-                "imports": {
-                  "@js-joda/core": "./@js-joda/core/dist/js-joda.esm.js"
-                }
-            }
-        </script>
         <script type="application/javascript" src="skiko.js"></script>
-        <script type="module" src="load.mjs"></script>
     </head>
     <body>
         <canvas id="ComposeTarget"></canvas>
+        <script type="application/javascript" src="compose-website.js"></script>
     </body>
     <script type="application/javascript" >
         addEventListener("error", (event) => console.error("Unhandled Error:", event.error));

@@ -6,9 +6,9 @@ import androidx.compose.ui.window.CanvasBasedWindow
 import uk.co.baconi.session.SessionManagerEx
 
 @OptIn(ExperimentalComposeUiApi::class)
-suspend fun main() {
-    CanvasBasedWindow(title = "OAuth - Wasm") {
-//        val sessionManager = remember { SessionManagerEx() }
-//        MainScreen(sessionManager)
+fun main() {
+    CanvasBasedWindow(title = "OAuth - JS") {
+        val sessionManager = remember { SessionManagerEx() }
+        MainScreen(sessionManager)
     }
 }
