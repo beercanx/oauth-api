@@ -28,13 +28,6 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
 
         application.log.info("Registering the AuthorisationRoute.authorisation() routes")
 
-        val authenticationBundle = url {
-            takeFrom(Location.Assets.baseUrl)
-            path("/assets/js/authentication.js")
-        }
-
-        application.log.debug("Authentication asset location: {}", authenticationBundle)
-
         // TODO - Verify assumptions, not sure this has been done correctly
         // TODO - What about those who navigate back?
         // TODO - What about those who wish to cancel?
@@ -91,6 +84,11 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
                                 null -> {
                                     val (csrfToken) = call.sessions.getOrSet { AuthenticateSession(UUID.randomUUID()) }
                                     call.respondHtml(OK) {
+                                        val authenticationBundle = call.url {
+                                            // TODO - Update to handle different ports when run in segments?
+                                            path("/assets/js/authentication.js")
+                                            parameters.clear()
+                                        }
                                         reactPage("Login Page", authenticationBundle, csrfToken)
                                     }
                                 }
@@ -107,6 +105,8 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
                                             takeFrom(request.redirectUri)
                                             parameters["code"] = code
                                             parameters["state"] = state
+                                        }.also {
+                                            application.log.info("Redirecting back to $it")
                                         }
                                     )
                                 }

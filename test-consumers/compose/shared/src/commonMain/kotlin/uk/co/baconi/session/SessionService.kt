@@ -33,6 +33,10 @@ class SessionService(
     private val codeVerifierLength = 64
     private val codeVerifierCharPool = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
+    fun createState(): State {
+        return State(generateUUID())
+    }
+
     fun createVerifier(): CodeVerifier {
         return (1..codeVerifierLength)
             .map { Random.nextInt(0, codeVerifierCharPool.size).let { codeVerifierCharPool[it] } }

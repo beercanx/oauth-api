@@ -192,7 +192,7 @@ class AuthorisationRouteIntegrationTests : AuthorisationRoute {
                 contentType() shouldBe Text.Html.withCharset(UTF_8)
                 bodyAsText()
                     .shouldContain("<title>Login Page</title>")
-                    .shouldContain("""<script defer="defer" src="http://localhost:8081/assets/js/authentication.js"></script>""")
+                    .shouldContain("""<script defer="defer" src="http://localhost/assets/js/authentication.js"></script>""")
             }
         }
 

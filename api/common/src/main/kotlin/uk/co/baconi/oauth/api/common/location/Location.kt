@@ -6,7 +6,7 @@ import io.ktor.http.*
 private val config = ConfigFactory.load().getConfig("uk.co.baconi.oauth.api.locations")
 
 /**
- * Locations of each major base endpoint.
+ * Locations of each major base endpoint. TODO - Replace with something more sensible, domains change, so do IPs
  */
 enum class Location(val baseUrl: Url) {
 
