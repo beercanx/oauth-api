@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="compose:website [wasmBrowserRun]" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="compose:website [wasmJsBrowserRun]" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$/website" />
@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="wasmBrowserRun" />
+          <option value="wasmJsBrowserRun" />
         </list>
       </option>
       <option name="vmOptions" />

@@ -14,10 +14,6 @@ version = "1.0.0-SNAPSHOT"
 
 val ktorVersion: String by project
 val kotlinVersion: String by project
-val composeVersion: String by project
-val atomicfuVersion: String by project
-val composeWasmVersion: String by project
-val kotlinxDatetimeVersion: String by project
 val kotlinxCoroutinesVersion: String by project
 val kotlinxSerializationVersion: String by project
 
@@ -30,7 +26,7 @@ kotlin {
     jvm("desktop")
 
     @OptIn(ExperimentalWasmDsl::class)
-    wasm {
+    wasmJs {
         browser()
     }
 
@@ -46,13 +42,10 @@ kotlin {
                 @OptIn(ExperimentalComposeLibrary::class)
                 api(compose.components.resources)
 
-//                api("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
-
                 api("io.ktor:ktor-client-core:$ktorVersion")
                 api("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 api("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
-                implementation("org.jetbrains.kotlinx:atomicfu:$atomicfuVersion")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
                 api("org.jetbrains.kotlinx:kotlinx-serialization-core:$kotlinxSerializationVersion")
             }
@@ -60,9 +53,9 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                api("androidx.activity:activity-compose:1.6.1")
+                api("androidx.activity:activity-compose:1.8.2")
                 api("androidx.appcompat:appcompat:1.6.1")
-                api("androidx.core:core-ktx:1.9.0")
+                api("androidx.core:core-ktx:1.12.0")
 
                 api("io.ktor:ktor-client-okhttp:$ktorVersion")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion")
@@ -81,7 +74,7 @@ kotlin {
             }
         }
 
-        val wasmMain by getting {
+        val wasmJsMain by getting {
             dependencies {
                 api("io.ktor:ktor-client-js:$ktorVersion")
             }
@@ -103,11 +96,4 @@ android {
     kotlin {
         jvmToolchain(11)
     }
-}
-
-compose {
-    kotlinCompilerPlugin.set(composeWasmVersion)
-
-    // Fixes lintVitalAnalyzeRelease and lintAnalyzeDebug
-    kotlinCompilerPluginArgs.add("suppressKotlinVersionCompatibilityCheck=$kotlinVersion")
 }

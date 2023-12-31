@@ -6,7 +6,7 @@ Its a separate project from the main OAuth one so that the dependencies don't cl
 Thinking of trying to cover:
 * Android `./gradlew :android:installDebug`
 * Desktop `./gradlew :desktop:run`
-* Website (WASM) `./gradlew :website:wasmBrowserRun`
+* Website (WASM) `./gradlew :website:wasmJsBrowserDevelopmentRun`
 
 Probably not going to cover:
 * iOS - due to needing specialised hardware and software to compile code.

@@ -8,7 +8,7 @@ import uk.co.baconi.session.SessionManagerEx
 @OptIn(ExperimentalComposeUiApi::class)
 suspend fun main() {
     CanvasBasedWindow(title = "OAuth - Wasm") {
-        val sessionManager = remember { SessionManagerEx() }
-        MainScreen(sessionManager)
+//        val sessionManager = remember { SessionManagerEx() }
+//        MainScreen(sessionManager)
     }
 }

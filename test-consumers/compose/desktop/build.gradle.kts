@@ -35,8 +35,3 @@ compose.desktop {
         }
     }
 }
-
-compose {
-    val composeWasmVersion: String by project
-    kotlinCompilerPlugin.set(composeWasmVersion)
-}
