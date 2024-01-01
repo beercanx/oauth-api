@@ -19,7 +19,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="localhost" android:port="8180" android:pathPrefix="/callback" />
+                <data android:scheme="uk.co.baconi" android:host="test-consumer-compose" android:pathPrefix="/callback" />
             </intent-filter>
         </activity>
     </application>
