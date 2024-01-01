@@ -29,7 +29,7 @@ expect class SessionManagerEx(sessionService: SessionService = SessionService())
      * Starts the authorisation flow.
      */
 
-    fun startLogin()
+    suspend fun startLogin()
 
     /**
      * Cancels any attempt at an authorisation flow.

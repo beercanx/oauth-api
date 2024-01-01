@@ -22,7 +22,7 @@ actual class SessionManagerEx actual constructor(val sessionService: SessionServ
     private val callback = MutableStateFlow<Job?>(null)
     actual val isAuthorising = callback.map { it?.isActive == true } // TODO - Possibly pointless on Android
 
-    actual fun startLogin()  {
+    actual suspend fun startLogin()  {
         // TODO - Replace with flavour variations instead of shared code.
     }
 

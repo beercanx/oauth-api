@@ -22,7 +22,7 @@ actual class SessionManagerEx actual constructor(private val sessionService: Ses
     private val callback = MutableStateFlow<Job?>(null)
     actual val isAuthorising = callback.map { it?.isActive == true }
 
-    actual fun startLogin() {
+    actual suspend fun startLogin() {
 
         if(callback.value != null) return
 
