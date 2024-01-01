@@ -85,7 +85,6 @@ android {
     namespace = "uk.co.baconi.compose.shared"
     defaultConfig {
         minSdk = 26
-        targetSdk = 33
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
