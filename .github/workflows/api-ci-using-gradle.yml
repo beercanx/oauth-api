@@ -6,10 +6,12 @@ on:
     branches: [ "main" ]
     paths-ignore: 
       - "user-interface/**"
+      - "test-consumers/compose/**"
   pull_request:
     branches: [ "main" ]
     paths-ignore: 
       - "user-interface/**"
+      - "test-consumers/compose/**"
 
 permissions:
   # The Dependency Submission API requires write permission on the repository to submit dependencies

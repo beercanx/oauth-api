@@ -16,4 +16,5 @@
     <logger name="uk.co.jemos.podam" level="INFO"/>
     <logger name="org.eclipse.jetty" level="INFO"/>
     <logger name="io.netty" level="INFO"/>
+    <logger name="io.ktor" level="INFO"/>
 </configuration>
