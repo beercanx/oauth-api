@@ -18,10 +18,11 @@ fun main() {
 
         MainScreen(sessionManager)
 
+        val session = sessionManager.session.collectAsState().value
         LaunchedEffect(Unit) {
             val currentUrl = Url(window.location.href)
             when {
-                sessionManager.session.collectAsState().value == null -> console.log("Already Logged In!")
+                session == null -> console.log("Already Logged In!")
                 currentUrl.parameters.contains("code") -> sessionManager.handleCallback(currentUrl)
                 !currentUrl.parameters.contains("error") -> sessionManager.startLogin()
             }
