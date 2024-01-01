@@ -31,8 +31,6 @@ actual class SessionManagerEx actual constructor(private val sessionService: Ses
         }
     }
 
-    actual val isAuthorising: Flow<Boolean> = flowOf(false)
-
     init {
         mutableSession.value = currentSession
     }
@@ -55,9 +53,6 @@ actual class SessionManagerEx actual constructor(private val sessionService: Ses
         val challenge = sessionService.createChallenge(verifier)
         val authoriseUrl = sessionService.authoriseUrl(state, challenge)
         window.location.assign(authoriseUrl.toString())
-    }
-
-    actual fun cancelLogin() {
     }
 
     suspend fun handleCallback(callback: Url) {

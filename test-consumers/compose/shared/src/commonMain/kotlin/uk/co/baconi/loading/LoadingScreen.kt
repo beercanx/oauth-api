@@ -29,5 +29,6 @@ fun LoadingScreen() {
             modifier = Modifier.align(Alignment.Center).offset(0.dp, 70.dp),
             style = MaterialTheme.typography.bodyMedium
         )
+        // TODO - Consider having a cancel button.
     }
 }

@@ -13,28 +13,18 @@ open class SessionManagerShared {
 
 }
 
+// TODO - Replace with function and interface pattern for stable multiplatform support.
 expect class SessionManagerEx(sessionService: SessionService = SessionService()) : SessionManagerShared {
-
-    /**
-     * Indicates if an authorise attempt has been started.
-     */
-    val isAuthorising: Flow<Boolean>
-
-    /**
-     * Contains the current session, if there is one at all.
-     */
-    //val session: StateFlow<Session?>
 
     /**
      * Starts the authorisation flow.
      */
-
     suspend fun startLogin()
 
     /**
      * Cancels any attempt at an authorisation flow.
      */
-    fun cancelLogin()
+    // fun cancelLogin() // TODO - Is support required?
 
     /**
      * Triggers the logout and invalidation of the current session

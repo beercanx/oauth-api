@@ -32,7 +32,3 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
-
-dependencies {
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
-}

@@ -7,9 +7,7 @@ import io.ktor.server.netty.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
 import uk.co.baconi.session.oauth.AuthorisationCode
-import uk.co.baconi.session.oauth.State
 import java.awt.Desktop
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
@@ -19,41 +17,23 @@ actual class SessionManagerEx actual constructor(private val sessionService: Ses
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     private var server: NettyApplicationEngine? = null
-    private val callback = MutableStateFlow<Job?>(null)
-    actual val isAuthorising = callback.map { it?.isActive == true }
 
     actual suspend fun startLogin() {
+        try {
+            val state = sessionService.createState()
+            val verifier = sessionService.createVerifier()
+            val challenge = sessionService.createChallenge(verifier)
+            val authoriseUrl = sessionService.authoriseUrl(state, challenge)
 
-        if(callback.value != null) return
+            launchAuthorise(authoriseUrl)
 
-        callback.value = coroutineScope.launch {
-            try {
-                val state = sessionService.createState()
-                val verifier = sessionService.createVerifier()
-                val challenge = sessionService.createChallenge(verifier)
-                val authoriseUrl = sessionService.authoriseUrl(state, challenge)
+            val code = waitForAuthorisation()
 
-                launchAuthorise(authoriseUrl)
-
-                val code = waitForAuthorisation()
-
-                val session = sessionService.authorisationCodeGrant(code, verifier)
-                if(session.state == state) mutableSession.value = session
-            } catch (exception: Exception) {
-                exception.printStackTrace()
-            }
-        }.also { job ->
-            job.invokeOnCompletion {
-                callback.value = null
-            }
+            val session = sessionService.authorisationCodeGrant(code, verifier)
+            if (session.state == state) mutableSession.value = session
+        } catch (exception: Exception) {
+            exception.printStackTrace()
         }
-    }
-
-    actual fun cancelLogin() {
-        callback.value?.cancel()
-        callback.value = null
-        server?.stop(0, 0)
-        server = null
     }
 
     private suspend fun launchAuthorise(url: Url) {
@@ -67,7 +47,7 @@ actual class SessionManagerEx actual constructor(private val sessionService: Ses
         val code = suspendCancellableCoroutine { continuation ->
             server = embeddedServer(Netty, port = 8180) {
                 routing {
-                    get ("/callback") {
+                    get("/callback") {
                         val code = call.parameters["code"] ?: throw RuntimeException("Received a response with no code")
                         call.respondText("OK")
                         continuation.resume(AuthorisationCode(code))

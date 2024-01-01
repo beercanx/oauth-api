@@ -22,7 +22,7 @@ fun main() {
         LaunchedEffect(Unit) {
             val currentUrl = Url(window.location.href)
             when {
-                session == null -> console.log("Already Logged In!")
+                session != null -> console.log("Already Logged In!")
                 currentUrl.parameters.contains("code") -> sessionManager.handleCallback(currentUrl)
                 !currentUrl.parameters.contains("error") -> sessionManager.startLogin()
             }

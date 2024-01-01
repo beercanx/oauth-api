@@ -10,12 +10,11 @@ import uk.co.baconi.session.SessionScreen
 fun MainScreen(sessionManager: SessionManagerEx) {
 
     MaterialTheme {
-        val isAuthorising = sessionManager.isAuthorising.collectAsState(false).value
         val session = sessionManager.session.collectAsState().value
         when {
-//            isAuthorising -> LoadingScreen() // TODO - Consider having a cancel button.
+            // TODO - Consider having a start authentication screen that allows config changes.
             session != null -> SessionScreen(session)
-            else -> LoadingScreen() // TODO - Consider having a start authentication screen that allows config changes.
+            else -> LoadingScreen()
         }
     }
 }
