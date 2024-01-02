@@ -1,74 +1,64 @@
-val ktorVersion: String by project
-val mockkVersion: String by project
-val kotestVersion: String by project
-val typesafeConfigVersion: String by project
-val logbackVersion: String by project
-val junitVersion: String by project
-val exposedVersion: String by project
-val h2DatabaseVersion: String by project
-val argon2Version: String by project
-val argon2Type: String by project
-val commonsLang3Version: String by project
+val useArgon2NoLibs: String by project
 
 plugins {
     jacoco
-    kotlin("jvm")
-    kotlin("plugin.serialization")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 dependencies {
 
     // Logging
-    api("ch.qos.logback:logback-classic:$logbackVersion")
+    api(libs.logback.classic)
 
     // Configuration
-    api("com.typesafe:config:$typesafeConfigVersion")
+    api(libs.typesafe.config)
 
     // Server: Engine - using CIO as it supports JVM, Native and GraalVM but doesn't support HTTP/2
-    api("io.ktor:ktor-server-cio:$ktorVersion")
+    api(libs.ktor.server.cio)
 
     // Serialisation
-    api("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    api(libs.ktor.serialization.kotlinx.json)
 
     // Server: Common
-    api("io.ktor:ktor-server-core:$ktorVersion")
-    api("io.ktor:ktor-server-auth:$ktorVersion")
-    api("io.ktor:ktor-server-sessions:$ktorVersion")
-    api("io.ktor:ktor-server-html-builder:$ktorVersion")
-    implementation("io.ktor:ktor-server-cors:$ktorVersion")
-    implementation("io.ktor:ktor-server-hsts:$ktorVersion")
-    implementation("io.ktor:ktor-server-compression:$ktorVersion")
-    implementation("io.ktor:ktor-server-double-receive:$ktorVersion")
-    implementation("io.ktor:ktor-server-caching-headers:$ktorVersion")
-    implementation("io.ktor:ktor-server-data-conversion:$ktorVersion")
-    implementation("io.ktor:ktor-server-auto-head-response:$ktorVersion")
-    implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+    api(libs.ktor.server.core)
+    api(libs.ktor.server.auth)
+    api(libs.ktor.server.sessions)
+    api(libs.ktor.server.html)
+    implementation(libs.ktor.server.cors)
+    implementation(libs.ktor.server.hsts)
+    implementation(libs.ktor.server.compression)
+    implementation(libs.ktor.server.double.receive)
+    implementation(libs.ktor.server.caching.headers)
+    implementation(libs.ktor.server.data.conversion)
+    implementation(libs.ktor.server.auto.head.response)
+    implementation(libs.ktor.server.content.negotiation)
 
     // Crypto for safe credential checking
-    api("de.mkammerer:$argon2Type:$argon2Version")
+    api(if (useArgon2NoLibs.toBooleanStrict()) libs.argon2.jvm.nolibs else libs.argon2.jvm.libs)
 
     // Database
-    api("com.h2database:h2:$h2DatabaseVersion")
-    api("org.jetbrains.exposed:exposed-core:$exposedVersion")
-    api("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-    api("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
+    api(libs.h2database)
+    api(libs.exposed.core)
+    api(libs.exposed.jdbc)
+    api(libs.exposed.java.time)
 
     // JUnit 5 for tests definitions and running
-    testImplementation(platform("org.junit:junit-bom:$junitVersion"))
+    testImplementation(enforcedPlatform(libs.junit.bom))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Ktor testing
-    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+    testImplementation(libs.ktor.server.test.host)
 
     // Asserting stuff
-    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation(libs.kotest.assertions)
 
     // Mocking
-    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation(libs.mockk)
 
     // Test data generation
-    testImplementation("org.apache.commons:commons-lang3:$commonsLang3Version")
+    testImplementation(libs.commons.lang3)
 
     // Security patching
     constraints {

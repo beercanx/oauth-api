@@ -1,7 +1,7 @@
 plugins {
     jacoco
     application
-    kotlin("jvm")
+    alias(libs.plugins.kotlin.jvm)
 }
 
 dependencies {

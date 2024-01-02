@@ -1,37 +1,31 @@
-val ktorVersion: String by project
-val kotestVersion: String by project
-val typesafeConfigVersion: String by project
-val logbackVersion: String by project
-val junitVersion: String by project
-val restAssured: String by project
-
 plugins {
-    kotlin("jvm")
-    kotlin("plugin.serialization")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 dependencies {
 
     // Logging
-    implementation("ch.qos.logback:logback-classic:$logbackVersion")
-    implementation("org.slf4j:jcl-over-slf4j:2.0.9")
-    implementation("org.slf4j:log4j-over-slf4j:2.0.9")
-    implementation("org.slf4j:jul-to-slf4j:2.0.9")
+    implementation(libs.logback.classic)
+    implementation(libs.slf4j.jcl.over.slf4j)
+    implementation(libs.slf4j.log4j.over.slf4j)
+    implementation(libs.slf4j.jul.to.slf4j)
 
     // Configuration
-    implementation("com.typesafe:config:$typesafeConfigVersion")
+    implementation(libs.typesafe.config)
 
     // Asserting stuff
-    implementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    implementation(libs.kotest.assertions)
 
     // Rest stuff
-    implementation("io.rest-assured:rest-assured:$restAssured")
-    implementation("io.rest-assured:kotlin-extensions:$restAssured")
-    implementation("io.rest-assured:json-path:$restAssured")
-    implementation("io.rest-assured:json-schema-validator:$restAssured")
+    implementation(enforcedPlatform(libs.rest.assured.bom))
+    implementation("io.rest-assured:rest-assured")
+    implementation("io.rest-assured:kotlin-extensions")
+    implementation("io.rest-assured:json-path")
+    implementation("io.rest-assured:json-schema-validator")
 
     // JUnit 5 bits for providing things like custom resolvers
-    implementation(platform("org.junit:junit-bom:$junitVersion"))
+    implementation(enforcedPlatform(libs.junit.bom))
     implementation("org.junit.jupiter:junit-jupiter-api")
     implementation("org.junit.jupiter:junit-jupiter-params")
 

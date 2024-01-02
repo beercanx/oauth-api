@@ -1,27 +1,22 @@
-val ktorVersion: String by project
-val junitVersion: String by project
-val mockkVersion: String by project
-val kotestVersion: String by project
-
 plugins {
     jacoco
     application
-    kotlin("jvm")
+    alias(libs.plugins.kotlin.jvm)
 }
 
 dependencies {
     api(project(":api:common"))
 
-    testImplementation(platform("org.junit:junit-bom:$junitVersion"))
+    testImplementation(enforcedPlatform(libs.junit.bom))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
-    testImplementation("io.ktor:ktor-server-call-logging:$ktorVersion")
-    testImplementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    testImplementation(libs.ktor.server.test.host)
+    testImplementation(libs.ktor.server.call.logging)
+    testImplementation(libs.ktor.client.content.negotiation)
 
-    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation(libs.kotest.assertions)
+    testImplementation(libs.mockk)
 }
 
 application {
