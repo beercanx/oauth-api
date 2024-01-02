@@ -20,16 +20,6 @@ dependencies {
     testImplementation(enforcedPlatform(libs.junit.bom))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-    // Security patching
-    constraints {
-        implementation("com.google.guava:guava:33.0.0-jre") {
-            because("selenide brings in 31.1-jre")
-        }
-        implementation("io.netty:netty-handler:4.1.104.Final") {
-            because("selenide brings in 4.1.92.Final")
-        }
-    }
 }
 
 tasks.withType<Test>().configureEach {
