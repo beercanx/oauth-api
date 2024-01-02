@@ -38,7 +38,7 @@ dependencies {
         implementation("commons-codec:commons-codec:1.16.0") {
             because("Apache Http Client brings in 1.11")
         }
-        implementation("com.fasterxml.jackson.core:jackson-databind:2.16.0") {
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1") {
             because("json-schema-validator brings in 2.11")
         }
         implementation("org.mozilla:rhino:1.7.14") {
