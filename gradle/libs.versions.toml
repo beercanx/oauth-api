@@ -2,7 +2,7 @@
 ##
 # Common Versions
 ##
-ktor = "2.3.6"
+ktor = "2.3.7"
 kotlin = "1.9.0"
 
 ##
