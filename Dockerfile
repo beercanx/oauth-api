@@ -27,7 +27,7 @@ COPY api/token-introspection/build.gradle.kts  /project/api/token-introspection/
 COPY api/token-revocation/build.gradle.kts  /project/api/token-revocation/
 RUN --mount=type=cache,target=/root/.gradle \
     --mount=type=cache,target=/project/.gradle \
-    ./gradlew -Pargon2Type=argon2-jvm-nolibs dependencies
+    ./gradlew -PuseArgon2NoLibs=true dependencies
 
 # Add the project and build it
 COPY api /project/api
@@ -49,7 +49,7 @@ RUN --mount=type=cache,target=/root/.gradle \
     --mount=type=cache,target=/project/api/token-introspection/build \
     --mount=type=cache,target=/project/api/token-revocation/build \
     --mount=type=cache,target=/project/build \
-    ./gradlew -Pargon2Type=argon2-jvm-nolibs build \
+    ./gradlew -PuseArgon2NoLibs=true build \
     # Unzip all the distributions ready for copying later on \
     && mkdir /project/distributions && cd /project/distributions \
     && for archive in /project/api/*/build/distributions/*.zip; do unzip "$archive"; done

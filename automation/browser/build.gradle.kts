@@ -1,29 +1,23 @@
-val kotestVersion: String by project
-val typesafeConfigVersion: String by project
-val logbackVersion: String by project
-val junitVersion: String by project
-val selenideVersion: String by project
-
 plugins {
-    kotlin("jvm")
+    alias(libs.plugins.kotlin.jvm)
 }
 
 dependencies {
 
     // Logging
-    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation(libs.logback.classic)
 
     // Configuration
-    implementation("com.typesafe:config:$typesafeConfigVersion")
+    implementation(libs.typesafe.config)
 
     // Browser stuff
-    implementation("com.codeborne:selenide:$selenideVersion")
+    implementation(libs.selenide)
 
     // Manually asserting stuff
-    implementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    implementation(libs.kotest.assertions)
 
     // JUnit 5 for tests definitions and running
-    testImplementation(platform("org.junit:junit-bom:$junitVersion"))
+    testImplementation(enforcedPlatform(libs.junit.bom))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 

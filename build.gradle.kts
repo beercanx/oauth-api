@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 
 plugins {
     base
-    kotlin("jvm") apply false // Here to enable allProjects configuration
+    alias(libs.plugins.kotlin.jvm) apply false // Here to enable allProjects configuration
 }
 
 group = "uk.co.baconi.oauth"

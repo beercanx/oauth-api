@@ -1,0 +1,89 @@
+[versions]
+##
+# Common Versions
+##
+ktor = "2.3.6"
+kotlin = "1.9.0"
+
+##
+# JVM Versions
+##
+argon2 = "2.11"
+exposed = "0.42.0"
+logback = "1.4.14"
+h2Database = "2.2.220"
+typesafeConfig = "1.4.2"
+slf4j = "2.0.10"
+
+##
+# Common Test Versions
+##
+kotest = "5.4.2"
+mockk = "1.13.5"
+
+##
+# JVM Test Versions
+##
+junit = "5.10.0"
+selenide = "6.19.1"
+restAssured = "5.3.1"
+commonsLang3 = "3.13.0"
+
+[libraries]
+##
+# Main dependencies
+##
+typesafe-config = { module = "com.typesafe:config", version.ref = "typesafeConfig" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+slf4j-jul-to-slf4j = { module = "org.slf4j:jul-to-slf4j", version.ref = "slf4j" }
+slf4j-jcl-over-slf4j = { module = "org.slf4j:jcl-over-slf4j", version.ref = "slf4j" }
+slf4j-log4j-over-slf4j = { module = "org.slf4j:log4j-over-slf4j", version.ref = "slf4j" }
+
+ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktor" }
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktor-server-auth = { module = "io.ktor:ktor-server-auth", version.ref = "ktor" }
+ktor-server-sessions = { module = "io.ktor:ktor-server-sessions", version.ref = "ktor" }
+ktor-server-html = { module = "io.ktor:ktor-server-html-builder", version.ref = "ktor" }
+ktor-server-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
+ktor-server-hsts = { module = "io.ktor:ktor-server-hsts", version.ref = "ktor" }
+ktor-server-compression = { module = "io.ktor:ktor-server-compression", version.ref = "ktor" }
+ktor-server-double-receive = { module = "io.ktor:ktor-server-double-receive", version.ref = "ktor" }
+ktor-server-caching-headers = { module = "io.ktor:ktor-server-caching-headers", version.ref = "ktor" }
+ktor-server-data-conversion = { module = "io.ktor:ktor-server-data-conversion", version.ref = "ktor" }
+ktor-server-auto-head-response = { module = "io.ktor:ktor-server-auto-head-response", version.ref = "ktor" }
+ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
+ktor-server-call-logging = { module = "io.ktor:ktor-server-call-logging", version.ref = "ktor" }
+
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+argon2-jvm-libs = { module = "de.mkammerer:argon2-jvm", version.ref = "argon2" }
+argon2-jvm-nolibs = { module = "de.mkammerer:argon2-jvm-nolibs", version.ref = "argon2" }
+
+h2database = { module = "com.h2database:h2", version.ref = "h2Database" }
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
+
+##
+# Test dependencies
+##
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+
+mockk = { module = "io.mockk:mockk" , version.ref = "mockk" }
+
+kotest-assertions = { module = "io.kotest:kotest-assertions-core" , version.ref = "kotest" }
+
+ktor-server-test-host = { module = "io.ktor:ktor-server-test-host" , version.ref = "ktor" }
+
+commons-lang3 = { module = "org.apache.commons:commons-lang3" , version.ref = "commonsLang3" }
+
+rest-assured-bom = { module = "io.rest-assured:rest-assured-bom", version.ref = "restAssured" }
+
+selenide = { module = "com.codeborne:selenide", version.ref = "selenide" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

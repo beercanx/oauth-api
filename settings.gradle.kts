@@ -19,13 +19,3 @@ include(":automation:browser")
 include(":automation:load")
 
 // TODO - Test Consumers
-
-// Here, because workaround https://github.com/gradle/gradle/issues/1697#issuecomment-655682357
-pluginManagement {
-    val kotlinVersion: String by settings
-    plugins {
-        kotlin("jvm") version kotlinVersion apply false
-        kotlin("plugin.allopen") version kotlinVersion apply false
-        kotlin("plugin.serialization") version kotlinVersion apply false
-    }
-}
