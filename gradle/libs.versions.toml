@@ -19,7 +19,7 @@ slf4j = "2.0.10"
 # Common Test Versions
 ##
 kotest = "5.4.2"
-mockk = "1.13.5"
+mockk = "1.13.8"
 
 ##
 # JVM Test Versions
