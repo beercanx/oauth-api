@@ -12,7 +12,7 @@ argon2 = "2.11"
 exposed = "0.42.0"
 logback = "1.4.14"
 h2Database = "2.2.220"
-typesafeConfig = "1.4.2"
+typesafeConfig = "1.4.3"
 slf4j = "2.0.10"
 
 ##
