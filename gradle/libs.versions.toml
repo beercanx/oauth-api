@@ -27,7 +27,7 @@ mockk = "1.13.8"
 junit = "5.10.1"
 selenide = "7.0.4"
 restAssured = "5.3.1"
-commonsLang3 = "3.13.0"
+commonsLang3 = "3.14.0"
 
 [libraries]
 ##
