@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.allopen)
-    id("io.gatling.gradle") version "3.9.5.6"
+    id("io.gatling.gradle") version "3.10.3"
 }
 
 dependencies {
