@@ -6,7 +6,7 @@ plugins {
 
 dependencies {
     // Security patching
-    gatlingImplementation(enforcedPlatform("io.netty:netty-bom:4.1.101.Final")) {
+    gatlingImplementation(enforcedPlatform("io.netty:netty-bom:4.1.104.Final")) {
         because("io.gatling:gatling-http brings in 4.1.92.Final")
     }
 }
