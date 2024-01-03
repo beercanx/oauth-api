@@ -24,5 +24,6 @@ class LoginAndIntrospectSimulation : Simulation() {
 
     init {
         setUp(theScenario.injectOpen(atOnceUsers(1)).protocols(httpProtocol))
+            .assertions(forAll().failedRequests().count().shouldBe(0)) // Cause Gradle output to error on any failure.
     }
 }

@@ -1,0 +1,54 @@
+name: Automation Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "Run which automation test pack?"
+        required: true
+        type: choice
+        default: ":automation:api:test"
+        options:
+          - ":automation:api:test"
+          - ":automation:browser:test"
+          - ":automation:load:gatlingRun"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      api:
+        image: "ghcr.io/beercan1989/oauth-api/server-full:main"
+        ports:
+          - "8080:8080"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Run Test Pack
+        run: ./gradlew ${{ inputs.command }}
+        env:
+          ENABLE_AUTOMATION_API: true
+          ENABLE_AUTOMATION_BROWSER: true
+
+      - name: Archive Test Report
+        uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: "Test Report"
+          if-no-files-found: "error"
+          path: |
+            automation/api/build/reports/tests/test
+            automation/browser/build/reports/tests/test
+            automation/load/build/reports/gatling
