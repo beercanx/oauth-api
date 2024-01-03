@@ -38,9 +38,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v1
-        if: ${{ inputs.command == ':automation:browser:test' }}
+      - run: ls -asl /usr/bin/google-chrome
 
       - name: Run Test Pack
         run: ./gradlew ${{ inputs.command }}
