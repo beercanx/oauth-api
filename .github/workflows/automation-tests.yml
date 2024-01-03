@@ -40,7 +40,7 @@ jobs:
 
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
-        if: ${{ inputs.command == ":automation:browser:test" }}
+        if: ${{ inputs.command == ':automation:browser:test' }}
 
       - name: Run Test Pack
         run: ./gradlew ${{ inputs.command }}
