@@ -4,6 +4,7 @@
       <option name="env">
         <map>
           <entry key="ENABLE_AUTOMATION_BROWSER" value="true" />
+          <entry key="ENABLE_HEADLESS_BROWSER" value="true" />
         </map>
       </option>
       <option name="executionName" />
