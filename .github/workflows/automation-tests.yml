@@ -13,6 +13,8 @@ on:
           - ":automation:browser:test"
           - ":automation:load:gatlingRun"
 
+run-name: Automation Tests - ${{ inputs.command }}
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -44,7 +46,7 @@ jobs:
 
       - name: Archive Test Report
         uses: actions/upload-artifact@v4
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         with:
           name: "Test Report"
           if-no-files-found: "error"
