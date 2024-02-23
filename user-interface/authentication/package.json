@@ -6,6 +6,12 @@
   "engines": {
     "node": "^20"
   },
+  "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "start": "cross-env PORT=8080 BROWSER=none node scripts/start.js",
+    "build": "cross-env GENERATE_SOURCEMAP=false node scripts/build.js",
+    "test": "node scripts/test.js"
+  },
   "dependencies": {
     "@babel/core": "^7.16.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
@@ -69,12 +75,6 @@
     "cross-env": "^7.0.3",
     "jest-environment-jsdom": "^29.7.0",
     "source-map-explorer": "^2.5.3"
-  },
-  "scripts": {
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "start": "cross-env PORT=8080 BROWSER=none node scripts/start.js",
-    "build": "cross-env GENERATE_SOURCEMAP=false node scripts/build.js",
-    "test": "node scripts/test.js"
   },
   "proxy": "http://localhost:8083",
   "eslintConfig": {
