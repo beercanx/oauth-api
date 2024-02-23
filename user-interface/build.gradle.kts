@@ -13,7 +13,7 @@ subprojects {
         // Configure the Node plugin
         extensions.configure<NodeExtension> {
             version.set(rootProject.libs.versions.node)
-            download.set(false)
+            download.set(System.getenv("CI").toBoolean())
         }
 
         // Create a clean task to clean up the node directories
