@@ -11,7 +11,12 @@ include(":api:token-introspection")
 include(":api:token-revocation")
 include(":api:server")
 
-// User Interface - Not imported here as they are NPM projects.
+// User Interface
+include(":user-interface:authentication")
+// TODO include(":user-interface:authorise")
+// TODO include(":user-interface:confirm-details")
+// TODO include(":user-interface:registration")
+// TODO include(":user-interface:session-management")
 
 // Automation
 include(":automation:api")
