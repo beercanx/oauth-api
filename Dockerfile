@@ -33,6 +33,7 @@ RUN --mount=type=cache,target=/root/.gradle \
 
 # Add the project and build it
 COPY api /project/api
+COPY user-interface /project/user-interface
 
 # Install the native argon2 C library
 ARG ARGON2_VERSION
@@ -53,7 +54,7 @@ RUN --mount=type=cache,target=/root/.gradle \
     --mount=type=cache,target=/project/build \
     --mount=type=cache,target=/project/user-interface/build \
     --mount=type=cache,target=/project/user-interface/node_modules \
-    ./gradlew -PuseArgon2NoLibs=true build \
+    CI=true ./gradlew -PuseArgon2NoLibs=true build \
     # Unzip all the distributions ready for copying later on \
     && mkdir /project/distributions && cd /project/distributions \
     && for archive in /project/api/*/build/distributions/*.zip; do unzip "$archive"; done
