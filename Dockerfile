@@ -12,7 +12,7 @@ COPY gradlew /project/
 
 RUN --mount=type=cache,target=/root/.gradle \
     --mount=type=cache,target=/project/.gradle \
-    ./gradlew
+    CI="true" ./gradlew
 
 # Add build files to enable dependency resolution caching.
 COPY build.gradle.kts settings.gradle.kts gradle.properties /project/
@@ -29,10 +29,11 @@ COPY user-interface/build.gradle.kts  /project/user-interface/
 COPY user-interface/authentication/build.gradle.kts /project/user-interface/authentication/
 RUN --mount=type=cache,target=/root/.gradle \
     --mount=type=cache,target=/project/.gradle \
-    ./gradlew -PuseArgon2NoLibs=true dependencies
+    CI="true" ./gradlew -PuseArgon2NoLibs=true dependencies
 
 # Add the project and build it
 COPY api /project/api
+COPY user-interface /project/user-interface
 
 # Install the native argon2 C library
 ARG ARGON2_VERSION
@@ -53,7 +54,7 @@ RUN --mount=type=cache,target=/root/.gradle \
     --mount=type=cache,target=/project/build \
     --mount=type=cache,target=/project/user-interface/build \
     --mount=type=cache,target=/project/user-interface/node_modules \
-    ./gradlew -PuseArgon2NoLibs=true build \
+    CI="true" ./gradlew -PuseArgon2NoLibs=true build \
     # Unzip all the distributions ready for copying later on \
     && mkdir /project/distributions && cd /project/distributions \
     && for archive in /project/api/*/build/distributions/*.zip; do unzip "$archive"; done
