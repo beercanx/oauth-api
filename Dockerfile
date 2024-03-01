@@ -25,6 +25,8 @@ COPY api/session-info/build.gradle.kts  /project/api/session-info/
 COPY api/token/build.gradle.kts  /project/api/token/
 COPY api/token-introspection/build.gradle.kts  /project/api/token-introspection/
 COPY api/token-revocation/build.gradle.kts  /project/api/token-revocation/
+COPY user-interface/build.gradle.kts  /project/user-interface/
+COPY user-interface/authentication/build.gradle.kts /project/user-interface/authentication/
 RUN --mount=type=cache,target=/root/.gradle \
     --mount=type=cache,target=/project/.gradle \
     ./gradlew -PuseArgon2NoLibs=true dependencies
@@ -49,6 +51,8 @@ RUN --mount=type=cache,target=/root/.gradle \
     --mount=type=cache,target=/project/api/token-introspection/build \
     --mount=type=cache,target=/project/api/token-revocation/build \
     --mount=type=cache,target=/project/build \
+    --mount=type=cache,target=/project/user-interface/build \
+    --mount=type=cache,target=/project/user-interface/node_modules \
     ./gradlew -PuseArgon2NoLibs=true build \
     # Unzip all the distributions ready for copying later on \
     && mkdir /project/distributions && cd /project/distributions \
