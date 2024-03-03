@@ -36,13 +36,30 @@ dependencies {
     // Security patching
     constraints {
         implementation("commons-codec:commons-codec:1.16.0") {
-            because("Apache Http Client brings in 1.11")
+            // Needs Rest Assured to upgrade to Apache Http Client 5+
+            because("""
+                |Rest Assured 5.4 brings in
+                |Apache Http Client 4.5 (nearing EOL) that brings in
+                |Commons Codec 1.11
+            """.trimMargin())
         }
         implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1") {
-            because("json-schema-validator brings in 2.11")
+            // Needs Rest Assured to replace its JSON schema validation library with a maintained one.
+            because("""
+                |Rest Assured 5.4 brings in
+                |Json Schema Validator 2.2.14 (No releases since 2020) that brings in
+                |Json Schema Core 1.2.14 that brings in
+                |Jackson Databind 2.11.0
+            """.trimMargin())
         }
         implementation("org.mozilla:rhino:1.7.14") {
-            because("json-schema-validator brings in 1.7.7.2")
+            // Needs Rest Assured to replace its JSON schema validation library with a maintained one.
+            because("""
+                |Rest Assured 5.4 brings in
+                |Json Schema Validator 2.2.14 (No releases since 2020) that brings in
+                |Json Schema Core 1.2.14 that brings in
+                |Rhino 1.7.7.2
+            """.trimMargin())
         }
     }
 }

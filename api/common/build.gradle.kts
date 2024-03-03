@@ -63,7 +63,13 @@ dependencies {
     // Security patching
     constraints {
         api("commons-codec:commons-codec:1.16.0") {
-            because("Apache Http Client brings in 1.11")
+            // Needs Ktor to upgrade to Apache Http Client 5+
+            because("""
+                |Ktor Server Test Host 2.3 that brings in 
+                |Ktor Client Apache 2.3 that brings in 
+                |Apache Http Async Client 4.1 (EOL) that brings in 
+                |Commons Codec 1.11""".trimMargin()
+            )
         }
     }
 }
