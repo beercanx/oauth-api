@@ -8,14 +8,18 @@ plugins {
 dependencies {
     api(project(":api:common"))
 
-//    testImplementation(enforcedPlatform(libs.junit.bom))
-//    testImplementation("org.junit.jupiter:junit-jupiter")
-//    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-//
+    testImplementation(enforcedPlatform(libs.junit.bom))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
 //    testImplementation(libs.ktor.server.test.host)
 //    testImplementation(libs.ktor.server.call.logging)
 //    testImplementation(libs.ktor.client.content.negotiation)
-//
-//    testImplementation(libs.kotest.assertions)
-//    testImplementation(libs.mockk)
+
+    testImplementation(libs.kotest.assertions)
+    testImplementation(libs.mockk)
+}
+
+application {
+    mainClass.set("uk.co.baconi.oauth.api.session.info.MainKt")
 }

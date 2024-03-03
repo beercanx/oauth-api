@@ -19,11 +19,14 @@ import uk.co.baconi.oauth.api.common.token.AccessTokenRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
 import uk.co.baconi.oauth.api.common.token.RefreshTokenRepository
 import uk.co.baconi.oauth.api.common.token.RefreshTokenService
+import uk.co.baconi.oauth.api.session.info.SessionInfoRoute
+import uk.co.baconi.oauth.api.session.info.SessionInfoServer.generateTestRefreshTokens
+import uk.co.baconi.oauth.api.session.info.SessionInfoService
 import uk.co.baconi.oauth.api.token.*
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionRoute
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionService
 
-object FullServer : AuthenticationModule, DatabaseModule, AssetsRoute, AuthenticationRoute, AuthorisationRoute, TokenRoute, IntrospectionRoute, TestAccessTokenModule, TestUserModule {
+object FullServer : AuthenticationModule, DatabaseModule, AssetsRoute, AuthenticationRoute, AuthorisationRoute, IntrospectionRoute, SessionInfoRoute, TokenRoute, TestAccessTokenModule, TestRefreshTokenModule, TestUserModule {
 
     override val scopeRepository = ScopeRepository()
 
@@ -52,6 +55,8 @@ object FullServer : AuthenticationModule, DatabaseModule, AssetsRoute, Authentic
 
     override val introspectionService = IntrospectionService(accessTokenRepository)
 
+    override val sessionInfoService = SessionInfoService(accessTokenRepository, refreshTokenRepository)
+
     fun start() {
         embeddedCommonServer {
             common()
@@ -60,12 +65,13 @@ object FullServer : AuthenticationModule, DatabaseModule, AssetsRoute, Authentic
                 assets()
                 authentication()
                 authorisation()
-                // TODO - sessionInfo()
+                sessionInfo()
                 token()
                 introspection()
                 // TODO - revocation()
             }
             generateTestAccessTokens()
+            generateTestRefreshTokens()
             generateTestUsers()
         }.start(true)
     }
