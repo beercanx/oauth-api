@@ -26,7 +26,7 @@ Since it's a multistage project we need to run a few commands to build and tag e
 # Create all the all endpoints server instance
 docker build --tag 'oauth-api:server-full' --target server-full .
 
-# Create all the individual server instances [not are implemented yet have]
+# Create all the individual server instances [some are not yet implemented]
 docker build --tag 'oauth-api:server-assets' --target server-assets .
 docker build --tag 'oauth-api:server-authentication' --target server-authentication .
 docker build --tag 'oauth-api:server-authorisation' --target server-authorisation .

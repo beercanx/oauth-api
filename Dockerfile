@@ -1,6 +1,9 @@
 ARG JAVA_VERSION=17
-ARG ALPINE_VERSION=3.15
+ARG NODEJS_VERSION=20
+ARG ALPINE_VERSION=3.18
 ARG ARGON2_VERSION=20190702
+
+FROM node:${NODEJS_VERSION}-alpine${ALPINE_VERSION} AS alpine-nodejs
 
 FROM amazoncorretto:${JAVA_VERSION}-alpine${ALPINE_VERSION}-jdk AS code-build
 
@@ -9,13 +12,11 @@ WORKDIR /project
 # Add gradlew to enable gradle caching.
 COPY gradle /project/gradle/
 COPY gradlew /project/
-
-RUN --mount=type=cache,target=/root/.gradle \
-    --mount=type=cache,target=/project/.gradle \
-    CI="true" ./gradlew
+RUN ./gradlew --version --console=plain --info
 
 # Add build files to enable dependency resolution caching.
 COPY build.gradle.kts settings.gradle.kts gradle.properties /project/
+
 COPY api/assets/build.gradle.kts  /project/api/assets/
 COPY api/authentication/build.gradle.kts  /project/api/authentication/
 COPY api/authorisation/build.gradle.kts  /project/api/authorisation/
@@ -25,11 +26,23 @@ COPY api/session-info/build.gradle.kts  /project/api/session-info/
 COPY api/token/build.gradle.kts  /project/api/token/
 COPY api/token-introspection/build.gradle.kts  /project/api/token-introspection/
 COPY api/token-revocation/build.gradle.kts  /project/api/token-revocation/
+
 COPY user-interface/build.gradle.kts  /project/user-interface/
 COPY user-interface/authentication/build.gradle.kts /project/user-interface/authentication/
-RUN --mount=type=cache,target=/root/.gradle \
-    --mount=type=cache,target=/project/.gradle \
-    CI="true" ./gradlew -PuseArgon2NoLibs=true dependencies
+COPY user-interface/authentication/package.json /project/user-interface/authentication/
+COPY user-interface/authentication/package-lock.json /project/user-interface/authentication/
+
+RUN ./gradlew dependencies -PuseArgon2NoLibs=true --console=plain --info
+
+# Install Alpine NodeJS
+RUN apk --no-cache add libstdc++
+COPY --from=alpine-nodejs /usr/local/bin /usr/local/bin
+COPY --from=alpine-nodejs /usr/local/include /usr/local/include
+COPY --from=alpine-nodejs /usr/local/lib /usr/local/lib
+RUN node --version && npm --version
+
+# node_modules resolution caching
+RUN cd user-interface && ../gradlew npmInstall --console=plain --info
 
 # Add the project and build it
 COPY api /project/api
@@ -40,22 +53,7 @@ ARG ARGON2_VERSION
 RUN apk --no-cache add "argon2-libs>${ARGON2_VERSION}"
 
 # Build the project
-RUN --mount=type=cache,target=/root/.gradle \
-    --mount=type=cache,target=/project/.gradle \
-    --mount=type=cache,target=/project/api/assets/build \
-    --mount=type=cache,target=/project/api/authentication/build \
-    --mount=type=cache,target=/project/api/authorisation/build \
-    --mount=type=cache,target=/project/api/common/build \
-    --mount=type=cache,target=/project/api/server/build \
-    --mount=type=cache,target=/project/api/session-info/build \
-    --mount=type=cache,target=/project/api/token/build \
-    --mount=type=cache,target=/project/api/token-introspection/build \
-    --mount=type=cache,target=/project/api/token-revocation/build \
-    --mount=type=cache,target=/project/build \
-    --mount=type=cache,target=/project/user-interface/build \
-    --mount=type=cache,target=/project/user-interface/node_modules \
-    CI="true" ./gradlew -PuseArgon2NoLibs=true build \
-    # Unzip all the distributions ready for copying later on \
+RUN ./gradlew build -PuseArgon2NoLibs=true --console=plain --info \
     && mkdir /project/distributions && cd /project/distributions \
     && for archive in /project/api/*/build/distributions/*.zip; do unzip "$archive"; done
 
@@ -72,8 +70,8 @@ RUN ${JAVA_HOME}/bin/jlink \
   --output /javaruntime
 
 FROM alpine:${ALPINE_VERSION} AS server-base
-ARG ARGON2_VERSION
 
+ARG ARGON2_VERSION
 RUN apk --no-cache upgrade && \
     apk --no-cache add java-common "argon2-libs>${ARGON2_VERSION}"
 
