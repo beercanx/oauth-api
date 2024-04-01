@@ -35,7 +35,7 @@ dependencies {
 
     // Security patching
     constraints {
-        implementation("commons-codec:commons-codec:1.16.0") {
+        implementation("commons-codec:commons-codec:1.16.1") {
             // Needs Rest Assured to upgrade to Apache Http Client 5+
             because("""
                 |Rest Assured 5.4 brings in
