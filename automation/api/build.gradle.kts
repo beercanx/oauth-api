@@ -43,7 +43,7 @@ dependencies {
                 |Commons Codec 1.11
             """.trimMargin())
         }
-        implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1") {
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.17.0") {
             // Needs Rest Assured to replace its JSON schema validation library with a maintained one.
             because("""
                 |Rest Assured 5.4 brings in
