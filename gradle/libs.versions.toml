@@ -25,7 +25,7 @@ mockk = "1.13.10"
 ##
 # JVM Test Versions
 ##
-junit = "5.10.1"
+junit = "5.10.2"
 selenide = "7.0.4"
 restAssured = "5.4.0"
 commonsLang3 = "3.14.0"
