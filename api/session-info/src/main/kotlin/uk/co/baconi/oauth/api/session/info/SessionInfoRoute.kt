@@ -14,6 +14,7 @@ import uk.co.baconi.oauth.api.common.html.PageTemplate.base
 import uk.co.baconi.oauth.api.common.html.PageTemplate.bootstrap
 import uk.co.baconi.oauth.api.common.html.PageTemplate.metaData
 import uk.co.baconi.oauth.api.session.info.SessionInfoResponse.Token
+import java.time.Instant
 
 interface SessionInfoRoute {
 
@@ -51,9 +52,15 @@ interface SessionInfoRoute {
                                 p { +"${session.username}" }
                                 hr()
                             }
-                            if (tokens != null) {
+                            if (tokens?.authorisations != null) {
+                                tokenTable("Authorisation", tokens.authorisations)
+                                hr()
+                            }
+                            if (tokens?.accessTokens != null) {
                                 tokenTable("Access", tokens.accessTokens)
                                 hr()
+                            }
+                            if (tokens?.refreshTokens != null) {
                                 tokenTable("Refresh", tokens.refreshTokens)
                                 hr()
                             }

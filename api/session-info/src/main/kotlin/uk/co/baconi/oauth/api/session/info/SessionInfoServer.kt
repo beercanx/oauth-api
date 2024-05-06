@@ -5,6 +5,7 @@ import uk.co.baconi.oauth.api.common.CommonModule.common
 import uk.co.baconi.oauth.api.common.DatabaseModule
 import uk.co.baconi.oauth.api.common.TestAccessTokenModule
 import uk.co.baconi.oauth.api.common.TestRefreshTokenModule
+import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.embeddedCommonServer
 import uk.co.baconi.oauth.api.common.token.AccessTokenRepository
 import uk.co.baconi.oauth.api.common.token.AccessTokenService
@@ -13,13 +14,15 @@ import uk.co.baconi.oauth.api.common.token.RefreshTokenService
 
 object SessionInfoServer : DatabaseModule, SessionInfoRoute, TestAccessTokenModule, TestRefreshTokenModule {
 
+    private val authorisationCodeRepository = AuthorisationCodeRepository(authorisationCodeDatabase)
+
     private val accessTokenRepository = AccessTokenRepository(accessTokenDatabase)
     override val accessTokenService = AccessTokenService(accessTokenRepository)
 
     private val refreshTokenRepository = RefreshTokenRepository(refreshTokenDatabase)
     override val refreshTokenService = RefreshTokenService(refreshTokenRepository)
 
-    override val sessionInfoService = SessionInfoService(accessTokenRepository, refreshTokenRepository)
+    override val sessionInfoService = SessionInfoService(accessTokenRepository, refreshTokenRepository, authorisationCodeRepository)
 
     fun start() {
         embeddedCommonServer {

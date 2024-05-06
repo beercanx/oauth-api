@@ -11,6 +11,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedSession
+import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCode
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.token.AccessToken
 import uk.co.baconi.oauth.api.common.token.RefreshToken
@@ -22,10 +23,11 @@ import java.time.temporal.ChronoUnit.SECONDS
 data class SessionInfoResponse(val session: AuthenticatedSession?, val tokens: Tokens?) {
 
     @Serializable
-    data class Tokens(val accessTokens: List<Token>, val refreshTokens: List<Token>)
+    data class Tokens(val authorisations: List<Token>, val accessTokens: List<Token>, val refreshTokens: List<Token>)
 
     @Serializable
     data class Token(val clientId: ClientId, val issuedAt: Instant, val expiresAt: Instant) {
+        constructor(code: AuthorisationCode): this(code.clientId, code.issuedAt.truncatedTo(SECONDS), code.expiresAt.truncatedTo(SECONDS))
         constructor(token: AccessToken): this(token.clientId, token.issuedAt.truncatedTo(SECONDS), token.expiresAt.truncatedTo(SECONDS))
         constructor(token: RefreshToken): this(token.clientId, token.issuedAt.truncatedTo(SECONDS), token.expiresAt.truncatedTo(SECONDS))
     }
