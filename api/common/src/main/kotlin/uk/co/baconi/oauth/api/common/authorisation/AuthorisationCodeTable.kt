@@ -10,6 +10,7 @@ import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.client.clientIdColumn
 import uk.co.baconi.oauth.api.common.scope.Scope
 import uk.co.baconi.oauth.api.common.scope.scopeColumn
+import uk.co.baconi.oauth.api.common.token.AccessTokenTable.index
 import java.time.Instant
 import java.util.*
 
@@ -26,7 +27,8 @@ object AuthorisationCodeTable : IdTable<UUID>() {
     override val id: Column<EntityID<UUID>> = uuid("id").entityId()
 
     val type: Column<String> = varchar("type", 6) // basic|pkce
-    val username: Column<AuthenticatedUsername> = authenticatedUsernameColumn("username")
+    val used: Column<Boolean> = bool("used")
+    val username: Column<AuthenticatedUsername> = authenticatedUsernameColumn("username").index()
     val clientId: Column<ClientId> = clientIdColumn("client_id")
     val issuedAt: Column<Instant> = timestamp("issued_at") // TODO - Verify Instant over LocalDateTime as Instant still seems like its persisting in local time not UTC
     val expiresAt: Column<Instant> = timestamp("expires_at").index()

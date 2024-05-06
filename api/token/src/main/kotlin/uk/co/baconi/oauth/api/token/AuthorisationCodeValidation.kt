@@ -73,6 +73,9 @@ interface AuthorisationCodeValidation {
             // Verify the authorisation code has not yet expired.
             authorisationCode.hasExpired() -> null
 
+            // Verify the authorisation code has not been used. https://www.rfc-editor.org/rfc/rfc6749#section-10.5
+            authorisationCode.used -> null // TODO - SHOULD attempt to revoke all access tokens already granted based on the compromised authorization code.
+
             // Verify if the client MUST be exchanging PKCE
             client is PublicClient && authorisationCode !is AuthorisationCode.PKCE -> null
 

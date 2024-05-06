@@ -43,8 +43,8 @@ object FullServer : AuthenticationModule, DatabaseModule, AssetsRoute, Authentic
     override val clientConfigurationRepository = ClientConfigurationRepository(scopeRepository)
     override val clientSecretService = ClientSecretService(clientSecretRepository, clientConfigurationRepository)
 
-    override val authorisationCodeGrant = AuthorisationCodeGrant(accessTokenService, refreshTokenService)
     override val authorisationCodeRepository = AuthorisationCodeRepository(authorisationCodeDatabase)
+    override val authorisationCodeGrant = AuthorisationCodeGrant(accessTokenService, refreshTokenService, authorisationCodeRepository)
     override val authorisationCodeService = AuthorisationCodeService(authorisationCodeRepository)
 
     override val customerStatusRepository = CustomerStatusRepository(customerStatusDatabase)
@@ -55,7 +55,7 @@ object FullServer : AuthenticationModule, DatabaseModule, AssetsRoute, Authentic
 
     override val introspectionService = IntrospectionService(accessTokenRepository)
 
-    override val sessionInfoService = SessionInfoService(accessTokenRepository, refreshTokenRepository)
+    override val sessionInfoService = SessionInfoService(accessTokenRepository, refreshTokenRepository, authorisationCodeRepository)
 
     fun start() {
         embeddedCommonServer {
