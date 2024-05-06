@@ -48,7 +48,8 @@ class AuthorisationCodeRepository(private val database: Database) {
     fun findById(id: UUID): AuthorisationCode? {
         return transaction(database) {
             AuthorisationCodeTable
-                .select { AuthorisationCodeTable.id eq id }
+                .selectAll()
+                .where { AuthorisationCodeTable.id eq id }
                 .firstOrNull()
                 ?.let(::toAuthorisationCode)
         }
