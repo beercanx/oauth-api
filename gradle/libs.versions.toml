@@ -3,15 +3,15 @@
 # Common Versions
 ##
 node = "20.11.1"
-ktor = "2.3.8"
-kotlin = "1.9.22"
+ktor = "2.3.10"
+kotlin = "1.9.23"
 
 ##
 # JVM Versions
 ##
 argon2 = "2.11"
-exposed = "0.48.0"
-logback = "1.5.1"
+exposed = "0.50.0"
+logback = "1.5.6"
 h2Database = "2.2.224"
 typesafeConfig = "1.4.3"
 slf4j = "2.0.12"
@@ -25,8 +25,8 @@ mockk = "1.13.10"
 ##
 # JVM Test Versions
 ##
-junit = "5.10.1"
-selenide = "7.0.4"
+junit = "5.10.2"
+selenide = "7.3.1"
 restAssured = "5.4.0"
 commonsLang3 = "3.14.0"
 
