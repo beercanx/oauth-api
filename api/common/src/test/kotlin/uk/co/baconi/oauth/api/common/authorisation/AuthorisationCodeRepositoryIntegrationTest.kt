@@ -2,7 +2,11 @@ package uk.co.baconi.oauth.api.common.authorisation
 
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -117,6 +121,51 @@ class AuthorisationCodeRepositoryIntegrationTest {
             val now = Instant.now()
             underTest.insert(authorisationCodePkce(value = uuid, now = now))
             underTest.findById(uuid) shouldBe authorisationCodePkce(value = uuid, now = now)
+        }
+    }
+
+    @Nested
+    inner class FindAllByUsername {
+
+        @Test
+        fun `should return an empty list when no authorisation codes exist`() {
+            underTest.findAllByUsername(AuthenticatedUsername("no-such-user")).shouldBeEmpty()
+        }
+
+        @Test
+        fun `should return a list when authorisation codes exist`() {
+            underTest.insert(authorisationCodeBasic(username = "find-all-by-username"))
+            assertSoftly(underTest.findAllByUsername(AuthenticatedUsername("find-all-by-username"))) {
+                shouldHaveSize(1)
+                first().username shouldBe AuthenticatedUsername("find-all-by-username")
+            }
+        }
+    }
+
+    @Nested
+    inner class MarkUsed {
+
+        @Test
+        fun `should throw exception when no record is updated`() {
+            shouldThrow<IllegalStateException> {
+                underTest.markUsed(authorisationCodeBasic())
+            }
+        }
+
+        @Test
+        fun `should update the used field`() {
+
+            val code = assertSoftly(authorisationCodeBasic()) {
+                used shouldBe false
+            }
+
+            underTest.insert(code)
+            underTest.markUsed(code)
+
+            assertSoftly(underTest.findById(code.value)) {
+                this.shouldNotBeNull()
+                used shouldBe true
+            }
         }
     }
 

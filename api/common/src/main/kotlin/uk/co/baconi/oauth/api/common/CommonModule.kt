@@ -18,10 +18,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import uk.co.baconi.oauth.api.common.authentication.AuthenticateSession
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedSession
-import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
-import java.util.UUID
 import kotlin.collections.forEach
-import kotlin.collections.set
 import kotlin.time.Duration.Companion.minutes
 
 object CommonModule {

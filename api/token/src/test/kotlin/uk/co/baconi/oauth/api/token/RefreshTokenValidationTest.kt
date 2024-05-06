@@ -35,6 +35,7 @@ class RefreshTokenValidationTest {
 
     private val client = mockk<ClientPrincipal> {
         every { can(GrantType.RefreshToken) } returns true
+        every { canBeIssued(Scope("basic")) } returns true
     }
 
     private val underTest = object : RefreshTokenValidation {
