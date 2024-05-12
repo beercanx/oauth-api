@@ -14,7 +14,7 @@ dependencies {
     implementation(libs.selenide)
 
     // Manually asserting stuff
-    implementation(libs.kotest.assertions)
+    implementation(libs.kotest.assertions.core)
 
     // JUnit 5 for tests definitions and running
     testImplementation(enforcedPlatform(libs.junit.bom))

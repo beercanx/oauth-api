@@ -13,11 +13,10 @@ import kotlinx.serialization.encoding.Encoder
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedSession
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCode
 import uk.co.baconi.oauth.api.common.client.ClientId
-import uk.co.baconi.oauth.api.common.token.AccessToken
-import uk.co.baconi.oauth.api.common.token.RefreshToken
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit.SECONDS
+import uk.co.baconi.oauth.api.common.token.Token as OAuthToken
 
 @Serializable
 data class SessionInfoResponse(val session: AuthenticatedSession?, val tokens: Tokens?) {
@@ -27,9 +26,8 @@ data class SessionInfoResponse(val session: AuthenticatedSession?, val tokens: T
 
     @Serializable
     data class Token(val clientId: ClientId, val issuedAt: Instant, val expiresAt: Instant) {
+        constructor(token: OAuthToken): this(token.clientId, token.issuedAt.truncatedTo(SECONDS), token.expiresAt.truncatedTo(SECONDS))
         constructor(code: AuthorisationCode): this(code.clientId, code.issuedAt.truncatedTo(SECONDS), code.expiresAt.truncatedTo(SECONDS))
-        constructor(token: AccessToken): this(token.clientId, token.issuedAt.truncatedTo(SECONDS), token.expiresAt.truncatedTo(SECONDS))
-        constructor(token: RefreshToken): this(token.clientId, token.issuedAt.truncatedTo(SECONDS), token.expiresAt.truncatedTo(SECONDS))
     }
 
     object InstantSerializer : KSerializer<Instant> {

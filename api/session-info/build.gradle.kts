@@ -12,11 +12,11 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-//    testImplementation(libs.ktor.server.test.host)
-//    testImplementation(libs.ktor.server.call.logging)
-//    testImplementation(libs.ktor.client.content.negotiation)
+    testImplementation(libs.ktor.server.test.host)
+    testImplementation(libs.ktor.client.content.negotiation)
 
-    testImplementation(libs.kotest.assertions)
+    testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.kotest.assertions.json)
     testImplementation(libs.mockk)
 }
 

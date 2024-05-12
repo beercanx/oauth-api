@@ -15,7 +15,7 @@ dependencies {
     testImplementation(libs.ktor.server.call.logging)
     testImplementation(libs.ktor.client.content.negotiation)
 
-    testImplementation(libs.kotest.assertions)
+    testImplementation(libs.kotest.assertions.core)
     testImplementation(libs.mockk)
 }
 
