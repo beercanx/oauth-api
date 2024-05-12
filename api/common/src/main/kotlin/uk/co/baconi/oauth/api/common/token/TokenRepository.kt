@@ -34,7 +34,8 @@ abstract class TokenRepository<R, T>(private val tokenTable: T, private val data
     fun findById(id: UUID): R? {
         return transaction(database) {
             tokenTable
-                .select { tokenTable.id eq id }
+                .selectAll()
+                .where { tokenTable.id eq id }
                 .firstOrNull()
                 ?.let(::toToken)
         }
@@ -43,7 +44,8 @@ abstract class TokenRepository<R, T>(private val tokenTable: T, private val data
     fun findAllByUsername(username: AuthenticatedUsername): List<R> {
         return transaction(database) {
             tokenTable
-                .select { tokenTable.username eq username }
+                .selectAll()
+                .where { tokenTable.username eq username }
                 .map(::toToken)
         }
     }
@@ -51,7 +53,8 @@ abstract class TokenRepository<R, T>(private val tokenTable: T, private val data
     fun findAllByClientId(clientId: ClientId): List<R> {
         return transaction(database) {
             tokenTable
-                .select { tokenTable.clientId eq clientId }
+                .selectAll()
+                .where { tokenTable.clientId eq clientId }
                 .map(::toToken)
         }
     }

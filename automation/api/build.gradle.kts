@@ -15,7 +15,7 @@ dependencies {
     implementation(libs.typesafe.config)
 
     // Asserting stuff
-    implementation(libs.kotest.assertions)
+    implementation(libs.kotest.assertions.core)
 
     // Rest stuff
     implementation(enforcedPlatform(libs.rest.assured.bom))

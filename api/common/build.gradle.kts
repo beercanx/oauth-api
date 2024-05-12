@@ -52,7 +52,7 @@ dependencies {
     testImplementation(libs.ktor.server.test.host)
 
     // Asserting stuff
-    testImplementation(libs.kotest.assertions)
+    testImplementation(libs.kotest.assertions.core)
 
     // Mocking
     testImplementation(libs.mockk)

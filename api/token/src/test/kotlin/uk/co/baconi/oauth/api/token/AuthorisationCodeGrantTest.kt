@@ -6,9 +6,11 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCode
+import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.client.ConfidentialClient
 import uk.co.baconi.oauth.api.common.scope.Scope
@@ -38,7 +40,11 @@ class AuthorisationCodeGrantTest {
         }
     }
 
-    private val underTest = AuthorisationCodeGrant(accessTokenService, refreshTokenService)
+    private val authorisationCodeRepository = mockk<AuthorisationCodeRepository> {
+        every { markUsed(any()) } returns Unit
+    }
+
+    private val underTest = AuthorisationCodeGrant(accessTokenService, refreshTokenService, authorisationCodeRepository)
 
     @Test
     fun `should return success when customer authentication succeeds`() {
@@ -62,5 +68,7 @@ class AuthorisationCodeGrantTest {
             this.scope shouldContainExactly setOf(Scope("basic"))
             this.state shouldBe "a5385765-0a4b-41be-bb97-5415a5c2be67"
         }
+
+        verify { authorisationCodeRepository.markUsed(authorisationCode) }
     }
 }

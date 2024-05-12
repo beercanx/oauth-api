@@ -4,6 +4,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
 import org.jetbrains.exposed.sql.transactions.transaction
+import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.scope.Scope
 import uk.co.baconi.oauth.api.common.scope.ScopesDeserializer
 import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
@@ -41,6 +42,7 @@ class AuthorisationCodeRepository(private val database: Database) {
                 it[scopes] = new.scopes
                 it[redirectUri] = new.redirectUri
                 it[state] = new.state
+                it[used] = new.used
             }
         }
     }
@@ -48,9 +50,32 @@ class AuthorisationCodeRepository(private val database: Database) {
     fun findById(id: UUID): AuthorisationCode? {
         return transaction(database) {
             AuthorisationCodeTable
-                .select { AuthorisationCodeTable.id eq id }
+                .selectAll()
+                .where { AuthorisationCodeTable.id eq id }
                 .firstOrNull()
                 ?.let(::toAuthorisationCode)
+        }
+    }
+
+    fun findAllByUsername(username: AuthenticatedUsername): List<AuthorisationCode> {
+        return transaction(database) {
+            AuthorisationCodeTable
+                .selectAll()
+                .where { AuthorisationCodeTable.username eq username }
+                .map(::toAuthorisationCode)
+        }
+    }
+
+    fun markUsed(code: AuthorisationCode) {
+        transaction(database) {
+
+            val updated = AuthorisationCodeTable.update({ AuthorisationCodeTable.id eq code.value }) {
+                it[used] = true
+            }
+
+            if(updated != 1) {
+                throw IllegalStateException("Failed to mark authorisation code as used: updated = $updated")
+            }
         }
     }
 
@@ -88,5 +113,6 @@ class AuthorisationCodeRepository(private val database: Database) {
         scopes = this[AuthorisationCodeTable.scopes],
         redirectUri = this[AuthorisationCodeTable.redirectUri],
         state = this[AuthorisationCodeTable.state],
+        used = this[AuthorisationCodeTable.used],
     )
 }

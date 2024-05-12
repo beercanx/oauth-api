@@ -57,7 +57,7 @@ interface RefreshTokenValidation {
                     token == null -> TokenRequest.Invalid(InvalidGrant, "invalid parameter: $REFRESH_TOKEN")
 
                     // TODO - what if a config change reduces the clients allowed scopes?
-                    parameters[SCOPE] == null -> RefreshTokenRequest(client, token.scopes, token)
+                    parameters[SCOPE] == null -> RefreshTokenRequest(client, token.scopes.filter(client::canBeIssued).toSet(), token)
 
                     else -> RefreshTokenRequest(client, scopes.filter(token.scopes::contains).toSet(), token)
                 }

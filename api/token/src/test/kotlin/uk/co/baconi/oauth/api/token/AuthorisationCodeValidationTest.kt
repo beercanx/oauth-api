@@ -214,12 +214,27 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
         }
 
         @Test
+        fun `should return null when authorisation code has been used`() {
+
+            every { authorisationCodeRepository.findById(uuid) } returns mockk<AuthorisationCode.Basic> {
+                every { value } returns uuid
+                every { clientId } returns ClientId("consumer-x")
+                every { redirectUri } returns "uk.co.baconi.valid://callback"
+                every { hasExpired() } returns false
+                every { used } returns true
+            }
+
+            validateAuthorisationCode(client, uuid, "uk.co.baconi.valid://callback") should beNull()
+        }
+
+        @Test
         fun `should return null when code verifier was not provided but authorisation code is PKCE issued`() {
 
             every { authorisationCodeRepository.findById(uuid) } returns mockk<AuthorisationCode.PKCE> {
                 every { clientId } returns ClientId("consumer-x")
                 every { redirectUri } returns "uk.co.baconi.valid://callback"
                 every { hasExpired() } returns false
+                every { used } returns false
             }
 
             validateAuthorisationCode(client, uuid, "uk.co.baconi.valid://callback", null) should beNull()
@@ -233,6 +248,7 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
                 every { clientId } returns ClientId("consumer-x")
                 every { redirectUri } returns "uk.co.baconi.valid://callback"
                 every { hasExpired() } returns false
+                every { used } returns false
                 every { codeChallenge } returns CodeChallenge("z5wcuJWEv4xBdqN8LJVKjcVgd9O6Ze5EAR5iq3xjzi0")
                 every { codeChallengeMethod } returns CodeChallengeMethod.S256
             }
@@ -248,6 +264,7 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
                 every { clientId } returns ClientId("consumer-x")
                 every { redirectUri } returns "uk.co.baconi.valid://callback"
                 every { hasExpired() } returns false
+                every { used } returns false
                 every { codeChallenge } returns CodeChallenge("z5wcuJWEv4xBdqN8LJVKjcVgd9O6Ze5EAR5iq3xjzi0")
                 every { codeChallengeMethod } returns CodeChallengeMethod.S256
             }
@@ -265,6 +282,7 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
                 every { clientId } returns ClientId("consumer-x")
                 every { redirectUri } returns "uk.co.baconi.valid://callback"
                 every { hasExpired() } returns false
+                every { used } returns false
             }
 
             validateAuthorisationCode(client, uuid, "uk.co.baconi.valid://callback", "code_verifier") should beNull()
@@ -278,6 +296,7 @@ class AuthorisationCodeValidationTest : AuthorisationCodeValidation {
                 every { clientId } returns ClientId("consumer-x")
                 every { redirectUri } returns "uk.co.baconi.valid://callback"
                 every { hasExpired() } returns false
+                every { used } returns false
             }
 
             assertSoftly(validateAuthorisationCode(client, uuid, "uk.co.baconi.valid://callback")) {

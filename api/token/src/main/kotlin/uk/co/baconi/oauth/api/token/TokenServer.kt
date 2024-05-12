@@ -36,8 +36,8 @@ internal object TokenServer : AuthenticationModule, DatabaseModule, TokenRoute, 
     private val clientConfigurationRepository = ClientConfigurationRepository(scopeRepository)
     override val clientSecretService = ClientSecretService(clientSecretRepository, clientConfigurationRepository)
 
-    override val authorisationCodeGrant = AuthorisationCodeGrant(accessTokenService, refreshTokenService)
     override val authorisationCodeRepository = AuthorisationCodeRepository(authorisationCodeDatabase)
+    override val authorisationCodeGrant = AuthorisationCodeGrant(accessTokenService, refreshTokenService, authorisationCodeRepository)
 
     override val customerStatusRepository = CustomerStatusRepository(customerStatusDatabase)
 
