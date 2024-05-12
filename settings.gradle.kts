@@ -13,6 +13,7 @@ include(":api:server")
 
 // User Interface
 include(":user-interface:authentication")
+include(":user-interface:authentication-v2")
 // TODO include(":user-interface:authorise")
 // TODO include(":user-interface:confirm-details")
 // TODO include(":user-interface:registration")
