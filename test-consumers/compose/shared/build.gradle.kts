@@ -1,7 +1,6 @@
-import org.jetbrains.compose.ExperimentalComposeLibrary
-
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.compose")
     kotlin("plugin.serialization")
 
     id("com.android.library")
@@ -37,7 +36,6 @@ kotlin {
                 api(compose.foundation)
                 api(compose.material)
                 api(compose.material3)
-                @OptIn(ExperimentalComposeLibrary::class)
                 api(compose.components.resources)
 
                 api("io.ktor:ktor-client-core:$ktorVersion")
