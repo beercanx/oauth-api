@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+
 plugins {
     // this is necessary to avoid the plugins to be loaded multiple times in each subproject's classloader
     kotlin("jvm") apply false
@@ -13,9 +15,17 @@ plugins {
 group = "uk.co.baconi.oauth.consumers.compose"
 
 allprojects {
+
     repositories {
         google()
         mavenCentral()
+    }
+
+    plugins.withId("org.jetbrains.kotlin.jvm") {
+        // Replacement for kotlin { jvmToolchain(21) } in each project
+        extensions.configure<KotlinJvmProjectExtension> {
+            jvmToolchain(21)
+        }
     }
 }
 
