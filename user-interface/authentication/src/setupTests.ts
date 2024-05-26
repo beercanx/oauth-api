@@ -4,12 +4,12 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 
-import nodeCrypto from "crypto";
+import nodeCrypto, {UUID} from "crypto";
 
 // @ts-ignore
 // noinspection JSConstantReassignment
 global.crypto = {
-    randomUUID(): string {
+    randomUUID(): UUID {
         return nodeCrypto.randomUUID();
     }
 }

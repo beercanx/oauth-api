@@ -7,6 +7,8 @@
     "node": "^20"
   },
   "scripts": {
+    "start": "echo TODO: Needs implementing && exit 1",
+    "build": "echo TODO: Needs implementing && exit 1",
     "compile": "tsc",
     "test": "jest"
   },
