@@ -22,6 +22,7 @@ pluginManagement {
         kotlin("jvm") version kotlinVersion apply false
         kotlin("android") version kotlinVersion apply false
         kotlin("multiplatform") version kotlinVersion apply false
+        kotlin("plugin.compose") version kotlinVersion apply false
         kotlin("plugin.serialization") version kotlinVersion apply false
 
         id("com.android.base") version agpVersion apply false
