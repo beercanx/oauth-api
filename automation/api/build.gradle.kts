@@ -52,7 +52,7 @@ dependencies {
                 |Jackson Databind 2.11.0
             """.trimMargin())
         }
-        implementation("org.mozilla:rhino:1.7.14") {
+        implementation("org.mozilla:rhino:1.7.15") {
             // Needs Rest Assured to replace its JSON schema validation library with a maintained one.
             because("""
                 |Rest Assured 5.4 brings in
