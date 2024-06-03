@@ -10,7 +10,7 @@ kotlin = "2.0.0"
 # JVM Versions
 ##
 argon2 = "2.11"
-exposed = "0.50.0"
+exposed = "0.51.0"
 logback = "1.5.6"
 h2Database = "2.2.224"
 typesafeConfig = "1.4.3"
@@ -20,13 +20,13 @@ slf4j = "2.0.12"
 # Common Test Versions
 ##
 kotest = "5.9.0"
-mockk = "1.13.10"
+mockk = "1.13.11"
 
 ##
 # JVM Test Versions
 ##
 junit = "5.10.2"
-selenide = "7.3.1"
+selenide = "7.3.2"
 restAssured = "5.4.0"
 commonsLang3 = "3.14.0"
 
