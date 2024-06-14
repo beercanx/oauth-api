@@ -3,7 +3,7 @@ import {render, screen} from '@testing-library/react';
 import LoginForm from './LoginForm';
 
 test('renders learn react link', () => {
-    render(<LoginForm />);
+    render(<LoginForm authenticationEndpoint="" />);
     const loginButton = screen.getByText(/Login/i);
     expect(loginButton).toBeInTheDocument();
 });

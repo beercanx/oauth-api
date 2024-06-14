@@ -5,6 +5,7 @@ import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.application.*
 import io.ktor.server.html.*
+import io.ktor.server.http.content.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
@@ -16,8 +17,6 @@ import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType.Cod
 import uk.co.baconi.oauth.api.common.html.PageTemplate.base
 import uk.co.baconi.oauth.api.common.html.PageTemplate.bootstrap
 import uk.co.baconi.oauth.api.common.html.PageTemplate.metaData
-import uk.co.baconi.oauth.api.common.html.ReactTemplate.reactPage
-import uk.co.baconi.oauth.api.common.location.Location
 import java.util.*
 
 interface AuthorisationRoute : AuthorisationRequestValidation {
@@ -83,14 +82,8 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
                                 // Seek authorisation decision
                                 null -> {
                                     val (csrfToken) = call.sessions.getOrSet { AuthenticateSession(UUID.randomUUID()) }
-                                    call.respondHtml(OK) {
-                                        val authenticationBundle = call.url {
-                                            // TODO - Update to handle different ports when run in segments?
-                                            path("/assets/js/authentication.js")
-                                            parameters.clear()
-                                        }
-                                        reactPage("Login Page", authenticationBundle, csrfToken)
-                                    }
+                                    // TODO - Reconsider csrfToken source, maybe back to HTTP request rather than embedded in page, or see if another bundler works better
+                                    call.respondNullable(OK, call.resolveResource("static/authentication/index.html"))
                                 }
 
                                 // Handle authorisation decision [success]

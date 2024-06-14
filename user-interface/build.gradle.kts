@@ -17,8 +17,13 @@ subprojects {
         }
 
         // Create a clean task to clean up the node directories
+        val parcelBuildClean = tasks.register<Delete>("parcelBuildClean") {
+            delete("build")
+        }
+
         val npmClean = tasks.register<Delete>("npmClean") {
-            delete("node_modules", "build")
+            dependsOn(parcelBuildClean)
+            delete("node_modules", "build", "dist", ".parcel-cache")
         }
 
         // Create a test task to run tests using npm
@@ -28,38 +33,25 @@ subprojects {
             args.set(listOf("run", "test"))
 
             inputs.dir("src")
-            inputs.dir("config")
-            inputs.dir("public")
             inputs.dir("node_modules")
-            inputs.files("tsconfig.json", "scripts/test.js")
+            inputs.files("tsconfig.json", "package.json", "jest.config.js")
 
             outputs.upToDateWhen { true }
         }
 
         // Create a build task to build a React bundle using npm
         val npmBuild = tasks.register<NpmTask>("npmBuild") {
+            dependsOn(parcelBuildClean)
             dependsOn(npmTest)
 
             args.set(listOf("run", "build"))
 
             inputs.dir(project.fileTree("src").exclude("**/*.test.tsx"))
-            inputs.dir("config")
-            inputs.dir("public")
             inputs.dir("node_modules")
-            inputs.files("tsconfig.json", "scripts/build.js")
+            inputs.files("tsconfig.json", "package.json")
 
-            outputs.dir("build/static")
-            outputs.files("build/asset-manifest.json")
-            outputs.files("build/index.html")
+            outputs.dir("build")
             outputs.upToDateWhen { true }
-        }
-
-        // Creates a named bundle based on the projects name
-        val renameBundle = tasks.register<Copy>("renameBundle") {
-            dependsOn(npmBuild)
-            from(project.fileTree("build/static/js").include("main.*.js"))
-            into("build/static/bundle")
-            rename("""main\.([^.]+)\.js""", "${project.name}.$1.js")
         }
 
         tasks.register<Task>("clean") {
@@ -71,7 +63,7 @@ subprojects {
         }
 
         tasks.register<Task>("build") {
-            dependsOn(renameBundle)
+            dependsOn(npmBuild)
         }
     }
 }
