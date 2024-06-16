@@ -40,7 +40,7 @@ allprojects {
         }
     }
     tasks.withType<Jar>().configureEach {
-        //duplicatesStrategy = DuplicatesStrategy.WARN
+        duplicatesStrategy = DuplicatesStrategy.WARN
     }
 }
 

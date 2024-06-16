@@ -16,10 +16,10 @@ interface AuthenticationRequestValidation {
 
     fun validateAuthenticationRequest(raw: Raw, session: AuthenticateSession?): AuthenticationRequest = when {
 
-        // TODO - Check CSRF Token
+        // Check CSRF Token
         session == null -> AuthenticationRequest.InvalidField("csrfToken")
-        //raw.csrfToken.isNullOrBlank() -> AuthenticationRequest.InvalidField("csrfToken")
-        //raw.csrfToken != session.csrfToken.toString() -> AuthenticationRequest.InvalidField("csrfToken")
+        raw.csrfToken.isNullOrBlank() -> AuthenticationRequest.InvalidField("csrfToken")
+        raw.csrfToken != session.csrfToken.toString() -> AuthenticationRequest.InvalidField("csrfToken")
 
         // Basic field validation
         raw.username.isNullOrBlank() -> AuthenticationRequest.InvalidField("username")

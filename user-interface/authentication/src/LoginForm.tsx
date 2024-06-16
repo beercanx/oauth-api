@@ -3,7 +3,8 @@ import React, {ChangeEvent, FormEvent, MouseEvent} from "react";
 declare namespace LoginForm {
 
     interface Props {
-        authenticationEndpoint: string
+        authenticationEndpoint: string,
+        sessionEndpoint: string,
     }
 
     interface State {
@@ -17,6 +18,7 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
 
     static defaultProps = {
         authenticationEndpoint: "/authentication",
+        sessionEndpoint: "/authentication/session",
     }
 
     constructor(props: LoginForm.Props) {
@@ -25,13 +27,30 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
         this.state = {
             username: "",
             password: "",
-            csrfToken: document.head.querySelector<HTMLMetaElement>("meta[name='_csrf']")?.content,
+            csrfToken: "",
         };
 
+        this.refreshCsrfToken = this.refreshCsrfToken.bind(this);
         this.handleChangeUsername = this.handleChangeUsername.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
         this.handleAbort = this.handleAbort.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        this.refreshCsrfToken().then(_ => _);
+    }
+
+    async refreshCsrfToken() {
+        return window
+            .fetch(this.props.sessionEndpoint, {
+                method: "GET",
+                headers: {'accept': 'application/json'},
+                credentials: "include"
+            })
+            .then(response => response.json())
+            .then(result => this.setState({csrfToken: result.csrfToken}))
+            .catch(error => console.error("Get CSRF token error:", error));
     }
 
     handleChangeUsername(event: ChangeEvent<HTMLInputElement>) {
@@ -54,8 +73,9 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
         event.preventDefault();
         console.log("Authentication Submitted!");
 
-        await window
-            .fetch(this.props.authenticationEndpoint, {
+        // TODO - What if we know we have no CSRF token, now we're doing via extra fetch?
+
+        await fetch((this.props.authenticationEndpoint), {
                 method: "POST",
                 headers: {'content-type': 'application/json'},
                 credentials: "include",

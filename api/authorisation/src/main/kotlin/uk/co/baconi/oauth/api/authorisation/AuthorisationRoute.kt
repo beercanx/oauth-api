@@ -81,8 +81,6 @@ interface AuthorisationRoute : AuthorisationRequestValidation {
 
                                 // Seek authorisation decision
                                 null -> {
-                                    val (csrfToken) = call.sessions.getOrSet { AuthenticateSession(UUID.randomUUID()) }
-                                    // TODO - Reconsider csrfToken source, maybe back to HTTP request rather than embedded in page, or see if another bundler works better
                                     call.respondNullable(OK, call.resolveResource("static/authentication/index.html"))
                                 }
 
