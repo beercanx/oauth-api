@@ -7,6 +7,7 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.beEmpty
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -17,10 +18,9 @@ import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.http.HttpStatusCode.Companion.UnsupportedMediaType
 import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.application.*
-import io.ktor.server.routing.*
-import io.ktor.server.sessions.*
 import io.ktor.server.testing.*
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -42,10 +42,8 @@ class AuthenticationRouteIntegrationTests : AuthenticationRoute {
             driver = "org.h2.Driver"
         )
 
-        private const val AUTHORISE_ENDPOINT = "/authorise"
         private const val AUTHENTICATION_ENDPOINT = "/authentication"
-
-        private val CSRF_TOKEN = UUID.randomUUID()
+        private const val SESSION_ENDPOINT = "/authentication/session"
 
         private const val ACTIVE_CUSTOMER = "aardvark"
         private const val LOCKED_CUSTOMER = "badger"
@@ -84,11 +82,6 @@ class AuthenticationRouteIntegrationTests : AuthenticationRoute {
             }
             routing {
                 authentication() // underTest
-                route(AUTHORISE_ENDPOINT) {
-                    get {
-                        call.sessions.set(AuthenticateSession(CSRF_TOKEN))
-                    }
-                }
             }
             block(
                 createClient {
@@ -110,6 +103,24 @@ class AuthenticationRouteIntegrationTests : AuthenticationRoute {
         accept(accept)
         contentType(contentType)
         setBody(body)
+    }
+
+    @Nested
+    inner class SessionEndpoint {
+
+        @ParameterizedTest
+        @CsvSource("POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+        fun `should only support get requests`(method: String) = setupApplication { client ->
+
+            val response = client.request(SESSION_ENDPOINT) {
+                authenticationRequest(method = HttpMethod.parse(method))
+            }
+
+            assertSoftly(response) {
+                status shouldBe MethodNotAllowed
+                bodyAsText() should beEmpty()
+            }
+        }
     }
 
     @Nested
@@ -152,7 +163,7 @@ class AuthenticationRouteIntegrationTests : AuthenticationRoute {
 
             val response = client.request(AUTHENTICATION_ENDPOINT) {
 
-                setupAuthenticateSession(client)
+                setupCsrfToken(client)
 
                 authenticationRequest(body = """{"username":"aardvark","password":[1,2,1,2,1,2],"csrfToken":"bad"}""")
             }
@@ -168,9 +179,9 @@ class AuthenticationRouteIntegrationTests : AuthenticationRoute {
 
             val response = client.request(AUTHENTICATION_ENDPOINT) {
 
-                setupAuthenticateSession(client)
+                val csrfToken = setupCsrfToken(client)
 
-                authenticationRequest(body = """{"password":[1,2,1,2,1,2],"csrfToken":"$CSRF_TOKEN"}""")
+                authenticationRequest(body = """{"password":[1,2,1,2,1,2],"csrfToken":"$csrfToken"}""")
             }
 
             assertSoftly(response) {
@@ -184,9 +195,9 @@ class AuthenticationRouteIntegrationTests : AuthenticationRoute {
 
             val response = client.request(AUTHENTICATION_ENDPOINT) {
 
-                setupAuthenticateSession(client)
+                val csrfToken = setupCsrfToken(client)
 
-                authenticationRequest(body = """{"username":"aardvark","csrfToken":"$CSRF_TOKEN"}""")
+                authenticationRequest(body = """{"username":"aardvark","csrfToken":"$csrfToken"}""")
             }
 
             assertSoftly(response) {
@@ -207,9 +218,9 @@ class AuthenticationRouteIntegrationTests : AuthenticationRoute {
 
             val response = client.request(AUTHENTICATION_ENDPOINT) {
 
-                setupAuthenticateSession(client)
+                val csrfToken = setupCsrfToken(client)
 
-                authenticationRequest(body = """{"username":"$username", "password": $pins, "csrfToken": "$CSRF_TOKEN"}""")
+                authenticationRequest(body = """{"username":"$username", "password": $pins, "csrfToken": "$csrfToken"}""")
             }
 
             assertSoftly(response) {
@@ -223,9 +234,9 @@ class AuthenticationRouteIntegrationTests : AuthenticationRoute {
 
             val response = client.request(AUTHENTICATION_ENDPOINT) {
 
-                setupAuthenticateSession(client)
+                val csrfToken = setupCsrfToken(client)
 
-                authenticationRequest(body = """{"username":"aardvark","password":[1,2,1,2,1,2],"csrfToken":"$CSRF_TOKEN"}""")
+                authenticationRequest(body = """{"username":"aardvark","password":[1,2,1,2,1,2],"csrfToken":"$csrfToken"}""")
             }
 
             assertSoftly(response) {
@@ -235,9 +246,11 @@ class AuthenticationRouteIntegrationTests : AuthenticationRoute {
         }
     }
 
-    private suspend fun HttpMessageBuilder.setupAuthenticateSession(client: HttpClient) {
-        client.get(AUTHORISE_ENDPOINT).setCookie().forEach { cookie ->
-            cookie(cookie.name, cookie.value, domain = cookie.domain, path = cookie.path)
-        }
+    private suspend fun HttpMessageBuilder.setupCsrfToken(client: HttpClient): String {
+        return client.get(SESSION_ENDPOINT).apply {
+            setCookie().forEach { cookie ->
+                cookie(cookie.name, cookie.value, domain = cookie.domain, path = cookie.path)
+            }
+        }.body<JsonObject>()["csrfToken"]!!.jsonPrimitive.content
     }
 }

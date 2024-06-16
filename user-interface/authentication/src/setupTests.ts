@@ -4,12 +4,5 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 
-import nodeCrypto from "crypto";
-
-// @ts-ignore
-// noinspection JSConstantReassignment
-global.crypto = {
-    randomUUID(): string {
-        return nodeCrypto.randomUUID();
-    }
-}
+import { enableFetchMocks } from 'jest-fetch-mock';
+enableFetchMocks();

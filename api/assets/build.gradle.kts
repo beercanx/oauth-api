@@ -25,11 +25,12 @@ application {
 
 // Copies all react bundles from user-interface into build/generated-bundles
 tasks.register<Sync>("generateReactAssets") {
+    val destination = layout.buildDirectory
     project(":user-interface").subprojects {
-        from(tasks.named("renameBundle"))
+        from(tasks.named("npmBuild"))
+        into(destination.dir("generated-bundles/static/${project.name}"))
+        include("*.html", "*.js")
     }
-    into(layout.buildDirectory.dir("generated-bundles/static/js"))
-    rename("""(.+)\.[^.]+\.js""", "$1.js")
 }
 
 tasks.named("processResources") {

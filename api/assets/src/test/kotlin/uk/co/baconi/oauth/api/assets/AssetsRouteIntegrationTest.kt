@@ -24,8 +24,8 @@ import uk.co.baconi.oauth.api.common.CommonModule.common
 class AssetsRouteIntegrationTest: AssetsRoute {
 
     companion object {
-        private const val ASSETS_LOCATION = "/assets/js"
-        private const val AUTHENTICATION_JS = "authentication.js"
+        private const val ASSETS_LOCATION = "/assets"
+        private const val AUTHENTICATION_INDEX_HTML = "/authentication/index.html"
     }
 
     private fun setupApplication(block: suspend ApplicationTestBuilder.(HttpClient) -> Unit) {
@@ -44,7 +44,7 @@ class AssetsRouteIntegrationTest: AssetsRoute {
     @CsvSource("POST", "PUT", "PATCH", "DELETE", "OPTIONS")
     fun `should only support get and head requests`(method: String) = setupApplication { client ->
 
-        val response = client.request("$ASSETS_LOCATION/$AUTHENTICATION_JS") {
+        val response = client.request("$ASSETS_LOCATION/$AUTHENTICATION_INDEX_HTML") {
             this.method = HttpMethod.parse(method)
         }
 
@@ -57,7 +57,7 @@ class AssetsRouteIntegrationTest: AssetsRoute {
     @Test
     fun `should not suggest that the content can be cached`() = setupApplication { client ->
 
-        val response = client.get("$ASSETS_LOCATION/$AUTHENTICATION_JS")
+        val response = client.get("$ASSETS_LOCATION/$AUTHENTICATION_INDEX_HTML")
 
         assertSoftly(response) {
             status shouldBe OK
@@ -72,13 +72,13 @@ class AssetsRouteIntegrationTest: AssetsRoute {
     }
 
     @Test
-    fun `should return javascript bundles marked as javascript`() = setupApplication { client ->
+    fun `should return html pages marked as html`() = setupApplication { client ->
 
-        val response = client.get("$ASSETS_LOCATION/$AUTHENTICATION_JS")
+        val response = client.get("$ASSETS_LOCATION/$AUTHENTICATION_INDEX_HTML")
 
         assertSoftly(response) {
             status shouldBe OK
-            contentType() shouldBe Application.JavaScript
+            contentType() shouldBe Text.Html.withCharset(Charsets.UTF_8)
         }
     }
 

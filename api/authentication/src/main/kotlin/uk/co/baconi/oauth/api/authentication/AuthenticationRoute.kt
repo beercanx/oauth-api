@@ -9,6 +9,9 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import kotlinx.serialization.json.JsonObjectBuilder
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import uk.co.baconi.oauth.api.authentication.AuthenticationRequest.InvalidField
 import uk.co.baconi.oauth.api.authentication.AuthenticationRequest.Valid
 import uk.co.baconi.oauth.api.common.authentication.AuthenticateSession
@@ -17,6 +20,7 @@ import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Failure
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthentication.Success
 import uk.co.baconi.oauth.api.common.authentication.CustomerAuthenticationService
+import java.util.*
 
 interface AuthenticationRoute : AuthenticationRequestValidation {
 
@@ -31,6 +35,17 @@ interface AuthenticationRoute : AuthenticationRequestValidation {
         application.log.info("Registering the AuthenticationRoute.authentication() routes")
 
         route("/authentication") {
+            route("/session") {
+                accept(Application.Json) {
+                    get {
+                        val session = call.sessions.getOrSet { AuthenticateSession(UUID.randomUUID()) }
+                        application.log.debug("{}", session)
+                        call.respond(OK, buildJsonObject {
+                            put("csrfToken", session.csrfToken.toString())
+                        })
+                    }
+                }
+            }
             contentType(Application.Json) {
                 post {
                     when (val request = call.validateAuthenticationRequest()) {
