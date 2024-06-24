@@ -7,22 +7,21 @@ object Clients {
 
     private const val CLIENT_ID = "clientId"
     private const val CLIENT_SECRET = "clientSecret"
+    private const val CLIENT_REDIRECT = "clientRedirect"
 
     object Expressions {
         val clientId: (Session) -> String = sessionToString(CLIENT_ID)
         val clientSecret: (Session) -> String = sessionToString(CLIENT_SECRET)
+        val clientRedirect: (Session) -> String = sessionToString(CLIENT_REDIRECT)
     }
 
     object Setup {
 
-        // TODO - Decide on which pattern we want to use more Function<Session, Session> or Session.withClient()
-
-        fun withClient(id: String, secret: String): (Session) -> Session = { session ->
-            session.withClient(id, secret)
+        fun withClient(id: String, secret: String, redirect: String?): (Session) -> Session = { session ->
+            session
+                .set(CLIENT_ID, id)
+                .set(CLIENT_SECRET, secret)
+                .set(CLIENT_REDIRECT, redirect)
         }
-
-        fun Session.withClient(id: String, secret: String): Session = this
-            .set(CLIENT_ID, id)
-            .set(CLIENT_SECRET, secret)
     }
 }

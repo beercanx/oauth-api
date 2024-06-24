@@ -11,7 +11,7 @@ on:
         options:
           - ":automation:api:test"
           - ":automation:browser:test"
-          - ":automation:load:gatlingRun"
+          - ":automation:load:gatlingRun --all"
 
 run-name: Automation Tests - ${{ inputs.command }}
 
