@@ -6,6 +6,7 @@ import io.gatling.javaapi.core.CoreDsl.exec
 import io.gatling.javaapi.core.CoreDsl.jsonPath
 import io.gatling.javaapi.core.Session
 import io.gatling.javaapi.http.HttpDsl.*
+import uk.co.baconi.oauth.api.gatling.endpoints.AuthorisationEndpoint.Expressions.authorisationCode
 import uk.co.baconi.oauth.api.gatling.endpoints.TokenEndpoint.Checks.hasAccessTokenAndSave
 import uk.co.baconi.oauth.api.gatling.endpoints.TokenEndpoint.Checks.hasBearerTokenType
 import uk.co.baconi.oauth.api.gatling.endpoints.TokenEndpoint.Checks.hasCacheControlDisabled
@@ -13,6 +14,7 @@ import uk.co.baconi.oauth.api.gatling.endpoints.TokenEndpoint.Checks.hasExpiresI
 import uk.co.baconi.oauth.api.gatling.endpoints.TokenEndpoint.Checks.hasScopes
 import uk.co.baconi.oauth.api.gatling.endpoints.TokenEndpoint.Configuration.TOKEN_ENDPOINT
 import uk.co.baconi.oauth.api.gatling.feeders.Clients.Expressions.clientId
+import uk.co.baconi.oauth.api.gatling.feeders.Clients.Expressions.clientRedirect
 import uk.co.baconi.oauth.api.gatling.feeders.Clients.Expressions.clientSecret
 import uk.co.baconi.oauth.api.gatling.feeders.Customers.Expressions.password
 import uk.co.baconi.oauth.api.gatling.feeders.Customers.Expressions.username
@@ -25,7 +27,6 @@ object TokenEndpoint {
     object Configuration {
         const val TOKEN_ENDPOINT = "/token"
     }
-
 
     object Expressions {
         val accessToken: (Session) -> String = sessionToString(ACCESS_TOKEN)
@@ -57,6 +58,26 @@ object TokenEndpoint {
     object Operations {
 
         /**
+         * Generates an access token using a given authorisation code.
+         */
+        val authorisationCodeGrant: ChainBuilder = exec(
+            http("Authorisation Code Grant Request with authorisation code")
+                .post(TOKEN_ENDPOINT)
+                .basicAuth(clientId, clientSecret)
+                .formParam("grant_type", "authorization_code")
+                .formParam("redirect_uri", clientRedirect)
+                .formParam("code", authorisationCode)
+                .header("content-type", "application/x-www-form-urlencoded")
+                .header("accept", "application/json")
+                .check(status().shouldBe(200))
+                .check(hasAccessTokenAndSave)
+                .check(hasBearerTokenType)
+                .check(hasExpiresInTwoHours)
+                .check(hasScopes("basic"))
+                .check(hasCacheControlDisabled)
+        )
+
+        /**
          * Generates an access token using a given username and password.
          */
         val passwordCredentialsGrant: ChainBuilder = exec(
@@ -70,7 +91,6 @@ object TokenEndpoint {
                 .header("content-type", "application/x-www-form-urlencoded")
                 .header("accept", "application/json")
                 .check(status().shouldBe(200))
-                .check()
                 .check(hasAccessTokenAndSave)
                 .check(hasBearerTokenType)
                 .check(hasExpiresInTwoHours)
