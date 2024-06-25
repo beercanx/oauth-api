@@ -14,7 +14,7 @@ object State {
 
     object Setup {
 
-        fun withState(state: String? = null): (Session) -> Session = { session ->
+        fun generateState(state: String? = null): (Session) -> Session = { session ->
             session.set(STATE, state ?: UUID.randomUUID().toString())
         }
     }

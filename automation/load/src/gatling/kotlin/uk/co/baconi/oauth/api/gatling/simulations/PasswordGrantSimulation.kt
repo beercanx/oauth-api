@@ -5,13 +5,13 @@ import io.gatling.javaapi.core.*
 import io.gatling.javaapi.http.HttpDsl.http
 import uk.co.baconi.oauth.api.gatling.endpoints.IntrospectionEndpoint.Operations.introspectAccessToken
 import uk.co.baconi.oauth.api.gatling.endpoints.TokenEndpoint.Operations.passwordCredentialsGrant
-import uk.co.baconi.oauth.api.gatling.feeders.Clients.Setup.withClient
+import uk.co.baconi.oauth.api.gatling.feeders.Clients.Setup.withConfidentialClient
 import uk.co.baconi.oauth.api.gatling.feeders.Customers.Feeders.customers
 
-class LoginAndIntrospectSimulation : Simulation() {
+class PasswordGrantSimulation : Simulation() {
 
-    private val theScenario = scenario("Login and Introspect")
-        .exec(withClient("consumer-z", "7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu", null)) // TODO - Extract into environmental config
+    private val theScenario = scenario("Password Grant and Introspect")
+        .exec(withConfidentialClient("consumer-z", "7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu", "https://consumer-z.baconi.co.uk/callback")) // TODO - Extract into environmental config
         .feed(arrayFeeder(customers).circular())
         .exec(passwordCredentialsGrant)
         .exitHereIfFailed()
