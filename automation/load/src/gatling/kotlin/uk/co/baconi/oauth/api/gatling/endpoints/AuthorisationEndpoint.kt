@@ -1,10 +1,8 @@
 package uk.co.baconi.oauth.api.gatling.endpoints
 
 import io.gatling.http.client.uri.Uri
-import io.gatling.javaapi.core.ChainBuilder
 import io.gatling.javaapi.core.CheckBuilder
 import io.gatling.javaapi.core.CoreDsl.css
-import io.gatling.javaapi.core.CoreDsl.exec
 import io.gatling.javaapi.core.Session
 import io.gatling.javaapi.http.HttpDsl.*
 import uk.co.baconi.oauth.api.gatling.endpoints.AuthorisationEndpoint.Checks.hasAuthenticationPageTitle
@@ -12,10 +10,14 @@ import uk.co.baconi.oauth.api.gatling.endpoints.AuthorisationEndpoint.Checks.has
 import uk.co.baconi.oauth.api.gatling.endpoints.AuthorisationEndpoint.Checks.hasCacheControlDisabled
 import uk.co.baconi.oauth.api.gatling.endpoints.AuthorisationEndpoint.Configuration.AUTHORISATION_ENDPOINT
 import uk.co.baconi.oauth.api.gatling.endpoints.AuthorisationEndpoint.Transforms.headerToAuthorisationCode
+import uk.co.baconi.oauth.api.gatling.feeders.Clients.Client.Type
 import uk.co.baconi.oauth.api.gatling.feeders.Clients.Expressions.clientId
 import uk.co.baconi.oauth.api.gatling.feeders.Clients.Expressions.clientRedirect
+import uk.co.baconi.oauth.api.gatling.feeders.ProofOfKeyCodeExchange.Expressions.codeChallenge
+import uk.co.baconi.oauth.api.gatling.feeders.ProofOfKeyCodeExchange.Expressions.codeChallengeMethod
 import uk.co.baconi.oauth.api.gatling.feeders.State.Expressions.state
 import uk.co.baconi.oauth.api.gatling.sessionToString
+import java.net.URI
 
 object AuthorisationEndpoint {
 
@@ -30,10 +32,14 @@ object AuthorisationEndpoint {
     }
 
     object Transforms {
+
+        private val URI.queryParams: Map<String, String>
+            get() = query.split("&").map { it.split("=", limit = 2) }.associate { it[0] to it[1] }
+
         val headerToAuthorisationCode: (String?) -> String? = { header ->
             when (header) {
                 null -> null
-                else -> Uri.create(header).encodedQueryParams.find { param -> param.name == "code" }?.value
+                else -> URI.create(header).queryParams["code"]
             }
         }
     }
@@ -54,7 +60,7 @@ object AuthorisationEndpoint {
 
     object Operations {
 
-        private val baseAuthorise = http("Authorisation request with client id, redirect and state")
+        private fun baseConfidentialAuthorise(type: Type) = http("Authorisation request with confidential client")
             .get(AUTHORISATION_ENDPOINT)
             .disableFollowRedirect()
             .queryParam("response_type", "code")
@@ -62,25 +68,29 @@ object AuthorisationEndpoint {
             .queryParam("redirect_uri", clientRedirect)
             .queryParam("state", state)
             .queryParam("scope", "basic")
+            .let { request ->
+                when(type) {
+                    Type.Confidential -> request
+                    Type.Public -> request
+                        .queryParam("code_challenge", codeChallenge)
+                        .queryParam("code_challenge_method", codeChallengeMethod)
+                }
+            }
 
         /**
          * Starts an authorisation request and expects the authentication page.
          */
-        val authoriseWithAuthenticationPage: ChainBuilder = exec(
-            baseAuthorise
-                .check(status().shouldBe(200))
-                .check(hasAuthenticationPageTitle)
-                .check(hasCacheControlDisabled)
-        )
+        fun confidentialAuthorisationWithPage(type: Type) = baseConfidentialAuthorise(type)
+            .check(status().shouldBe(200))
+            .check(hasAuthenticationPageTitle)
+            .check(hasCacheControlDisabled)
 
         /**
          * Starts an authorisation request and expects callback with an authorisation code.
          */
-        val authoriseWithAuthorisationCode: ChainBuilder = exec(
-            baseAuthorise
-                .check(status().shouldBe(302))
-                .check(hasAuthorisationCodeAndSave)
-                .check(hasCacheControlDisabled)
-        )
+        fun confidentialAuthorisationWithCode(type: Type) = baseConfidentialAuthorise(type)
+            .check(status().shouldBe(302))
+            .check(hasAuthorisationCodeAndSave)
+            .check(hasCacheControlDisabled)
     }
 }

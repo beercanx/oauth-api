@@ -6,27 +6,29 @@ import io.gatling.javaapi.http.HttpDsl.http
 import uk.co.baconi.oauth.api.gatling.endpoints.AuthenticationEndpoint.Operations.authenticate
 import uk.co.baconi.oauth.api.gatling.endpoints.IntrospectionEndpoint.Operations.introspectAccessToken
 import uk.co.baconi.oauth.api.gatling.endpoints.TokenEndpoint.Operations.authorisationCodeGrant
-import uk.co.baconi.oauth.api.gatling.endpoints.AuthorisationEndpoint.Operations.authoriseWithAuthenticationPage
-import uk.co.baconi.oauth.api.gatling.endpoints.AuthorisationEndpoint.Operations.authoriseWithAuthorisationCode
-import uk.co.baconi.oauth.api.gatling.feeders.Clients.Setup.withClient
+import uk.co.baconi.oauth.api.gatling.endpoints.AuthorisationEndpoint.Operations.confidentialAuthorisationWithPage
+import uk.co.baconi.oauth.api.gatling.endpoints.AuthorisationEndpoint.Operations.confidentialAuthorisationWithCode
+import uk.co.baconi.oauth.api.gatling.feeders.Clients.Client.Type.Confidential
+import uk.co.baconi.oauth.api.gatling.feeders.Clients.Client.Type.Public
+import uk.co.baconi.oauth.api.gatling.feeders.Clients.Setup.withPublicClient
 import uk.co.baconi.oauth.api.gatling.feeders.Customers.Feeders.customers
-import uk.co.baconi.oauth.api.gatling.feeders.State.Setup.withState
+import uk.co.baconi.oauth.api.gatling.feeders.ProofOfKeyCodeExchange.Setup.generateVerifierAndChallenge
+import uk.co.baconi.oauth.api.gatling.feeders.State.Setup.generateState
 
-class AuthorisationSimulation : Simulation() {
+class AuthorisationWithPublicSimulation : Simulation() {
 
-    private val theScenario = scenario("Authorisation")
-        .exec(withClient("consumer-z", "7XLlyzjRpvICEkNrsgtOuuj1S30Bj9Xu", "https://consumer-z.baconi.co.uk/callback")) // TODO - Extract into environmental config
-        .exec(withState())
+    private val theScenario = scenario("Authorisation Code Grant with Public Client")
+        .exec(withPublicClient("consumer-y", "uk.co.baconi.consumer-y://callback")) // TODO - Extract into environmental config
         .feed(arrayFeeder(customers).circular())
-        .exec(authoriseWithAuthenticationPage)
+        .exec(generateState())
+        .exec(generateVerifierAndChallenge())
+        .exec(confidentialAuthorisationWithPage(Public))
         .exitHereIfFailed()
         .exec(authenticate)
         .exitHereIfFailed()
-        .exec(authoriseWithAuthorisationCode)
+        .exec(confidentialAuthorisationWithCode(Public))
         .exitHereIfFailed()
-        .exec(authorisationCodeGrant)
-        .exitHereIfFailed()
-        .exec(introspectAccessToken)
+        .exec(authorisationCodeGrant(Public))
         .exitHereIfFailed()
 
     private val httpProtocol = http

@@ -1,27 +1,35 @@
 package uk.co.baconi.oauth.api.gatling.feeders
 
 import io.gatling.javaapi.core.Session
-import uk.co.baconi.oauth.api.gatling.sessionToString
+import uk.co.baconi.oauth.api.gatling.feeders.Clients.Client.Type.Confidential
+import uk.co.baconi.oauth.api.gatling.feeders.Clients.Client.Type.Public
 
 object Clients {
 
-    private const val CLIENT_ID = "clientId"
-    private const val CLIENT_SECRET = "clientSecret"
-    private const val CLIENT_REDIRECT = "clientRedirect"
+    private const val CLIENT = "client"
+
+    data class Client(val id: String, val secret: String?, val redirect: String, val type: Type) {
+        enum class Type {
+            Confidential,
+            Public;
+        }
+    }
 
     object Expressions {
-        val clientId: (Session) -> String = sessionToString(CLIENT_ID)
-        val clientSecret: (Session) -> String = sessionToString(CLIENT_SECRET)
-        val clientRedirect: (Session) -> String = sessionToString(CLIENT_REDIRECT)
+        val client: (Session) -> Client = { session -> checkNotNull(session.get<Client>(CLIENT)) { "client was null" } }
+        val clientId: (Session) -> String = { session -> client(session).id }
+        val clientSecret: (Session) -> String? = { session -> client(session).secret }
+        val clientRedirect: (Session) -> String = { session -> client(session).redirect }
     }
 
     object Setup {
 
-        fun withClient(id: String, secret: String, redirect: String?): (Session) -> Session = { session ->
-            session
-                .set(CLIENT_ID, id)
-                .set(CLIENT_SECRET, secret)
-                .set(CLIENT_REDIRECT, redirect)
+        fun withConfidentialClient(id: String, secret: String, redirect: String): (Session) -> Session = { session ->
+            session.set(CLIENT, Client(id, secret, redirect, Confidential))
+        }
+
+        fun withPublicClient(id: String, redirect: String): (Session) -> Session = { session ->
+            session.set(CLIENT, Client(id, null, redirect, Public))
         }
     }
 }
