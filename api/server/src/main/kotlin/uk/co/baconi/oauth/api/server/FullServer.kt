@@ -20,7 +20,6 @@ import uk.co.baconi.oauth.api.common.token.AccessTokenService
 import uk.co.baconi.oauth.api.common.token.RefreshTokenRepository
 import uk.co.baconi.oauth.api.common.token.RefreshTokenService
 import uk.co.baconi.oauth.api.session.info.SessionInfoRoute
-import uk.co.baconi.oauth.api.session.info.SessionInfoServer.generateTestRefreshTokens
 import uk.co.baconi.oauth.api.session.info.SessionInfoService
 import uk.co.baconi.oauth.api.token.*
 import uk.co.baconi.oauth.api.token.introspection.IntrospectionRoute

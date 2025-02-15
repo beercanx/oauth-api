@@ -2,12 +2,8 @@ package uk.co.baconi.oauth.api.authentication
 
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.string.shouldContain
-import io.kotest.matchers.string.shouldNotBeUUID
-import io.kotest.matchers.string.shouldNotContain
 import io.kotest.matchers.string.shouldNotContainInOrder
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.api.common.authentication.CustomerCredential
 
 class AuthenticationRequestTest {
 

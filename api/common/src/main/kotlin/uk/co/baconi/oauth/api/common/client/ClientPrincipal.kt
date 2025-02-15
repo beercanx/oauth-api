@@ -1,6 +1,5 @@
 package uk.co.baconi.oauth.api.common.client
 
-import io.ktor.server.auth.*
 import uk.co.baconi.oauth.api.common.client.ClientAction.Introspect
 import uk.co.baconi.oauth.api.common.client.ClientAction.ProofKeyForCodeExchange
 import uk.co.baconi.oauth.api.common.grant.GrantType
@@ -8,7 +7,7 @@ import uk.co.baconi.oauth.api.common.grant.GrantType.AuthorisationCode
 import uk.co.baconi.oauth.api.common.grant.GrantType.Password
 import uk.co.baconi.oauth.api.common.scope.Scope
 
-sealed class ClientPrincipal : Principal {
+sealed class ClientPrincipal {
     abstract val id: ClientId
     abstract val configuration: ClientConfiguration
     fun can(action: ClientAction): Boolean = configuration.allowedActions.contains(action)

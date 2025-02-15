@@ -6,7 +6,7 @@ import kotlin.reflect.jvm.jvmName
 /**
  * Provides a typed way to define which principle type this bearer auth will provide.
  */
-inline fun <reified T : Principal> AuthenticationConfig.bearer(
+inline fun <reified T> AuthenticationConfig.bearer(
     noinline configure: BearerAuthenticationProvider.Config.() -> Unit
 ) {
     bearer(T::class.jvmName, configure)

@@ -17,7 +17,6 @@ import io.ktor.http.HttpHeaders.Location
 import io.ktor.http.HttpStatusCode.Companion.Found
 import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
 import io.ktor.http.HttpStatusCode.Companion.OK
-import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.ktor.server.testing.*
@@ -35,6 +34,7 @@ import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeTable
 import uk.co.baconi.oauth.api.common.client.ClientConfigurationRepository
 import uk.co.baconi.oauth.api.common.scope.ScopeRepository
+import java.net.URI
 import java.net.URL
 import java.net.URLDecoder.decode
 import kotlin.text.Charsets.UTF_8
@@ -230,7 +230,7 @@ class AuthorisationRouteIntegrationTests : AuthorisationRoute {
         }
     }
 
-    private fun String.asUrl() = URL(this)
+    private fun String.asUrl() = URI(this).toURL()
 
     private fun URL.extractQueryParameters(): Map<String, String> {
         val query = query?.split("&")?.associate { it.split("=").let { (key, value) -> key to decode(value, UTF_8) } }

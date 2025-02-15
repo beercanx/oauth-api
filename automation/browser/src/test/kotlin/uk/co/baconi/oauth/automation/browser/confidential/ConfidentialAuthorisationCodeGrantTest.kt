@@ -27,6 +27,7 @@ import org.openqa.selenium.Cookie
 import org.openqa.selenium.WebDriverException
 import org.slf4j.LoggerFactory
 import uk.co.baconi.oauth.automation.browser.AUTOMATION
+import java.net.URI
 import java.net.URL
 import java.net.URLDecoder
 import java.net.URLDecoder.decode
@@ -168,7 +169,7 @@ class ConfidentialAuthorisationCodeGrantTest {
     }
 
     private fun buildUrl(base: String, parameters: List<Pair<String, String>> = emptyList()): URL {
-        return URL(buildString {
+        return URI(buildString {
             append(base)
             if (parameters.isNotEmpty()) {
                 append('?')
@@ -176,10 +177,10 @@ class ConfidentialAuthorisationCodeGrantTest {
                     "$key=${encode(value, UTF_8)}"
                 })
             }
-        })
+        }).toURL()
     }
 
-    private fun String.asUrl() = URL(this)
+    private fun String.asUrl() = URI(this).toURL()
 
     private fun URL.extractQueryParameters(): Map<String, String> {
         val query = query?.split("&")?.associate { it.split("=").let { (key, value) -> key to decode(value, UTF_8) } }

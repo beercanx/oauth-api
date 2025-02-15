@@ -8,7 +8,6 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.co.baconi.oauth.api.common.uuid.UUIDSerializer
 import java.util.*
 
 class UUIDSerializerTest {

@@ -14,7 +14,6 @@ import io.ktor.server.plugins.doublereceive.*
 import io.ktor.server.plugins.hsts.*
 import io.ktor.server.sessions.*
 import io.ktor.util.*
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import uk.co.baconi.oauth.api.common.authentication.AuthenticateSession
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedSession
@@ -23,7 +22,6 @@ import kotlin.time.Duration.Companion.minutes
 
 object CommonModule {
 
-    @OptIn(ExperimentalSerializationApi::class)
     fun Application.common() {
 
         log.info("Registering the CommonModule.common() module")

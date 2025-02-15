@@ -1,8 +1,6 @@
 package uk.co.baconi.oauth.api.assets
 
 import io.kotest.assertions.assertSoftly
-import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldBeSingleton
 import io.kotest.matchers.collections.shouldExist
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
@@ -12,7 +10,6 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.http.ContentType.*
-import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
 import io.ktor.http.HttpStatusCode.Companion.NotFound
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.testing.*

@@ -9,12 +9,6 @@ import java.util.*
 
 class ReactTemplateIntegrationTest {
 
-    private fun underTest(csrfToken: UUID? = null) = buildString {
-        appendHTML().html {
-            reactPage(title = "Custom Title", reactSource = "file://source.js")
-        }
-    }
-
     @Test
     fun `should be able to render a templated react HTML page`() {
 

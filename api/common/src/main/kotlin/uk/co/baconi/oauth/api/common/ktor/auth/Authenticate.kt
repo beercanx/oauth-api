@@ -9,7 +9,7 @@ import kotlin.reflect.jvm.jvmName
  * Provides a typed way to declare which principle type we expect for this route.
  */
 fun Route.authenticate(
-    vararg principals: KClass<out Principal>,
+    vararg principals: KClass<*>,
     optional: Boolean = false,
     build: Route.() -> Unit
 ): Route {

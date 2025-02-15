@@ -5,14 +5,13 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import io.kotest.matchers.throwable.shouldHaveMessage
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import uk.co.baconi.oauth.api.token.TokenErrorType.InvalidClient
 import uk.co.baconi.oauth.api.token.TokenErrorType.InvalidRequest
-import java.util.UUID
+import java.util.*
 
 class TokenResponseTests {
 

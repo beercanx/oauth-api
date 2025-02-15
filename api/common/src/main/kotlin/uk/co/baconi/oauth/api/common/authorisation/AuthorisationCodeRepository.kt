@@ -5,9 +5,6 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
 import org.jetbrains.exposed.sql.transactions.transaction
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
-import uk.co.baconi.oauth.api.common.scope.Scope
-import uk.co.baconi.oauth.api.common.scope.ScopesDeserializer
-import uk.co.baconi.oauth.api.common.scope.ScopesSerializer
 import java.time.Instant
 import java.util.*
 

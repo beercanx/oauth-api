@@ -10,9 +10,6 @@ import io.ktor.http.*
 import io.ktor.http.ContentType.Application.FormUrlEncoded
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
-import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.plugins.doublereceive.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
@@ -34,7 +31,7 @@ class AuthenticationModuleTest : AuthenticationModule {
     override val clientSecretService = mockk<ClientSecretService>()
     override val accessTokenService = mockk<AccessTokenService>()
 
-    private inline fun <reified T : Principal> underTest(crossinline block: suspend ApplicationTestBuilder.() -> Unit) {
+    private inline fun <reified T> underTest(crossinline block: suspend ApplicationTestBuilder.() -> Unit) {
         testApplication {
             application {
                 common()
