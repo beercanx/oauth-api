@@ -2,7 +2,6 @@ package uk.co.baconi.oauth.api.session.info
 
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -10,15 +9,14 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedSession
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
-import uk.co.baconi.oauth.api.session.info.SessionInfoResponse.Tokens
 import uk.co.baconi.oauth.api.session.info.SessionInfoResponse.Token
+import uk.co.baconi.oauth.api.session.info.SessionInfoResponse.Tokens
 import java.time.Instant
 
 class SessionInfoResponseTest {

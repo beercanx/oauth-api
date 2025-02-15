@@ -9,7 +9,6 @@ import uk.co.baconi.oauth.api.common.authentication.authenticatedUsernameColumn
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.client.clientIdColumn
 import uk.co.baconi.oauth.api.common.scope.Scope
-import uk.co.baconi.oauth.api.common.scope.ScopeRepository
 import uk.co.baconi.oauth.api.common.scope.scopeColumn
 import java.time.Instant
 import java.util.*

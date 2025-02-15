@@ -1,8 +1,6 @@
 package uk.co.baconi.oauth.api.common.client
 
-import io.kotest.assertions.withClue
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.client.ClientType.Confidential

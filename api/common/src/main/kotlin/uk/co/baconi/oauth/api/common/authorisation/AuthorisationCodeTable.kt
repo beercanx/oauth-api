@@ -10,7 +10,6 @@ import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.client.clientIdColumn
 import uk.co.baconi.oauth.api.common.scope.Scope
 import uk.co.baconi.oauth.api.common.scope.scopeColumn
-import uk.co.baconi.oauth.api.common.token.AccessTokenTable.index
 import java.time.Instant
 import java.util.*
 

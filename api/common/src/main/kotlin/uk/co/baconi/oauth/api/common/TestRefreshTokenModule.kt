@@ -4,7 +4,6 @@ import io.ktor.server.application.*
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
-import uk.co.baconi.oauth.api.common.token.AccessTokenService
 import uk.co.baconi.oauth.api.common.token.RefreshTokenService
 
 @Deprecated("This is intended to be removed once code complete")
