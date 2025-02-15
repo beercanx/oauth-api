@@ -1,6 +1,5 @@
 package uk.co.baconi.oauth.api.common.token
 
-import io.ktor.server.auth.*
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
@@ -16,7 +15,7 @@ data class AccessToken(
     override val issuedAt: Instant, // TODO - Validate if this is the right datetime type to use.
     override val expiresAt: Instant,
     override val notBefore: Instant
-) : Token, Principal {
+) : Token {
 
     fun hasExpired(): Boolean = now().isAfter(expiresAt)
     fun isBefore(): Boolean = now().isBefore(notBefore)

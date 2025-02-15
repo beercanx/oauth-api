@@ -8,7 +8,7 @@ import kotlin.reflect.jvm.jvmName
  * Provides a typed way to define which principle type this basic auth will provide.
  * Requires the [DoubleReceive] feature to enable access to the body inside the request handler.
  */
-inline fun <reified T : Principal> AuthenticationConfig.form(
+inline fun <reified T> AuthenticationConfig.form(
     noinline configure: FormAuthenticationProvider.Config.() -> Unit
 ) {
     form(T::class.jvmName, configure)
