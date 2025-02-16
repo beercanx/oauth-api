@@ -1,7 +1,6 @@
 package uk.co.baconi.session
 
 import io.ktor.http.*
-import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.response.*
@@ -16,7 +15,7 @@ actual class SessionManagerEx actual constructor(private val sessionService: Ses
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    private var server: NettyApplicationEngine? = null
+    private var server: EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine. Configuration>? = null
 
     actual suspend fun startLogin() {
         try {
