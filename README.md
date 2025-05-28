@@ -1,8 +1,9 @@
 # A Ktor bare-bones OAuth API
 
-[![API CI using Gradle](https://github.com/beercan1989/oauth-api/actions/workflows/api-ci-using-gradle.yml/badge.svg)](https://github.com/beercan1989/oauth-api/actions/workflows/api-ci-using-gradle.yml)
-[![UI CI using NPM](https://github.com/beercan1989/oauth-api/actions/workflows/ui-ci-using-npm.yml/badge.svg)](https://github.com/beercan1989/oauth-api/actions/workflows/ui-ci-using-npm.yml)
-[![Docker CI and Push](https://github.com/beercan1989/oauth-api/actions/workflows/docker-ci-and-publish.yml/badge.svg)](https://github.com/beercan1989/oauth-api/actions/workflows/docker-ci-and-publish.yml)
+An attempt to create an OAuth 2 service as close and on spec as possible, it attempts to provide: 
+* the ability to scale components without running everything everywhere.
+* contain various types of automation test packs, from api, to browser, to load testing.
+* provide test consumers that will demonstrate best practice and the various ways to integrate depending on system architecture.
 
 ## Using Gradle
 ```bash
@@ -35,6 +36,11 @@ docker build --tag 'oauth-api:server-token' --target server-token .
 docker build --tag 'oauth-api:server-token-introspection' --target server-token-introspection .
 docker build --tag 'oauth-api:server-token-revocation' --target server-token-revocation .
 ```
+
+## Test Consumers
+There's currently one test consumer that provides Android, desktop and website support. This project is built separately
+from the main application, due to it having a different set of dependency constraints that would have impacted the main 
+project, see [test-consumers/compose/README.md](./test-consumers/compose/README.md) for more.
 
 ## Sources
 OAuth and related RFCs
