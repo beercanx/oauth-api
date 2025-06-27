@@ -2,33 +2,33 @@
 ##
 # Common Versions
 ##
-node = "20.11.1"
-ktor = "3.1.0"
-kotlin = "2.1.10"
+node = "20.19.3"
+ktor = "3.2.0"
+kotlin = "2.2.0"
 
 ##
 # JVM Versions
 ##
-argon2 = "2.11"
-exposed = "0.51.0"
-logback = "1.5.6"
-h2Database = "2.2.224"
+argon2 = "2.12"
+exposed = "0.61.0"
+logback = "1.5.18"
+h2Database = "2.3.232"
 typesafeConfig = "1.4.3"
-slf4j = "2.0.12"
+slf4j = "2.0.17"
 
 ##
 # Common Test Versions
 ##
-kotest = "5.9.0"
-mockk = "1.13.11"
+kotest = "5.9.1"
+mockk = "1.14.4"
 
 ##
 # JVM Test Versions
 ##
-junit = "5.10.2"
-selenide = "7.3.2"
-restAssured = "5.4.0"
-commonsLang3 = "3.14.0"
+junit = "5.13.2"
+selenide = "7.9.3"
+restAssured = "5.5.5"
+commonsLang3 = "3.17.0"
 
 [libraries]
 ##
