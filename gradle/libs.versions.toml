@@ -86,7 +86,7 @@ rest-assured-bom = { module = "io.rest-assured:rest-assured-bom", version.ref = 
 selenide = { module = "com.codeborne:selenide", version.ref = "selenide" }
 
 [plugins]
-node-gradle = { id = "com.github.node-gradle.node", version = "7.0.2" }
+node-gradle = { id = "com.github.node-gradle.node", version = "7.1.0" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
