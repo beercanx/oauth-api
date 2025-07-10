@@ -7,11 +7,11 @@ plugins {
 kotlin {
 
     js(IR) {
-        moduleName = "compose-website"
+        outputModuleName = "compose-website"
         binaries.executable()
         browser {
             commonWebpackConfig {
-                outputFileName = "$moduleName.js"
+                outputFileName = "${outputModuleName.get()}.js"
             }
         }
     }

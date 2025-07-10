@@ -80,7 +80,7 @@ kotlin {
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 35
     namespace = "uk.co.baconi.compose.shared"
     defaultConfig {
         minSdk = 26
