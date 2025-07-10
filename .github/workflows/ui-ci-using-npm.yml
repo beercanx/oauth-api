@@ -11,6 +11,9 @@ on:
     paths:
       - "user-interface/**"
 
+permissions:
+  contents: read
+
 jobs:
   build:
 
