@@ -26,10 +26,12 @@ application {
 // Copies all react bundles from user-interface into build/generated-bundles
 tasks.register<Sync>("generateReactAssets") {
     val destination = layout.buildDirectory
-    project(":user-interface").subprojects {
-        from(tasks.named("npmBuild"))
-        into(destination.dir("generated-bundles/static/${project.name}"))
-        include("*.html", "*.js")
+    if (!System.getenv("CODEQL").toBoolean()) {
+        project(":user-interface").subprojects {
+            from(tasks.named("npmBuild"))
+            into(destination.dir("generated-bundles/static/${project.name}"))
+            include("*.html", "*.js")
+        }
     }
 }
 
