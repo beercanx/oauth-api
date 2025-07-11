@@ -37,7 +37,7 @@ jobs:
         - language: actions
           build-mode: none
         - language: java-kotlin
-          build-mode: autobuild
+          build-mode: manual
         - language: javascript-typescript
           build-mode: none
 
@@ -50,6 +50,13 @@ jobs:
       with:
         languages: ${{ matrix.language }}
         build-mode: ${{ matrix.build-mode }}
+
+    - if: matrix.build-mode == 'manual'
+      uses: gradle/actions/setup-gradle@v3
+
+    - if: matrix.build-mode == 'manual'
+      shell: bash
+      run: ./gradlew clean testClasses
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
