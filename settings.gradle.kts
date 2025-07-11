@@ -12,11 +12,13 @@ include(":api:token-revocation")
 include(":api:server")
 
 // User Interface
-include(":user-interface:authentication")
-// TODO include(":user-interface:authorise")
-// TODO include(":user-interface:confirm-details")
-// TODO include(":user-interface:registration")
-// TODO include(":user-interface:session-management")
+if (!System.getenv("CODEQL").toBoolean()) { // Disable the node projects when being scanned by CodeQL
+    include(":user-interface:authentication")
+    // TODO include(":user-interface:authorise")
+    // TODO include(":user-interface:confirm-details")
+    // TODO include(":user-interface:registration")
+    // TODO include(":user-interface:session-management")
+}
 
 // Automation
 include(":automation:api")
