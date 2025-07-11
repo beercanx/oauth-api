@@ -56,7 +56,7 @@ jobs:
 
     - if: matrix.build-mode == 'manual'
       shell: bash
-      run: ./gradlew clean testClasses
+      run: ./gradlew -V --no-daemon -S "-Dkotlin.daemon.jvmargs=-Xmx1024" clean testClasses
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
