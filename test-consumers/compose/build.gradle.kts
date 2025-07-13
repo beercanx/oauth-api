@@ -29,7 +29,3 @@ allprojects {
         }
     }
 }
-
-tasks.withType<Wrapper>().configureEach {
-    distributionType = Wrapper.DistributionType.ALL
-}

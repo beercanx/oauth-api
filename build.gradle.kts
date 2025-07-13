@@ -48,7 +48,3 @@ subprojects {
     // A hack to enable printing all submodule dependencies with ease using `./gradlew all-dependencies`
     tasks.register<DependencyReportTask>("all-dependencies")
 }
-
-tasks.withType<Wrapper>().configureEach {
-    distributionType = Wrapper.DistributionType.ALL
-}
