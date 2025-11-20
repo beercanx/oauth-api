@@ -11,6 +11,10 @@ on:
     paths:
       - "test-consumers/compose/**"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   pull-requests: write
 

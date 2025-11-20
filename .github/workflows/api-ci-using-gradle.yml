@@ -13,6 +13,10 @@ on:
       - "user-interface/**"
       - "test-consumers/compose/**"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   # The Dependency Submission API requires write permission on the repository to submit dependencies
   contents: write
