@@ -19,6 +19,25 @@ updates:
       - "gradle"
       - "dependencies"
 
+  # Try and maintain the test consumer
+  - package-ecosystem: "gradle"
+    directory: "/test-consumers/compose"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "test-consumer-compose"
+      - "dependencies"
+
+  # Disable because its all controlled by Kotlin MPP via Gradle, and its waisting Action runs.
+  - package-ecosystem: "npm"
+    directory: "/test-consumers/compose"
+    open-pull-requests-limit: 0
+    schedule:
+      interval: "monthly"
+    labels:
+      - "test-consumer-compose"
+      - "dependencies"
+
   # Maintain React bundles
   - package-ecosystem: "npm"
     directory: "/user-interface/authentication"
