@@ -34,6 +34,8 @@ jobs:
 
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v5
+      with:
+        dependency-graph: ${{ github.ref == 'refs/heads/main' && 'generate-and-submit' || 'generate' }}
 
     - name: Gradle build
       working-directory: ./test-consumers/compose
