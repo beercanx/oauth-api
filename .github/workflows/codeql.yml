@@ -52,7 +52,7 @@ jobs:
         build-mode: ${{ matrix.build-mode }}
 
     - if: matrix.build-mode == 'manual'
-      uses: gradle/actions/setup-gradle@v3
+      uses: gradle/actions/setup-gradle@v5
 
     - if: matrix.build-mode == 'manual'
       shell: bash
