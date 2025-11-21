@@ -20,7 +20,7 @@ kotlin {
 }
 
 android {
-    compileSdk = 35
+    compileSdk = 36
     namespace = "uk.co.baconi.compose.android"
     defaultConfig {
         minSdk = 26
