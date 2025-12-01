@@ -3,7 +3,7 @@
 # Common Versions
 ##
 node = "20.19.3"
-ktor = "3.3.2"
+ktor = "3.3.3"
 kotlin = "2.2.21"
 
 ##
