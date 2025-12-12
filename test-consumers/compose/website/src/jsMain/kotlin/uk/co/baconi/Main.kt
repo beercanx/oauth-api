@@ -4,15 +4,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.window.CanvasBasedWindow
+import androidx.compose.ui.window.ComposeViewport
 import io.ktor.http.*
 import kotlinx.browser.window
-import kotlinx.coroutines.delay
 import uk.co.baconi.session.SessionManagerEx
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    CanvasBasedWindow(title = "OAuth - JS") {
+
+    ComposeViewport {
 
         val sessionManager = remember { SessionManagerEx() }
 
