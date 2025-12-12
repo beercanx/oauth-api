@@ -5,6 +5,10 @@ An attempt to create an OAuth 2 service as close and on spec as possible, it att
 * contain various types of automation test packs, from api, to browser, to load testing.
 * provide test consumers that will demonstrate best practice and the various ways to integrate depending on system architecture.
 
+## Requirements
+* Java 21
+* Node 24
+
 ## Using Gradle
 ```bash
 # To run tests for a project, Gradle will not run tests for area's that have not had any changes.
