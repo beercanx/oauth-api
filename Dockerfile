@@ -1,6 +1,6 @@
 ARG JAVA_VERSION=21
 ARG NODEJS_VERSION=24
-ARG ALPINE_VERSION=3.18
+ARG ALPINE_VERSION=3.22
 ARG ARGON2_VERSION=20190702
 
 FROM node:${NODEJS_VERSION}-alpine${ALPINE_VERSION} AS alpine-nodejs
@@ -80,49 +80,49 @@ ENV PATH="${JAVA_HOME}/bin:${PATH}"
 COPY --from=jre-build /javaruntime ${JAVA_HOME}
 
 ## Create Server - Full
-FROM server-base as server-full
+FROM server-base AS server-full
 COPY --from=code-build /project/distributions/server/ /application
 WORKDIR /application
 CMD "./bin/server"
 
 ## Create Server - Assets
-FROM server-base as server-assets
+FROM server-base AS server-assets
 COPY --from=code-build /project/distributions/assets/ /application
 WORKDIR /application
 CMD "./bin/assets"
 
 ## Create Server - Authentication
-FROM server-base as server-authentication
+FROM server-base AS server-authentication
 COPY --from=code-build /project/distributions/authentication/ /application
 WORKDIR /application
 CMD "./bin/authentication"
 
 ## Create Server - Authorisation
-FROM server-base as server-authorisation
+FROM server-base AS server-authorisation
 COPY --from=code-build /project/distributions/authorisation/ /application
 WORKDIR /application
 CMD "./bin/authorisation"
 
 ## Create Server - Session Info
-FROM server-base as server-session-info
+FROM server-base AS server-session-info
 COPY --from=code-build /project/distributions/session-info/ /application
 WORKDIR /application
 CMD "./bin/session-info"
 
 ## Create Server - Token
-FROM server-base as server-token
+FROM server-base AS server-token
 COPY --from=code-build /project/distributions/token/ /application
 WORKDIR /application
 CMD "./bin/token"
 
 ## Create Server - Token Introspection
-FROM server-base as server-token-introspection
+FROM server-base AS server-token-introspection
 COPY --from=code-build /project/distributions/token-introspection/ /application
 WORKDIR /application
 CMD "./bin/token-introspection"
 
 ## Create Server - Token Revocation
-FROM server-base as server-token-revocation
+FROM server-base AS server-token-revocation
 COPY --from=code-build /project/distributions/token-revocation/ /application
 WORKDIR /application
 CMD "./bin/token-revocation"
