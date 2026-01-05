@@ -13,7 +13,9 @@ import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
@@ -43,6 +45,13 @@ class RefreshTokenRepositoryIntegrationTest {
     }
 
     private val underTest = RefreshTokenRepository(database)
+
+    @AfterEach
+    fun cleanDatabase() {
+        transaction(database) {
+            RefreshTokenTable.deleteAll()
+        }
+    }
 
     @Nested
     inner class Insert {
