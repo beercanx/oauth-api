@@ -3,8 +3,8 @@
 # Common Versions
 ##
 node = "24.12.0"
-ktor = "3.3.3"
-kotlin = "2.2.21"
+ktor = "3.4.0"
+kotlin = "2.3.0"
 
 ##
 # JVM Versions
@@ -19,7 +19,7 @@ slf4j = "2.0.17"
 ##
 # Common Test Versions
 ##
-kotest = "6.0.7"
+kotest = "6.1.1"
 mockk = "1.14.7"
 
 ##

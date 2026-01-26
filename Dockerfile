@@ -1,6 +1,6 @@
-ARG JAVA_VERSION=21
+ARG JAVA_VERSION=25
 ARG NODEJS_VERSION=24
-ARG ALPINE_VERSION=3.22
+ARG ALPINE_VERSION=3.23
 ARG ARGON2_VERSION=20190702
 
 FROM node:${NODEJS_VERSION}-alpine${ALPINE_VERSION} AS alpine-nodejs
@@ -26,6 +26,10 @@ COPY api/session-info/build.gradle.kts  /project/api/session-info/
 COPY api/token/build.gradle.kts  /project/api/token/
 COPY api/token-introspection/build.gradle.kts  /project/api/token-introspection/
 COPY api/token-revocation/build.gradle.kts  /project/api/token-revocation/
+
+COPY automation/api/build.gradle.kts /project/automation/api/
+COPY automation/browser/build.gradle.kts /project/automation/browser/
+COPY automation/load/build.gradle.kts /project/automation/load/
 
 COPY user-interface/build.gradle.kts  /project/user-interface/
 COPY user-interface/authentication/build.gradle.kts /project/user-interface/authentication/
