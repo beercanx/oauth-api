@@ -2,16 +2,17 @@ name: "CodeQL (java-kotlin)"
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "main" ]
-    paths-ignore:
-      - ".github/**"
-      - "user-interface/**"
-  pull_request:
-    branches: [ "main" ]
-    paths-ignore:
-      - ".github/**"
-      - "user-interface/**"
+  # Enable again once https://github.com/github/codeql/pull/20965 is delivered
+  # push:
+  #   branches: [ "main" ]
+  #   paths-ignore:
+  #     - ".github/**"
+  #     - "user-interface/**"
+  # pull_request:
+  #   branches: [ "main" ]
+  #   paths-ignore:
+  #     - ".github/**"
+  #     - "user-interface/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
