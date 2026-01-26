@@ -27,6 +27,10 @@ COPY api/token/build.gradle.kts  /project/api/token/
 COPY api/token-introspection/build.gradle.kts  /project/api/token-introspection/
 COPY api/token-revocation/build.gradle.kts  /project/api/token-revocation/
 
+COPY automation/api/build.gradle.kts /project/automation/api/
+COPY automation/browser/build.gradle.kts /project/automation/browser/
+COPY automation/load/build.gradle.kts /project/automation/load/
+
 COPY user-interface/build.gradle.kts  /project/user-interface/
 COPY user-interface/authentication/build.gradle.kts /project/user-interface/authentication/
 COPY user-interface/authentication/package.json /project/user-interface/authentication/
