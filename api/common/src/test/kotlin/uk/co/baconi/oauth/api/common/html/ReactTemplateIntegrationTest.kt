@@ -21,7 +21,7 @@ class ReactTemplateIntegrationTest {
             |  <head>
             |    <meta charset="utf-8">
             |    <meta name="viewport" content="width=device-width, initial-scale=1">
-            |    <link rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx">
+            |    <link rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB">
             |    <title>Custom Title</title>
             |    <script defer="defer" src="file://source.js"></script>
             |  </head>
@@ -48,7 +48,7 @@ class ReactTemplateIntegrationTest {
             |    <meta charset="utf-8">
             |    <meta name="viewport" content="width=device-width, initial-scale=1">
             |    <meta name="_csrf" content="$csrfToken">
-            |    <link rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx">
+            |    <link rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB">
             |    <title>Custom Title</title>
             |    <script defer="defer" src="file://source.js"></script>
             |  </head>
