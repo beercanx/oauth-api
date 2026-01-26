@@ -56,6 +56,17 @@ dependencies {
 
     // Mocking
     testImplementation(libs.mockk)
+    constraints {
+        api("net.bytebuddy:byte-buddy-agent:1.17.8")
+        api("net.bytebuddy:byte-buddy:1.17.8") {
+            because("""
+                |Mockk depends on 1.5.11, which doesn't support JDK 25
+                |See https://github.com/mockk/mockk/issues/1434
+                |But Byte Buddy 1.17.5 brings in JDK 25 support
+                |https://github.com/raphw/byte-buddy/releases/tag/byte-buddy-1.17.5""".trimMargin()
+            )
+        }
+    }
 
     // Test data generation
     testImplementation(libs.commons.lang3)
