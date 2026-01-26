@@ -6,7 +6,7 @@ An attempt to create an OAuth 2 service as close and on spec as possible, it att
 * provide test consumers that will demonstrate best practice and the various ways to integrate depending on system architecture.
 
 ## Requirements
-* Java 21
+* Java 25
 * Node 24
 
 ## Using Gradle
@@ -25,7 +25,7 @@ An attempt to create an OAuth 2 service as close and on spec as possible, it att
 ```
 
 ## Building Docker
-Since it's a multistage project we need to run a few commands to build and tag everything.
+Since it's a multistage project, we need to run a few commands to build and tag everything.
 
 ```bash
 # Create all the all endpoints server instance

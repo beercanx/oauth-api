@@ -15,9 +15,9 @@ allprojects {
         mavenLocal()
     }
     plugins.withId("org.jetbrains.kotlin.jvm") {
-        // Replacement for kotlin { jvmToolchain(21) } in each project
+        // Replacement for kotlin { jvmToolchain(25) } in each project
         extensions.configure<KotlinJvmProjectExtension> {
-            jvmToolchain(21)
+            jvmToolchain(25)
         }
     }
     tasks.withType<Test>().configureEach {
