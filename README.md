@@ -1,5 +1,10 @@
 # A Ktor bare-bones OAuth API
 
+[![API CI using Gradle](https://github.com/beercanx/oauth-api/actions/workflows/api-ci-using-gradle.yml/badge.svg)](https://github.com/beercanx/oauth-api/actions/workflows/api-ci-using-gradle.yml) 
+[![UI CI using NPM](https://github.com/beercanx/oauth-api/actions/workflows/ui-ci-using-npm.yml/badge.svg)](https://github.com/beercanx/oauth-api/actions/workflows/ui-ci-using-npm.yml)
+[![Docker CI and Push](https://github.com/beercanx/oauth-api/actions/workflows/docker-ci-and-publish.yml/badge.svg)](https://github.com/beercanx/oauth-api/actions/workflows/docker-ci-and-publish.yml) 
+[![Build the Compose test consumer](https://github.com/beercanx/oauth-api/actions/workflows/compose-test-consumer.yml/badge.svg)](https://github.com/beercanx/oauth-api/actions/workflows/compose-test-consumer.yml) 
+
 An attempt to create an OAuth 2 service as close and on spec as possible, it attempts to provide: 
 * the ability to scale components without running everything everywhere.
 * contain various types of automation test packs, from api, to browser, to load testing.
