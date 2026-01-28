@@ -17,12 +17,12 @@ subprojects {
         }
 
         // Create a clean task to clean up the node directories
-        val parcelBuildClean = tasks.register<Delete>("parcelBuildClean") {
+        val rsbuildClean = tasks.register<Delete>("rsbuildClean") {
             delete("build")
         }
 
         val npmClean = tasks.register<Delete>("npmClean") {
-            dependsOn(parcelBuildClean)
+            dependsOn(rsbuildClean)
             delete("node_modules", "build", "dist", ".parcel-cache")
         }
 
@@ -41,7 +41,7 @@ subprojects {
 
         // Create a build task to build a React bundle using npm
         val npmBuild = tasks.register<NpmTask>("npmBuild") {
-            dependsOn(parcelBuildClean)
+            dependsOn(rsbuildClean)
             dependsOn(npmTest)
 
             args.set(listOf("run", "build"))
