@@ -6,8 +6,7 @@
 # testing
 **/coverage
 
-# parcel
-**/.parcel-cache
+# Rsbuild
 **/build
 **/dist
 

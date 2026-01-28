@@ -9,7 +9,7 @@ import java.util.*
 
 object ReactTemplate {
 
-    @Deprecated("Might be replaced by the index.html in the Parcel bundle")
+    @Deprecated("Might be replaced by the index.html in the Rsbuild bundle")
     fun HTML.reactPage(title: String, reactSource: String, csrfToken: UUID? = null) {
         base()
         head {
