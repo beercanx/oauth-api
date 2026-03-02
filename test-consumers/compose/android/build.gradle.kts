@@ -1,21 +1,14 @@
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.kotlin.plugin.compose)
+    alias(libs.plugins.androidApplication)
 
-    alias(libs.plugins.android.application)
-
-    alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.composeMultiplatform)
 }
 
 kotlin {
     jvmToolchain(11)
-    androidTarget()
-    sourceSets {
-        val androidMain by getting {
-            dependencies {
-                implementation(project(":shared"))
-            }
-        }
+    dependencies {
+        implementation(projects.shared)
     }
 }
 
