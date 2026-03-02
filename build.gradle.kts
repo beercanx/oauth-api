@@ -9,6 +9,15 @@ plugins {
 
 group = "uk.co.baconi.oauth"
 
+buildscript {
+    // Review on changes to:
+    //  - `gatling-gradle-plugin` (./automation/load/build.gradle.kts)
+    //  - `gradle-node-plugin` (./user-interface/build.gradle.kts)
+    gradle.extra["securityBoms"] = listOf(
+        "com.fasterxml.jackson:jackson-bom:2.21.1",
+    )
+}
+
 allprojects {
     repositories {
         mavenCentral()
@@ -42,9 +51,4 @@ allprojects {
     tasks.withType<Jar>().configureEach {
         duplicatesStrategy = DuplicatesStrategy.WARN
     }
-}
-
-subprojects {
-    // A hack to enable printing all submodule dependencies with ease using `./gradlew all-dependencies`
-    tasks.register<DependencyReportTask>("all-dependencies")
 }

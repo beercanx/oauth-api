@@ -4,31 +4,31 @@
 ##
 node = "24.12.0"
 ktor = "3.4.0"
-kotlin = "2.3.0"
+kotlin = "2.3.10"
 
 ##
 # JVM Versions
 ##
 argon2 = "2.12"
 exposed = "0.61.0"
-logback = "1.5.27"
+logback = "1.5.32"
 h2Database = "2.4.240"
-typesafeConfig = "1.4.3"
+typesafeConfig = "1.4.6"
 slf4j = "2.0.17"
 
 ##
 # Common Test Versions
 ##
-kotest = "6.1.1"
+kotest = "6.1.4"
 mockk = "1.14.9"
 
 ##
 # JVM Test Versions
 ##
-junit = "6.0.2"
+junit = "6.0.3"
 selenide = "7.14.0"
 restAssured = "6.0.0"
-commonsLang3 = "3.18.0"
+commonsLang3 = "3.20.0"
 
 [libraries]
 ##

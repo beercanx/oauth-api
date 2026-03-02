@@ -50,7 +50,7 @@ jobs:
           ENABLE_HEADLESS_BROWSER: true
 
       - name: Archive Test Report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: "Test Report"

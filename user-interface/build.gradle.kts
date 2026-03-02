@@ -5,6 +5,15 @@ plugins {
     alias(libs.plugins.node.gradle) apply false
 }
 
+buildscript {
+    dependencies {
+        // Review on changes to `gradle-node-plugin`, see ../build.gradle.kts
+        for (securityBom in gradle.extra["securityBoms"] as List<*>) {
+            classpath(platform(securityBom!!))
+        }
+    }
+}
+
 subprojects {
 
     // Only applies the following configuration deploy if the project has the "node-gradle" plugin defined and enabled.

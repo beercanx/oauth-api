@@ -57,8 +57,8 @@ dependencies {
     // Mocking
     testImplementation(libs.mockk)
     constraints {
-        api("net.bytebuddy:byte-buddy-agent:1.17.8")
-        api("net.bytebuddy:byte-buddy:1.17.8") {
+        api("net.bytebuddy:byte-buddy-agent:1.18.5")
+        api("net.bytebuddy:byte-buddy:1.18.5") {
             because("""
                 |Mockk depends on 1.5.11, which doesn't support JDK 25
                 |See https://github.com/mockk/mockk/issues/1434
@@ -73,7 +73,7 @@ dependencies {
 
     // Security patching
     constraints {
-        api("commons-codec:commons-codec:1.20.0") {
+        api("commons-codec:commons-codec:1.21.0") {
             // Needs Ktor to upgrade to Apache Http Client 5+
             because("""
                 |Ktor Server Test Host 2.3 that brings in 
