@@ -1,12 +1,12 @@
 [versions]
 
-androidGradlePlugin="8.13.2"
+androidGradlePlugin="9.0.1"
 
-kotlin="2.3.0"
+kotlin="2.3.10"
 
 ktor="3.4.0"
 
-jetbrainsCompose="1.10.0"
+jetbrainsCompose="1.10.1"
 
 kotlinxCoroutines="1.10.2"
 
@@ -18,7 +18,7 @@ androidx-core-ktx = { module = "androidx.core:core-ktx", version = "1.17.0" }
 
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.1" }
 
-androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.12.3" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.12.4" }
 
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.2.0" }
 
@@ -42,11 +42,11 @@ ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor"
 
 [plugins]
 
-android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
-android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+androidApplication = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidGradlePlugin" }
 
-jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "jetbrainsCompose" }
+composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "jetbrainsCompose" }
 
-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-kotlin-plugin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

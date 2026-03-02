@@ -1,11 +1,11 @@
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.kotlin.plugin.compose)
-    alias(libs.plugins.kotlin.plugin.serialization)
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinSerialization)
 
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.androidMultiplatformLibrary)
 
-    alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.composeMultiplatform)
 }
 
 version = "1.0.0-SNAPSHOT"
@@ -14,7 +14,11 @@ kotlin {
 
     jvmToolchain(11)
 
-    androidTarget()
+    android {
+        namespace = "uk.co.baconi.compose.shared"
+        compileSdk = 36
+        minSdk = 26
+    }
 
     jvm("desktop")
 
@@ -71,17 +75,5 @@ kotlin {
                 api(libs.ktor.client.js)
             }
         }
-    }
-}
-
-android {
-    compileSdk = 36
-    namespace = "uk.co.baconi.compose.shared"
-    defaultConfig {
-        minSdk = 26
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
     }
 }
