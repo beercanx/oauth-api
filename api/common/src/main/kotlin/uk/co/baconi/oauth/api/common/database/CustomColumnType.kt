@@ -1,7 +1,7 @@
 package uk.co.baconi.oauth.api.common.database
 
-import org.jetbrains.exposed.sql.IColumnType
-import org.jetbrains.exposed.sql.VarCharColumnType
+import org.jetbrains.exposed.v1.core.IColumnType
+import org.jetbrains.exposed.v1.core.VarCharColumnType
 
 /**
  * Based on https://jetbrains.github.io/Exposed/frequently-asked-questions.html#q-how-can-i-create-a-custom-column-type.

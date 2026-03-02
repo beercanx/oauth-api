@@ -1,9 +1,10 @@
 package uk.co.baconi.oauth.api.common.authorisation
 
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IdTable
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.javatime.timestamp
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.IdTable
+import org.jetbrains.exposed.v1.core.Column
+import org.jetbrains.exposed.v1.core.java.javaUUID
+import org.jetbrains.exposed.v1.javatime.timestamp
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedUsername
 import uk.co.baconi.oauth.api.common.authentication.authenticatedUsernameColumn
 import uk.co.baconi.oauth.api.common.client.ClientId
@@ -23,7 +24,7 @@ object AuthorisationCodeTable : IdTable<UUID>() {
     /**
      * [AuthorisationCode.value]
      */
-    override val id: Column<EntityID<UUID>> = uuid("id").entityId()
+    override val id: Column<EntityID<UUID>> = javaUUID("id").entityId() // TODO - Migrate to Kotlin.UUID
 
     val type: Column<String> = varchar("type", 6) // basic|pkce
     val used: Column<Boolean> = bool("used")

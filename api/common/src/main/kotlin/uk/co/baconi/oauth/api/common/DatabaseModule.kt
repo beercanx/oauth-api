@@ -2,10 +2,10 @@ package uk.co.baconi.oauth.api.common
 
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.SchemaUtils
+import org.jetbrains.exposed.v1.core.Table
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import uk.co.baconi.oauth.api.common.authentication.CustomerCredentialTable
