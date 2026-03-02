@@ -2,7 +2,7 @@
 
 androidGradlePlugin="8.13.2"
 
-kotlin="2.3.0"
+kotlin="2.3.10"
 
 ktor="3.4.0"
 
