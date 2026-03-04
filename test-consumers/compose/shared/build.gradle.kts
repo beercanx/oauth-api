@@ -75,5 +75,10 @@ kotlin {
                 api(libs.ktor.client.js)
             }
         }
+        val jsTest by getting {
+            dependencies {
+                implementation(devNpm("webpack", "5.104.1")) // Added to allow security patching
+            }
+        }
     }
 }

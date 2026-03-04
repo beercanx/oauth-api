@@ -21,6 +21,7 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(projects.shared)
+                implementation(devNpm("webpack", "5.104.1")) // Added to allow security patching
             }
         }
     }
