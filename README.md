@@ -25,8 +25,8 @@ An attempt to create an OAuth 2 service as close and on spec as possible, it att
 # Remove previous build cache files, useful to force recompilation and test.
 ./gradlew clean
 
-# Run the basic application
-./gradlew run
+# Run the full server in one application
+./gradlew :api:server:run
 ```
 
 ## Building Docker
