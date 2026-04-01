@@ -6,7 +6,7 @@ kotlin="2.3.10"
 
 ktor="3.4.2"
 
-jetbrainsCompose="1.10.1"
+jetbrainsCompose="1.10.3"
 
 kotlinxCoroutines="1.10.2"
 
