@@ -41,7 +41,7 @@ jobs:
           languages: java-kotlin
           build-mode: manual
 
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
 
       - shell: bash
         run: ./gradlew -V --no-daemon -S clean testClasses
