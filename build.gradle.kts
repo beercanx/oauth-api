@@ -16,6 +16,9 @@ buildscript {
     gradle.extra["securityBoms"] = listOf(
         "com.fasterxml.jackson:jackson-bom:2.21.1",
     )
+    gradle.extra["securityPatches"] = listOf(
+        "org.codehaus.plexus:plexus-utils:4.0.3",
+    )
 }
 
 allprojects {
