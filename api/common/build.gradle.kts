@@ -57,8 +57,8 @@ dependencies {
     // Mocking
     testImplementation(libs.mockk)
     constraints {
-        api("net.bytebuddy:byte-buddy-agent:1.18.5")
-        api("net.bytebuddy:byte-buddy:1.18.5") {
+        api("net.bytebuddy:byte-buddy-agent:1.18.8")
+        api("net.bytebuddy:byte-buddy:1.18.8") {
             because("""
                 |Mockk depends on 1.5.11, which doesn't support JDK 25
                 |See https://github.com/mockk/mockk/issues/1434
