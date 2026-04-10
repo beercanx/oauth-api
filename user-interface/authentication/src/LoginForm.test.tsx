@@ -1,16 +1,13 @@
-import React, {act} from 'react';
+import {expect, rs, test} from '@rstest/core';
 import {render, screen} from '@testing-library/react';
 import LoginForm from './LoginForm';
-import fetchMock from "jest-fetch-mock";
+import {CsrfToken} from "./api";
+
+rs.mock('./api', () => ({
+    fetchCsrfToken: (): Promise<CsrfToken> => Promise.resolve({csrfToken: 'aardvark'}),
+}));
 
 test('renders login form', async () => {
-
-    fetchMock.mockResponse(JSON.stringify({csrfToken: 'aardvark'}));
-
-    await act(async () => {
-        render(<LoginForm />);
-    });
-
-    const loginButton = screen.getByText(/Login/i);
-    expect(loginButton).toBeInTheDocument();
+    render(<LoginForm/>);
+    expect(await screen.findByText(/Login/i)).toBeDefined();
 });
