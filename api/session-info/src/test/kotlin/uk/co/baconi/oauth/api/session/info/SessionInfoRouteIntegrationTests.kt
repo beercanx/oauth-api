@@ -163,7 +163,7 @@ class SessionInfoRouteIntegrationTests : AuthenticationModule, SessionInfoRoute 
 
             assertSoftly(response) {
                 status shouldBe OK
-                contentType() shouldBe Application.Json.withCharset(UTF_8)
+                contentType() shouldBe Application.Json
                 body<String>() shouldEqualJson "{}"
             }
         }
@@ -194,7 +194,7 @@ class SessionInfoRouteIntegrationTests : AuthenticationModule, SessionInfoRoute 
 
             assertSoftly(response) {
                 status shouldBe OK
-                contentType() shouldBe Application.Json.withCharset(UTF_8)
+                contentType() shouldBe Application.Json
                 body<String>() shouldEqualSpecifiedJson """
                     |{
                     |  "session": { 
