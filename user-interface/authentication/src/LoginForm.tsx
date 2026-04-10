@@ -1,6 +1,7 @@
 import React, {ChangeEvent, FormEvent, MouseEvent} from "react";
+import {fetchAuthentication, fetchCsrfToken} from "./api";
 
-declare namespace LoginForm {
+export declare namespace LoginForm {
 
     interface Props {
         authenticationEndpoint: string,
@@ -42,13 +43,7 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
     }
 
     async refreshCsrfToken() {
-        return window
-            .fetch(this.props.sessionEndpoint, {
-                method: "GET",
-                headers: {'accept': 'application/json'},
-                credentials: "include"
-            })
-            .then(response => response.json())
+        return fetchCsrfToken(this.props.sessionEndpoint)
             .then(result => this.setState({csrfToken: result.csrfToken}))
             .catch(error => console.error("Get CSRF token error:", error));
     }
@@ -75,18 +70,8 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
 
         // TODO - What if we know we have no CSRF token, now we're doing via extra fetch?
 
-        await fetch((this.props.authenticationEndpoint), {
-                method: "POST",
-                headers: {'content-type': 'application/json'},
-                credentials: "include",
-                body: JSON.stringify({
-                    username: this.state.username,
-                    password: this.state.password.split(""),
-                    csrfToken: this.state.csrfToken
-                })
-            })
-            .then(response => response.json())
-            .then(result => window.location.reload())
+        await fetchAuthentication(this.state, this.props.authenticationEndpoint)
+            .then(_ => window.location.reload())
             .catch(exception => console.error("Authentication error:", exception));
 
         // TODO - Handle invalid CSRF token by refreshing the page.
