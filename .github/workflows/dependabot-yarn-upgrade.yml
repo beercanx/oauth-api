@@ -1,0 +1,41 @@
+name: Dependabot Yarn Upgrade
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  upgrade-yarn-lock:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR Branch
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Run Kotlin Upgrade Yarn Lock
+        working-directory: ./test-consumers/compose
+        run: ./gradlew kotlinUpgradeYarnLock
+
+      - name: Commit updated yarn.lock
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "Updated yarn.lock via 'gradle kotlinUpgradeYarnLock' post Dependabot patch"
+          file_pattern: test-consumers/compose/kotlin-js-store/yarn.lock
