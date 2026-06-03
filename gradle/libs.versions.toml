@@ -14,7 +14,7 @@ exposed = "1.2.0"
 logback = "1.5.32"
 h2Database = "2.4.240"
 typesafeConfig = "1.4.6"
-slf4j = "2.0.17"
+slf4j = "2.0.18"
 
 ##
 # Common Test Versions
