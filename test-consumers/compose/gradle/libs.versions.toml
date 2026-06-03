@@ -4,7 +4,7 @@ androidGradlePlugin="9.0.1"
 
 kotlin="2.3.21"
 
-ktor="3.4.3"
+ktor="3.5.0"
 
 jetbrainsCompose="1.10.3"
 
