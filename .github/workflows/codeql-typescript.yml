@@ -1,15 +1,8 @@
 name: "CodeQL (javascript-typescript)"
 
 on:
-  workflow_dispatch:
-  push:
-    branches: [ "main" ]
-    paths:
-      - "user-interface/**"
   pull_request:
     branches: [ "main" ]
-    paths:
-      - "user-interface/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
