@@ -1,15 +1,8 @@
 name: "CodeQL (actions)"
 
 on:
-  workflow_dispatch:
-  push:
-    branches: [ "main" ]
-    paths:
-      - ".github/**"
   pull_request:
     branches: [ "main" ]
-    paths:
-      - ".github/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
