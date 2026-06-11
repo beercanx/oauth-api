@@ -22,6 +22,7 @@ kotlin {
             dependencies {
                 implementation(projects.shared)
                 implementation(devNpm("webpack", "5.104.1")) // Added to allow security patching
+                implementation(devNpm("webpack-dev-server", "5.2.4")) // Added to allow security patching
             }
         }
     }
