@@ -14,7 +14,7 @@ buildscript {
     //  - `gatling-gradle-plugin` (./automation/load/build.gradle.kts)
     //  - `gradle-node-plugin` (./user-interface/build.gradle.kts)
     gradle.extra["securityBoms"] = listOf(
-        "com.fasterxml.jackson:jackson-bom:2.21.4",
+        "com.fasterxml.jackson:jackson-bom:2.22.0",
     )
     gradle.extra["securityPatches"] = listOf(
         "org.codehaus.plexus:plexus-utils:4.0.3",
