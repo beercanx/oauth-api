@@ -19,6 +19,8 @@ group = "uk.co.baconi.oauth.consumers.compose"
 allprojects {
     plugins.withType<YarnPlugin> {
         extensions.configure<YarnRootExtension> {
+            resolution("diff", "8.0.3")
+            resolution("uuid", "11.1.1")
             resolution("ws", "8.21.0")
             resolution("serialize-javascript", "7.0.5") // Review once Mocha 12 is released and used.
             resolution("webpack", "5.104.1")
