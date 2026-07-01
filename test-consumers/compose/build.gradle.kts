@@ -19,6 +19,7 @@ group = "uk.co.baconi.oauth.consumers.compose"
 allprojects {
     plugins.withType<YarnPlugin> {
         extensions.configure<YarnRootExtension> {
+            resolution("ws", "8.21.0")
             resolution("webpack", "5.104.1")
             resolution("webpack-dev-server", "5.2.5")
         }
