@@ -24,7 +24,7 @@ allprojects {
             resolution("ws", "8.21.0")
             resolution("serialize-javascript", "7.0.5") // Review once Mocha 12 is released and used.
             resolution("webpack", "5.104.1")
-            resolution("webpack-dev-server", "5.2.5")
+            resolution("webpack-dev-server", "5.2.6")
         }
     }
 }
