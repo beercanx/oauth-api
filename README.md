@@ -14,6 +14,37 @@ An attempt to create an OAuth 2 service as close and on spec as possible, it att
 * Java 25
 * Node 24
 
+## Structure
+A Gradle project utilising a multi-project build.
+```
+├── api                     # All the Kotlin/Ktor projects used to create the HTTP servies
+│   ├── assets
+│   ├── authentication
+│   └── ..etc
+│
+├── automation              # All the automation projects that can run against any instance
+│   ├── api
+│   ├── browser
+│   └── load
+│
+├── gradle                  # Gradle related settings
+│   ├── ..etc
+│   └── libs.versions.toml  # Gradle version catalog, where all dependency versions are managed
+│
+├── scripts                 # Potentially helpful scripts that can be run against the project
+│
+├── test-consumers          # Working applications that can integrate with this OAuth service
+│   ├── compose
+│   └── ...etc
+│
+├── user-interface          # All the Typescript/React projects used to create the user interfaces
+│   ├── authentication
+│   ├── ...etc
+│   └── build.gradle.kts    # Contains logic to trigger the NPM builds under Gradle for each subproject
+│
+└── README.md
+```
+
 ## Using Gradle
 ```bash
 # To run tests for a project, Gradle will not run tests for area's that have not had any changes.
