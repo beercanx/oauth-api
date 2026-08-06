@@ -9,7 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.AnnotationBasedArgumentsProvider
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsSource
-import org.slf4j.LoggerFactory
+import org.junit.jupiter.params.support.ParameterDeclarations
 import uk.co.baconi.oauth.automation.api.config.ClientType.Confidential
 import uk.co.baconi.oauth.automation.api.config.ClientType.Public
 import uk.co.baconi.oauth.automation.api.config.GrantType.AuthorizationCode
@@ -26,7 +26,7 @@ import kotlin.streams.asStream
 annotation class ClientSource(
 
     /**
-     * [Client]s will be one of these types of client.
+     * [Client]s will be one of these types of a client.
      */
     val clientTypes: Array<ClientType> = [],
 
@@ -39,6 +39,11 @@ annotation class ClientSource(
      * [Client]s must have these extra capabilities.
      */
     val capabilities: Array<ClientCapabilities> = [],
+
+    /**
+     * [Client]s exact name matching only, will ignore all other filter types.
+     */
+    val clientName: String = "",
 )
 
 /**
@@ -72,7 +77,7 @@ class ClientArgumentsProvider : AnnotationBasedArgumentsProvider<ClientSource>()
                     override val capabilities = capabilities
                     override val redirectUri by lazy { value.getUri("redirectUri") }
                     override val secret by lazy { value.getString("secret").let(::ClientSecret) }
-                    override fun toString() = "ConfidentialClient(id='${id.value}')"
+                    override fun toString() = "ConfidentialClient(id='${id}')"
                 }
 
                 Public -> object : PublicClient {
@@ -80,23 +85,36 @@ class ClientArgumentsProvider : AnnotationBasedArgumentsProvider<ClientSource>()
                     override val grantTypes = grantTypes
                     override val capabilities = capabilities
                     override val redirectUri by lazy { value.getUri("redirectUri") }
-                    override fun toString() = "PublicClient(id='${id.value}')"
+                    override fun toString() = "PublicClient(id='${id}')"
                 }
             }
         }
     }
 
-    override fun provideArguments(context: ExtensionContext, clientSource: ClientSource): Stream<out Arguments> {
+    override fun provideArguments(
+        parameters: ParameterDeclarations,
+        context: ExtensionContext,
+        clientSource: ClientSource
+    ): Stream<out Arguments> {
         return provideClients(clientSource)
             .asStream()
             .map(Arguments::of)
     }
 
     fun provideClients(clientSource: ClientSource): Sequence<Client> {
-        return clients
-            .filter(hasValidClientType(clientSource))
-            .filter(hasValidGrantType(clientSource))
-            .filter(hasValidClientCapabilities(clientSource))
+        return when {
+            clientSource.clientName.isNotBlank() -> clients
+                .filter(hasExactClientName(clientSource))
+
+            else -> clients
+                .filter(hasValidClientType(clientSource))
+                .filter(hasValidGrantType(clientSource))
+                .filter(hasValidClientCapabilities(clientSource))
+        }
+    }
+
+    private fun hasExactClientName(clientSource: ClientSource): (Client) -> Boolean = { value ->
+        value.id.value == clientSource.clientName
     }
 
     private fun hasValidClientType(clientSource: ClientSource): (Client) -> Boolean = { value ->

@@ -18,8 +18,8 @@ class IntrospectionTests : RestAssuredDriverTest() {
 
     companion object : RestAssuredDriverTest() {
 
-        private lateinit var issuedClient: ClientId
-        private lateinit var username: String
+        private lateinit var issuedClient: ConfidentialClient
+        private lateinit var user: User
 
         private lateinit var accessToken: AccessToken
         private lateinit var refreshToken: RefreshToken
@@ -27,8 +27,8 @@ class IntrospectionTests : RestAssuredDriverTest() {
         @BeforeAll
         @JvmStatic
         fun createTokens(@ClientSource([Confidential], [Password]) client: ConfidentialClient, user: User) {
-            issuedClient = client.id
-            username = user.username
+            issuedClient = client
+            this.user = user
 
             val response = driver.passwordGrant(client, user, setOf("basic"))
 
@@ -45,9 +45,9 @@ class IntrospectionTests : RestAssuredDriverTest() {
             .body(
                 "active", equalTo(true),
                 "scope", equalTo("basic"),
-                "client_id", equalTo(issuedClient.value),
-                "sub", equalTo(username),
-                "username", equalTo(username),
+                "client_id", equalTo(issuedClient.id.value),
+                "sub", equalTo(user.username),
+                "username", equalTo(user.username),
             )
     }
 
