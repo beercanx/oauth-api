@@ -15,7 +15,11 @@ import org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE
 import uk.co.baconi.oauth.automation.api.*
 import uk.co.baconi.oauth.automation.api.config.AccessToken
 import uk.co.baconi.oauth.automation.api.config.Client
+import uk.co.baconi.oauth.automation.api.config.ClientSource
+import uk.co.baconi.oauth.automation.api.config.ClientType.Confidential
 import uk.co.baconi.oauth.automation.api.config.ConfidentialClient
+import uk.co.baconi.oauth.automation.api.config.GrantType.Password
+import uk.co.baconi.oauth.automation.api.config.PublicClient
 import uk.co.baconi.oauth.automation.api.driver.RestAssuredDriverTest
 import uk.co.baconi.oauth.automation.api.driver.basic
 import java.util.*
@@ -57,10 +61,10 @@ class TokenIntrospectionRequests : RestAssuredDriverTest() {
         }
 
         @Test
-        fun `reject invalid basic authentication`() {
+        fun `reject invalid basic authentication`(client: ConfidentialClient) {
 
             given(driver.serverSpecification)
-                .auth().basic("aardvark", "badger")
+                .auth().basic(client.id.value, "badger")
                 .post(driver.introspectionLocation)
                 .then()
                 .statusCode(401)
@@ -69,13 +73,13 @@ class TokenIntrospectionRequests : RestAssuredDriverTest() {
         }
 
         @Test
-        fun `reject public client authentication`() {
+        fun `reject public client authentication`(publicClient: PublicClient) {
 
             given(driver.serverSpecification)
                 .urlEncodingEnabled(true)
                 .params(
                     mapOf(
-                        "client_id" to "consumer-y"
+                        "client_id" to publicClient.id
                     )
                 )
                 .post(driver.introspectionLocation)
@@ -86,10 +90,12 @@ class TokenIntrospectionRequests : RestAssuredDriverTest() {
         }
 
         @Test
-        fun `reject a valid client that is missing the introspection allowed action`() {
+        fun `reject a valid client that is missing the introspection allowed action`(
+            @ClientSource(clientName = "no-op", clientTypes = [Confidential]) client: ConfidentialClient
+        ) {
 
             given(driver.serverSpecification)
-                .auth().basic("no-op", "MQgQKBW3*j1m4QyHWnMsp52sqADHq7j3")
+                .auth().basic(client)
                 .urlEncodingEnabled(true)
                 .params(
                     mapOf(

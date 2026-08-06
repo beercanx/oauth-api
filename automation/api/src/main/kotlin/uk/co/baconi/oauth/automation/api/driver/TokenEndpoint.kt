@@ -52,7 +52,7 @@ interface TokenEndpoint {
             .withConfidentialAuthentication(client)
             .contentType(ContentType.URLENC)
             .formParams(
-                buildMap<String, String> {
+                buildMap {
                     this["grant_type"] = "authorization_code"
                     this["redirect_uri"] = client.redirectUri.toASCIIString()
                     this["code"] = code
@@ -81,7 +81,7 @@ interface TokenEndpoint {
             .withConfidentialAuthentication(client)
             .contentType(ContentType.URLENC)
             .formParams(
-                mapOf<String, String> (
+                mapOf(
                     "grant_type" to "password",
                     "username" to user.username,
                     "password" to user.password,
@@ -105,7 +105,7 @@ interface TokenEndpoint {
         is ConfidentialClient -> auth().preemptive().basic(client)
     }
 
-    private fun MutableMap<String, String>.withPublicAuthentication(client: Client) {
+    private fun MutableMap<String, Any?>.withPublicAuthentication(client: Client) {
         if (client is PublicClient) this["client_id"] = client.id.value
     }
 }
