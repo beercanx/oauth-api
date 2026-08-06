@@ -87,46 +87,46 @@ COPY --from=jre-build /javaruntime ${JAVA_HOME}
 FROM server-base AS server-full
 COPY --from=code-build /project/distributions/server/ /application
 WORKDIR /application
-CMD "./bin/server"
+CMD ["./bin/server"]
 
 ## Create Server - Assets
 FROM server-base AS server-assets
 COPY --from=code-build /project/distributions/assets/ /application
 WORKDIR /application
-CMD "./bin/assets"
+CMD ["./bin/assets"]
 
 ## Create Server - Authentication
 FROM server-base AS server-authentication
 COPY --from=code-build /project/distributions/authentication/ /application
 WORKDIR /application
-CMD "./bin/authentication"
+CMD ["./bin/authentication"]
 
 ## Create Server - Authorisation
 FROM server-base AS server-authorisation
 COPY --from=code-build /project/distributions/authorisation/ /application
 WORKDIR /application
-CMD "./bin/authorisation"
+CMD ["./bin/authorisation"]
 
 ## Create Server - Session Info
 FROM server-base AS server-session-info
 COPY --from=code-build /project/distributions/session-info/ /application
 WORKDIR /application
-CMD "./bin/session-info"
+CMD ["./bin/session-info"]
 
 ## Create Server - Token
 FROM server-base AS server-token
 COPY --from=code-build /project/distributions/token/ /application
 WORKDIR /application
-CMD "./bin/token"
+CMD ["./bin/token"]
 
 ## Create Server - Token Introspection
 FROM server-base AS server-token-introspection
 COPY --from=code-build /project/distributions/token-introspection/ /application
 WORKDIR /application
-CMD "./bin/token-introspection"
+CMD ["./bin/token-introspection"]
 
 ## Create Server - Token Revocation
 FROM server-base AS server-token-revocation
 COPY --from=code-build /project/distributions/token-revocation/ /application
 WORKDIR /application
-CMD "./bin/token-revocation"
+CMD ["./bin/token-revocation"]

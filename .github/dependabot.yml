@@ -36,3 +36,12 @@ updates:
     labels:
       - "ui-authentication"
       - "dependencies"
+
+  # Monitor container images
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: monthly
+    labels:
+      - "docker"
+      - "dependencies"
