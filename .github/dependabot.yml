@@ -9,6 +9,18 @@ updates:
     labels:
       - "github-actions"
       - "dependencies"
+    groups:
+      security-updates-github-actions:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      minor-patch-github-actions:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
   # Maintain Gradle modules?
   - package-ecosystem: "gradle"
@@ -18,6 +30,18 @@ updates:
     labels:
       - "gradle"
       - "dependencies"
+    groups:
+      security-updates-gradle-dependencies:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      minor-patch-gradle-dependencies:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
   # Try and maintain the test consumer
   - package-ecosystem: "gradle"
@@ -27,6 +51,18 @@ updates:
     labels:
       - "test-consumer-compose"
       - "dependencies"
+    groups:
+      security-updates-test-consumer-compose:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      minor-patch-test-consumer-compose:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
   # Maintain React bundles
   - package-ecosystem: "npm"
@@ -36,6 +72,18 @@ updates:
     labels:
       - "ui-authentication"
       - "dependencies"
+    groups:
+      security-updates-npm-dependencies:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      minor-patch-npm-dependencies:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
   # Monitor container images
   - package-ecosystem: docker
