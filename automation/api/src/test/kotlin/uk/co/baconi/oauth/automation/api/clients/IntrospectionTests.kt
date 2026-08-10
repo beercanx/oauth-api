@@ -26,7 +26,7 @@ class IntrospectionTests : RestAssuredDriverTest() {
 
         @BeforeAll
         @JvmStatic
-        fun createTokens(@ClientSource([Confidential], [Password]) client: ConfidentialClient, user: User) {
+        fun createTokens(@ClientSource([Confidential], [Password]) client: ConfidentialClient, @ActiveUser user: User) {
             issuedClient = client
             this.user = user
 

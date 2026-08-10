@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Tag
 import org.junit.jupiter.params.ParameterizedTest
 import uk.co.baconi.oauth.automation.api.AUTOMATION
 import uk.co.baconi.oauth.automation.api.CLIENTS
+import uk.co.baconi.oauth.automation.api.config.ActiveUser
 import uk.co.baconi.oauth.automation.api.config.Client
 import uk.co.baconi.oauth.automation.api.config.ClientCapabilities.ProofKeyOfCodeExchange
 import uk.co.baconi.oauth.automation.api.config.ClientSource
@@ -26,7 +27,7 @@ class AuthorisationCodeGrantTests : RestAssuredDriverTest() {
 
     @ParameterizedTest
     @ClientSource(clientTypes = [Confidential], grantTypes = [AuthorizationCode])
-    fun `authorisation code grant`(client: ConfidentialClient, user: User) {
+    fun `authorisation code grant`(client: ConfidentialClient, @ActiveUser user: User) {
 
         val state = UUID.randomUUID()
         val scopes = setOf("basic")
@@ -73,7 +74,7 @@ class AuthorisationCodeGrantTests : RestAssuredDriverTest() {
 
     @ParameterizedTest
     @ClientSource([Public, Confidential], grantTypes = [AuthorizationCode], capabilities = [ProofKeyOfCodeExchange])
-    fun `authorisation code grant using PKCE`(client: Client, user: User) {
+    fun `authorisation code grant using PKCE`(client: Client, @ActiveUser user: User) {
 
         val state = UUID.randomUUID()
         val scopes = setOf("basic")
