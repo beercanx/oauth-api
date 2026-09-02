@@ -99,13 +99,4 @@ interface TokenEndpoint {
             )
             .statusCode(200)
     }
-
-    private fun RequestSpecification.withConfidentialAuthentication(client: Client) = when (client) {
-        is PublicClient -> this // No authentication headers, they go in the body
-        is ConfidentialClient -> auth().preemptive().basic(client)
-    }
-
-    private fun MutableMap<String, Any?>.withPublicAuthentication(client: Client) {
-        if (client is PublicClient) this["client_id"] = client.id.value
-    }
 }
