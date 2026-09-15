@@ -1,5 +1,3 @@
-val useArgon2NoLibs: String by project
-
 plugins {
     jacoco
     alias(libs.plugins.kotlin.jvm)
@@ -35,7 +33,7 @@ dependencies {
     implementation(libs.ktor.server.content.negotiation)
 
     // Crypto for safe credential checking
-    api(if (useArgon2NoLibs.toBooleanStrict()) libs.argon2.jvm.nolibs else libs.argon2.jvm.libs)
+    api(if ((project.property("useArgon2NoLibs") as String).toBooleanStrict()) libs.argon2.jvm.nolibs else libs.argon2.jvm.libs)
 
     // Database
     api(libs.h2database)
@@ -50,6 +48,10 @@ dependencies {
 
     // Ktor testing
     testImplementation(libs.ktor.server.test.host)
+    constraints {
+        // TODO - Review need for constraint when Ktor bumps
+        testImplementation("org.apache.httpcomponents.client5:httpclient5:5.6.4")
+    }
 
     // Asserting stuff
     testImplementation(libs.kotest.assertions.core)
