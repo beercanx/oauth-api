@@ -81,8 +81,8 @@ object CommonModule {
                 cookie.maxAge = 5.minutes
                 transform(
                     SessionTransportTransformerEncrypt( // TODO - Extract into config
-                        hex("901c7e7ad029ad1ecfab8020d0005ee0"), // 128-bit
-                        hex("8d712329a4d2cbab") // 64-bit
+                        "901c7e7ad029ad1ecfab8020d0005ee0".hexToByteArray(), // 128-bit
+                        "8d712329a4d2cbab".hexToByteArray() // 64-bit
                     )
                 )
             }
@@ -91,8 +91,8 @@ object CommonModule {
                 cookie.maxAge = 30.minutes
                 transform(
                     SessionTransportTransformerEncrypt( // TODO - Extract into config
-                        hex("854dd2c698be10ea0ae7cd0337b23721"), // 128-bit
-                        hex("62faa3a4a55c3108") // 64-bit
+                        "854dd2c698be10ea0ae7cd0337b23721".hexToByteArray(), // 128-bit
+                        "62faa3a4a55c3108".hexToByteArray() // 64-bit
                     )
                 )
             }

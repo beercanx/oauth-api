@@ -6,13 +6,13 @@ import uk.co.baconi.oauth.api.common.authentication.*
 
 data class TestUser(val username: String, val password: String, val state: CustomerState)
 
-@Deprecated("This is intended to be removed once code complete")
+// TODO - Remove as this is intended to be removed once code complete
 interface TestUserModule {
 
     val customerCredentialRepository: CustomerCredentialRepository
     val customerStatusRepository: CustomerStatusRepository
 
-    @Deprecated("This is intended to be removed once code complete")
+    // TODO - Remove as this is intended to be removed once code complete
     fun Application.generateTestUsers(users: List<TestUser> = listOf(
         TestUser("aardvark","121212", CustomerState.Active),
         TestUser("badger", "212121", CustomerState.Active),

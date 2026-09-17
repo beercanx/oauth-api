@@ -77,7 +77,7 @@ class CustomerCredentialRepositoryIntegrationTest {
     }
 
     private fun customerCredential(
-        username: String = RandomStringUtils.randomAlphanumeric(8),
+        username: String = RandomStringUtils.secure().nextAlphanumeric(8),
         secret: String = "password"
     ): CustomerCredential {
         return CustomerCredential(

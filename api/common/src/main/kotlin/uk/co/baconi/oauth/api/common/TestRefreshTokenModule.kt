@@ -6,12 +6,12 @@ import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope
 import uk.co.baconi.oauth.api.common.token.RefreshTokenService
 
-@Deprecated("This is intended to be removed once code complete")
+// TODO - Remove as this is intended to be removed once code complete
 interface TestRefreshTokenModule {
 
     val refreshTokenService: RefreshTokenService
 
-    @Deprecated("This is intended to be removed once code complete")
+    // TODO - Remove as this is intended to be removed once code complete
     fun Application.generateTestRefreshTokens() {
 
         log.info("Registering the TestRefreshTokenModule.generateTestAccessTokens() module")
