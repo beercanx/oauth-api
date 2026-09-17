@@ -7,7 +7,7 @@ plugins {
 
 buildscript {
     dependencies {
-        // Review on changes to `gradle-node-plugin`, see ../build.gradle.kts
+        // Review on changes to `gradle-node-plugin`, see `../build.gradle.kts`
         for (securityBom in gradle.extra["securityBoms"] as List<*>) {
             classpath(platform(securityBom!!))
         }
@@ -16,7 +16,7 @@ buildscript {
 
 subprojects {
 
-    // Only applies the following configuration deploy if the project has the "node-gradle" plugin defined and enabled.
+    // Only applies the following configuration if the project has the "node-gradle" plugin defined and enabled.
     plugins.withId(rootProject.libs.plugins.node.gradle.get().pluginId) {
 
         // Configure the Node plugin
@@ -25,18 +25,19 @@ subprojects {
             download.set(System.getenv("CI").toBoolean())
         }
 
-        // Create a clean task to clean up the node directories
         val rsbuildClean = tasks.register<Delete>("rsbuildClean") {
+            description = "Clean up just the rsbuild output"
             delete("build")
         }
 
         val npmClean = tasks.register<Delete>("npmClean") {
+            description = "Clean up the node directories"
             dependsOn(rsbuildClean)
             delete("node_modules", "build", "dist", ".parcel-cache")
         }
 
-        // Create a test task to run tests using npm
         val npmTest = tasks.register<NpmTask>("npmTest") {
+            description = "Run tests using npm"
             dependsOn(tasks.named("npmInstall"))
 
             args.set(listOf("run", "test"))
@@ -48,8 +49,8 @@ subprojects {
             outputs.upToDateWhen { true }
         }
 
-        // Create a build task to build a React bundle using npm
         val npmBuild = tasks.register<NpmTask>("npmBuild") {
+            description = "Build the React bundle using npm"
             dependsOn(rsbuildClean)
             dependsOn(npmTest)
 
@@ -64,14 +65,17 @@ subprojects {
         }
 
         tasks.register<Task>("clean") {
+            description = "Clean up the React bundle"
             dependsOn(npmClean)
         }
 
         tasks.register<Task>("test") {
+            description = "Test the React bundle"
             dependsOn(npmTest)
         }
 
         tasks.register<Task>("build") {
+            description = "Build the React bundle"
             dependsOn(npmBuild)
         }
     }

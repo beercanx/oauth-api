@@ -29,8 +29,8 @@ application {
     mainClass.set("uk.co.baconi.oauth.api.authorisation.MainKt")
 }
 
-// Copies all react bundles from user-interface into build/generated-bundles
 tasks.register<Sync>("generateReactAssets") {
+    description = "Copies all react bundles from user-interface into build/generated-bundles"
     val destination = layout.buildDirectory
     if (!System.getenv("CODEQL").toBoolean()) {
         project(":user-interface").subprojects {
