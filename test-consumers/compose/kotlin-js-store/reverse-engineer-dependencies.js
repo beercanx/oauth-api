@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
 /**
- * reverse-engineer-deps.js
+ * reverse-engineer-dependencies.js
  *
  * Parses a yarn.lock (v1) file and determines which packages are top-level
  * dependencies (i.e., not depended upon by any other package in the lockfile).
  * Outputs a package.json-style dependencies block.
  *
  * Usage:
- *   node reverse-engineer-deps.js [path/to/yarn.lock]
+ *   node reverse-engineer-dependencies.js [path/to/yarn.lock]
  *
  * Defaults to ./yarn.lock if no argument is provided.
  */
