@@ -8,7 +8,6 @@ import io.restassured.specification.RequestSpecification
 import org.hamcrest.Matchers.equalTo
 import uk.co.baconi.oauth.automation.api.config.Client
 import uk.co.baconi.oauth.automation.api.config.ConfidentialClient
-import uk.co.baconi.oauth.automation.api.config.PublicClient
 import uk.co.baconi.oauth.automation.api.config.User
 import uk.co.baconi.oauth.automation.api.getUri
 import uk.co.baconi.oauth.automation.api.isUUID

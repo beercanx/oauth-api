@@ -52,7 +52,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         private val scopeRepository = ScopeRepository()
         private val accessTokenRepository = AccessTokenRepository(database)
 
-        private const val introspectionEndpoint = "/introspect"
+        private const val INTROSPECTION_ENDPOINT = "/introspect"
         private val activeToken = accessToken()
         private val missingToken = accessToken()
         private val futureToken = accessToken(now = Instant.now().plus(10, ChronoUnit.DAYS))
@@ -112,7 +112,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         @CsvSource("GET", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS")
         fun `should only support post requests`(method: String) = setupApplication { client ->
 
-            val response = client.request(introspectionEndpoint) {
+            val response = client.request(INTROSPECTION_ENDPOINT) {
                 introspectionRequest(method = parse(method))
             }
 
@@ -123,7 +123,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         @CsvSource("""json,{"token":"88900459-98af-4680-94b9-29e5b0b2e59e"}""", """xml,<token>88900459-98af-4680-94b9-29e5b0b2e59e</token>""")
         fun `should only support url encoded form requests`(type: String, body: String) = setupApplication { client ->
 
-            val response = client.request(introspectionEndpoint) {
+            val response = client.request(INTROSPECTION_ENDPOINT) {
                 introspectionRequest(contentType = ContentType("application", type), body = body)
             }
 
@@ -137,7 +137,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         @Test
         fun `should return unauthorised response when a public client is used`() = setupApplication { client ->
 
-            val response = client.request(introspectionEndpoint) {
+            val response = client.request(INTROSPECTION_ENDPOINT) {
                 introspectionRequest {
                     setBody("token=${UUID.randomUUID()}&clientId=consumer-y")
                 }
@@ -153,7 +153,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         fun `should return unauthorised response when a confidential clients without the allowed action is used`() =
             setupApplication { client ->
 
-                val response = client.request(introspectionEndpoint) {
+                val response = client.request(INTROSPECTION_ENDPOINT) {
                     introspectionRequest {
                         basicAuth("no-introspection", "9VylF3DbEeJbtdbih3lqpNXBw@Non#bi")
                     }
@@ -175,7 +175,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         @Test
         fun `should return invalid request on missing token in request`() = setupApplication { client ->
 
-            val response = client.request(introspectionEndpoint) {
+            val response = client.request(INTROSPECTION_ENDPOINT) {
                 introspectionRequest(body = "")
             }
 
@@ -191,7 +191,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         @Test
         fun `should return invalid request on blank token`() = setupApplication { client ->
 
-            val response = client.request(introspectionEndpoint) {
+            val response = client.request(INTROSPECTION_ENDPOINT) {
                 introspectionRequest(body = "token=")
             }
 
@@ -207,7 +207,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         @Test
         fun `should return invalid request on non uuid token`() = setupApplication { client ->
 
-            val response = client.request(introspectionEndpoint) {
+            val response = client.request(INTROSPECTION_ENDPOINT) {
                 introspectionRequest(body = "token=aardvark")
             }
 
@@ -227,7 +227,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         @Test
         fun `should return an active response for an access token that is active`() = setupApplication { client ->
 
-            val response = client.request(introspectionEndpoint) {
+            val response = client.request(INTROSPECTION_ENDPOINT) {
                 introspectionRequest(body = "token=${activeToken.value}")
             }
 
@@ -251,7 +251,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         fun `should return an inactive response for an access token that does not exist`() =
             setupApplication { client ->
 
-                val response = client.request(introspectionEndpoint) {
+                val response = client.request(INTROSPECTION_ENDPOINT) {
                     introspectionRequest(body = "token=${missingToken.value}")
                 }
 
@@ -266,7 +266,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         @Test
         fun `should return an inactive response for an access token that has expired`() = setupApplication { client ->
 
-            val response = client.request(introspectionEndpoint) {
+            val response = client.request(INTROSPECTION_ENDPOINT) {
                 introspectionRequest(body = "token=${expiredToken.value}")
             }
 
@@ -282,7 +282,7 @@ class IntrospectionIntegrationTests : AuthenticationModule, IntrospectionRoute {
         fun `should return an inactive response for an access token that is in the future`() =
             setupApplication { client ->
 
-                val response = client.request(introspectionEndpoint) {
+                val response = client.request(INTROSPECTION_ENDPOINT) {
                     introspectionRequest(body = "token=${futureToken.value}")
                 }
 

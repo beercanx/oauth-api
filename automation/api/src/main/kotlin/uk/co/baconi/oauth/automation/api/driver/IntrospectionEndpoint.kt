@@ -5,8 +5,6 @@ import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import io.restassured.response.ValidatableResponse
 import io.restassured.specification.RequestSpecification
-import uk.co.baconi.oauth.automation.api.config.AccessToken
-import uk.co.baconi.oauth.automation.api.config.Client
 import uk.co.baconi.oauth.automation.api.config.ConfidentialClient
 import uk.co.baconi.oauth.automation.api.config.Token
 import uk.co.baconi.oauth.automation.api.getUri

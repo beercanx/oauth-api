@@ -17,7 +17,6 @@ import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCode
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationCodeRepository
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType.Code
 import uk.co.baconi.oauth.api.common.authorisation.CodeChallenge
-import uk.co.baconi.oauth.api.common.authorisation.CodeChallengeMethod
 import uk.co.baconi.oauth.api.common.authorisation.CodeChallengeMethod.S256
 import uk.co.baconi.oauth.api.common.client.ClientId
 import uk.co.baconi.oauth.api.common.scope.Scope

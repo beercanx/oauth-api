@@ -1,12 +1,10 @@
 package uk.co.baconi.oauth.api.gatling.endpoints
 
-import io.gatling.http.client.uri.Uri
 import io.gatling.javaapi.core.ChainBuilder
 import io.gatling.javaapi.core.CheckBuilder
 import io.gatling.javaapi.core.CoreDsl.*
 import io.gatling.javaapi.core.Session
 import io.gatling.javaapi.http.HttpDsl.*
-import io.gatling.javaapi.http.HttpRequestActionBuilder
 import uk.co.baconi.oauth.api.gatling.endpoints.AuthenticationEndpoint.Checks.hasCacheControlDisabled
 import uk.co.baconi.oauth.api.gatling.endpoints.AuthenticationEndpoint.Checks.hasCsrfTokenAndSave
 import uk.co.baconi.oauth.api.gatling.endpoints.AuthenticationEndpoint.Checks.hasExpectedUsername
@@ -14,8 +12,6 @@ import uk.co.baconi.oauth.api.gatling.endpoints.AuthenticationEndpoint.Checks.ha
 import uk.co.baconi.oauth.api.gatling.endpoints.AuthenticationEndpoint.Configuration.AUTHENTICATION_ENDPOINT
 import uk.co.baconi.oauth.api.gatling.endpoints.AuthenticationEndpoint.Configuration.AUTHENTICATION_SESSION_ENDPOINT
 import uk.co.baconi.oauth.api.gatling.endpoints.AuthenticationEndpoint.Expressions.csrfToken
-import uk.co.baconi.oauth.api.gatling.feeders.Clients.Expressions.clientId
-import uk.co.baconi.oauth.api.gatling.feeders.Clients.Expressions.clientRedirect
 import uk.co.baconi.oauth.api.gatling.feeders.Customers.Expressions.password
 import uk.co.baconi.oauth.api.gatling.feeders.Customers.Expressions.username
 import uk.co.baconi.oauth.api.gatling.sessionToString

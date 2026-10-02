@@ -3,7 +3,6 @@ package uk.co.baconi.oauth.api.common.authentication
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.core.dao.id.IdTable
 import org.jetbrains.exposed.v1.core.Column
-import java.util.*
 
 object CustomerStatusTable : IdTable<String>() {
 

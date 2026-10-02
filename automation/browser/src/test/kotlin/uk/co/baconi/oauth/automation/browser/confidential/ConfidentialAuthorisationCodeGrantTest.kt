@@ -2,40 +2,25 @@ package uk.co.baconi.oauth.automation.browser.confidential
 
 import com.codeborne.selenide.Selectors.byId
 import com.codeborne.selenide.Selectors.byName
-import com.codeborne.selenide.Selenide
-import com.codeborne.selenide.Condition.*
-import com.codeborne.selenide.Configuration
 import com.codeborne.selenide.WebDriverConditions.*
 import com.codeborne.selenide.Selenide.*
 import com.typesafe.config.ConfigFactory
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.maps.shouldContainKey
-import io.kotest.matchers.nulls.beNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.should
-import io.kotest.matchers.shouldNot
 import io.kotest.matchers.string.shouldContain
-import io.kotest.matchers.throwable.shouldHaveMessage
 import io.kotest.matchers.types.beInstanceOf
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import org.openqa.selenium.Cookie
 import org.openqa.selenium.WebDriverException
-import org.slf4j.LoggerFactory
 import uk.co.baconi.oauth.automation.browser.AUTOMATION
 import java.net.URI
 import java.net.URL
-import java.net.URLDecoder
 import java.net.URLDecoder.decode
 import java.net.URLEncoder.encode
-import java.time.Instant
-import java.time.temporal.ChronoUnit
-import java.time.temporal.ChronoUnit.*
-import java.time.temporal.TemporalUnit
 import java.util.*
 import kotlin.text.Charsets.UTF_8
 
@@ -70,8 +55,8 @@ class ConfidentialAuthorisationCodeGrantTest {
 
         // fill in username, password and click login
         element(byId("login-form")).apply {
-            find(byName("username")).setValue(username)
-            find(byName("password")).setValue(password)
+            find(byName("username")).value = username
+            find(byName("password")).value = password
             find(byName("login")).click()
         }
 

@@ -4,11 +4,9 @@ import io.gatling.javaapi.core.CoreDsl.*
 import io.gatling.javaapi.core.*
 import io.gatling.javaapi.http.HttpDsl.http
 import uk.co.baconi.oauth.api.gatling.endpoints.AuthenticationEndpoint.Operations.authenticate
-import uk.co.baconi.oauth.api.gatling.endpoints.IntrospectionEndpoint.Operations.introspectAccessToken
 import uk.co.baconi.oauth.api.gatling.endpoints.TokenEndpoint.Operations.authorisationCodeGrant
 import uk.co.baconi.oauth.api.gatling.endpoints.AuthorisationEndpoint.Operations.confidentialAuthorisationWithPage
 import uk.co.baconi.oauth.api.gatling.endpoints.AuthorisationEndpoint.Operations.confidentialAuthorisationWithCode
-import uk.co.baconi.oauth.api.gatling.feeders.Clients.Client.Type.Confidential
 import uk.co.baconi.oauth.api.gatling.feeders.Clients.Client.Type.Public
 import uk.co.baconi.oauth.api.gatling.feeders.Clients.Setup.withPublicClient
 import uk.co.baconi.oauth.api.gatling.feeders.Customers.Feeders.customers

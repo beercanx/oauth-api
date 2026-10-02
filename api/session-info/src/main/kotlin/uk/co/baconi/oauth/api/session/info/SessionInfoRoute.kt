@@ -14,7 +14,6 @@ import uk.co.baconi.oauth.api.common.html.PageTemplate.base
 import uk.co.baconi.oauth.api.common.html.PageTemplate.bootstrap
 import uk.co.baconi.oauth.api.common.html.PageTemplate.metaData
 import uk.co.baconi.oauth.api.session.info.SessionInfoResponse.Token
-import java.time.Instant
 
 interface SessionInfoRoute {
 

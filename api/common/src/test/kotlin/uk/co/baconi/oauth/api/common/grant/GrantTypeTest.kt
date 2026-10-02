@@ -7,6 +7,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement
 import org.junit.jupiter.api.Test
+import kotlin.enums.enumEntries
 
 class GrantTypeTest {
 
@@ -27,14 +28,14 @@ class GrantTypeTest {
 
     @Test
     fun `should be able to find valid grant type from value`() {
-        for (grantType in enumValues<GrantType>()) {
+        for (grantType in enumEntries<GrantType>()) {
             GrantType.fromValue(grantType.value) shouldBe grantType
         }
     }
 
     @Test
     fun `json value should match from value method`() {
-        for (grantType in enumValues<GrantType>()) {
+        for (grantType in enumEntries<GrantType>()) {
             GrantType.fromValue(grantType.jsonValue) shouldBe grantType
         }
     }

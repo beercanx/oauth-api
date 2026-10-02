@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FormEvent, MouseEvent} from "react";
+import React, {ChangeEvent, MouseEvent, SubmitEvent} from "react";
 import {fetchAuthentication, fetchCsrfToken} from "./api";
 
 export declare namespace LoginForm {
@@ -64,7 +64,7 @@ export class LoginForm extends React.Component<LoginForm.Props, LoginForm.State>
         window.location.search += "&abort=true";
     }
 
-    async handleSubmit(event: FormEvent<HTMLFormElement>) {
+    async handleSubmit(event: SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
         console.log("Authentication Submitted!");
 

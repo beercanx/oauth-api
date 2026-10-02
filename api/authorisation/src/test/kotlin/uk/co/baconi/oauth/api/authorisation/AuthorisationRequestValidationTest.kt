@@ -14,11 +14,9 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.EmptySource
 import org.junit.jupiter.params.provider.NullSource
-import org.junit.jupiter.params.provider.ValueSource
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType.Code
 import uk.co.baconi.oauth.api.common.authorisation.CodeChallenge
 import uk.co.baconi.oauth.api.common.authorisation.CodeChallengeMethod
-import uk.co.baconi.oauth.api.common.client.ClientAction
 import uk.co.baconi.oauth.api.common.client.ClientAction.Authorise
 import uk.co.baconi.oauth.api.common.client.ClientAction.ProofKeyForCodeExchange
 import uk.co.baconi.oauth.api.common.client.ClientConfiguration

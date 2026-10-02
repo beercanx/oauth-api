@@ -22,6 +22,7 @@ import uk.co.baconi.oauth.api.common.grant.GrantType.Password
 import uk.co.baconi.oauth.api.common.scope.ScopeRepository
 import uk.co.baconi.oauth.api.common.token.RefreshTokenService
 import uk.co.baconi.oauth.api.token.TokenErrorType.*
+import kotlin.enums.enumEntries
 
 class TokenRequestValidationTest : TokenRequestValidation {
 
@@ -115,7 +116,7 @@ class TokenRequestValidationTest : TokenRequestValidation {
     fun `should return valid request for valid grant type for given client`(): Unit = runBlocking {
 
         assertSoftly {
-            enumValues<GrantType>().forEach { grantType ->
+            enumEntries<GrantType>().forEach { grantType ->
 
                 every { parameters["grant_type"] } returns grantType.value
                 every { client.can(grantType) } returns true

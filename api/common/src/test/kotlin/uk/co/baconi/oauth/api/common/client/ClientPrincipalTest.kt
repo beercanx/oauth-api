@@ -20,6 +20,7 @@ import uk.co.baconi.oauth.api.common.client.ClientType.Public
 import uk.co.baconi.oauth.api.common.grant.GrantType
 import uk.co.baconi.oauth.api.common.grant.GrantType.*
 import uk.co.baconi.oauth.api.common.scope.Scope
+import kotlin.enums.enumEntries
 
 class ClientPrincipalTest {
 
@@ -176,7 +177,7 @@ class ClientPrincipalTest {
 
             assertSoftly(underTest) {
                 can(ProofKeyForCodeExchange) shouldBe true
-                enumValues<GrantType>().filterNot(AuthorisationCode::equals).forEach { grantType ->
+                enumEntries<GrantType>().filterNot(AuthorisationCode::equals).forEach { grantType ->
                     withClue("grantType: $grantType") {
                         can(grantType) shouldBe false
                     }
@@ -187,7 +188,7 @@ class ClientPrincipalTest {
         @Test
         fun `should throw an exception if a public client is configured to perform banned actions`() {
 
-            val expectedBanned = enumValues<ClientAction>()
+            val expectedBanned = enumEntries<ClientAction>()
                 .filterNot(Authorise::equals)
                 .filterNot(ProofKeyForCodeExchange::equals)
 
@@ -210,7 +211,7 @@ class ClientPrincipalTest {
         @Test
         fun `should throw an exception if a public client is configured to perform banned grant types`() {
 
-            val expectedBanned = enumValues<GrantType>()
+            val expectedBanned = enumEntries<GrantType>()
                 .filterNot(RefreshToken::equals)
                 .filterNot(Assertion::equals)
 

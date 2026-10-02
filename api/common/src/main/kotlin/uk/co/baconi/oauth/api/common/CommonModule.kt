@@ -13,7 +13,6 @@ import io.ktor.server.plugins.dataconversion.*
 import io.ktor.server.plugins.doublereceive.*
 import io.ktor.server.plugins.hsts.*
 import io.ktor.server.sessions.*
-import io.ktor.util.*
 import kotlinx.serialization.json.Json
 import uk.co.baconi.oauth.api.common.authentication.AuthenticateSession
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedSession

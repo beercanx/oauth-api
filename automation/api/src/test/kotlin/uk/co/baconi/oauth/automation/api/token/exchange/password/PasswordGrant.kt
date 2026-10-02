@@ -17,7 +17,6 @@ import uk.co.baconi.oauth.automation.api.config.UserType
 import uk.co.baconi.oauth.automation.api.driver.RestAssuredDriverTest
 import uk.co.baconi.oauth.automation.api.driver.withConfidentialAuthentication
 import uk.co.baconi.oauth.automation.api.driver.withPublicAuthentication
-import uk.co.baconi.oauth.automation.api.isUUID
 import kotlin.collections.buildMap
 import kotlin.collections.set
 

@@ -20,7 +20,6 @@ import uk.co.baconi.oauth.api.gatling.feeders.Clients.Expressions.clientRedirect
 import uk.co.baconi.oauth.api.gatling.feeders.Clients.Expressions.clientSecret
 import uk.co.baconi.oauth.api.gatling.feeders.Customers.Expressions.password
 import uk.co.baconi.oauth.api.gatling.feeders.Customers.Expressions.username
-import uk.co.baconi.oauth.api.gatling.feeders.ProofOfKeyCodeExchange
 import uk.co.baconi.oauth.api.gatling.feeders.ProofOfKeyCodeExchange.Expressions.codeVerifier
 import uk.co.baconi.oauth.api.gatling.feeders.State.Expressions.state
 import uk.co.baconi.oauth.api.gatling.sessionToString

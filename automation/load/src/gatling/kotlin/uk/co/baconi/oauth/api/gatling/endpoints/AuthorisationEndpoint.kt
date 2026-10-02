@@ -1,6 +1,5 @@
 package uk.co.baconi.oauth.api.gatling.endpoints
 
-import io.gatling.http.client.uri.Uri
 import io.gatling.javaapi.core.CheckBuilder
 import io.gatling.javaapi.core.CoreDsl.css
 import io.gatling.javaapi.core.Session

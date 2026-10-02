@@ -6,6 +6,8 @@ Ultimate idea would be that all the static assets are published to a CDN and not
 
 ## How to build the assets
 
+- [ ] TODO: Rework this README as this process has changed since it was written.
+
 ### [src/main/resources/static/js/authentication.js](src/main/resources/static/js/authentication.js)
 
  ```bash

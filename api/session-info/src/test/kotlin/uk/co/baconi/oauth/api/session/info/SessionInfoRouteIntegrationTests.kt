@@ -2,10 +2,6 @@ package uk.co.baconi.oauth.api.session.info
 
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.json.*
-import io.kotest.assertions.json.schema.array
-import io.kotest.assertions.json.schema.jsonSchema
-import io.kotest.assertions.json.schema.obj
-import io.kotest.assertions.json.schema.shouldMatchSchema
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
@@ -20,14 +16,12 @@ import io.ktor.http.HttpStatusCode.Companion.MethodNotAllowed
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.UnsupportedMediaType
 import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.ktor.server.testing.*
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest

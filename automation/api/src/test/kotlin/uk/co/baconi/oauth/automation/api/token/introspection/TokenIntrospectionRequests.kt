@@ -14,11 +14,9 @@ import org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE
 import org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE
 import uk.co.baconi.oauth.automation.api.*
 import uk.co.baconi.oauth.automation.api.config.AccessToken
-import uk.co.baconi.oauth.automation.api.config.Client
 import uk.co.baconi.oauth.automation.api.config.ClientSource
 import uk.co.baconi.oauth.automation.api.config.ClientType.Confidential
 import uk.co.baconi.oauth.automation.api.config.ConfidentialClient
-import uk.co.baconi.oauth.automation.api.config.GrantType.Password
 import uk.co.baconi.oauth.automation.api.config.PublicClient
 import uk.co.baconi.oauth.automation.api.driver.RestAssuredDriverTest
 import uk.co.baconi.oauth.automation.api.driver.basic

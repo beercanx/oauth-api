@@ -6,6 +6,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement
 import org.junit.jupiter.api.Test
+import kotlin.enums.enumEntries
 
 class ClientTypeTest {
 
@@ -21,14 +22,14 @@ class ClientTypeTest {
 
     @Test
     fun `should be able to find valid client type from value`() {
-        for (clientType in enumValues<ClientType>()) {
+        for (clientType in enumEntries<ClientType>()) {
             ClientType.fromValue(clientType.value) shouldBe clientType
         }
     }
 
     @Test
     fun `json value should match from value method`() {
-        for (clientType in enumValues<ClientType>()) {
+        for (clientType in enumEntries<ClientType>()) {
             ClientType.fromValue(clientType.jsonValue) shouldBe clientType
         }
     }

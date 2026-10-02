@@ -31,7 +31,6 @@ import org.junit.jupiter.params.provider.CsvSource
 import uk.co.baconi.oauth.api.common.CommonModule.common
 import uk.co.baconi.oauth.api.common.authentication.*
 import uk.co.baconi.oauth.api.common.authentication.CustomerState.*
-import java.util.*
 
 class AuthenticationRouteIntegrationTests : AuthenticationRoute {
 

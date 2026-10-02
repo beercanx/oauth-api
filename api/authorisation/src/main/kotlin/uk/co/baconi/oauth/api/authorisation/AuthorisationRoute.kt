@@ -11,13 +11,11 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.ktor.server.util.*
 import kotlinx.html.*
-import uk.co.baconi.oauth.api.common.authentication.AuthenticateSession
 import uk.co.baconi.oauth.api.common.authentication.AuthenticatedSession
 import uk.co.baconi.oauth.api.common.authorisation.AuthorisationResponseType.Code
 import uk.co.baconi.oauth.api.common.html.PageTemplate.base
 import uk.co.baconi.oauth.api.common.html.PageTemplate.bootstrap
 import uk.co.baconi.oauth.api.common.html.PageTemplate.metaData
-import java.util.*
 
 interface AuthorisationRoute : AuthorisationRequestValidation {
 

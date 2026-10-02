@@ -3,11 +3,7 @@ package uk.co.baconi.oauth.automation.api.driver
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import io.restassured.builder.RequestSpecBuilder
-import io.restassured.config.CsrfConfig
-import io.restassured.config.CsrfConfig.csrfConfig
-import io.restassured.config.RedirectConfig
 import io.restassured.config.RedirectConfig.redirectConfig
-import io.restassured.config.RestAssuredConfig
 import io.restassured.config.RestAssuredConfig.config
 import io.restassured.filter.cookie.CookieFilter
 import io.restassured.specification.RequestSpecification

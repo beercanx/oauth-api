@@ -13,5 +13,5 @@ object OAuth21ResponseParameters {
      *
      * https://www.ietf.org/archive/id/draft-parecki-oauth-v2-1-01.html#name-access-token-scope
      */
-    const val Scope: String = "scope"
+    const val SCOPE: String = "scope"
 }
