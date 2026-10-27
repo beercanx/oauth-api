@@ -21,7 +21,7 @@ allprojects {
         extensions.configure<YarnRootExtension> {
             resolution("diff", "8.0.3")
             resolution("ws", "8.21.0")
-            resolution("serialize-javascript", "7.0.5") // Review once Mocha 12 is released and used.
+            resolution("serialize-javascript", "7.1.3") // Review once Mocha 12 is released and used.
         }
     }
 }
