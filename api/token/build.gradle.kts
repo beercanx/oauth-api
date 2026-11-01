@@ -15,7 +15,7 @@ dependencies {
     testImplementation(libs.ktor.server.test.host)
     constraints {
         // TODO - Review need for constraint when Ktor bumps
-        testImplementation("org.apache.httpcomponents.client5:httpclient5:5.6.4")
+        testImplementation("org.apache.httpcomponents.client5:httpclient5:5.6.5")
     }
 
     testImplementation(libs.ktor.server.call.logging)
