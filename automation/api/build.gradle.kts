@@ -35,7 +35,7 @@ dependencies {
 
     // Security patching
     constraints {
-        implementation("commons-codec:commons-codec:1.22.1") {
+        implementation("commons-codec:commons-codec:1.23.0") {
             // Needs Rest Assured to upgrade to Apache Http Client 5+
             because("""
                 |Rest Assured 5.4 brings in
@@ -43,7 +43,7 @@ dependencies {
                 |Commons Codec 1.11
             """.trimMargin())
         }
-        implementation("com.fasterxml.jackson.core:jackson-databind:2.22.3") {
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.22.4") {
             // Needs Rest Assured to replace its JSON schema validation library with a maintained one.
             because("""
                 |Rest Assured 5.4 brings in
@@ -52,7 +52,7 @@ dependencies {
                 |Jackson Databind 2.11.0
             """.trimMargin())
         }
-        implementation("org.mozilla:rhino:1.9.1") {
+        implementation("org.mozilla:rhino:1.9.2") {
             // Needs Rest Assured to replace its JSON schema validation library with a maintained one.
             because("""
                 |Rest Assured 5.4 brings in
